@@ -2,52 +2,47 @@
 body {
     margin: 0;
     font-family: Arial, sans-serif;
-  }
-  
-  .header {
+}
+
+.header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px 60px;
+    padding: 15px 40px;
     background-color: white;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    flex-wrap: wrap;
-  }
-  
-  .logo {
+    position: relative;
+}
+
+/* Left Logo */
+.logo {
     display: flex;
     align-items: center;
-  }
-  
-  .logo-image {
+}
+
+.logo-image {
     height: 40px;
-    margin-right: 10px;
-  }
-  
-  .nav {
+}
+
+/* Navigation Bar (Visible Above 768px) */
+.nav {
     display: flex;
     gap: 20px;
-    flex: 1;
-    justify-content: center;
-    transition: all 0.3s ease;
-  }
-  
-  .nav-link {
+}
+
+.nav-link {
     text-decoration: none;
     font-size: 16px;
     color: #333;
     position: relative;
-  }
-  
-  .nav-link:hover {
+    padding: 10px 15px;
+}
+
+.nav-link:hover, .nav-link.active {
     color: gold;
-  }
-  
-  .nav-link.active {
-    color: gold;
-  }
-  
-  .nav-link.active::after {
+}
+
+.nav-link.active::after {
     content: "";
     display: block;
     height: 2px;
@@ -56,24 +51,39 @@ body {
     position: absolute;
     bottom: -5px;
     left: 0;
-  }
-  
-  .icons {
+}
+
+/* Right Section: Icons + Mobile Menu */
+.right-section {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+/* Icons Section */
+.icons {
     display: flex;
     align-items: center;
     gap: 15px;
-  }
-  
-  .icon {
+}
+
+/* Individual Icons */
+.icon {
     font-size: 18px;
     cursor: pointer;
-  }
-  
-  .cart-icon-container {
+    transition: color 0.3s ease;
+}
+
+.icon:hover {
+    color: gold;
+}
+
+/* Cart Icon with Badge */
+.cart-icon-container {
     position: relative;
-  }
-  
-  .cart-badge {
+}
+
+.cart-badge {
     position: absolute;
     top: -5px;
     right: -10px;
@@ -82,86 +92,75 @@ body {
     font-size: 12px;
     border-radius: 50%;
     padding: 2px 6px;
-  }
-  
-  /* Responsive Styling */
-  @media (max-width: 1024px) {
-    .header {
-      padding: 15px 30px;
-    }
-  
-    .logo-text {
-      font-size: 16px;
-    }
-  
-    .nav-link {
-      font-size: 14px;
-    }
-  
-    .icons {
-      gap: 10px;
-    }
-  }
-  
-  @media (max-width: 768px) {
+}
+
+/* Mobile Menu (Hidden Above 768px) */
+.mobile-menu {
+    display: none;
+    font-size: 22px;
+    cursor: pointer;
+    color: black;
+    transition: transform 0.3s ease;
+}
+
+.mobile-menu:hover {
+    color: gold;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    /* Hide Navigation */
     .nav {
-      display: none; /* Hide navigation links by default */
-      flex-direction: column;
-      position: absolute;
-      top: 60px;
-      right: 0;
-      background-color: white;
-      width: 100%;
-      padding: 10px 0;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 60px;
+        right: 0;
+        background-color: white;
+        width: 100%;
+        padding: 10px 0;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        text-align: center;
     }
-  
+
+    /* Show Navigation When Open */
     .nav.nav-open {
-      display: flex; /* Show navigation links when menu is open */
+        display: flex;
+        z-index:  1;
+
     }
-  
+
+    /* Show Mobile Menu Icon */
     .mobile-menu {
-      display: block;
-      font-size: 20px;
-      cursor: pointer;
-      margin-left: 10px;
+        display: block;
     }
-  
+}
+
+@media (max-width: 480px) {
     .header {
-      flex-direction: column;
-      align-items: flex-start;
+        padding: 10px 20px;
     }
-  
-    .icons {
-      display: flex;
-      justify-content: space-between;
-      width: 100%;
-      margin-top: 10px;
-    }
-  }
-  
-  @media (max-width: 480px) {
-    .header {
-      padding: 10px 20px;
-    }
-  
+
     .logo-image {
-      height: 30px;
+        height: 30px;
     }
-  
+
     .nav-link {
-      font-size: 14px;
-      padding: 10px 20px;
-      text-align: center;
+        font-size: 14px;
+        padding: 10px 20px;
+        text-align: center;
     }
-  
+
     .icon {
-      font-size: 16px;
+        font-size: 18px;
     }
-  
+
     .cart-badge {
-      font-size: 10px;
-      padding: 1px 4px;
+        font-size: 10px;
+        padding: 2px 5px;
     }
-  }
-  
+
+    .right-section {
+        gap: 10px;
+    }
+}
