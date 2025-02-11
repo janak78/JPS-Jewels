@@ -28,7 +28,7 @@ const sendEmail = async (toEmail, subject, body) => {
   try {
     const mailOptions = {
       from: "jpsjewels@gmail.com",
-      to: toEmail,
+      to: [toEmail, "mitmangukiya192@gmail.com"],
       subject: subject,
       html: body, // Sending HTML content
     };
@@ -107,7 +107,7 @@ const addContact = async (data) => {
   }
 };
 
-router.post("/addcontact", verifyLoginToken, async (req, res) => {
+router.post("/addcontact",  async (req, res) => {
   try {
     req.body.ContactId = Date.now(); // Generate a unique Contact ID
     const response = await addContact(req.body);

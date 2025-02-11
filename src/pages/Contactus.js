@@ -1,19 +1,63 @@
 import React, { useState } from "react";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import axios from "axios";
 import thumbnailImage from "../assets/images/video.webp";
 import videoFile from "../assets/videos/video.mp4";
 import craftsmanshipImg from "./../assets/images/about-us-banner-1.webp";
 import whyChooseUsImg from "./../assets/images/about-us-banner-2.webp";
 import { FaStar } from "react-icons/fa";
+import showToast from "../components/Toast/Toaster";
 import "./Contactus.css";
 
 const Contactus = () => {
   const [isOpen, setIsOpen] = useState(false);
+
+  const formik = useFormik({
+    initialValues: {
+      Name: "",
+      Email: "",
+      Subject: "",
+      Message: "",
+    },
+    validationSchema: Yup.object({
+      Name: Yup.string().required("Name is required"),
+      Email: Yup.string().email("Invalid email").required("Email is required"),
+      Subject: Yup.string().required("Subject is required"),
+      Message: Yup.string(),
+    }),
+    onSubmit: async (values, { setSubmitting, resetForm }) => {
+      try {
+        const response = await axios.post(
+          "http://localhost:5000/api/contact/addcontact",
+          values,
+          { headers: { "Content-Type": "application/json" } }
+        );
+        console.log(response.data.statusCode,"response.data.statusCode")
+        if (response.data.statusCode === 200) {
+        //   alert("Message sent successfully!");
+          showToast.success("Message sent successfully!");
+          console.log(showToast,"111")
+          resetForm();
+        } else {
+          alert("Failed to send message.");
+        }
+      } catch (error) {
+        console.error("API Error:", error);
+        alert("Something went wrong. Please try again later.");
+      } finally {
+        setSubmitting(false);
+      }
+    },
+  });
+
   return (
     <>
       <div className="maindiv">
         <div className="map-div">
-          <iframe className="contact-form"
-             src="https://maps.google.com/maps?q=Shashvat%20Apartment%2C%20Pipla%20Sheri%2C%20Mahidharpura%2C%20Surat%2C%20Gujarat%2C%20India%2C&amp;t=m&amp;z=16&amp;output=embed&amp;iwloc=near"
+          <iframe
+            className="contact-form"
+            src="https://maps.google.com/maps?q=Shashvat%20Apartment%2C%20Pipla%20Sheri%2C%20Mahidharpura%2C%20Surat%2C%20Gujarat%2C%20India%2C&amp;t=m&amp;z=16&amp;output=embed&amp;iwloc=near"
             width="370"
             height="95%"
             allowfullscreen=""
@@ -66,34 +110,46 @@ const Contactus = () => {
           {/* Contact Form */}
           <div className="form-container">
             <h2>WRITE TO US</h2>
-            <form id="contactForm">
+            <form onSubmit={formik.handleSubmit}>
               <input
                 type="text"
-                id="name"
                 name="name"
                 placeholder="Your name"
-                required
+                {...formik.getFieldProps("Name")}
               />
+              {formik.touched.Name && formik.errors.Name && (
+                <div className="error">{formik.errors.Name}</div>
+              )}
+
               <input
                 type="email"
-                id="email"
-                name="email"
-                placeholder="Your email"
-                required
+                name="Email"
+                placeholder="Your Email"
+                {...formik.getFieldProps("Email")}
               />
+              {formik.touched.Email && formik.errors.Email && (
+                <div className="error">{formik.errors.Email}</div>
+              )}
+
               <input
                 type="text"
-                id="subject"
-                name="subject"
+                name="Subject"
                 placeholder="Subject"
-                required
+                {...formik.getFieldProps("Subject")}
               />
+              {formik.touched.Subject && formik.errors.Subject && (
+                <div className="error">{formik.errors.Subject}</div>
+              )}
+
               <textarea
-                id="message"
-                name="message"
-                placeholder="Your message (optional)"
+                name="Message"
+                placeholder="Your Message (optional)"
+                {...formik.getFieldProps("Message")}
               ></textarea>
-              <button type="submit">Send message</button>
+
+              <button type="submit" disabled={formik.isSubmitting}>
+                {formik.isSubmitting ? "Sending..." : "Send Message"}
+              </button>
             </form>
           </div>
         </div>

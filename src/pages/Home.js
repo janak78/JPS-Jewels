@@ -62,7 +62,7 @@ const Home = () => {
               <h2 className="timeBeuty">Timeless Beauty</h2>
 
               <h3 className="timeBeuty">JEWELRY SETS</h3>
-              <p className="brtag">GET UP TO 10% OFF</p>
+              <p className="timeBeuty">GET UP TO 10% OFF</p>
 
               <p className="brtag">
                 Sparkle and Save: Enjoy our stunning <br />
@@ -114,7 +114,7 @@ const Home = () => {
         </div>
       </div>
       <section class="collection-section">
-        <h2 class="collection-title">New Collection</h2>
+        <h2 class="shop-by-brands-title">New Collection</h2>
 
         <div class="collection-grid">
           <div class="collection-item large">

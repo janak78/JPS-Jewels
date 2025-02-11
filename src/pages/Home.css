@@ -20,12 +20,12 @@
 /* Text Styling */
 .timeBeuty {
   color: black;
-  font-size: 50px;
+  font-size: 20px;
   font-weight: bold;
 }
 
 .brtag {
-  font-size: 20px;
+  font-size: 16px;
   color: #c9a236;
 }
 
@@ -68,11 +68,11 @@
   }
 
   .timeBeuty {
-      font-size: 40px;
+      font-size: 16px;
   }
 
   .brtag {
-      font-size: 18px;
+      font-size: 16px;
   }
 
   .cardshopnow {
@@ -92,7 +92,7 @@
   }
 
   .timeBeuty {
-      font-size: 30px;
+      font-size: 16px;
   }
 
   .brtag {
@@ -116,7 +116,7 @@
   }
 
   .timeBeuty {
-      font-size: 24px;
+      font-size: 16px;
   }
 
   .brtag {
@@ -357,7 +357,7 @@ ul, li {
   justify-content: center;
   align-items: center;
   width: 100%;
-  min-height: 100vh;
+  min-height: 60vh;
   flex-wrap: wrap; /* Ensures wrapping on smaller screens */
 }
 
@@ -685,7 +685,7 @@ body {
   display: flex;
   justify-content: flex-start;
   white-space: nowrap;
-  width: 80%;
+  /* width: 80%; */
   overflow-x: auto;
   scroll-behavior: smooth;
   scrollbar-width: none; /* Hides scrollbar for a clean look */

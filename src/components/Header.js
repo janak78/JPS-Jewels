@@ -1,13 +1,26 @@
-  import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./Header.css";
 import logo from "../assets/images/logo.svg";
+import { Link, useLocation  } from "react-router-dom";
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
   };
+
+  const location = useLocation();
 
   return (
     <header className="header">
@@ -18,10 +31,36 @@ const Header = () => {
 
       {/* Navigation Links (Hidden on Small Screens) */}
       <nav className={`nav ${menuOpen ? "nav-open" : ""}`}>
-        <a href="/" className="nav-link active">HOME</a>
-        <a href="#diamond" className="nav-link">DIAMOND</a>
-        <a href="#about" className="nav-link">ABOUT US</a>
-        <a href="#contact" className="nav-link">CONTACT US</a>
+        <Link
+          to="/"
+          className={`nav-link ${location.pathname === "/" ? "active" : ""}`}
+        >
+          HOME
+        </Link>
+        <Link
+          to="/diamond"
+          className={`nav-link ${
+            location.pathname === "/diamond" ? "active" : ""
+          }`}
+        >
+          DIAMOND
+        </Link>
+        <Link
+          to="/aboutus"
+          className={`nav-link ${
+            location.pathname === "/aboutus" ? "active" : ""
+          }`}
+        >
+          ABOUT US
+        </Link>
+        <Link
+          to="/contactus"
+          className={`nav-link ${
+            location.pathname === "/contactus" ? "active" : ""
+          }`}
+        >
+          CONTACT US
+        </Link>
       </nav>
 
       {/* Right Section: Icons + Mobile Menu */}

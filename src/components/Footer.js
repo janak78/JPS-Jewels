@@ -8,9 +8,13 @@ import {
 } from "react-icons/fa";
 import { FaPhoneAlt, FaMapMarkerAlt } from "react-icons/fa";
 import logo from "../assets/images/logo.svg";
+import { useNavigate } from "react-router-dom";
 import "./Footer.css";
 
 const Footer = () => {
+
+  const navigate = useNavigate();
+
   return (
     <footer className="footer">
       <div className="footer-container">
@@ -95,7 +99,7 @@ const Footer = () => {
         </div>
         <div class="pri-pol">
           <div className="footer-bottom">Terms of use</div>
-          <div className="footer-bottom">Privacy Policy</div>
+          <div className="footer-bottom" style={{cursor:"pointer"}} onClick={() => navigate("/privacypolicy")}>Privacy Policy</div>
         </div>
       </div>
       </div>
