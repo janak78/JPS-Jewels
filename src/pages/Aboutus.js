@@ -17,10 +17,13 @@ import craftsmanshipImg from "./../assets/images/about-us-banner-1.webp";
 import whyChooseUsImg from "./../assets/images/about-us-banner-2.webp";
 import thumbnailImage from "../assets/images/video.webp";
 import videoFile from "../assets/videos/video.mp4";
+import image1 from "../assets/images/slide-1-asset-2-1.webp";
+import image2 from "../assets/images/slide-1-asset-3.webp";
+import image3 from "../assets/images/slide-1-asset-4.webp";
 
 const Aboutus = () => {
   const [isOpen, setIsOpen] = useState(false);
-  
+
   return (
     <>
       <section className="about-us">
@@ -36,10 +39,10 @@ const Aboutus = () => {
           handpicked for its timeless elegance and unparalleled quality.
         </p>
         <div className="image-gallery">
-          <div className="large-img">
+          <div className="about1-img">
             <img src={about1} alt="Jewelry 1" />
           </div>
-          <div className="small-img">
+          <div className="about2-img">
             <img src={about2} alt="Jewelry 2" />
             <img src={about4} alt="Jewelry 3" />
             <img src={about5} alt="Jewelry 4" />
@@ -202,7 +205,7 @@ const Aboutus = () => {
             </p>
             <div className="testimonial-profile">
               <img
-                src="https://randomuser.me/api/portraits/women/44.jpg"
+                src={image1}
                 alt="Emily R."
               />
               <div className="profile-info">
@@ -227,11 +230,11 @@ const Aboutus = () => {
             </p>
             <div className="testimonial-profile">
               <img
-                src="https://randomuser.me/api/portraits/men/46.jpg"
-                alt="John D."
+                src={image2}
+                alt="=Jessey D."
               />
               <div className="profile-info">
-                <h4>John D.</h4>
+                <h4>Jessey D.</h4>
                 <div className="stars">
                   <FaStar className="star" />
                   <FaStar className="star" />
@@ -251,7 +254,7 @@ const Aboutus = () => {
             </p>
             <div className="testimonial-profile">
               <img
-                src="https://randomuser.me/api/portraits/women/50.jpg"
+                src={image3}
                 alt="Sarah M."
               />
               <div className="profile-info">

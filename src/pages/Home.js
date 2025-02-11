@@ -47,59 +47,36 @@ const Home = () => {
   return (
     <>
       <div className="hero border-1 pb-3">
-        <div className="card cardbackground text-white border-0">
-          <img
-            className="card-img img-fluid"
-            src={images[currentIndex]}
-            alt="Slider"
-            style={{ height: "600px", objectFit: "contain", width: "100%" }}
-          />
-          <div className="card-img-overlay d-flex align-items-center">
-            <div className="cardtext-style">
-              <div className="slider-content">
-                <div
-                  className="tp-caption tp-resizeme timeBeuty"
-                  style={{ justifyContent: "start", display: "flex" }}
-                  data-fontsize="50"
-                  data-fontweight="bold"
-                  data-lineheight="60"
-                >
-                  Timeless Beauty
-                </div>
-                <div
-                  className="tp-caption tp-resizeme timeBeuty"
-                  data-x="center"
-                  data-y="center"
-                  data-fontsize="30"
-                  data-fontweight="bold"
-                  style={{ textAlign: "left" }}
-                >
-                  JEWELRY SETS
-                  <br />
-                  GET UP TO 10% OFF
-                </div>
-                <div
-                  className="tp-caption tp-resizeme brtag"
-                  data-x="center"
-                  data-y="center"
-                  data-fontsize="20"
-                  data-fontweight="300"
-                >
-                  Sparkle and Save: Enjoy our stunning <br />
-                  jewelry collection at discounted prices!
-                </div>
-                <div style={{ marginTop: "50px", textAlign: "left" }}>
-                  <button className="cardshopnow">
-                    <span className="text" style={{ color: "white" }}>
-                      Shop Now
-                    </span>
-                  </button>
-                </div>
+      <div className="card cardbackground text-white border-0">
+        {/* Image Slider */}
+        <img
+          className="card-img img-fluid"
+          src={images[currentIndex]}
+          alt="Slider"
+        />
+
+        {/* Overlay Content */}
+        <div className="card-img-overlay d-flex align-items-center">
+          <div className="cardtext-style">
+            <div className="slider-content">
+              <h2 className="timeBeuty">Timeless Beauty</h2>
+
+              <h3 className="timeBeuty">JEWELRY SETS</h3>
+              <p className="timeBeuty">GET UP TO 10% OFF</p>
+
+              <p className="brtag">
+                Sparkle and Save: Enjoy our stunning <br />
+                jewelry collection at discounted prices!
+              </p>
+
+              <div className="btn-container">
+                <button className="cardshopnow">Shop Now</button>
               </div>
             </div>
           </div>
         </div>
       </div>
+    </div>
       <div className="category-carousel">
         <div className="category-container">
           <div className="category-item">
@@ -137,7 +114,7 @@ const Home = () => {
         </div>
       </div>
       <section class="collection-section">
-        <h2 class="collection-title">New Collection</h2>
+        <h2 class="shop-by-brands-title">New Collection</h2>
 
         <div class="collection-grid">
           <div class="collection-item large">

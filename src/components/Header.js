@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./Header.css";
 import logo from "../assets/images/logo.svg";
+import { Link, useLocation  } from "react-router-dom";
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -19,38 +20,68 @@ const Header = () => {
     setMenuOpen(!menuOpen);
   };
 
+  const location = useLocation();
+
   return (
     <header className="header">
+      {/* Left Logo */}
       <div className="logo">
         <img src={logo} alt="JPS Jewels" className="logo-image" />
       </div>
+
+      {/* Navigation Links (Hidden on Small Screens) */}
       <nav className={`nav ${menuOpen ? "nav-open" : ""}`}>
-        <a href="/" className="nav-link active" onClick={() => setMenuOpen(false)}>
+        <Link
+          to="/"
+          className={`nav-link ${location.pathname === "/" ? "active" : ""}`}
+        >
           HOME
-        </a>
-        <a href="#diamond" className="nav-link" onClick={() => setMenuOpen(false)}>
+        </Link>
+        <Link
+          to="/diamond"
+          className={`nav-link ${
+            location.pathname === "/diamond" ? "active" : ""
+          }`}
+        >
           DIAMOND
-        </a>
-        <a href="/aboutus" className="nav-link" onClick={() => setMenuOpen(false)}>
+        </Link>
+        <Link
+          to="/aboutus"
+          className={`nav-link ${
+            location.pathname === "/aboutus" ? "active" : ""
+          }`}
+        >
           ABOUT US
-        </a>
-        <a href="#contact" className="nav-link" onClick={() => setMenuOpen(false)}>
+        </Link>
+        <Link
+          to="/contactus"
+          className={`nav-link ${
+            location.pathname === "/contactus" ? "active" : ""
+          }`}
+        >
           CONTACT US
-        </a>
+        </Link>
       </nav>
-      <div className="icons">
-        {!isMobile && (
-          <>
-            <i className="fa-solid fa-magnifying-glass"></i>
-            <i className="fa-solid fa-cart-shopping"></i>
-            <i className="fa-regular fa-user"></i>
-          </>
-        )}
-        {isMobile && (
-          <div className="mobile-menu" onClick={toggleMenu}>
-            <i className={`fa-solid ${menuOpen ? "fa-xmark" : "fa-bars"}`}></i>
+
+      {/* Right Section: Icons + Mobile Menu */}
+      <div className="right-section">
+        {/* Icons */}
+        <div className="icons">
+          <i className="fa-solid fa-magnifying-glass icon"></i>
+
+          {/* Cart Icon with Badge */}
+          <div className="cart-icon-container">
+            <i className="fa-solid fa-cart-shopping icon"></i>
+            <span className="cart-badge">3</span> {/* Dynamic cart count */}
           </div>
-        )}
+
+          <i className="fa-regular fa-user icon"></i>
+        </div>
+
+        {/* Mobile Menu Toggle (Only Visible Below 768px) */}
+        <div className="mobile-menu" onClick={toggleMenu}>
+          <i className={`fa-solid ${menuOpen ? "fa-times" : "fa-bars"}`}></i>
+        </div>
       </div>
     </header>
   );
