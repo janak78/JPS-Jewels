@@ -1,6 +1,7 @@
 .map-div iframe {
     border: 0;
     padding: 10px;
+    margin-top: 10px;
 }
 
 .gfg {
@@ -9,7 +10,8 @@
 }
 
 .map-div {
-    background-color: rgb(152, 178, 234);
+    /* max-width: 1000px; */
+    margin: auto;
 }
 
 /* contactus */
@@ -35,18 +37,26 @@
     gap: 30px;
 }
 
+.description, .note {
+    word-wrap: break-word;   
+    overflow-wrap: break-word; 
+    max-width: 35ch;  
+    white-space: normal; 
+}
 /* Contact Section */
 .contact-container {
     flex: 1;
     padding: 20px;
     border-radius: 10px;
     text-align: left;
+    gap: 10px;
 }
 
-h2 {
+.headtext {
     font-size: 24px;
     color: #000;
     margin-bottom: 15px;
+    text-align: left;
 }
 
 /* Contact Item */
@@ -87,6 +97,7 @@ h2 {
 form input,
 form textarea {
     width: 100%;
+    max-width: 700px;
     padding: 12px;
     margin-bottom: 15px;
     border: 1px solid #ccc;
@@ -112,6 +123,10 @@ form button {
 
 form button:hover {
     background: #a07d2c;
+}
+.contact-form{
+    width: 90% !important;
+    height: 56vh !important;
 }
 
 /* Responsive Design */

@@ -1,0 +1,81 @@
+/* General Styles */
+.terms-container {
+    max-width: 100%; /* Adjusted for better responsiveness */
+    margin: 20px auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    line-height: 1.8;
+    color: #333;
+    text-align: left;
+    width: 90%; /* Makes it flexible on all screens */
+}
+
+/* Section Title */
+.section-title {
+    font-size: 28px;
+    font-weight: bold;
+    margin-top: 30px;
+    padding-bottom: 5px;
+}
+
+/* List Styling */
+.terms-list {
+    padding-left: 20px; /* Ensures proper indentation */
+}
+
+.terms-list li {
+    margin-bottom: 10px;
+    font-size: 18px;
+    list-style-type: disc;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .terms-container {
+        max-width: 90%;
+        padding: 18px;
+    }
+    
+    .section-title {
+        font-size: 26px;
+    }
+
+    .terms-list li {
+        font-size: 17px;
+    }
+}
+
+@media (max-width: 768px) {
+    .terms-container {
+        width: 95%;
+        padding: 15px;
+        margin: 25px auto;
+    }
+    
+    .section-title {
+        font-size: 22px;
+    }
+
+    .terms-list li {
+        font-size: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .terms-container {
+        width: 100%;
+        padding: 12px;
+    }
+    
+    .section-title {
+        font-size: 20px;
+    }
+
+    .terms-list {
+        padding-left: 15px; /* Adjusting padding for small screens */
+    }
+
+    .terms-list li {
+        font-size: 14px;
+    }
+}
