@@ -127,6 +127,7 @@
 
 .category-title {
   font-size: 24px;
+  text-align: center;
   margin-bottom: 10px;
 }
 
@@ -167,12 +168,27 @@
 
 /* / Testimonial Card / */
 .testimonial-card {
-  width: 350px;
+  width: clamp(280px, 90%, 350px); 
+  max-width: 100%;
   padding: 20px;
   background: white;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   text-align: left;
   transition: all 0.3s ease-in-out;
+}
+
+@media (max-width: 768px) {
+  .testimonial-card {
+    width: 90%; /* More flexible on tablets */
+    padding: 15px; /* Reduce padding */
+  }
+}
+
+@media (max-width: 480px) {
+  .testimonial-card {
+    width: 95%; /* Full width on smaller screens */
+    padding: 10px; /* Reduce padding further */
+  }
 }
 
 /* / Text / */
@@ -300,7 +316,7 @@
     color: #333;
 }
 
-.description {
+.aboutdescription {
     font-size: 14px;
     line-height: 1.5;
     color: #555;

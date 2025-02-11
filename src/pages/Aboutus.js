@@ -122,7 +122,7 @@ const Aboutus = () => {
           <div className="jewelry-item text text1">
             <p className="tagline">ELEGANCE</p>
             <h2 className="title">CRAFTSMANSHIP</h2>
-            <p className="description">
+            <p className="aboutdescription">
               We hand-craft our high-end silver and gold jewelry in our own
               production sites and our teams oversee each stage of the process.
               We create jewels every day. We ensure a quick turnaround time,
@@ -135,7 +135,7 @@ const Aboutus = () => {
           <div className="jewelry-item text text2">
             <p className="tagline">EXCELLENCE</p>
             <h2 className="title">WHY CHOOSE US?</h2>
-            <p className="description">
+            <p className="aboutdescription">
               Choose our jewelry store for exceptional quality and customer
               service. With a stunning collection of fine jewelry, fast and free
               shipping, and expert customer support, you can shop with

@@ -98,7 +98,7 @@ const Footer = () => {
           </a>
         </div>
         <div class="pri-pol">
-          <div className="footer-bottom">Terms of use</div>
+          <div className="footer-bottom" style={{cursor:"pointer"}} onClick={() => navigate("/termsofuse")}>Terms of use</div>
           <div className="footer-bottom" style={{cursor:"pointer"}} onClick={() => navigate("/privacypolicy")}>Privacy Policy</div>
         </div>
       </div>

@@ -9,6 +9,7 @@ import Home from './pages/Home';
 import Aboutus from './pages/Aboutus';
 import Contactus from './pages/Contactus';
 import Privacypolicy from './pages/privacypolicy/privacypolicy';
+import Termsofuse from './pages/Termsofuse/Termsofuse';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route path="/aboutus" element={<Aboutus />} />
         <Route path="/contactus" element={<Contactus />} />
         <Route path="/privacypolicy" element={<Privacypolicy />} />
+        <Route path="/termsofuse" element={<Termsofuse />} />
       </Routes>
       <Toaster />
       <ToastContainer />

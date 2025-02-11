@@ -69,7 +69,7 @@ const Contactus = () => {
         <div className="contactuscon">
           {/* Contact Details */}
           <div className="contact-container">
-            <h2>CONTACTS</h2>
+            <h2 className="headtext">CONTACTS</h2>
             <p className="description">
               Our one-to-one support is a big part of JPS Jewels company.
               Contact us by phone or email to get help from our qualified team.
@@ -109,7 +109,7 @@ const Contactus = () => {
 
           {/* Contact Form */}
           <div className="form-container">
-            <h2>WRITE TO US</h2>
+            <h2 className="headtext">WRITE TO US</h2>
             <form onSubmit={formik.handleSubmit}>
               <input
                 type="text"
