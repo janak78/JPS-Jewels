@@ -1,0 +1,472 @@
+.about-us {
+  text-align: left;
+  padding: 40px;
+  max-width: 1240px;
+  margin: auto;
+}
+
+.about-us h2 {
+  font-size: 24px;
+  margin-bottom: 15px;
+}
+
+.about-us p {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #444;
+  margin-bottom: 30px;
+}
+
+/* Image Gallery Layout */
+.image-gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  /* align-items: center; */
+}
+
+/* Large Image (Left) */
+.large-img {
+  flex: 1;
+  min-width: 300px;
+  /* max-width: 500px;  */
+}
+
+.large-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Small Images (Right - 2x2 Grid) */
+.small-img {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  flex: 1;
+  min-width: 300px;
+  /* max-width: 500px; */
+}
+
+.small-img img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .image-gallery {
+    flex-direction: column; /* Stack images in smaller screens */
+    align-items: center;
+  }
+
+  .large-img,
+  .small-img {
+    max-width: 100%; /* Use full width */
+  }
+
+  .small-img {
+    grid-template-columns: repeat(2, 1fr); /* Maintain 2-column grid */
+    gap: 10px;
+  }
+}
+
+@media (max-width: 768px) {
+  .about-us {
+    padding: 20px;
+  }
+
+  .small-img {
+    grid-template-columns: repeat(1, 1fr); /* Switch to single-column grid */
+  }
+}
+
+@media (max-width: 480px) {
+  .about-us h2 {
+    font-size: 20px;
+  }
+
+  .about-us p {
+    font-size: 14px;
+  }
+
+  .small-img {
+    grid-template-columns: 1fr; /* Single column for smallest screens */
+  }
+}
+
+/* our story */
+.our-story {
+  text-align: left;
+  padding: 40px;
+  max-width: 1240px;
+  margin: auto;
+}
+
+.our-story h2 {
+  font-size: 24px;
+  margin-bottom: 15px;
+}
+
+.our-story p {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #444;
+  margin-bottom: 15px;
+}
+
+/* Shop our exquisite */
+
+.category-section {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.category-title {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+/* / testinomial / */
+
+/* / Container / */
+.testimonial-container {
+  text-align: center;
+  padding: 50px 20px;
+  background: #f8f1eb;
+}
+
+.testimonial-heading {
+  font-size: 22px;
+  font-weight: bold;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  color: #333;
+  position: relative;
+}
+
+.testimonial-heading::after {
+  content: "";
+  width: 50px;
+  height: 2px;
+  background: #c19b70;
+  display: block;
+  margin: 5px auto;
+}
+
+/* / Testimonial Grid / */
+.testimonial-grid {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+/* / Testimonial Card / */
+.testimonial-card {
+  width: 350px;
+  padding: 20px;
+  background: white;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  text-align: left;
+  transition: all 0.3s ease-in-out;
+}
+
+/* / Text / */
+.testimonial-text {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 15px;
+}
+
+/* / Profile Section / */
+.testimonial-profile {
+  display: flex;
+  align-items: center;
+  justify-content: left;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.testimonial-profile img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.profile-info h4 {
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
+}
+
+/* / Stars / */
+.stars {
+  display: flex;
+}
+
+.star {
+  color: #f4c430;
+  font-size: 14px;
+}
+
+/* / Responsive / */
+@media (max-width: 768px) {
+  .testimonial-grid {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+/* / jwelery info / */
+
+/* / Container / */
+.jewelry-container {
+    max-width: 900px;
+    margin: auto;
+    padding: 40px 20px;
+}
+
+/* / Grid Layout / */
+.jewelry-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 0px;
+    position: relative;
+    align-items: center;
+}
+
+/* / Image Styling / */
+.jewelry-item.image {
+    position: relative;
+}
+
+.image1 {
+    grid-column: 1 / 2;
+    grid-row: 1 / 2;
+}
+
+.image2 {
+    grid-column: 2 / 3;
+    grid-row: 2 / 3;
+}
+
+.jewelry-img {
+    width: 100%;
+    max-width: 450px;  
+    max-height: 450px; 
+    object-fit: cover;
+}
+
+/* / Text Styling / */
+.jewelry-item.text {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 40px;
+}
+
+/* / Positioning Text Next to Images / */
+.text1 {
+    grid-column: 2 / 3;
+    grid-row: 1 / 2;
+    text-align: left;  
+}
+
+.text2 {
+    grid-column: 1 / 2;
+    grid-row: 2 / 3;
+    text-align: right;
+}
+
+/* / Typography / */
+.tagline {
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    color: #b29d87;
+    margin-bottom: 8px;
+}
+
+.title {
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.description {
+    font-size: 14px;
+    line-height: 1.5;
+    color: #555;
+}
+
+/* / Responsive Design / */
+@media (max-width: 768px) {
+    .jewelry-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .image1 {
+        grid-column: 1 / 2;
+        grid-row: 1;
+    }
+
+    .text1 {
+        grid-column: 1 / 2;
+        grid-row: 2;
+        text-align: center;
+    }
+
+    .image2 {
+        grid-column: 1 / 2;
+        grid-row: 3;
+    }
+
+    .text2 {
+        grid-column: 1 / 2;
+        grid-row: 4;
+        text-align: center;
+    }
+
+    .jewelry-img {
+        max-width: 100%;
+        max-height: 350px; 
+    }
+}
+
+/* / aboutus video image / */
+
+/* / Main container / */
+/* / Video Container / */
+.video-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    cursor: pointer;
+    width: 100%;
+}
+
+/* / Thumbnail Image / */
+.thumbnail {
+    position: relative;
+    display: inline-block;
+    border-radius: 10px;
+    overflow: hidden;
+    width: 100%;
+    max-width: 1200px;
+}
+
+.thumbnail-img {
+    width: 100%;
+    display: block;
+    height: auto;
+
+    border-radius: 10px;
+}
+
+/* / Play Button / */
+.play-button {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    font-size: 50px; 
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.3s;
+}
+
+.thumbnail:hover .play-button {
+    background: rgba(0, 0, 0, 0.8);
+    transform: translate(-50%, -50%) scale(1.1); 
+}
+
+/* / Modal / */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+/* / Modal Content / */
+.modal-content {
+    position: relative;
+    width: 90%;
+    max-width: 900px; 
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.video-player {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+}
+
+/* / Responsive Design / */
+@media (max-width: 1024px) {
+    .thumbnail {
+        max-width: 700px;
+    }
+
+    .play-button {
+        font-size: 40px;
+        width: 70px;
+        height: 70px;
+    }
+
+    .modal-content {
+        max-width: 80%;
+    }
+}
+
+@media (max-width: 768px) {
+    .thumbnail {
+        max-width: 90%;
+    }
+
+    .play-button {
+        font-size: 35px;
+        width: 60px;
+        height: 60px;
+    }
+
+    .modal-content {
+        max-width: 95%;
+    }
+}
+
+@media (max-width: 480px) {
+    .thumbnail {
+        max-width: 100%;
+    }
+
+    .play-button {
+        font-size: 30px;
+        width: 50px;
+        height: 50px;
+    }
+
+    .modal-content {
+        max-width: 100%;
+    }
+}

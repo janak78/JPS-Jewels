@@ -4,6 +4,16 @@ import logo from "../assets/images/logo.svg";
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
@@ -15,26 +25,32 @@ const Header = () => {
         <img src={logo} alt="JPS Jewels" className="logo-image" />
       </div>
       <nav className={`nav ${menuOpen ? "nav-open" : ""}`}>
-        <a href="/" className="nav-link active">
+        <a href="/" className="nav-link active" onClick={() => setMenuOpen(false)}>
           HOME
         </a>
-        <a href="#diamond" className="nav-link">
+        <a href="#diamond" className="nav-link" onClick={() => setMenuOpen(false)}>
           DIAMOND
         </a>
-        <a href="#about" className="nav-link">
+        <a href="/aboutus" className="nav-link" onClick={() => setMenuOpen(false)}>
           ABOUT US
         </a>
-        <a href="#contact" className="nav-link">
+        <a href="#contact" className="nav-link" onClick={() => setMenuOpen(false)}>
           CONTACT US
         </a>
       </nav>
       <div className="icons">
-        <i className="fa-solid fa-magnifying-glass"></i>
-        <i className="fa-solid fa-cart-shopping"></i>
-        <i className="fa-regular fa-user"></i>
-        {/* <div className="mobile-menu" onClick={toggleMenu}>
-          <i className="fa-solid fa-bars"></i>
-        </div> */}
+        {!isMobile && (
+          <>
+            <i className="fa-solid fa-magnifying-glass"></i>
+            <i className="fa-solid fa-cart-shopping"></i>
+            <i className="fa-regular fa-user"></i>
+          </>
+        )}
+        {isMobile && (
+          <div className="mobile-menu" onClick={toggleMenu}>
+            <i className={`fa-solid ${menuOpen ? "fa-xmark" : "fa-bars"}`}></i>
+          </div>
+        )}
       </div>
     </header>
   );

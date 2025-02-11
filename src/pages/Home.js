@@ -72,7 +72,7 @@ const Home = () => {
                   data-y="center"
                   data-fontsize="30"
                   data-fontweight="bold"
-                  style={{textAlign:"left"}}
+                  style={{ textAlign: "left" }}
                 >
                   JEWELRY SETS
                   <br />
