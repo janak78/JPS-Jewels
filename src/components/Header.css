@@ -45,14 +45,15 @@ body {
 
 .nav-link:hover,
 .nav-link.active {
-  color: gold;
+  color: rgb(163, 148, 66);
+  transition: color 300ms ease-out; 
 }
 
 .nav-link.active::after {
   content: "";
   display: block;
   height: 2px;
-  background-color: gold;
+  background-color: rgb(163, 152, 89);
   width: 100%;
   position: absolute;
   bottom: -5px;
@@ -110,7 +111,8 @@ body {
 }
 
 .mobile-menu:hover {
-  color: gold;
+  color: rgb(148, 135, 63);
+  transition: color 300ms ease-out;
 }
 
 /* Responsive Styles */
@@ -172,4 +174,90 @@ body {
   .right-section {
     gap: 10px;
   }
+}
+
+
+/* login */
+
+/* Main container */
+.user-login-container {
+  position: relative;
+  display: inline-block;
+}
+
+/* User icon */
+.user-icon {
+  font-size: 28px !important;
+  cursor: pointer;
+  color: #000;
+}
+
+/* Dropdown login form */
+.login-dropdown {
+  position: absolute;
+  top: 50px;
+  right: 0;
+  width: 280px;
+  background: white;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  padding: 15px;
+  z-index: 100;
+}
+
+/* Login button */
+.login-btn-login {
+  background-color: #b8860b !important;
+  color: white !important;
+  width: 100%;
+  margin-top: 10px;
+}
+
+/* Forgot password & Signup */
+.forgot-signup {
+  font-size: 14px;
+  text-align: center;
+  margin-top: 10px;
+  color: #333;
+}
+
+.signup-link-signup {
+  font-weight: bold;
+  cursor: pointer;
+  color: #b8860b;
+}
+
+/* Responsive adjustments */
+@media (max-width: 500px) {
+  .login-dropdown {
+    width: 240px;
+  }
+}
+
+@media (max-width: 320px) {
+  .login-dropdown {
+    width: 200px;
+  }
+}
+
+
+/* cart */
+
+.cart-button {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+
+.closeicon{
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+
+.checkoutbutton{
+  border: none !important;
+  outline: none !important;
 }

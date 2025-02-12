@@ -1,0 +1,79 @@
+/* Main Container */
+.auth-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    max-width: 90%;
+    margin: 50px auto;
+    padding: 20px;
+
+  }
+  
+  /* Box Styling */
+  .auth-box {
+    width: 47%;
+    height: 50%;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: #fff;
+    text-align: left;
+  }
+  
+  /* Titles */
+  .auth-title {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 15px;
+  }
+  
+  /* Password Input */
+  .password-container {
+    position: relative;
+  }
+  
+  .toggle-password {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+  }
+  
+  /* Links */
+  .forgot-password {
+    color: #b8860b;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  
+  .privacy-link, .terms-link {
+    color: #b8860b;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  
+  .privacy-link:hover, .terms-link:hover {
+    text-decoration: underline;
+  }
+  
+  /* Buttons */
+  .login-btn, .register-btn {
+    background-color: #b8860b !important;
+    color: white !important;
+    margin-top: 15px;
+    width: auto;
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .auth-container {
+      flex-direction: column;
+    }
+    .auth-box {
+      width: 90%;
+      margin-bottom: 20px;
+    }
+  }
+  

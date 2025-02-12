@@ -22,7 +22,8 @@ const Contactus = () => {
     },
     validationSchema: Yup.object({
       Name: Yup.string().required("Name is required"),
-      Email: Yup.string().email("Invalid email").required("Email is required"),
+      Email: Yup.string().email("Invalid email").required("Email is required")
+        .matches(/^[^@]+@[^@]+\.[^@]+$/, "Email must contain '@' and '.'"),
       Subject: Yup.string().required("Subject is required"),
       Message: Yup.string(),
     }),
@@ -40,11 +41,15 @@ const Contactus = () => {
           console.log(showToast,"111")
           resetForm();
         } else {
-          alert("Failed to send message.");
+        //   alert("Failed to send message.");
+        showToast.error("Failed to sent message!");
+
         }
       } catch (error) {
         console.error("API Error:", error);
-        alert("Something went wrong. Please try again later.");
+        // alert("Something went wrong. Please try again later.");
+        showToast.warning("something went wrong. Please try again later!");
+
       } finally {
         setSubmitting(false);
       }

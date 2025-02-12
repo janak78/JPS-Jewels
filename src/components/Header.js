@@ -1,11 +1,59 @@
 import React, { useEffect, useState } from "react";
-import "./Header.css";
+import {
+  Drawer,
+  TextField,
+  Typography,
+  Button,
+  Badge,
+  Box,
+  ClickAwayListener,
+  Checkbox,
+  IconButton,
+  FormGroup,
+  InputAdornment,
+  FormControlLabel,
+} from "@mui/material";
 import logo from "../assets/images/logo.svg";
-import { Link, useLocation  } from "react-router-dom";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import CloseIcon from "@mui/icons-material/Close";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
+import { jwtDecode } from "jwt-decode";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import showToast from "../components/Toast/Toaster";
+import "./Header.css";
 
 const Header = () => {
+  const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const [open, setOpen] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [userName, setUserName] = useState(null);
+
+  const [cartopen, setCartOpen] = useState(false);
+  const cartCount = 3;
+
+  const checkUserToken = () => {
+    const token = localStorage.getItem("Token");
+    if (token) {
+      try {
+        const decoded = jwtDecode(token);
+        console.log(decoded, "decodedddddddddd"); // Decode JWT Token
+        setUserName(decoded.Username); // Store User Name
+      } catch (error) {
+        console.error("Error decoding token:", error);
+      }
+    }
+  };
+
+  useEffect(() => {
+    checkUserToken();
+  }, []);
 
   useEffect(() => {
     const handleResize = () => {
@@ -18,6 +66,58 @@ const Header = () => {
 
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
+  };
+
+  const formik = useFormik({
+    initialValues: {
+      Username: "",
+      UserPassword: "",
+    },
+    validateOnChange: false,
+    validateOnBlur: false,
+    validationSchema: Yup.object().shape({
+      Username: Yup.string().required("Email is required"),
+      UserPassword: Yup.string().required("Password is required"),
+    }),
+    onSubmit: (values) => {
+      handleSubmit(values);
+    },
+  });
+
+  const handleSubmit = async (values) => {
+    try {
+      //   setLoader(true);
+      const res = await axios.post(`http://localhost:5000/api/user/login`, {
+        ...values,
+      });
+
+      console.log(res, "resss");
+      if (res.data.statusCode === 200) {
+        localStorage.setItem("Token", res.data.token);
+        localStorage.setItem("UserId", res.data.user.UserId);
+        setUserName(res.data.user.Username);
+        showToast.success(res.data.message, {
+          autoClose: 3000,
+        });
+        formik.resetForm();
+        navigate("/");
+        setOpen(false);
+      } else if (res.data.statusCode === 201) {
+        showToast(res.data.message);
+      } else if (res.data.statusCode === 202) {
+        showToast(res.data.message);
+      } else if (res.data.statusCode === 204) {
+        showToast(res.data.message);
+      }
+    } catch (error) {
+      if (error.response) {
+        showToast.error(error.response?.data.message || "An error occurred");
+      } else {
+        showToast.error("Something went wrong. Please try again later.");
+      }
+    } finally {
+      //   setLoader(false);
+    }
   };
 
   const location = useLocation();
@@ -71,11 +171,205 @@ const Header = () => {
 
           {/* Cart Icon with Badge */}
           <div className="cart-icon-container">
-            <i className="fa-solid fa-cart-shopping icon"></i>
-            <span className="cart-badge">3</span> {/* Dynamic cart count */}
+            <Button
+              color="inherit"
+              onClick={() => setCartOpen(true)}
+              className="cart-button"
+            >
+              <Badge badgeContent={cartCount} color="error">
+                <ShoppingCartIcon fontSize="medium" />
+              </Badge>
+            </Button>
           </div>
+          <Drawer
+            anchor="right"
+            open={cartopen}
+            onClose={() => setCartOpen(false)}
+          >
+            <Box
+              sx={{
+                width: 350,
+                height: "100vh",
+                display: "flex",
+                flexDirection: "column",
+                padding: 2,
+                position: "relative",
+              }}
+            >
+              <IconButton
+                className="closeicon"
+                onClick={() => setCartOpen(false)}
+                sx={{ position: "absolute", top: 10, right: 10 }}
+              >
+                <CloseIcon />
+              </IconButton>
 
-          <i className="fa-regular fa-user icon"></i>
+              <Typography
+                variant="h6"
+                sx={{ marginBottom: 2, textAlign: "left" }}
+              >
+                CART
+              </Typography>
+              <Typography variant="body1" sx={{ textAlign: "left" }}>
+                Please log in to see cart details.
+              </Typography>
+
+              <Button
+                className="checkoutbutton"
+                variant="contained"
+                sx={{
+                  marginTop: "auto",
+                  backgroundColor: "#C9A236",
+                }}
+              >
+                Checkout
+              </Button>
+            </Box>
+          </Drawer>
+
+          {/* <i className="fa-regular fa-user icon"></i>
+           */}
+          <ClickAwayListener onClickAway={() => setOpen(false)}>
+            <div className="user-login-container">
+              {/* User Icon */}
+              <PersonOutlineIcon
+                className="user-icon"
+                onClick={() => setOpen(!open)}
+              />
+
+              {/* Dropdown Login Form */}
+              {open && (
+                <div className="login-dropdown">
+                  {userName ? (
+                    <div className="user-info-container">
+                      <p className="user-welcome-text">Welcome, {userName}</p>
+
+                      <p
+                        className="forgot-signup"
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-around",
+                        }}
+                      >
+                        <span
+                          onClick={() => {
+                            navigate("/login");
+                            localStorage.clear();
+                            formik.resetForm();
+                            setUserName(null);
+                            setOpen(false);
+                          }}
+                          style={{ cursor: "pointer" }}
+                          className="logout-text"
+                        >
+                          Log out
+                        </span>
+                        <span
+                          onClick={() => {
+                            navigate("/signup");
+                            localStorage.clear();
+                            formik.resetForm();
+                            setUserName(null);
+                            setOpen(false);
+                          }}
+                          style={{ cursor: "pointer" }}
+                          className="logout-text"
+                        >
+                          Sign Up
+                        </span>
+                      </p>
+                    </div>
+                  ) : (
+                    <form onSubmit={formik.handleSubmit}>
+                      <FormGroup
+                        className="text-boxes"
+                        style={{ width: "100%", marginTop: "24px" }}
+                      >
+                        <TextField
+                          value={formik.values.Username}
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          error={
+                            formik.touched.Username &&
+                            Boolean(formik.errors.Username)
+                          }
+                          helperText={
+                            formik.touched.Username && formik.errors.Username
+                          }
+                          name="Username"
+                          label="Username"
+                          type="text"
+                          className="text-blue-color w-100"
+                          fullWidth
+                        />
+                      </FormGroup>
+
+                      <div className="password-container">
+                        <TextField
+                          value={formik.values.UserPassword}
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          name="UserPassword"
+                          label="Password"
+                          type={showPassword ? "text" : "password"}
+                          fullWidth
+                          margin="normal"
+                          InputProps={{
+                            endAdornment: (
+                              <InputAdornment position="end">
+                                <IconButton
+                                  aria-label="toggle password visibility"
+                                  onClick={() => setShowPassword(!showPassword)}
+                                  edge="end"
+                                >
+                                  {showPassword ? (
+                                    <VisibilityOffIcon />
+                                  ) : (
+                                    <VisibilityIcon />
+                                  )}
+                                </IconButton>
+                              </InputAdornment>
+                            ),
+                          }}
+                          error={
+                            formik.touched.UserPassword &&
+                            Boolean(formik.errors.UserPassword)
+                          }
+                          helperText={
+                            formik.touched.UserPassword &&
+                            formik.errors.UserPassword
+                          }
+                        />
+                      </div>
+
+                      <p className="forgot-signup">
+                        <span
+                          onClick={() => {
+                            navigate("/login");
+                            localStorage.clear();
+                            formik.resetForm();
+                            setOpen(false);
+                          }}
+                          style={{ cursor: "pointer" }}
+                        >
+                          Log out
+                        </span>{" "}
+                        <span className="signup-link-signup">Sign up</span>
+                      </p>
+
+                      <Button
+                        type="submit"
+                        variant="contained"
+                        className="login-btn-login"
+                      >
+                        Login
+                      </Button>
+                    </form>
+                  )}
+                </div>
+              )}
+            </div>
+          </ClickAwayListener>
         </div>
 
         {/* Mobile Menu Toggle (Only Visible Below 768px) */}

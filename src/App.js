@@ -10,6 +10,8 @@ import Aboutus from './pages/Aboutus';
 import Contactus from './pages/Contactus';
 import Privacypolicy from './pages/privacypolicy/privacypolicy';
 import Termsofuse from './pages/Termsofuse/Termsofuse';
+import Login from './pages/login/login';
+import Signup from './pages/register/register';
 
 function App() {
   return (
@@ -21,6 +23,8 @@ function App() {
         <Route path="/contactus" element={<Contactus />} />
         <Route path="/privacypolicy" element={<Privacypolicy />} />
         <Route path="/termsofuse" element={<Termsofuse />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
       </Routes>
       <Toaster />
       <ToastContainer />
