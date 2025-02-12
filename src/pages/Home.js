@@ -30,6 +30,8 @@ import shop1 from "../assets/images/tripple-banner-img-2.webp";
 import shop2 from "../assets/images/tripple-banner-img-3.webp";
 import shop3 from "../assets/images/tripple-banner-img-1.webp";
 import "./Home.css";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 const images = [image1, image2, image3];
 
@@ -44,39 +46,46 @@ const Home = () => {
     return () => clearInterval(interval);
   }, []);
 
+  useEffect(() => {
+    AOS.init({
+      duration: 1000,
+      once: true,
+    });
+  }, []);
+
   return (
     <>
       <div className="hero border-1 pb-3">
-      <div className="card cardbackground text-white border-0">
-        {/* Image Slider */}
-        <img
-          className="card-img img-fluid"
-          src={images[currentIndex]}
-          alt="Slider"
-        />
+        <div className="card cardbackground text-white border-0">
+          {/* Image Slider */}
+          <img
+            className="card-img img-fluid"
+            src={images[currentIndex]}
+            alt="Slider"
+          />
 
-        {/* Overlay Content */}
-        <div className="card-img-overlay d-flex align-items-center">
-          <div className="cardtext-style">
-            <div className="slider-content">
-              <h2 className="timeBeuty">Timeless Beauty</h2>
+          {/* Overlay Content */}
+          <div className="card-img-overlay d-flex align-items-center">
+            <div className="cardtext-style">
+              <div className="slider-content">
+                <h2 className="timeBeuty">Timeless Beauty</h2>
 
-              <h3 className="timeBeuty">JEWELRY SETS</h3>
-              <p className="timeBeuty">GET UP TO 10% OFF</p>
+                <h3 className="timeBeuty">JEWELRY SETS</h3>
+                <p className="timeBeuty">GET UP TO 10% OFF</p>
 
-              <p className="brtag">
-                Sparkle and Save: Enjoy our stunning <br />
-                jewelry collection at discounted prices!
-              </p>
+                <p className="brtag">
+                  Sparkle and Save: Enjoy our stunning <br />
+                  jewelry collection at discounted prices!
+                </p>
 
-              <div className="btn-container">
-                <button className="cardshopnow">Shop Now</button>
+                <div className="btn-container">
+                  <button className="cardshopnow">Shop Now</button>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
       <div className="category-carousel">
         <div className="category-container">
           <div className="category-item">
@@ -115,41 +124,46 @@ const Home = () => {
       </div>
       <section class="collection-section">
         <h2 class="shop-by-brands-title">New Collection</h2>
-
         <div class="collection-grid">
           <div class="collection-item large">
-            <div class="curtain1">
+            <div data-aos="fade-right">
               <img src={curtain1} alt="Jewelry Model" />
             </div>
           </div>
 
           <div class="collection-item small">
-            <div>
-              <img src={curtain3} alt="Hand with Rings" />
-            </div>
-            <div class="collection-text">
-              <h3>Discover New Arrivals</h3>
-              <a href="#" class="discover-button">
-                Discover more
-              </a>
+            <div data-aos="fade-left">
+              <div>
+                <img src={curtain3} alt="Hand with Rings" />
+              </div>
+              <div class="collection-text">
+                <h3>Discover New Arrivals</h3>
+                <a href="#" class="discover-button">
+                  Discover more
+                </a>
+              </div>
             </div>
           </div>
 
           <div class="collection-item small">
-            <div class="curtain3">
-              <img src={curtain5} alt="Necklace Close-up" />
-            </div>
-            <div class="collection-text">
-              <h3>Jewelry Tells a Great Story</h3>
-              <a href="#" class="discover-button">
-                Discover more
-              </a>
+            <div data-aos="fade-right">
+              <div class="curtain3">
+                <img src={curtain5} alt="Necklace Close-up" />
+              </div>
+              <div class="collection-text">
+                <h3>Jewelry Tells a Great Story</h3>
+                <a href="#" class="discover-button">
+                  Discover more
+                </a>
+              </div>
             </div>
           </div>
 
           <div class="collection-item large">
             <div class="curtain5">
-              <img src={curtain2} alt="Woman with Necklace" />
+              <div data-aos="fade-left">
+                <img src={curtain2} alt="Woman with Necklace" />
+              </div>
             </div>
           </div>
         </div>

@@ -60,80 +60,78 @@
 /* Responsive Design */
 @media (max-width: 1024px) {
   .card-img {
-      height: 500px;
+    height: 500px;
   }
 
   .slider-content {
-      left: 8%;
+    left: 8%;
   }
 
   .timeBeuty {
-      font-size: 16px;
+    font-size: 16px;
   }
 
   .brtag {
-      font-size: 16px;
+    font-size: 16px;
   }
 
   .cardshopnow {
-      font-size: 18px;
-      padding: 8px 18px;
+    font-size: 18px;
+    padding: 8px 18px;
   }
 }
 
 @media (max-width: 768px) {
   .card-img {
-      height: 400px;
+    height: 400px;
   }
 
   .slider-content {
-      left: 5%;
-      max-width: 90%;
+    left: 5%;
+    max-width: 90%;
   }
 
   .timeBeuty {
-      font-size: 16px;
+    font-size: 16px;
   }
 
   .brtag {
-      font-size: 16px;
+    font-size: 16px;
   }
 
   .cardshopnow {
-      font-size: 16px;
-      padding: 7px 15px;
+    font-size: 16px;
+    padding: 7px 15px;
   }
 }
 
 @media (max-width: 480px) {
   .card-img {
-      height: 300px;
+    height: 300px;
   }
 
   .slider-content {
-      left: 5%;
-      max-width: 90%;
+    left: 5%;
+    max-width: 90%;
   }
 
   .timeBeuty {
-      font-size: 16px;
+    font-size: 16px;
   }
 
   .brtag {
-      font-size: 14px;
+    font-size: 14px;
   }
 
   .cardshopnow {
-      font-size: 14px;
-      padding: 6px 12px;
+    font-size: 14px;
+    padding: 6px 12px;
   }
 }
 
-
-
-
 /* Reset Defaults */
-ul, li {
+ul,
+li {
   margin: 0;
   padding: 0;
   list-style: none;
@@ -252,8 +250,6 @@ ul, li {
   }
 }
 
-
-
 /* // images shop below */
 
 /* Main Container */
@@ -337,8 +333,6 @@ ul, li {
     padding: 10px;
   }
 }
-
-
 
 /* watches section */
 
@@ -493,8 +487,6 @@ ul, li {
   }
 }
 
-
-
 /* 4-6 images ek sath */
 
 /* General Styling */
@@ -550,6 +542,12 @@ body {
   display: block;
   object-fit: cover;
   border-radius: 5px;
+}
+
+.collection-item img:hover {
+  transform: scale(1.05) rotate(1deg) !important;
+  transition: transform 2s cubic-bezier(0.19, 1, 0.22, 1);
+  cursor: pointer;
 }
 
 /* Large Items */
@@ -656,8 +654,6 @@ body {
   }
 }
 
-
-
 /* carousel */
 
 /* General Styles */
@@ -742,7 +738,8 @@ body {
 }
 
 /* Navigation Buttons */
-button.prev, button.next {
+button.prev,
+button.next {
   background: none;
   border: none;
   font-size: 24px;
@@ -780,7 +777,8 @@ button.next {
     padding: 15px;
   }
 
-  button.prev, button.next {
+  button.prev,
+  button.next {
     font-size: 20px;
     padding: 5px;
   }
@@ -809,9 +807,9 @@ button.next {
     font-size: 12px;
   }
 
-  button.prev, button.next {
+  button.prev,
+  button.next {
     font-size: 18px;
     padding: 5px;
   }
 }
-

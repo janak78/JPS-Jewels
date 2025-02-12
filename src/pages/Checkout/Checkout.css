@@ -1,0 +1,27 @@
+.unique-checkout-container {
+    display: flex;
+    justify-content: left !important;
+    align-items: left !important;
+    min-height: 50vh;
+    background-color: #ffffff;
+}
+
+.checkout-box {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    /* box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); */
+    width: 100%;
+    max-width: 90%;
+    text-align: left;
+}
+
+.submit-button {
+    background-color: #c8a254 !important;
+    color: white !important;
+    margin-top: 15px;
+}
+
+.submit-button:hover {
+    background-color: #b09245 !important;
+}

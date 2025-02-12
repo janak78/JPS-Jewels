@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./Aboutus.css";
 import about1 from "../assets/images/about-1.webp";
 import about2 from "../assets/images/about-2.webp";
@@ -20,9 +20,17 @@ import videoFile from "../assets/videos/video.mp4";
 import image1 from "../assets/images/slide-1-asset-2-1.webp";
 import image2 from "../assets/images/slide-1-asset-3.webp";
 import image3 from "../assets/images/slide-1-asset-4.webp";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 const Aboutus = () => {
   const [isOpen, setIsOpen] = useState(false);
+  useEffect(() => {
+    AOS.init({
+      duration: 1000,
+      once: true,
+    });
+  }, []);
 
   return (
     <>
@@ -39,10 +47,10 @@ const Aboutus = () => {
           handpicked for its timeless elegance and unparalleled quality.
         </p>
         <div className="image-gallery">
-          <div className="about1-img">
+          <div className="about1-img" data-aos="fade-right"> 
             <img src={about1} alt="Jewelry 1" />
           </div>
-          <div className="about2-img">
+          <div className="about2-img" data-aos="fade-left">
             <img src={about2} alt="Jewelry 2" />
             <img src={about4} alt="Jewelry 3" />
             <img src={about5} alt="Jewelry 4" />
@@ -112,11 +120,13 @@ const Aboutus = () => {
         <div className="jewelry-grid">
           {/* {/ First Image /} */}
           <div className="jewelry-item image image1">
-            <img
-              src={craftsmanshipImg}
-              alt="Jewelry 1"
-              className="jewelry-img"
-            />
+            <div data-aos="fade-right">
+              <img
+                src={craftsmanshipImg}
+                alt="Jewelry 1"
+                className="jewelry-img"
+              />
+            </div>
           </div>
           {/* {/ First Text - Appears on the Right /} */}
           <div className="jewelry-item text text1">
@@ -145,7 +155,13 @@ const Aboutus = () => {
           </div>
           {/* {/ Second Image /} */}
           <div className="jewelry-item image image2">
-            <img src={whyChooseUsImg} alt="Jewelry 2" className="jewelry-img" />
+            <div data-aos="fade-left">
+              <img
+                src={whyChooseUsImg}
+                alt="Jewelry 2"
+                className="jewelry-img"
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -204,10 +220,7 @@ const Aboutus = () => {
               craftsmanship is impeccable, and it adds a touch of elegance!"
             </p>
             <div className="testimonial-profile">
-              <img
-                src={image1}
-                alt="Emily R."
-              />
+              <img src={image1} alt="Emily R." />
               <div className="profile-info">
                 <h4>Emily R.</h4>
                 <div className="stars">
@@ -229,10 +242,7 @@ const Aboutus = () => {
               happier."
             </p>
             <div className="testimonial-profile">
-              <img
-                src={image2}
-                alt="=Jessey D."
-              />
+              <img src={image2} alt="=Jessey D." />
               <div className="profile-info">
                 <h4>Jessey D.</h4>
                 <div className="stars">
@@ -253,10 +263,7 @@ const Aboutus = () => {
               beautifully designed and feels like a unique piece of history."
             </p>
             <div className="testimonial-profile">
-              <img
-                src={image3}
-                alt="Sarah M."
-              />
+              <img src={image3} alt="Sarah M." />
               <div className="profile-info">
                 <h4>Sarah M.</h4>
                 <div className="stars">
