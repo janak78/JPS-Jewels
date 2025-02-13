@@ -58,7 +58,7 @@ const Header = () => {
   // Run cartcount() only after userId is set
   useEffect(() => {
     if (userId) {
-      cartcount();
+      cartcount(userId);
     }
   }, [userId]);
 
@@ -66,7 +66,7 @@ const Header = () => {
     checkUserToken();
   }, []);
 
-  const cartcount = async (values) => {
+  const cartcount = async (userId) => {
     try {
       //   setLoader(true);
       const res = await AxiosInstance.get(
@@ -144,7 +144,7 @@ const Header = () => {
           autoClose: 3000,
         });
         formik.resetForm();
-        cartcount();
+        cartcount(res.data.user.UserId);
         navigate("/");
         setOpen(false);
       } else if (res.data.statusCode === 201) {
