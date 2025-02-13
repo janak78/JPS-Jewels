@@ -13,6 +13,7 @@ import Termsofuse from './pages/Termsofuse/Termsofuse';
 import Checkout from './pages/Checkout/Checkout';
 import Login from './pages/login/login';
 import Signup from './pages/register/register';
+import Shop from './pages/shop/shop';
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/checkout" element={<Checkout />} />
+        <Route path="/shop" element={<Shop />} />
       </Routes>
       <Toaster />
       <ToastContainer />

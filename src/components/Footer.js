@@ -7,12 +7,11 @@ import {
   FaYoutube,
 } from "react-icons/fa";
 import { FaPhoneAlt, FaMapMarkerAlt } from "react-icons/fa";
-import logo from "../assets/images/logo.svg";
+import logo from "../assets/images/png.png";
 import { useNavigate } from "react-router-dom";
 import "./Footer.css";
 
 const Footer = () => {
-
   const navigate = useNavigate();
 
   return (
@@ -55,20 +54,32 @@ const Footer = () => {
         </div>
 
         {/* {/ Contact Section /} */}
-        <div className="footer-contact">
+        <div className="footer-section">
           <h3>CONTACT US</h3>
-          <div>
+          <div className="phoneno">
             <FaPhoneAlt />
-            <span>Call us 8 AM - 11 PM</span>
+            <div>
+              <span>Call us 8 AM - 11 PM</span>
+              <span>
+                <a href="tel:+919825971176" className="note">
+                  +91 9825971176
+                </a>
+              </span>
+            </div>
           </div>
-          <div>
-            <span>+91 9825971176</span>
-          </div>
-          <div>
+          <div className="addresssec">
             <FaMapMarkerAlt />
             <span>
-              315, Shashvat Apartment, <br></br>Pipla Sheri, Mahidharpura,
-              <br></br> Surat - 395003
+              <a
+                href="https://www.google.com/maps/search/?q=315+Shashvat+Apartment,+Pipla+Sheri,+Mahidharpura,+Surat+-+395003"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="note"
+              >
+                315, Shashvat Apartment, <br />
+                Pipla Sheri, Mahidharpura, <br />
+                Surat - 395003
+              </a>
             </span>
           </div>
         </div>
@@ -76,32 +87,44 @@ const Footer = () => {
 
       {/* {/ Footer Bottom /} */}
       <div className="fm">
-      <div class="footermain">
-        <div className="footer-bottom">
-          Copyright © 2025 JPS Jewels. All Rights Reserved
+        <div class="footermain">
+          <div className="footer-bottom">
+            Copyright © 2025 JPS Jewels. All Rights Reserved
+          </div>
+          <div className="social-icons">
+            <a href="#">
+              <FaFacebookF />
+            </a>
+            <a href="#">
+              <FaInstagram />
+            </a>
+            <a href="#">
+              <FaTelegram />
+            </a>
+            <a href="#">
+              <FaTwitter />
+            </a>
+            <a href="#">
+              <FaYoutube />
+            </a>
+          </div>
+          <div class="pri-pol">
+            <div
+              className="footer-bottom"
+              style={{ cursor: "pointer" }}
+              onClick={() => navigate("/termsofuse")}
+            >
+              Terms of use
+            </div>
+            <div
+              className="footer-bottom"
+              style={{ cursor: "pointer" }}
+              onClick={() => navigate("/privacypolicy")}
+            >
+              Privacy Policy
+            </div>
+          </div>
         </div>
-        <div className="social-icons">
-          <a href="#">
-            <FaFacebookF />
-          </a>
-          <a href="#">
-            <FaInstagram />
-          </a>
-          <a href="#">
-            <FaTelegram />
-          </a>
-          <a href="#">
-            <FaTwitter />
-          </a>
-          <a href="#">
-            <FaYoutube />
-          </a>
-        </div>
-        <div class="pri-pol">
-          <div className="footer-bottom" style={{cursor:"pointer"}} onClick={() => navigate("/termsofuse")}>Terms of use</div>
-          <div className="footer-bottom" style={{cursor:"pointer"}} onClick={() => navigate("/privacypolicy")}>Privacy Policy</div>
-        </div>
-      </div>
       </div>
     </footer>
   );

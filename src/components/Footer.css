@@ -47,12 +47,12 @@
   .footer-logo {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: left;
     gap: 10px;
   }
   
   .footer-logo img {
-    width: 100px;
+    width: 150px;
   }
   
   .footer-description {
@@ -189,3 +189,37 @@
     height: 20px;
     object-fit: contain;
   }
+  .phoneno,
+  .addresssec {
+    display: flex;
+    align-items: center; /* Align icon and text */
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .phoneno div {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .phoneno span,
+  .addresssec span {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  
+  .footer-section svg {
+    color: #d4af37; /* Gold color */
+    font-size: 18px; /* Adjust icon size */
+  }
+  
+  /* ✅ Responsive Adjustments */
+  @media (max-width: 600px) {
+    .phoneno,
+    .addresssec {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+  }
+  

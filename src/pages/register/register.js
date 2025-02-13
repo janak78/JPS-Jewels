@@ -139,7 +139,7 @@ const RegistrationForm = () => {
   return (
     <Container maxWidth="md" className="form-container">
       <Typography variant="h4" className="form-title">
-        Registration Form
+        Register Your Self
       </Typography>
       <form
         onSubmit={(e) => {
@@ -456,8 +456,8 @@ const RegistrationForm = () => {
             fullWidth
           />
           {/* Register Button */}
-          <Grid item xs={12} className="btn-container">
-            <Button type="submit" variant="contained" color="primary" fullWidth>
+          <Grid item xs={12} className="btn-containermain">
+            <Button className="btn-container" type="submit" variant="contained" style={{backgroundColor:"orangered"}}>
               Register
             </Button>
           </Grid>

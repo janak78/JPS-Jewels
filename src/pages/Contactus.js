@@ -22,7 +22,9 @@ const Contactus = () => {
     },
     validationSchema: Yup.object({
       Name: Yup.string().required("Name is required"),
-      Email: Yup.string().email("Invalid email").required("Email is required")
+      Email: Yup.string()
+        .email("Invalid email")
+        .required("Email is required")
         .matches(/^[^@]+@[^@]+\.[^@]+$/, "Email must contain '@' and '.'"),
       Subject: Yup.string().required("Subject is required"),
       Message: Yup.string(),
@@ -34,22 +36,20 @@ const Contactus = () => {
           values,
           { headers: { "Content-Type": "application/json" } }
         );
-        console.log(response.data.statusCode,"response.data.statusCode")
+        console.log(response.data.statusCode, "response.data.statusCode");
         if (response.data.statusCode === 200) {
-        //   alert("Message sent successfully!");
+          //   alert("Message sent successfully!");
           showToast.success("Message sent successfully!");
-          console.log(showToast,"111")
+          console.log(showToast, "111");
           resetForm();
         } else {
-        //   alert("Failed to send message.");
-        showToast.error("Failed to sent message!");
-
+          //   alert("Failed to send message.");
+          showToast.error("Failed to sent message!");
         }
       } catch (error) {
         console.error("API Error:", error);
         // alert("Something went wrong. Please try again later.");
         showToast.warning("something went wrong. Please try again later!");
-
       } finally {
         setSubmitting(false);
       }
@@ -84,9 +84,15 @@ const Contactus = () => {
               <span className="icon">
                 📍 <strong>Address:</strong>
               </span>
-              <a href="#" className="note">
-                315, Shashvat Apartment, PiplaSheri, Mahidharpura, Surat -
-                395003
+              <a
+                href="https://www.google.com/maps/search/?q=315+Shashvat+Apartment,+Pipla+Sheri,+Mahidharpura,+Surat+-+395003"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="note"
+              >
+                315, Shashvat Apartment, <br />
+                Pipla Sheri, Mahidharpura, <br />
+                Surat - 395003
               </a>
             </div>
 
