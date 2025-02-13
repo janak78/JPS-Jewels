@@ -261,3 +261,16 @@ body {
   border: none !important;
   outline: none !important;
 }
+
+/* Responsive adjustments */
+@media (max-width: 500px) {
+  .cart-drawer {
+    width: 240px !important;
+  }
+}
+
+@media (max-width: 320px) {
+  .cart-drawer {
+    width: 200px !important;
+  }
+}

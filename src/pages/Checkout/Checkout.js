@@ -46,7 +46,7 @@ const Checkout = () => {
   return (
     <div className="unique-checkout-container w-100">
       {/* <Container maxWidth="sm" > */}
-      <Grid container spacing={3}>
+      <Grid container spacing={2}>
         <Grid item xs={12} md={6}>
           <Box className="checkout-box">
             <Typography variant="h5" gutterBottom>
@@ -213,8 +213,8 @@ const Checkout = () => {
             </Formik>
           </Box>
         </Grid>
-        <Grid item xs={12} md={6}>
-          <Paper className="order-summary" elevation={3}>
+        <Grid item xs={12} md={3} sx={{mx: 3}}>
+          {/* <Paper className="order-summary" elevation={3}>
             <Typography variant="h6" gutterBottom>
               Your Order
             </Typography>
@@ -228,7 +228,29 @@ const Checkout = () => {
                 </Box>
               </Box>
             ))}
-          </Paper>
+            
+          </Paper> */}
+          <div className="diamond-carddisplay">
+            <div className="diamond-item">
+              <div className="diamond-image">
+                <img alt="Diamond" />
+              </div>
+              <div className="diamond-details">
+                <p>
+                  <span>1</span> Carat
+                  <span> rbc</span>
+                  <span> d</span> /<span>vs1</span> Diamond -<span> g1a</span>
+                  <span>ex</span>
+                </p>
+                <div className="diamond-quantity">
+                  Quantity: <span>1</span>
+                  &nbsp;x&nbsp;
+                  <span>1223</span>
+                </div>
+                <p className="diamond-total">Item Total: 637378</p>
+              </div>
+            </div>
+          </div>
         </Grid>
       </Grid>
       {/* </Container> */}

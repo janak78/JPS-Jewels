@@ -171,22 +171,22 @@ const Header = () => {
 
           {/* Cart Icon with Badge */}
           <div className="cart-icon-container">
-            <Button
+            <IconButton
               color="inherit"
               onClick={() => setCartOpen(true)}
               className="cart-button"
             >
               <Badge badgeContent={cartCount} color="error">
-                <ShoppingCartIcon fontSize="medium" />
+                <ShoppingCartIcon fontSize="small" />
               </Badge>
-            </Button>
+            </IconButton>
           </div>
           <Drawer
             anchor="right"
             open={cartopen}
             onClose={() => setCartOpen(false)}
           >
-            <Box
+            <Box className="cart-drawer"
               sx={{
                 width: 350,
                 height: "100vh",

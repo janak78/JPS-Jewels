@@ -1,27 +1,69 @@
 .unique-checkout-container {
-    display: flex;
-    justify-content: left !important;
-    align-items: left !important;
-    min-height: 50vh;
-    background-color: #ffffff;
+  display: flex;
+  justify-content: left !important;
+  align-items: left !important;
+  min-height: 50vh;
+  background-color: #ffffff;
 }
 
 .checkout-box {
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    /* box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); */
-    width: 100%;
-    max-width: 90%;
-    text-align: left;
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  /* box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); */
+  width: 100%;
+  max-width: 90%;
+  text-align: left;
 }
 
 .submit-button {
-    background-color: #c8a254 !important;
-    color: white !important;
-    margin-top: 15px;
+  background-color: #c8a254 !important;
+  color: white !important;
+  margin-top: 15px;
 }
 
 .submit-button:hover {
-    background-color: #b09245 !important;
+  background-color: #b09245 !important;
+}
+
+.diamond-item {
+  display: flex;
+  margin-bottom: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px;
+  align-items: center;
+}
+
+.diamond-image {
+  margin-right: 10px;
+}
+
+.diamond-image img {
+  width: 60px;
+  border-radius: 5px;
+}
+
+.diamond-details p {
+  margin: 5px 0;
+  font-size: 14px;
+  color: #333;
+}
+
+.diamond-quantity {
+  display: flex;
+  font-size: 14px;
+  color: #555;
+}
+
+.diamond-total {
+  font-weight: bold;
+  text-align: left;
+}
+
+.diamond-carddisplay {
+  height: 100%;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  margin-top: 25px;
 }
