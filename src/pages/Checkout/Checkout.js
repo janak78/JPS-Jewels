@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import {
   Container,
   TextField,
@@ -10,37 +11,62 @@ import {
   Paper,
 } from "@mui/material";
 import { Formik, Form, Field } from "formik";
+import AxiosInstance from "../../Axiosinstance";
 import * as Yup from "yup";
 import "./Checkout.css";
 
 const Checkout = () => {
+  const userName = useSelector((state) => state.auth.Username);
+  const cartData = useSelector((state) => state.cart.cartData);
+
   const initialValues = {
-    email: "",
-    country: "Bahamas",
-    firstName: "",
-    lastName: "",
-    address: "",
-    city: "",
-    state: "",
-    pinCode: "",
-    phone: "",
+    ContactEmail: "",
+    Country: "Bahamas",
+    FirstName: "",
+    LastName: "",
+    Appartment: "",
+    City: "",
+    State: "",
+    PinCode: "",
+    Phone: "",
   };
 
   const validationSchema = Yup.object({
-    email: Yup.string().email("Invalid email").required("Required"),
-    firstName: Yup.string().required("Required"),
-    lastName: Yup.string().required("Required"),
-    address: Yup.string().required("Required"),
-    city: Yup.string().required("Required"),
-    state: Yup.string().required("Required"),
-    pinCode: Yup.string().required("Required"),
-    phone: Yup.string()
+    ContactEmail: Yup.string().email("Invalid email").required("Required"),
+    FirstName: Yup.string().required("Required"),
+    LastName: Yup.string().required("Required"),
+    Appartment: Yup.string().required("Required"),
+    City: Yup.string().required("Required"),
+    State: Yup.string().required("Required"),
+    PinCode: Yup.string().required("Required"),
+    Phone: Yup.string()
       .matches(/^[0-9]{10}$/, "Invalid phone number")
       .notRequired(),
   });
 
-  const handleSubmit = (values) => {
-    console.log("Form Submitted:", values);
+  const handleSubmit = async (values, { setSubmitting }) => {
+    try {
+      const UserId = "your_user_id"; // Replace with the actual user ID
+      const response = await AxiosInstance.post(
+        `http://localhost:5000/api/billing/addbilling?UserId=${localStorage.getItem(
+          "UserId"
+        )}`, // Replace with your actual API URL
+        values
+      );
+
+      console.log(response, "responseresponseeeeeeeeeeeeeeeeeeee");
+
+      if (response.data.statusCode === 200) {
+        alert("Order placed successfully!"); // Redirect to confirmation page
+      } else {
+        alert(response.data.message);
+      }
+    } catch (error) {
+      console.error("Error placing order:", error);
+      alert("Something went wrong. Please try again later.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -67,12 +93,13 @@ const Checkout = () => {
                   <Field
                     as={TextField}
                     fullWidth
+                    value={values.ContactEmail}
                     label="Email"
-                    name="email"
+                    name="ContactEmail"
                     variant="outlined"
                     margin="normal"
-                    error={touched.email && Boolean(errors.email)}
-                    helperText={touched.email && errors.email}
+                    error={touched.ContactEmail && Boolean(errors.ContactEmail)}
+                    helperText={touched.ContactEmail && errors.ContactEmail}
                     onChange={handleChange}
                   />
 
@@ -83,9 +110,10 @@ const Checkout = () => {
                   <Field
                     as={TextField}
                     select
+                    value={values.Country}
                     fullWidth
                     label="Country"
-                    name="country"
+                    name="Country"
                     variant="outlined"
                     margin="normal"
                     onChange={handleChange}
@@ -100,11 +128,12 @@ const Checkout = () => {
                       <Field
                         as={TextField}
                         fullWidth
+                        value={values.FirstName}
                         label="First Name"
-                        name="firstName"
+                        name="FirstName"
                         variant="outlined"
-                        error={touched.firstName && Boolean(errors.firstName)}
-                        helperText={touched.firstName && errors.firstName}
+                        error={touched.FirstName && Boolean(errors.FirstName)}
+                        helperText={touched.FirstName && errors.FirstName}
                         onChange={handleChange}
                       />
                     </Grid>
@@ -112,11 +141,12 @@ const Checkout = () => {
                       <Field
                         as={TextField}
                         fullWidth
+                        value={values.LastName}
                         label="Last Name"
-                        name="lastName"
+                        name="LastName"
                         variant="outlined"
-                        error={touched.lastName && Boolean(errors.lastName)}
-                        helperText={touched.lastName && errors.lastName}
+                        error={touched.LastName && Boolean(errors.LastName)}
+                        helperText={touched.LastName && errors.LastName}
                         onChange={handleChange}
                       />
                     </Grid>
@@ -125,12 +155,13 @@ const Checkout = () => {
                   <Field
                     as={TextField}
                     fullWidth
+                    value={values.Appartment}
                     label="Address"
-                    name="address"
+                    name="Appartment"
                     variant="outlined"
                     margin="normal"
-                    error={touched.address && Boolean(errors.address)}
-                    helperText={touched.address && errors.address}
+                    error={touched.Appartment && Boolean(errors.Appartment)}
+                    helperText={touched.Appartment && errors.Appartment}
                     onChange={handleChange}
                   />
 
@@ -139,11 +170,12 @@ const Checkout = () => {
                       <Field
                         as={TextField}
                         fullWidth
+                        value={values.City}
                         label="City"
-                        name="city"
+                        name="City"
                         variant="outlined"
-                        error={touched.city && Boolean(errors.city)}
-                        helperText={touched.city && errors.city}
+                        error={touched.City && Boolean(errors.City)}
+                        helperText={touched.City && errors.City}
                         onChange={handleChange}
                       />
                     </Grid>
@@ -151,11 +183,12 @@ const Checkout = () => {
                       <Field
                         as={TextField}
                         fullWidth
+                        value={values.State}
                         label="State"
-                        name="state"
+                        name="State"
                         variant="outlined"
-                        error={touched.state && Boolean(errors.state)}
-                        helperText={touched.state && errors.state}
+                        error={touched.State && Boolean(errors.State)}
+                        helperText={touched.State && errors.State}
                         onChange={handleChange}
                       />
                     </Grid>
@@ -166,11 +199,12 @@ const Checkout = () => {
                       <Field
                         as={TextField}
                         fullWidth
+                        value={values.PinCode}
                         label="Pin Code"
-                        name="pinCode"
+                        name="PinCode"
                         variant="outlined"
-                        error={touched.pinCode && Boolean(errors.pinCode)}
-                        helperText={touched.pinCode && errors.pinCode}
+                        error={touched.PinCode && Boolean(errors.PinCode)}
+                        helperText={touched.PinCode && errors.PinCode}
                         onChange={handleChange}
                       />
                     </Grid>
@@ -178,11 +212,12 @@ const Checkout = () => {
                       <Field
                         as={TextField}
                         fullWidth
+                        value={values.Phone}
                         label="Phone (Optional)"
-                        name="phone"
+                        name="Phone"
                         variant="outlined"
-                        error={touched.phone && Boolean(errors.phone)}
-                        helperText={touched.phone && errors.phone}
+                        error={touched.Phone && Boolean(errors.Phone)}
+                        helperText={touched.Phone && errors.Phone}
                         onChange={handleChange}
                       />
                     </Grid>
@@ -213,8 +248,9 @@ const Checkout = () => {
             </Formik>
           </Box>
         </Grid>
-        <Grid item xs={12} md={3} sx={{mx: 3}}>
-          {/* <Paper className="order-summary" elevation={3}>
+        <Grid item xs={12} md={3} sx={{ mx: 3 }}>
+          <Box className="cart-boxs">
+            {/* <Paper className="order-summary" elevation={3}>
             <Typography variant="h6" gutterBottom>
               Your Order
             </Typography>
@@ -230,27 +266,64 @@ const Checkout = () => {
             ))}
             
           </Paper> */}
-          <div className="diamond-carddisplay">
-            <div className="diamond-item">
-              <div className="diamond-image">
-                <img alt="Diamond" />
-              </div>
-              <div className="diamond-details">
-                <p>
-                  <span>1</span> Carat
-                  <span> rbc</span>
-                  <span> d</span> /<span>vs1</span> Diamond -<span> g1a</span>
-                  <span>ex</span>
-                </p>
-                <div className="diamond-quantity">
-                  Quantity: <span>1</span>
-                  &nbsp;x&nbsp;
-                  <span>1223</span>
-                </div>
-                <p className="diamond-total">Item Total: 637378</p>
-              </div>
-            </div>
-          </div>
+            {userName ? (
+              cartData && cartData.length > 0 ? (
+                cartData.map((item, index) => (
+                  <div
+                    style={{
+                      marginBottom: "20px",
+                      border: "1px solid #ddd",
+                      borderRadius: "10px",
+                      padding: "10px",
+                    }}
+                  >
+                    <div
+                      className="widget_shopping_cart_content"
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        alignItems: "center",
+                        height:"70px"
+                      }}
+                    >
+                      <div>
+                        <img
+                          className="ImagessElement"
+                          src={item?.diamondDetails?.Image}
+                          // alt={diamondType}
+                          style={{
+                            width: "70px",
+                            height: "auto",
+                            borderRadius: "10px",
+                          }}
+                        />
+                      </div>
+                      <div style={{ marginLeft: "15px" }}>
+                        <span style={{ marginBottom: "0" }}>
+                          <span>{item?.diamondDetails?.Carats}</span> Carat{" "}
+                          <span>{item?.diamondDetails?.Shape}</span>
+                          <span>{item?.diamondDetails?.Colo}</span> /
+                          <span>{item?.diamondDetails?.Clarity}</span> -{" "}
+                          <span>{item?.diamondDetails?.Lab}</span>{" "}
+                          <span>{item?.diamondDetails?.Cut}</span>
+                        </span>
+                        <div style={{ display: "flex", marginTop: "0" }}>
+                          <span>
+                            Quantity: <span>{item?.Quantity}</span> x{" "}
+                          </span>
+                          &nbsp; {item?.diamondDetails?.Price}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <p>No items in the cart</p>
+              )
+            ) : (
+              <p>Please Log In To See Cart Details</p>
+            )}
+          </Box>
         </Grid>
       </Grid>
       {/* </Container> */}

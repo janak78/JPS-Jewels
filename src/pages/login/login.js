@@ -1,4 +1,7 @@
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { login } from "../../redux/authSlice";
+import { fetchCartCount } from "../../redux/cartSlice";
 import {
   TextField,
   Button,
@@ -19,6 +22,7 @@ import showToast from "../../components/Toast/Toaster";
 import "./login.css";
 
 const Login = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
 
@@ -50,12 +54,15 @@ const Login = () => {
 
       console.log(res,"resss")
       if (res.data.statusCode === 200) {
-        localStorage.setItem("Token", res.data.token);
-        localStorage.setItem("UserId", res.data.user.UserId);
-        showToast.success(res.data.message, {
-          autoClose: 3000,
-        });
-        navigate("/")
+        const { token, user } = res.data;
+
+      dispatch(login({ user, token })); // Store user and token in Redux
+      dispatch(fetchCartCount(user.UserId)); // Fetch cart count after login
+
+      showToast.success(res.data.message, { autoClose: 3000 });
+
+      formik.resetForm();
+      navigate("/");
       } else if (res.data.statusCode === 201) {
         showToast(res.data.message);
       } else if (res.data.statusCode === 202) {

@@ -75,7 +75,7 @@ const sendEmail = async (toEmail, subject, body) => {
   try {
     const mailOptions = {
       from: "jpsjewels@gmail.com", // Sender's email
-      to: toEmail, // Recipient's email
+      to: [toEmail,"mitmangukiya192@gmail.com"], // Recipient's email
       subject: subject,
       text: body, // Plain text body
       html: `<p>${body}</p>`, // HTML body
@@ -105,20 +105,23 @@ const addBilling = async (data, UserId) => {
         message: "No cart details found for the user.",
       };
     }
+    console.log(cartDetails,"cartDetails");
 
     // Fetch diamond details
     const diamDetails = await Promise.all(
       cartDetails.map(async (cartItem) => {
         const diamond = await userSchema
-          .findOne({ SKU: cartItem.SKU, IsDelte: false })
+          .findOne({ SKU: cartItem.SKU, IsDelete: false })
           .lean();
         return {
           ...cartItem,
           ...diamond,
-          Amount: cartItem.Quantity * diamond.Price,
+          Amount: cartItem?.Quantity * diamond?.Price,
         };
       })
     );
+
+    console.log(diamDetails,"ddd")
 
     // Add billing details for each item
     const billingEntries = diamDetails.map((item) => ({
@@ -128,7 +131,7 @@ const addBilling = async (data, UserId) => {
       SKU: item.SKU,
       Quantity: item.Quantity,
       Image: item.Image,
-      Price: item.Price,
+      Price: item?.Price,
       Carats: item.Carats,
       Shape: item.Shape,
       Color: item.Color,
@@ -139,6 +142,8 @@ const addBilling = async (data, UserId) => {
       createdAt: timestamp,
       updatedAt: timestamp,
     }));
+
+    console.log(billingEntries,"be")
 
     // Save all billing entries
     const newBillings = await Billing.insertMany(billingEntries);
@@ -281,10 +286,8 @@ const addBilling = async (data, UserId) => {
                           Color: ${item.Color}, Clarity: ${
                           item.Clarity
                         }, Lab: ${item.Lab}, Cut: ${item.Cut}<br>
-                          Quantity: ${item.Quantity} x $${item.Price.toFixed(
-                          2
-                        )}<br>
-                          <strong>Total: $${item.Amount.toFixed(2)}</strong>
+                          Quantity: ${item.Quantity} x $${item.Price}<br>
+                          <strong>Total: $${item.Amount}</strong>
                         </li>
                       `
                       )

@@ -1,4 +1,7 @@
 import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { addToCart } from "../../redux/cartSlice";
+import { fetchCartCount } from "../../redux/cartSlice";
 import axios from "axios";
 import { Star, StarBorder } from "@mui/icons-material";
 import DiamondLoader from "../../components/Loader/loader"; // Import Loader
@@ -7,7 +10,31 @@ import { Button, Menu, MenuItem, IconButton, Typography } from "@mui/material";
 import ArrowLeftIcon from "@mui/icons-material/ArrowLeft";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 
-const DiamondsGrid = () => {
+const DiamondsGrid = ({ diamond }) => {
+  console.log(diamond, "diamond");
+  const dispatch = useDispatch();
+  const userId = useSelector((state) => state.auth.user);
+
+  useEffect(() => {
+    if (userId) {
+      dispatch(fetchCartCount(userId)); // Fetch cart count when page loads
+    }
+  }, [userId]); // Run when userId is available
+
+  const handleAddToCart = (diamond) => {
+    if (!userId) {
+      alert("Please log in to add items to the cart.");
+      return;
+    }
+
+    const cartItem = {
+      SKU: diamond.SKU,
+      Quantity: 1, // You can change this to allow quantity selection
+    };
+
+    dispatch(addToCart(cartItem, userId)); // Dispatch action
+  };
+
   const [diamonds, setDiamonds] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -22,6 +49,7 @@ const DiamondsGrid = () => {
         "http://localhost:5000/api/stock/data/page",
         { params: { pageSize: itemsPerPage, pageNumber: currentPage } }
       );
+      console.log(response, "resress");
 
       if (response.data.result.statusCode === 200) {
         setDiamonds(response.data.result.data);
@@ -91,7 +119,10 @@ const DiamondsGrid = () => {
                 )}
               </div>
               <p className="price">${diamond.Price.toFixed(2)}</p>
-              <span className="add-to-cart">
+              <span
+                className="add-to-cart"
+                onClick={() => handleAddToCart(diamond)}
+              >
                 Add to cart <span className="arrowbtn">→</span>
               </span>
             </div>

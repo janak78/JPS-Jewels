@@ -3,6 +3,7 @@
   justify-content: left !important;
   align-items: left !important;
   min-height: 50vh;
+  padding-top: 30px !important;
   background-color: #ffffff;
 }
 
@@ -66,4 +67,8 @@
   overflow-y: auto;
   scrollbar-width: thin;
   margin-top: 25px;
+}
+
+.cart-boxs{
+  padding-top: 30px;
 }
