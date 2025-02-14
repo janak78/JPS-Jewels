@@ -1,0 +1,48 @@
+.loader-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: rgba(255, 255, 255, 0.8);
+  }
+  
+  .diamond {
+    position: relative;
+    width: 50px;
+    height: 50px;
+    animation: shimmer 1.5s infinite alternate;
+  }
+  
+  .diamond .top {
+    width: 0;
+    height: 0;
+    border-left: 25px solid transparent;
+    border-right: 25px solid transparent;
+    border-bottom: 40px solid #C9A236; /* Gold Color */
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+  
+  .diamond .bottom {
+    width: 0;
+    height: 0;
+    border-left: 25px solid transparent;
+    border-right: 25px solid transparent;
+    border-top: 40px solid #C9A236;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+  }
+  
+  @keyframes shimmer {
+    0% {
+      transform: scale(1);
+      filter: brightness(1);
+    }
+    100% {
+      transform: scale(1.1);
+      filter: brightness(1.5);
+    }
+  }
+  

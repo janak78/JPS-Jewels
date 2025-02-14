@@ -36,62 +36,63 @@ const RegistrationForm = () => {
       LineofBusiness: "",
       PreferredContactDetails: "",
     },
-    validateOnChange: false,
-    validateOnBlur: false,
     validationSchema: Yup.object().shape({
       Salutation: Yup.string().required("Salutation is required"),
-  FirstName: Yup.string()
-    .matches(/^[A-Za-z]+$/, "First name can only contain letters")
-    .required("First name is required"),
-  LastName: Yup.string()
-    .matches(/^[A-Za-z]+$/, "Last name can only contain letters")
-    .required("Last name is required"),
-  CompanyName: Yup.string().required("Company name is required"),
-  Designation: Yup.string().required("Designation is required"),
-  RegisterType: Yup.string().required("Register type is required"),
-  City: Yup.string().required("City is required"),
-  State: Yup.string().required("State is required"),
-  Country: Yup.string().notOneOf(["Select a country"], "Please select a valid country").required("Country is required"),
-  Pincode: Yup.string()
-    .matches(/^\d{5,6}$/, "Pincode must be 5-6 digits")
-    .required("Pincode is required"),
-  CityPhoneCode: Yup.string()
-    .matches(/^\d{1,5}$/, "City phone code must be 1-5 digits")
-    .required("City phone code is required"),
-  PhoneNo: Yup.string()
-    .matches(/^\d{7,15}$/, "Phone number must be 7-15 digits")
-    .required("Phone number is required"),
-  PrimaryEmail: Yup.string()
-    .email("Invalid email format")
-    .required("Primary email is required"),
-  SecondaryEmail: Yup.string()
-    .email("Invalid email format")
-    .nullable(), // Optional field, so it can be null or empty
-  Website: Yup.string()
-    .matches(
-      /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/,
-      "Enter a valid website URL"
-    )
-    .nullable(), // Optional
-  Username: Yup.string()
-    .min(3, "Username must be at least 3 characters")
-    .max(20, "Username must not exceed 20 characters")
-    .required("Username is required"),
-  UserPassword: Yup.string()
-    .min(6, "Password must be at least 6 characters")
-    .max(20, "Password must not exceed 20 characters")
-    .matches(/^(?=.*[A-Z])(?=.*[0-9])/, "Password must contain at least one uppercase letter and one number")
-    .required("Password is required"),
-  ConfirmPassword: Yup.string()
-    .oneOf([Yup.ref("UserPassword")], "Passwords must match")
-    .required("Confirm Password is required"),
-  LineofBusiness: Yup.string().required("Line of business is required"),
-  PreferredContactDetails: Yup.string()
-    .matches(
-      /^([\w\-.]+@([\w-]+\.)+[\w-]{2,4},?\s*)*([\d\s\-\(\)]{7,15},?\s*)*$/,
-      "Provide valid contact details (email or phone)"
-    )
-    .nullable(),
+      FirstName: Yup.string()
+        .matches(/^[A-Za-z]+$/, "First name can only contain letters")
+        .required("First name is required"),
+      LastName: Yup.string()
+        .matches(/^[A-Za-z]+$/, "Last name can only contain letters")
+        .required("Last name is required"),
+      CompanyName: Yup.string().required("Company name is required"),
+      Designation: Yup.string().required("Designation is required"),
+      RegisterType: Yup.string().required("Register type is required"),
+      City: Yup.string().required("City is required"),
+      State: Yup.string().required("State is required"),
+      Country: Yup.string()
+        .notOneOf(["Select a country"], "Please select a valid country")
+        .required("Country is required"),
+      Pincode: Yup.string()
+        .matches(/^\d{5,6}$/, "Pincode must be 5-6 digits")
+        .required("Pincode is required"),
+      CityPhoneCode: Yup.string()
+        .matches(/^\d{1,5}$/, "City phone code must be 1-5 digits")
+        .required("City phone code is required"),
+      PhoneNo: Yup.string()
+        .matches(/^\d{7,15}$/, "Phone number must be 7-15 digits")
+        .required("Phone number is required"),
+      PrimaryEmail: Yup.string()
+        .email("Invalid email format")
+        .required("Primary email is required"),
+      SecondaryEmail: Yup.string().email("Invalid email format").nullable(), // Optional field, so it can be null or empty
+      Website: Yup.string()
+        .matches(
+          /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/,
+          "Enter a valid website URL"
+        )
+        .nullable(), // Optional
+      Username: Yup.string()
+        .min(3, "Username must be at least 3 characters")
+        .max(20, "Username must not exceed 20 characters")
+        .required("Username is required"),
+      UserPassword: Yup.string()
+        .min(6, "Password must be at least 6 characters")
+        .max(20, "Password must not exceed 20 characters")
+        .matches(
+          /^(?=.*[A-Z])(?=.*[0-9])/,
+          "Password must contain at least one uppercase letter and one number"
+        )
+        .required("Password is required"),
+      ConfirmPassword: Yup.string()
+        .oneOf([Yup.ref("UserPassword")], "Passwords must match")
+        .required("Confirm Password is required"),
+      LineofBusiness: Yup.string().required("Line of business is required"),
+      PreferredContactDetails: Yup.string()
+        .matches(
+          /^([\w\-.]+@([\w-]+\.)+[\w-]{2,4},?\s*)*([\d\s\-\(\)]{7,15},?\s*)*$/,
+          "Provide valid contact details (email or phone)"
+        )
+        .nullable(),
     }),
     onSubmit: (values) => {
       console.log("Submitting form with values:", values); // Debugging log
@@ -139,7 +140,7 @@ const RegistrationForm = () => {
   return (
     <Container maxWidth="md" className="form-container">
       <Typography variant="h4" className="form-title">
-        Registration Form
+        Register Your Self
       </Typography>
       <form
         onSubmit={(e) => {
@@ -167,7 +168,6 @@ const RegistrationForm = () => {
           />
           <TextInput
             label="First Name *"
-            required
             value={formik.values.FirstName}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
@@ -180,7 +180,6 @@ const RegistrationForm = () => {
           />
           <TextInput
             label="Last Name *"
-            required
             value={formik.values.LastName}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
@@ -193,7 +192,7 @@ const RegistrationForm = () => {
           />
           {/* Row 2 */}
           <TextInput
-            label="Company Name"
+            label="Company Name *"
             value={formik.values.CompanyName}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
@@ -207,7 +206,7 @@ const RegistrationForm = () => {
             fullWidth
           />
           <TextInput
-            label="Designation"
+            label="Designation *"
             value={formik.values.Designation}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
@@ -221,7 +220,7 @@ const RegistrationForm = () => {
             fullWidth
           />
           <SelectInput
-            label="Register Type"
+            label="Register Type *"
             options={["Website Visit", "Referral", "Advertisement"]}
             value={formik.values.RegisterType}
             onChange={formik.handleChange}
@@ -240,7 +239,6 @@ const RegistrationForm = () => {
           {/* Row 3 */}
           <TextInput
             label="City *"
-            required
             value={formik.values.City}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
@@ -253,7 +251,6 @@ const RegistrationForm = () => {
           />
           <TextInput
             label="State *"
-            required
             value={formik.values.State}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
@@ -289,7 +286,6 @@ const RegistrationForm = () => {
             type="text"
             className="text-blue-color w-100"
             fullWidth
-            required
           />
           <TextInput
             label="City Phone Code *"
@@ -307,7 +303,6 @@ const RegistrationForm = () => {
             type="text"
             className="text-blue-color w-100"
             fullWidth
-            required
           />
           <TextInput
             label="Phone No *"
@@ -320,7 +315,6 @@ const RegistrationForm = () => {
             type="text"
             className="text-blue-color w-100"
             fullWidth
-            required
           />
           {/* Row 5 */}
           <TextInput
@@ -338,7 +332,6 @@ const RegistrationForm = () => {
             type="text"
             className="text-blue-color w-100"
             fullWidth
-            required
           />
           <TextInput
             label="Secondary Email"
@@ -381,7 +374,6 @@ const RegistrationForm = () => {
             type="text"
             className="text-blue-color w-100"
             fullWidth
-            required
           />
           <PasswordInput
             label="User Password *"
@@ -398,7 +390,6 @@ const RegistrationForm = () => {
             type="text"
             className="text-blue-color w-100"
             fullWidth
-            required
           />
           <PasswordInput
             label="Confirm Password *"
@@ -416,7 +407,6 @@ const RegistrationForm = () => {
             type="text"
             className="text-blue-color w-100"
             fullWidth
-            required
           />
           {/* Row 7 */}
           <SelectInput
@@ -456,8 +446,13 @@ const RegistrationForm = () => {
             fullWidth
           />
           {/* Register Button */}
-          <Grid item xs={12} className="btn-container">
-            <Button type="submit" variant="contained" color="primary" fullWidth>
+          <Grid item xs={12} className="btn-containermain">
+            <Button
+              className="btn-container"
+              type="submit"
+              variant="contained"
+              style={{ backgroundColor: "orangered" }}
+            >
               Register
             </Button>
           </Grid>

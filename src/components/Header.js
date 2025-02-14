@@ -25,6 +25,7 @@ import axios from "axios";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import showToast from "../components/Toast/Toaster";
+import AxiosInstance from "../Axiosinstance";
 import "./Header.css";
 
 const Header = () => {
@@ -34,9 +35,12 @@ const Header = () => {
   const [open, setOpen] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [userName, setUserName] = useState(null);
+  const [userId, setUserId] = useState(null);
+  const [countData, setCountData] = useState(null);
+  const [cartData, setCartData] = useState(null);
 
   const [cartopen, setCartOpen] = useState(false);
-  const cartCount = 3;
+  // const cartCount = 3;
 
   const checkUserToken = () => {
     const token = localStorage.getItem("Token");
@@ -45,15 +49,55 @@ const Header = () => {
         const decoded = jwtDecode(token);
         console.log(decoded, "decodedddddddddd"); // Decode JWT Token
         setUserName(decoded.Username); // Store User Name
+        setUserId(decoded.UserId); // Store User Name
       } catch (error) {
         console.error("Error decoding token:", error);
       }
     }
   };
+  // Run cartcount() only after userId is set
+  useEffect(() => {
+    if (userId) {
+      cartcount();
+    }
+  }, [userId]);
 
   useEffect(() => {
     checkUserToken();
   }, []);
+
+  const cartcount = async (values) => {
+    try {
+      //   setLoader(true);
+      const res = await AxiosInstance.get(
+        `http://localhost:5000/api/cart/cart?userId=${userId}`
+      );
+      console.log(res, "resres");
+
+      console.log(res, "resss");
+      if (res.data.statusCode === 200) {
+        setCountData(res.data.TotalCount);
+        setCartData(res.data.data);
+        formik.resetForm();
+        navigate("/");
+        setOpen(false);
+      } else if (res.data.statusCode === 201) {
+        showToast.error(res.data.message);
+      } else if (res.data.statusCode === 202) {
+        showToast.error(res.data.message);
+      } else if (res.data.statusCode === 204) {
+        showToast.error(res.data.message);
+      }
+    } catch (error) {
+      if (error.response) {
+        showToast.error(error.response?.data.message || "An error occurred");
+      } else {
+        showToast.error("Something went wrong. Please try again later.");
+      }
+    } finally {
+      //   setLoader(false);
+    }
+  };
 
   useEffect(() => {
     const handleResize = () => {
@@ -100,6 +144,7 @@ const Header = () => {
           autoClose: 3000,
         });
         formik.resetForm();
+        cartcount();
         navigate("/");
         setOpen(false);
       } else if (res.data.statusCode === 201) {
@@ -176,7 +221,7 @@ const Header = () => {
               onClick={() => setCartOpen(true)}
               className="cart-button"
             >
-              <Badge badgeContent={cartCount} color="error">
+              <Badge badgeContent={countData} color="error">
                 <ShoppingCartIcon fontSize="small" />
               </Badge>
             </IconButton>
@@ -210,9 +255,62 @@ const Header = () => {
               >
                 CART
               </Typography>
-              <Typography variant="body1" sx={{ textAlign: "left" }}>
-                Please log in to see cart details.
-              </Typography>
+              {userName ? (
+                cartData && cartData.length > 0 ? (
+                  cartData.map((item, index) => (
+                    <div
+                      style={{
+                        marginBottom: "20px",
+                        border: "1px solid #ddd",
+                        borderRadius: "10px",
+                        padding: "10px",
+                      }}
+                    >
+                      <div
+                        className="widget_shopping_cart_content"
+                        style={{
+                          display: "flex",
+                          flexDirection: "row",
+                          alignItems: "center",
+                        }}
+                      >
+                        <div>
+                          <img
+                            className="ImagessElement"
+                            src={item.diamondDetails.Image}
+                            // alt={diamondType}
+                            style={{
+                              width: "70px",
+                              height: "70px",
+                              borderRadius: "10px",
+                            }}
+                          />
+                        </div>
+                        <div style={{ marginLeft: "15px" }}>
+                          <span style={{ marginBottom: "0" }}>
+                            <span>{item.diamondDetails.Carats}</span> Carat{" "}
+                            <span>{item.diamondDetails.Shape}</span>
+                            <span>{item.diamondDetails.Colo}</span> /
+                            <span>{item.diamondDetails.Clarity}</span> -{" "}
+                            <span>{item.diamondDetails.Lab}</span>{" "}
+                            <span>{item.diamondDetails.Cut}</span>
+                          </span>
+                          <div style={{ display: "flex", marginTop: "0" }}>
+                            <span>
+                              Quantity: <span>{}</span> x{" "}
+                            </span>
+                            &nbsp; {item.diamondDetails.Price}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <p>No items in the cart</p>
+                )
+              ) : (
+                <p>Please Log In To See Cart Details</p>
+              )}
 
               <Button
                 className="checkoutbutton"
@@ -258,6 +356,7 @@ const Header = () => {
                             formik.resetForm();
                             setUserName(null);
                             setOpen(false);
+                            setCountData(null);
                           }}
                           style={{ cursor: "pointer" }}
                           className="logout-text"
@@ -267,9 +366,6 @@ const Header = () => {
                         <span
                           onClick={() => {
                             navigate("/signup");
-                            localStorage.clear();
-                            formik.resetForm();
-                            setUserName(null);
                             setOpen(false);
                           }}
                           style={{ cursor: "pointer" }}
@@ -354,7 +450,16 @@ const Header = () => {
                         >
                           Log out
                         </span>{" "}
-                        <span className="signup-link-signup">Sign up</span>
+                        <span
+                          className="signup-link-signup"
+                          onClick={() => {
+                            navigate("/signup");
+                            setOpen(false);
+                          }}
+                          style={{ cursor: "pointer" }}
+                        >
+                          Sign up
+                        </span>
                       </p>
 
                       <Button
