@@ -10,7 +10,7 @@ import "./shop.css"; // External CSS
 const DiamondsGrid = ({ diamond }) => {
   console.log(diamond, "diamond");
   const dispatch = useDispatch();
-  const userId = useSelector((state) => state.auth.user);
+  const userId = useSelector((state) => state.auth?.user?.UserId);
 
   useEffect(() => {
     if (userId) {

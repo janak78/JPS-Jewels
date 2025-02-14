@@ -17,15 +17,24 @@ const fetchCartDetails = async (UserId, SKU) => {
   const quotes = await Cart.aggregate([
     { $match: quoteSearchQuery },
     {
-    $lookup: {
-      from: "stocks",
-      let: { sku: "$SKU" },
-      pipeline: [
-        { $match: { $expr: { $and: [{ $eq: ["$SKU", "$$sku"] }, { $eq: ["$IsDelete", false] }] } } }
-      ],
-      as: "diamondDetails",
+      $lookup: {
+        from: "stocks",
+        let: { sku: "$SKU" },
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $and: [
+                  { $eq: ["$SKU", "$$sku"] },
+                  { $eq: ["$IsDelete", false] },
+                ],
+              },
+            },
+          },
+        ],
+        as: "diamondDetails",
+      },
     },
-  },
     {
       $unwind: { path: "$diamondDetails", preserveNullAndEmptyArrays: false },
     },
@@ -51,7 +60,7 @@ const fetchCartDetails = async (UserId, SKU) => {
   };
 };
 
-router.get("/cart",verifyLoginToken, async function (req, res) {
+router.get("/cart", verifyLoginToken, async function (req, res) {
   try {
     const { userId, SKU } = req.query;
 
@@ -146,7 +155,7 @@ const fetchCartWithoutCheckout = async () => {
   };
 };
 
-router.get("/cartwithoutcheckout",verifyLoginToken, async function (req, res) {
+router.get("/cartwithoutcheckout", verifyLoginToken, async function (req, res) {
   try {
     const result = await fetchCartWithoutCheckout();
 
@@ -256,7 +265,7 @@ const fetchCartWithoutCheckoutPopup = async (AddToCartId) => {
 };
 
 // API Route
-router.get("/cartpopup", verifyLoginToken,async function (req, res) {
+router.get("/cartpopup", verifyLoginToken, async function (req, res) {
   try {
     const { AddToCartId } = req.query;
 
@@ -280,8 +289,9 @@ router.get("/cartpopup", verifyLoginToken,async function (req, res) {
   }
 });
 
-const addToCart = async (data, UserId) => {
+const addToCart = async (data) => {
   try {
+    console.log(data);
     data["createdAt"] = moment().utcOffset(330).format("YYYY-MM-DD HH:mm:ss");
     data["updatedAt"] = moment().utcOffset(330).format("YYYY-MM-DD HH:mm:ss");
 
@@ -290,7 +300,7 @@ const addToCart = async (data, UserId) => {
     }
 
     const existingItem = await Cart.findOne({
-      UserId: UserId,
+      UserId: data.UserId,
       SKU: data.SKU, // Match SKU along with UserId
       IsCheckout: false,
       IsDelete: false,
@@ -321,16 +331,16 @@ const addToCart = async (data, UserId) => {
   }
 };
 
-router.post("/addtocart",verifyLoginToken, async (req, res) => {
+router.post("/addtocart", verifyLoginToken, async (req, res) => {
   // const token = req.headers["authorization"]?.split(" ")[1];
   // if (!token) {
   //   return res.status(401).json({ message: "Unauthorized" });
   // }
   try {
-    const UserId = req.body.UserId;
+    const { UserId } = req.query;
     // const decoded = jwt.verify(token, "your_secret_key");
     // req.body.UserId = decoded.Userid;
-    const response = await addToCart(req.body, UserId);
+    const response = await addToCart(req.body);
     res.status(response.statusCode).json(response);
   } catch (error) {
     console.error(error.message);
@@ -441,18 +451,22 @@ const deletecarddata = async (AddToCartId) => {
   }
 };
 
-router.delete("/updatecart/:AddToCartId",verifyLoginToken, async (req, res) => {
-  try {
-    const { AddToCartId } = req.params;
-    const response = await deletecarddata(AddToCartId);
-    res.status(response.statusCode).json(response);
-  } catch (error) {
-    console.error(error.message);
-    res.status(500).json({
-      statusCode: 500,
-      message: "Something went wrong, please try later!",
-    });
+router.delete(
+  "/updatecart/:AddToCartId",
+  verifyLoginToken,
+  async (req, res) => {
+    try {
+      const { AddToCartId } = req.params;
+      const response = await deletecarddata(AddToCartId);
+      res.status(response.statusCode).json(response);
+    } catch (error) {
+      console.error(error.message);
+      res.status(500).json({
+        statusCode: 500,
+        message: "Something went wrong, please try later!",
+      });
+    }
   }
-});
+);
 
 module.exports = router;

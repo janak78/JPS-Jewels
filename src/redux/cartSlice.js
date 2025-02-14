@@ -58,11 +58,6 @@
         const response = await AxiosInstance.post(
         "http://localhost:5000/api/cart/addtocart",
         { ...item, UserId: userId },
-        {
-            headers: {
-            Authorization: `Bearer ${token}`,
-            },
-        }
         );
 
         if (response.data.statusCode === 200) {
