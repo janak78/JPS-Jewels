@@ -17,15 +17,17 @@ const fetchCartDetails = async (UserId, SKU) => {
   const quotes = await Cart.aggregate([
     { $match: quoteSearchQuery },
     {
-      $lookup: {
-        from: "stocks",
-        localField: "SKU",
-        foreignField: "SKU",
-        as: "diamondDetails",
-      },
+    $lookup: {
+      from: "stocks",
+      let: { sku: "$SKU" },
+      pipeline: [
+        { $match: { $expr: { $and: [{ $eq: ["$SKU", "$$sku"] }, { $eq: ["$IsDelete", false] }] } } }
+      ],
+      as: "diamondDetails",
     },
+  },
     {
-      $unwind: { path: "$diamondDetails", preserveNullAndEmptyArrays: true },
+      $unwind: { path: "$diamondDetails", preserveNullAndEmptyArrays: false },
     },
     {
       $project: {
@@ -36,6 +38,7 @@ const fetchCartDetails = async (UserId, SKU) => {
       },
     },
   ]);
+  // console.log(quotes,"aaaaaqoutes")
 
   const cartCount = quotes.length;
 

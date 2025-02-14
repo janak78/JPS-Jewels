@@ -1,4 +1,8 @@
 import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchCartCount } from "../redux/cartSlice";
+import { removeCart } from "../redux/cartSlice";
+import { logout, login } from "../redux/authSlice";
 import {
   Drawer,
   TextField,
@@ -34,13 +38,27 @@ const Header = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [open, setOpen] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [userName, setUserName] = useState(null);
+  // const [userName, setUserName] = useState(null);
   const [userId, setUserId] = useState(null);
   const [countData, setCountData] = useState(null);
-  const [cartData, setCartData] = useState(null);
+  // const [cartData, setCartData] = useState(null);
 
   const [cartopen, setCartOpen] = useState(false);
   // const cartCount = 3;
+
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.auth.user);
+  const userName = useSelector((state) => state.auth.Username);
+  const cartCount = useSelector((state) => state.cart.cartCount);
+  const cartData = useSelector((state) => state.cart.cartData);
+  console.log(cartCount, "cc");
+  console.log(cartData, "cd");
+  console.log(userName, "un");
+
+  const handleLogout = () => {
+    dispatch(logout());
+    dispatch(removeCart());
+  };
 
   const checkUserToken = () => {
     const token = localStorage.getItem("Token");
@@ -48,7 +66,7 @@ const Header = () => {
       try {
         const decoded = jwtDecode(token);
         console.log(decoded, "decodedddddddddd"); // Decode JWT Token
-        setUserName(decoded.Username); // Store User Name
+        // setUserName(decoded.Username); // Store User Name
         setUserId(decoded.UserId); // Store User Name
       } catch (error) {
         console.error("Error decoding token:", error);
@@ -57,47 +75,48 @@ const Header = () => {
   };
   // Run cartcount() only after userId is set
   useEffect(() => {
+    const userId = localStorage.getItem("UserId");
     if (userId) {
-      cartcount(userId);
+      dispatch(fetchCartCount(userId));
     }
-  }, [userId]);
+  }, [dispatch, userId]);
 
   useEffect(() => {
     checkUserToken();
   }, []);
 
-  const cartcount = async (userId) => {
-    try {
-      //   setLoader(true);
-      const res = await AxiosInstance.get(
-        `http://localhost:5000/api/cart/cart?userId=${userId}`
-      );
-      console.log(res, "resres");
+  // const cartcount = async (userId) => {
+  //   try {
+  //     //   setLoader(true);
+  //     const res = await AxiosInstance.get(
+  //       `http://localhost:5000/api/cart/cart?userId=${userId}`
+  //     );
+  //     console.log(res, "resres");
 
-      console.log(res, "resss");
-      if (res.data.statusCode === 200) {
-        setCountData(res.data.TotalCount);
-        setCartData(res.data.data);
-        formik.resetForm();
-        navigate("/");
-        setOpen(false);
-      } else if (res.data.statusCode === 201) {
-        showToast.error(res.data.message);
-      } else if (res.data.statusCode === 202) {
-        showToast.error(res.data.message);
-      } else if (res.data.statusCode === 204) {
-        showToast.error(res.data.message);
-      }
-    } catch (error) {
-      if (error.response) {
-        showToast.error(error.response?.data.message || "An error occurred");
-      } else {
-        showToast.error("Something went wrong. Please try again later.");
-      }
-    } finally {
-      //   setLoader(false);
-    }
-  };
+  //     console.log(res, "resss");
+  //     if (res.data.statusCode === 200) {
+  //       setCountData(res.data.TotalCount);
+  //       setCartData(res.data.data);
+  //       formik.resetForm();
+  //       navigate("/");
+  //       setOpen(false);
+  //     } else if (res.data.statusCode === 201) {
+  //       showToast.error(res.data.message);
+  //     } else if (res.data.statusCode === 202) {
+  //       showToast.error(res.data.message);
+  //     } else if (res.data.statusCode === 204) {
+  //       showToast.error(res.data.message);
+  //     }
+  //   } catch (error) {
+  //     if (error.response) {
+  //       showToast.error(error.response?.data.message || "An error occurred");
+  //     } else {
+  //       showToast.error("Something went wrong. Please try again later.");
+  //     }
+  //   } finally {
+  //     //   setLoader(false);
+  //   }
+  // };
 
   useEffect(() => {
     const handleResize = () => {
@@ -137,16 +156,25 @@ const Header = () => {
 
       console.log(res, "resss");
       if (res.data.statusCode === 200) {
-        localStorage.setItem("Token", res.data.token);
-        localStorage.setItem("UserId", res.data.user.UserId);
-        setUserName(res.data.user.Username);
-        showToast.success(res.data.message, {
-          autoClose: 3000,
-        });
+        // localStorage.setItem("Token", res.data.token);
+        // localStorage.setItem("UserId", res.data.user.UserId);
+        // // setUserName(res.data.user.Username);
+        // showToast.success(res.data.message, {
+        //   autoClose: 3000,
+        // });
+        // formik.resetForm();
+        // navigate("/");
+        // setOpen(false);
+
+        const { token, user } = res.data;
+
+        dispatch(login({ user, token })); // Store user and token in Redux
+        dispatch(fetchCartCount(user.UserId)); // Fetch cart count after login
+
+        showToast.success(res.data.message, { autoClose: 3000 });
+
         formik.resetForm();
-        cartcount(res.data.user.UserId);
         navigate("/");
-        setOpen(false);
       } else if (res.data.statusCode === 201) {
         showToast(res.data.message);
       } else if (res.data.statusCode === 202) {
@@ -216,15 +244,15 @@ const Header = () => {
 
           {/* Cart Icon with Badge */}
           <div className="cart-icon-container">
-            <Button
+            <IconButton
               color="inherit"
               onClick={() => setCartOpen(true)}
               className="cart-button"
             >
-              <Badge badgeContent={countData} color="error">
-                <ShoppingCartIcon fontSize="medium" />
+              <Badge badgeContent={cartCount} color="error">
+                <ShoppingCartIcon fontSize="small" />
               </Badge>
-            </Button>
+            </IconButton>
           </div>
           <Drawer
             anchor="right"
@@ -232,6 +260,7 @@ const Header = () => {
             onClose={() => setCartOpen(false)}
           >
             <Box
+              className="cart-drawer"
               sx={{
                 width: 350,
                 height: "100vh",
@@ -277,7 +306,7 @@ const Header = () => {
                         <div>
                           <img
                             className="ImagessElement"
-                            src={item.diamondDetails.Image}
+                            src={item?.diamondDetails?.Image}
                             // alt={diamondType}
                             style={{
                               width: "70px",
@@ -288,18 +317,18 @@ const Header = () => {
                         </div>
                         <div style={{ marginLeft: "15px" }}>
                           <span style={{ marginBottom: "0" }}>
-                            <span>{item.diamondDetails.Carats}</span> Carat{" "}
-                            <span>{item.diamondDetails.Shape}</span>
-                            <span>{item.diamondDetails.Colo}</span> /
-                            <span>{item.diamondDetails.Clarity}</span> -{" "}
-                            <span>{item.diamondDetails.Lab}</span>{" "}
-                            <span>{item.diamondDetails.Cut}</span>
+                            <span>{item?.diamondDetails?.Carats || ""}</span> Carat{" "}
+                            <span>{item?.diamondDetails?.Shape}</span>
+                            <span>{item?.diamondDetails?.Color}</span> /
+                            <span>{item?.diamondDetails?.Clarity}</span> -{" "}
+                            <span>{item?.diamondDetails?.Lab}</span>{" "}
+                            <span>{item?.diamondDetails?.Cut}</span>
                           </span>
                           <div style={{ display: "flex", marginTop: "0" }}>
                             <span>
-                              Quantity: <span>{}</span> x{" "}
+                              Quantity: <span>{item?.Quantity}</span> x{" "}
                             </span>
-                            &nbsp; {item.diamondDetails.Price}
+                            &nbsp; {item?.diamondDetails?.Price}
                           </div>
                         </div>
                       </div>
@@ -318,6 +347,10 @@ const Header = () => {
                 sx={{
                   marginTop: "auto",
                   backgroundColor: "#C9A236",
+                }}
+                onClick={() => {
+                  navigate("/checkout");
+                  setCartOpen(false);
                 }}
               >
                 Checkout
@@ -354,9 +387,10 @@ const Header = () => {
                             navigate("/login");
                             localStorage.clear();
                             formik.resetForm();
-                            setUserName(null);
+                            // setUserName(null);
                             setOpen(false);
                             setCountData(null);
+                            handleLogout();
                           }}
                           style={{ cursor: "pointer" }}
                           className="logout-text"
@@ -445,6 +479,7 @@ const Header = () => {
                             localStorage.clear();
                             formik.resetForm();
                             setOpen(false);
+                            handleLogout();
                           }}
                           style={{ cursor: "pointer" }}
                         >
