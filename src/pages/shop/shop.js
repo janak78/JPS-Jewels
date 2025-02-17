@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "../../redux/cartSlice";
 import { fetchCartCount } from "../../redux/cartSlice";
+import { fetchShopData } from "../../redux/shopSlice";
 import axios from "axios";
 import { Star, StarBorder } from "@mui/icons-material";
 import DiamondLoader from "../../components/Loader/loader"; // Import Loader
@@ -9,11 +10,22 @@ import "./shop.css"; // External CSS
 import { Button, Menu, MenuItem, IconButton, Typography } from "@mui/material";
 import ArrowLeftIcon from "@mui/icons-material/ArrowLeft";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
+import { fetchDiamonds, setCurrentPage, setItemsPerPage } from "../../redux/shopSlice";
 
 const DiamondsGrid = ({ diamond }) => {
   console.log(diamond, "diamond");
   const dispatch = useDispatch();
   const userId = useSelector((state) => state.auth?.user?.UserId);
+  const {
+    diamondsByPage,
+    loading,
+    error,
+    totalPages,
+    currentPage,
+    itemsPerPage,
+  } = useSelector((state) => state.shop);
+
+  const diamonds = diamondsByPage[currentPage] || [];
 
   useEffect(() => {
     if (userId) {
@@ -35,38 +47,42 @@ const DiamondsGrid = ({ diamond }) => {
     dispatch(addToCart(cartItem, userId)); // Dispatch action
   };
 
-  const [diamonds, setDiamonds] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  // const [diamonds, setDiamonds] = useState([]);
+  // const [loading, setLoading] = useState(true);
+  // const [error, setError] = useState("");
   const [anchorEl, setAnchorEl] = useState(null);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(12);
-  const [totalPages, setTotalPages] = useState(1);
+  // const [currentPage, setCurrentPage] = useState(1);
+  // const [itemsPerPage, setItemsPerPage] = useState(12);
+  // const [totalPages, setTotalPages] = useState(1);
 
-  const fetchDiamonds = async () => {
-    try {
-      const response = await axios.get(
-        "http://localhost:5000/api/stock/data/page",
-        { params: { pageSize: itemsPerPage, pageNumber: currentPage } }
-      );
-      console.log(response, "resress");
+  // const fetchDiamonds = async () => {
+  //   try {
+  //     const response = await axios.get(
+  //       "http://localhost:5000/api/stock/data/page",
+  //       { params: { pageSize: itemsPerPage, pageNumber: currentPage } }
+  //     );
+  //     console.log(response, "resress");
 
-      if (response.data.result.statusCode === 200) {
-        setDiamonds(response.data.result.data);
-        setTotalPages(response.data?.result?.totalPages);
-      } else {
-        setError("No diamonds found.");
-      }
-    } catch (err) {
-      setError("Failed to fetch data.");
-    } finally {
-      setLoading(false);
-    }
-  };
+  //     if (response.data.result.statusCode === 200) {
+  //       setDiamonds(response.data.result.data);
+  //       setTotalPages(response.data?.result?.totalPages);
+  //     } else {
+  //       setError("No diamonds found.");
+  //     }
+  //   } catch (err) {
+  //     setError("Failed to fetch data.");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   useEffect(() => {
-    fetchDiamonds();
-  }, [currentPage, itemsPerPage, totalPages]);
+    if (!diamondsByPage[currentPage]) {
+      dispatch(
+        fetchDiamonds({ pageNumber: currentPage, pageSize: itemsPerPage })
+      );
+    }
+  }, [dispatch, currentPage, itemsPerPage, diamondsByPage]);
 
   if (loading) return <DiamondLoader />; // Show loader while fetching data
   if (error) return <p className="error">{error}</p>;
@@ -83,13 +99,13 @@ const DiamondsGrid = ({ diamond }) => {
   };
   const handleNextPage = () => {
     if (currentPage < totalPages) {
-      setCurrentPage((prev) => prev + 1);
+      dispatch(setCurrentPage(currentPage + 1));
     }
   };
 
   const handlePrevPage = () => {
     if (currentPage > 1) {
-      setCurrentPage((prev) => prev - 1);
+      dispatch(setCurrentPage(currentPage - 1));
     }
   };
 
@@ -129,8 +145,15 @@ const DiamondsGrid = ({ diamond }) => {
           </div>
         ))}
       </div>
-      <div className="mb-3" style={{ display: "flex", alignItems: "center", gap: "10px", justifyContent:"end" }}>
-        {/* Items per page dropdown */}
+      <div
+        className="mb-3"
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "10px",
+          justifyContent: "end",
+        }}
+      >
         <Button
           variant="contained"
           onClick={handleClick}
@@ -146,33 +169,35 @@ const DiamondsGrid = ({ diamond }) => {
           anchorEl={anchorEl}
           open={Boolean(anchorEl)}
           onClose={handleClose}
+          style={{ outline: "none", border: "none" }}
         >
           {[12, 28, 52, 100].map((perPage) => (
-            <MenuItem key={perPage} onClick={() => handleClose(perPage)}>
+            <MenuItem
+              key={perPage}
+              onClick={() => handleClose(perPage)}
+              style={{ outline: "none", border: "none" }}
+            >
               {perPage}
             </MenuItem>
           ))}
         </Menu>
 
-        {/* Previous Page Button */}
         <IconButton
           onClick={handlePrevPage}
           disabled={currentPage === 1}
-          style={{ backgroundColor: "#C9A236", color: "#fff" }}
+          style={{ backgroundColor: "#C9A236", color: "#fff", outline: "none" }}
         >
           <ArrowLeftIcon />
         </IconButton>
 
-        {/* Page Indicator */}
         <Typography variant="body1">
           Page {currentPage} of {totalPages}
         </Typography>
 
-        {/* Next Page Button */}
         <IconButton
           onClick={handleNextPage}
           disabled={currentPage === totalPages}
-          style={{ backgroundColor: "#C9A236", color: "#fff" }}
+          style={{ backgroundColor: "#C9A236", color: "#fff", outline: "none" }}
         >
           <ArrowRightIcon />
         </IconButton>

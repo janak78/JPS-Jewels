@@ -240,7 +240,7 @@ const Header = () => {
       <div className="right-section">
         {/* Icons */}
         <div className="icons">
-          <i className="fa-solid fa-magnifying-glass icon"></i>
+          {/* <i className="fa-solid fa-magnifying-glass icon"></i> */}
 
           {/* Cart Icon with Badge */}
           <div className="cart-icon-container">
