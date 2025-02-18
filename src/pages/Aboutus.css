@@ -487,3 +487,167 @@
         max-width: 100%;
     }
 }
+
+/* Category Carousel */
+.category-carousel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 40px auto;
+  position: relative;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+/* Category Container */
+.category-container {
+  display: flex;
+  justify-content: flex-start;
+  white-space: nowrap;
+  width: 80%;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scrollbar-width: none; /* Hides scrollbar for a clean look */
+  -ms-overflow-style: none; /* Hides scrollbar in IE and Edge */
+}
+
+/* Hide scrollbar (only visible when scrolling) */
+.category-container::-webkit-scrollbar {
+  display: none;
+}
+
+/* Category Item */
+.category-item {
+  background-color: #f9eeee;
+  border: 1px solid transparent;
+
+  /* padding: 20px; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  min-width: 143px;
+  min-height: 172px;
+  margin: 0 20px;
+  transition: transform 0.5s ease-in-out;
+  flex: 0 0 auto;
+}
+
+/* Category Image */
+.category-item img {
+  width: 64px;
+  height: 77px;
+  color: #c19a6b;
+  filter: sepia(100%) saturate(500%) hue-rotate(30deg);
+}
+
+/* Category Name (Positioned outside .category-item) */
+.category-name {
+  display: block;
+  text-align: center;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 20px;
+  text-transform: uppercase;
+  margin-top: 8px; /* Space between image and name */
+}
+
+.category-name::after {
+  content: "";
+  display: block;
+  width: 30px;
+  height: 2px;
+  background-color: #c19a6b;
+  margin: 4px auto 0;
+}
+
+/* Hover Effect */
+/* .category-item:hover {
+  cursor: pointer;
+  background-color: white;
+  border: 2px solid #c9a236;
+}
+.hovername:hover {
+  cursor: pointer;
+  border: 1px solid black;
+  color: #c19a6b;
+} */
+
+.hovername:hover .category-item {
+  cursor: pointer;
+  background-color: white;
+  border: 2px solid #c9a236;
+}
+
+.hovername:hover .category-name {
+  color: #c19a6b !important;
+}
+
+
+/* Navigation Buttons */
+button.prev,
+button.next {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 10px;
+  color: gray;
+  position: absolute;
+}
+
+button.prev {
+  left: 0;
+}
+
+button.next {
+  right: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .category-container {
+    width: 90%;
+  }
+}
+
+@media (max-width: 768px) {
+  .category-container {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    overflow-x: scroll;
+    white-space: nowrap;
+    scroll-behavior: smooth;
+  }
+
+  .category-item {
+    min-width: 100px; /* Reduce item width for smaller screens */
+    margin: 0 10px; /* Reduce spacing */
+  }
+}
+
+@media (max-width: 480px) {
+  .category-container {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    overflow-x: scroll;
+    white-space: nowrap;
+    scroll-behavior: smooth;
+  }
+
+  .category-item {
+    min-width: 90px; /* Adjust for small screens */
+    padding: 8px;
+  }
+
+  .category-item img {
+    width: 35px;
+    height: 35px;
+  }
+
+  .category-name {
+    font-size: 10px;
+  }
+}

@@ -26,7 +26,7 @@
 
 .brtag {
   font-size: 16px;
-  color: #c9a236;
+  color: #C9A236;
 }
 
 /* Center the overlay text */
@@ -45,7 +45,7 @@
   font-size: 20px;
   font-weight: bold;
   color: white;
-  background-color: #c9a236;
+  background-color: #C9A236;
   padding: 10px 20px;
   border-radius: 5px;
   border: none;
@@ -666,6 +666,7 @@ body {
 }
 
 /* Carousel Styling */
+/* Category Carousel */
 .category-carousel {
   display: flex;
   align-items: center;
@@ -681,7 +682,7 @@ body {
   display: flex;
   justify-content: flex-start;
   white-space: nowrap;
-  /* width: 80%; */
+  width: 80%;
   overflow-x: auto;
   scroll-behavior: smooth;
   scrollbar-width: none; /* Hides scrollbar for a clean look */
@@ -695,33 +696,41 @@ body {
 
 /* Category Item */
 .category-item {
-  background-color: #f9f9f9;
-  padding: 20px;
+  background-color: #f9eeee;
+  border: 1px solid transparent;
+
+  /* padding: 20px; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
   text-align: center;
-  min-width: 110px;
-  margin: 0 10px;
-  border-radius: 8px;
-  transition: transform 0.3s ease;
+  min-width: 143px;
+  min-height: 172px;
+  margin: 0 20px;
+  transition: transform 0.5s ease-in-out;
   flex: 0 0 auto;
 }
 
+/* Category Image */
 .category-item img {
-  width: 50px;
-  height: 50px;
-  margin-bottom: 10px;
+  width: 64px;
+  height: 77px;
   color: #c19a6b;
   filter: sepia(100%) saturate(500%) hue-rotate(30deg);
 }
 
-.category-item span {
+/* Category Name (Positioned outside .category-item) */
+.category-name {
   display: block;
-  font-size: 14px;
-  font-weight: bold;
-  color: #c19a6b;
-  position: relative;
+  text-align: center;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 20px;
+  text-transform: uppercase;
+  margin-top: 8px; /* Space between image and name */
 }
 
-.category-item span::after {
+.category-name::after {
   content: "";
   display: block;
   width: 30px;
@@ -731,11 +740,27 @@ body {
 }
 
 /* Hover Effect */
-.category-item:hover {
-  transform: scale(1.1);
+/* .category-item:hover {
   cursor: pointer;
   background-color: white;
+  border: 2px solid #c9a236;
 }
+.hovername:hover {
+  cursor: pointer;
+  border: 1px solid black;
+  color: #c19a6b;
+} */
+
+.hovername:hover .category-item {
+  cursor: pointer;
+  background-color: white;
+  border: 2px solid #c9a236;
+}
+
+.hovername:hover .category-name {
+  color: #c19a6b !important;
+}
+
 
 /* Navigation Buttons */
 button.prev,
@@ -767,20 +792,16 @@ button.next {
 @media (max-width: 768px) {
   .category-container {
     width: 100%;
-    overflow-x: auto;
+    display: flex;
+    justify-content: flex-start;
+    overflow-x: scroll;
     white-space: nowrap;
     scroll-behavior: smooth;
   }
 
   .category-item {
-    min-width: 90px;
-    padding: 15px;
-  }
-
-  button.prev,
-  button.next {
-    font-size: 20px;
-    padding: 5px;
+    min-width: 100px; /* Reduce item width for smaller screens */
+    margin: 0 10px; /* Reduce spacing */
   }
 }
 
@@ -789,27 +810,22 @@ button.next {
     width: 100%;
     display: flex;
     justify-content: flex-start;
-    overflow-x: auto;
+    overflow-x: scroll;
+    white-space: nowrap;
     scroll-behavior: smooth;
   }
 
   .category-item {
-    min-width: 80px;
-    padding: 10px;
+    min-width: 90px; /* Adjust for small screens */
+    padding: 8px;
   }
 
   .category-item img {
-    width: 40px;
-    height: 40px;
+    width: 35px;
+    height: 35px;
   }
 
-  .category-item span {
-    font-size: 12px;
-  }
-
-  button.prev,
-  button.next {
-    font-size: 18px;
-    padding: 5px;
+  .category-name {
+    font-size: 10px;
   }
 }

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux"
+import { fetchCartCount } from "../../redux/cartSlice";
 import {
   Container,
   TextField,
@@ -14,8 +15,11 @@ import { Formik, Form, Field } from "formik";
 import AxiosInstance from "../../Axiosinstance";
 import * as Yup from "yup";
 import "./Checkout.css";
+import showToast from "../../components/Toast/Toaster";
 
 const Checkout = () => {
+    const dispatch = useDispatch();
+  
   const userName = useSelector((state) => state.auth.Username);
   const cartData = useSelector((state) => state.cart.cartData);
 
@@ -54,10 +58,10 @@ const Checkout = () => {
         values
       );
 
-      console.log(response, "responseresponseeeeeeeeeeeeeeeeeeee");
-
       if (response.data.statusCode === 200) {
-        alert("Order placed successfully!"); // Redirect to confirmation page
+        showToast.success("Order placed successfully!"); // Redirect to confirmation page
+        // window.location.reload(); // Refresh the page
+        dispatch(fetchCartCount(localStorage.getItem("UserId"))); 
       } else {
         alert(response.data.message);
       }
@@ -283,7 +287,7 @@ const Checkout = () => {
                         display: "flex",
                         flexDirection: "row",
                         alignItems: "center",
-                        height:"70px"
+                        height: "70px",
                       }}
                     >
                       <div>

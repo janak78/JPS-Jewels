@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import image1 from "../assets/images/slide-1-asset-2-1.webp";
 import image2 from "../assets/images/slide-1-asset-3.webp";
 import image3 from "../assets/images/slide-1-asset-4.webp";
@@ -10,6 +10,9 @@ import cufflinks from "../assets/images/cufflinks.svg";
 // import earrings from "../assets/images/earrings.svg";
 import gemstone from "../assets/images/gemstone.svg";
 import giftset from "../assets/images/gift.svg";
+import necklace from "../assets/images/necklace.svg";
+import watch from "../assets/images/watch.svg";
+import ster from "../assets/images/diamond-pendant.svg";
 import curtain1 from "../assets/images/curtain-1.webp";
 import curtain3 from "../assets/images/curtain-3.webp";
 import curtain5 from "../assets/images/curtain-5.webp";
@@ -35,8 +38,22 @@ import "aos/dist/aos.css";
 
 const images = [image1, image2, image3];
 
+const categories = [
+  { img: rings, name: "RINGS" },
+  { img: bracelete, name: "BRACELET" },
+  { img: chain, name: "CHAIN" },
+  { img: choker, name: "CHOKER" },
+  { img: cufflinks, name: "EARRINGS" },
+  { img: gemstone, name: "GEMSTONE" },
+  { img: giftset, name: "GIFT SET" },
+  { img: necklace, name: "NECKLACE" },
+  { img: watch, name: "WATCH" },
+  { img: ster, name: "STER" },
+];
+
 const Home = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const carouselRef = useRef(null);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -51,6 +68,33 @@ const Home = () => {
       duration: 1000,
       once: true,
     });
+  }, []);
+
+  useEffect(() => {
+    if (!carouselRef.current) return;
+
+    let scrollSpeed = 2; // Adjust for smoothness
+    let scrollDirection = 1; // 1 for forward, -1 for reverse
+
+    const scrollCarousel = () => {
+      if (carouselRef.current) {
+        const maxScroll = carouselRef.current.scrollWidth - carouselRef.current.clientWidth;
+
+        // Move carousel
+        carouselRef.current.scrollLeft += scrollSpeed * scrollDirection;
+
+        // Reverse direction when reaching end/start
+        if (carouselRef.current.scrollLeft >= maxScroll) {
+          scrollDirection = -1;
+        } else if (carouselRef.current.scrollLeft <= 0) {
+          scrollDirection = 1;
+        }
+      }
+    };
+
+    const scrollInterval = setInterval(scrollCarousel, 20); // Smooth scrolling
+
+    return () => clearInterval(scrollInterval);
   }, []);
 
   return (
@@ -87,41 +131,20 @@ const Home = () => {
         </div>
       </div>
       <div className="category-carousel">
-        <div className="category-container">
-          <div className="category-item">
-            <img src={rings} alt="Rings" />
-            <span>RINGS</span>
-          </div>
-          <div className="category-item">
-            <img src={bracelete} alt="Bracelet" />
-            <span>BRACELET</span>
-          </div>
-          <div className="category-item">
-            <img src={chain} alt="Chain" />
-            <span>CHAIN</span>
-          </div>
-          <div className="category-item">
-            <img src={choker} alt="Chocker" />
-            <span>CHOCKER</span>
-          </div>
-          <div className="category-item">
-            <img src={cufflinks} alt="Cufflinks" />
-            <span>CUFFLINKS</span>
-          </div>
-          <div className="category-item">
-            <img src={cufflinks} alt="Earrings" />
-            <span>EARRINGS</span>
-          </div>
-          <div className="category-item">
-            <img src={gemstone} alt="Gemstone" />
-            <span>GEMSTONE</span>
-          </div>
-          <div className="category-item">
-            <img src={giftset} alt="Gift Set" />
-            <span>GIFT SET</span>
-          </div>
+        <div className="category-container" ref={carouselRef}>
+          {categories.map((category, index) => (
+            <>
+              <div className="hovername" key={index}>
+                <div className="category-item">
+                  <img src={category.img} alt={category.name} />
+                </div>
+                <span className="category-name">{category.name}</span>
+              </div>  
+            </>
+          ))}
         </div>
       </div>
+
       <section class="collection-section">
         <h2 class="shop-by-brands-title">New Collection</h2>
         <div class="collection-grid">

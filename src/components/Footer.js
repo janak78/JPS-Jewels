@@ -8,6 +8,10 @@ import {
 } from "react-icons/fa";
 import { FaPhoneAlt, FaMapMarkerAlt } from "react-icons/fa";
 import logo from "../assets/images/png.png";
+
+import pin from "../assets/images/pin.svg";
+import telephonecall from "../assets/images/telephone-call.svg";
+import email from "../assets/images/email.svg";
 import { useNavigate } from "react-router-dom";
 import "./Footer.css";
 
@@ -57,7 +61,7 @@ const Footer = () => {
         <div className="footer-section">
           <h3>CONTACT US</h3>
           <div className="phoneno">
-            <FaPhoneAlt />
+          <img src={telephonecall} alt="pin" width="27px" />
             <div>
               <span>Call us 8 AM - 11 PM</span>
               <span>
@@ -68,7 +72,7 @@ const Footer = () => {
             </div>
           </div>
           <div className="addresssec">
-            <FaMapMarkerAlt />
+          <img src={pin} alt="pin" width="27px" fill="#c9a236"/>
             <span>
               <a
                 href="https://www.google.com/maps/search/?q=315+Shashvat+Apartment,+Pipla+Sheri,+Mahidharpura,+Surat+-+395003"

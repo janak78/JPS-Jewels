@@ -2,10 +2,9 @@ import React, { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
-import thumbnailImage from "../assets/images/video.webp";
-import videoFile from "../assets/videos/video.mp4";
-import craftsmanshipImg from "./../assets/images/about-us-banner-1.webp";
-import whyChooseUsImg from "./../assets/images/about-us-banner-2.webp";
+import pin from "../assets/images/pin (1).svg";
+import telephonecall from "../assets/images/telephone-call (1).svg";
+import email from "../assets/images/email.svg";
 import { FaStar } from "react-icons/fa";
 import showToast from "../components/Toast/Toaster";
 import "./Contactus.css";
@@ -36,11 +35,9 @@ const Contactus = () => {
           values,
           { headers: { "Content-Type": "application/json" } }
         );
-        console.log(response.data.statusCode, "response.data.statusCode");
         if (response.data.statusCode === 200) {
           //   alert("Message sent successfully!");
           showToast.success("Message sent successfully!");
-          console.log(showToast, "111");
           resetForm();
         } else {
           //   alert("Failed to send message.");
@@ -82,7 +79,7 @@ const Contactus = () => {
 
             <div className="contact-item">
               <span className="icon">
-                📍 <strong>Address:</strong>
+                <img src={pin} alt="pin" width="27px" /> <strong>Address:</strong>
               </span>
               <a
                 href="https://www.google.com/maps/search/?q=315+Shashvat+Apartment,+Pipla+Sheri,+Mahidharpura,+Surat+-+395003"
@@ -98,7 +95,7 @@ const Contactus = () => {
 
             <div className="contact-item">
               <span className="icon">
-                📞 <strong>Phone:</strong>
+              <img src={telephonecall} alt="pin" width="27px" /> <strong>Phone:</strong>
               </span>
               <a href="tel:+919825971176" className="note">
                 +91 9825971176
@@ -110,7 +107,7 @@ const Contactus = () => {
 
             <div className="contact-item">
               <span className="icon">
-                📧 <strong>Email:</strong>
+              <img src={email} alt="pin" width="27px" /> <strong>Email:</strong>
               </span>
               <a href="mailto:info@uat.jpsjewels.com" className="note">
                 info@uat.jpsjewels.com
@@ -164,7 +161,7 @@ const Contactus = () => {
             </form>
           </div>
         </div>
-      </div>
+      </div>  
     </>
   );
 };

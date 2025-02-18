@@ -51,9 +51,6 @@ const Header = () => {
   const userName = useSelector((state) => state.auth.Username);
   const cartCount = useSelector((state) => state.cart.cartCount);
   const cartData = useSelector((state) => state.cart.cartData);
-  console.log(cartCount, "cc");
-  console.log(cartData, "cd");
-  console.log(userName, "un");
 
   const handleLogout = () => {
     dispatch(logout());
@@ -65,9 +62,8 @@ const Header = () => {
     if (token) {
       try {
         const decoded = jwtDecode(token);
-        console.log(decoded, "decodedddddddddd"); // Decode JWT Token
-        // setUserName(decoded.Username); // Store User Name
-        setUserId(decoded.UserId); // Store User Name
+        // setUserName(decoded.Username); 
+        setUserId(decoded.UserId); 
       } catch (error) {
         console.error("Error decoding token:", error);
       }
@@ -154,7 +150,6 @@ const Header = () => {
         ...values,
       });
 
-      console.log(res, "resss");
       if (res.data.statusCode === 200) {
         // localStorage.setItem("Token", res.data.token);
         // localStorage.setItem("UserId", res.data.user.UserId);
@@ -262,7 +257,7 @@ const Header = () => {
             <Box
               className="cart-drawer"
               sx={{
-                width: 350,
+                width: 400,
                 height: "100vh",
                 display: "flex",
                 flexDirection: "column",
@@ -284,55 +279,56 @@ const Header = () => {
               >
                 CART
               </Typography>
+              <div style={{height:"700px", overflowY:"auto"}}>
               {userName ? (
                 cartData && cartData.length > 0 ? (
                   cartData.map((item, index) => (
-                    <div
-                      style={{
-                        marginBottom: "20px",
-                        border: "1px solid #ddd",
-                        borderRadius: "10px",
-                        padding: "10px",
-                      }}
-                    >
                       <div
-                        className="widget_shopping_cart_content"
                         style={{
-                          display: "flex",
-                          flexDirection: "row",
-                          alignItems: "center",
+                          marginBottom: "20px",
+                          border: "1px solid #ddd",
+                          borderRadius: "10px",
+                          padding: "10px",
                         }}
                       >
-                        <div>
-                          <img
-                            className="ImagessElement"
-                            src={item?.diamondDetails?.Image}
-                            // alt={diamondType}
-                            style={{
-                              width: "70px",
-                              height: "70px",
-                              borderRadius: "10px",
-                            }}
-                          />
-                        </div>
-                        <div style={{ marginLeft: "15px" }}>
-                          <span style={{ marginBottom: "0" }}>
-                            <span>{item?.diamondDetails?.Carats || ""}</span> Carat{" "}
-                            <span>{item?.diamondDetails?.Shape}</span>
-                            <span>{item?.diamondDetails?.Color}</span> /
-                            <span>{item?.diamondDetails?.Clarity}</span> -{" "}
-                            <span>{item?.diamondDetails?.Lab}</span>{" "}
-                            <span>{item?.diamondDetails?.Cut}</span>
-                          </span>
-                          <div style={{ display: "flex", marginTop: "0" }}>
-                            <span>
-                              Quantity: <span>{item?.Quantity}</span> x{" "}
+                        <div
+                          className="widget_shopping_cart_content"
+                          style={{
+                            display: "flex",
+                            flexDirection: "row",
+                            alignItems: "center",
+                          }}
+                        >
+                          <div>
+                            <img
+                              className="ImagessElement"
+                              src={item?.diamondDetails?.Image}
+                              // alt={diamondType}
+                              style={{
+                                width: "70px",
+                                height: "70px",
+                                borderRadius: "10px",
+                              }}
+                            />
+                          </div>
+                          <div style={{ marginLeft: "15px" }}>
+                            <span style={{ marginBottom: "0" }}>
+                              <span>{item?.diamondDetails?.Carats || ""}</span>{" "}
+                              Carat <span>{item?.diamondDetails?.Shape}</span>
+                              <span>{item?.diamondDetails?.Color}</span> /
+                              <span>{item?.diamondDetails?.Clarity}</span> -{" "}
+                              <span>{item?.diamondDetails?.Lab}</span>{" "}
+                              <span>{item?.diamondDetails?.Cut}</span>
                             </span>
-                            &nbsp; {item?.diamondDetails?.Price}
+                            <div style={{ display: "flex", marginTop: "0" }}>
+                              <span>
+                                Quantity: <span>{item?.Quantity}</span> x{" "}
+                                {item?.diamondDetails?.Price}
+                              </span>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
                   ))
                 ) : (
                   <p>No items in the cart</p>
@@ -340,6 +336,7 @@ const Header = () => {
               ) : (
                 <p>Please Log In To See Cart Details</p>
               )}
+              </div>
 
               <Button
                 className="checkoutbutton"

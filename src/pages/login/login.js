@@ -52,7 +52,6 @@ const Login = () => {
         ...values,
       });
 
-      console.log(res,"resss")
       if (res.data.statusCode === 200) {
         const { token, user } = res.data;
 

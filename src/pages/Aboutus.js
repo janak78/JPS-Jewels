@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import "./Aboutus.css";
 import about1 from "../assets/images/about-1.webp";
 import about2 from "../assets/images/about-2.webp";
@@ -12,6 +12,9 @@ import choker from "../assets/images/choker (1).svg";
 import cufflinks from "../assets/images/cufflinks.svg";
 import gemstone from "../assets/images/gemstone.svg";
 import giftset from "../assets/images/gift.svg";
+import necklace from "../assets/images/necklace.svg";
+import watch from "../assets/images/watch.svg";
+import ster from "../assets/images/diamond-pendant.svg";
 import { FaStar } from "react-icons/fa";
 import craftsmanshipImg from "./../assets/images/about-us-banner-1.webp";
 import whyChooseUsImg from "./../assets/images/about-us-banner-2.webp";
@@ -23,14 +26,56 @@ import image3 from "../assets/images/slide-1-asset-4.webp";
 import AOS from "aos";
 import "aos/dist/aos.css";
 
+const categories = [
+  { img: rings, name: "RINGS" },
+  { img: bracelete, name: "BRACELET" },
+  { img: chain, name: "CHAIN" },
+  { img: choker, name: "CHOKER" },
+  { img: cufflinks, name: "EARRINGS" },
+  { img: gemstone, name: "GEMSTONE" },
+  { img: giftset, name: "GIFT SET" },
+  { img: necklace, name: "NECKLACE" },
+  { img: watch, name: "WATCH" },
+  { img: ster, name: "STER" },
+];
+
 const Aboutus = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const carouselRef = useRef(null);
+
   useEffect(() => {
     AOS.init({
       duration: 1000,
       once: true,
     });
   }, []);
+
+  useEffect(() => {
+      if (!carouselRef.current) return;
+  
+      let scrollSpeed = 2; // Adjust for smoothness
+      let scrollDirection = 1; // 1 for forward, -1 for reverse
+  
+      const scrollCarousel = () => {
+        if (carouselRef.current) {
+          const maxScroll = carouselRef.current.scrollWidth - carouselRef.current.clientWidth;
+  
+          // Move carousel
+          carouselRef.current.scrollLeft += scrollSpeed * scrollDirection;
+  
+          // Reverse direction when reaching end/start
+          if (carouselRef.current.scrollLeft >= maxScroll) {
+            scrollDirection = -1;
+          } else if (carouselRef.current.scrollLeft <= 0) {
+            scrollDirection = 1;
+          }
+        }
+      };
+  
+      const scrollInterval = setInterval(scrollCarousel, 20); // Smooth scrolling
+  
+      return () => clearInterval(scrollInterval);
+    }, []);
 
   return (
     <>
@@ -47,7 +92,7 @@ const Aboutus = () => {
           handpicked for its timeless elegance and unparalleled quality.
         </p>
         <div className="image-gallery">
-          <div className="about1-img" data-aos="fade-right"> 
+          <div className="about1-img" data-aos="fade-right">
             <img src={about1} alt="Jewelry 1" />
           </div>
           <div className="about2-img" data-aos="fade-left">
@@ -171,41 +216,19 @@ const Aboutus = () => {
           SHOP OUR EXQUISITE JEWELRY COLLECTION TODAY!
         </h2>
         <div className="category-carousel">
-          <div className="category-container">
-            <div className="category-item">
-              <img src={rings} alt="Rings" />
-              <span>RINGS</span>
-            </div>
-            <div className="category-item">
-              <img src={bracelete} alt="Bracelet" />
-              <span>BRACELET</span>
-            </div>
-            <div className="category-item">
-              <img src={chain} alt="Chain" />
-              <span>CHAIN</span>
-            </div>
-            <div className="category-item">
-              <img src={choker} alt="Chocker" />
-              <span>CHOCKER</span>
-            </div>
-            <div className="category-item">
-              <img src={cufflinks} alt="Cufflinks" />
-              <span>CUFFLINKS</span>
-            </div>
-            <div className="category-item">
-              <img src={cufflinks} alt="Earrings" />
-              <span>EARRINGS</span>
-            </div>
-            <div className="category-item">
-              <img src={gemstone} alt="Gemstone" />
-              <span>GEMSTONE</span>
-            </div>
-            <div className="category-item">
-              <img src={giftset} alt="Gift Set" />
-              <span>GIFT SET</span>
-            </div>
-          </div>
+        <div className="category-container" ref={carouselRef}>
+          {categories.map((category, index) => (
+            <>
+              <div className="hovername" key={index}>
+                <div className="category-item">
+                  <img src={category.img} alt={category.name} />
+                </div>
+                <span className="category-name">{category.name}</span>
+              </div>  
+            </>
+          ))}
         </div>
+      </div>
       </div>
 
       {/* testinomial */}
