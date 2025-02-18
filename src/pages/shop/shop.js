@@ -3,21 +3,31 @@ import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "../../redux/cartSlice";
 import { fetchCartCount } from "../../redux/cartSlice";
 import { useFetchDiamondsQuery } from "../../redux/shopSlice";
-import { Star, StarBorder } from "@mui/icons-material";
 import DiamondLoader from "../../components/Loader/loader"; // Import Loader
 import "./shop.css"; // External CSS
 import { Button, Menu, MenuItem, IconButton, Typography } from "@mui/material";
 import ArrowLeftIcon from "@mui/icons-material/ArrowLeft";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
-import { setCurrentPage, setItemsPerPage, setTotalPages } from "../../redux/shopSlice";
+import {
+  setCurrentPage,
+  setItemsPerPage,
+  setTotalPages,
+} from "../../redux/shopSlice";
+import { useNavigate } from "react-router-dom";
 
 const DiamondsGrid = ({ diamond }) => {
+  const navigate = useNavigate();
   console.log(diamond, "diamond");
   const dispatch = useDispatch();
   const userId = useSelector((state) => state.auth?.user?.UserId);
-  const { totalPages, currentPage, itemsPerPage } = useSelector((state) => state.shop);
-  
-  const { data, error, isLoading } = useFetchDiamondsQuery({ pageNumber: currentPage, pageSize: itemsPerPage });
+  const { totalPages, currentPage, itemsPerPage } = useSelector(
+    (state) => state.shop
+  );
+
+  const { data, error, isLoading } = useFetchDiamondsQuery({
+    pageNumber: currentPage,
+    pageSize: itemsPerPage,
+  });
   const diamonds = data?.result?.data || [];
 
   useEffect(() => {
@@ -25,12 +35,12 @@ const DiamondsGrid = ({ diamond }) => {
       dispatch(setTotalPages(data.result.totalPages));
     }
   }, [data, dispatch]);
-  
+
   useEffect(() => {
     if (userId) {
-      dispatch(fetchCartCount(userId)); // Fetch cart count when page loads
+      dispatch(fetchCartCount(userId));
     }
-  }, [userId]); // Run when userId is available
+  }, [userId]);
 
   const handleAddToCart = (diamond) => {
     if (!userId) {
@@ -40,15 +50,15 @@ const DiamondsGrid = ({ diamond }) => {
 
     const cartItem = {
       SKU: diamond.SKU,
-      Quantity: 1, // You can change this to allow quantity selection
+      Quantity: 1,
     };
 
-    dispatch(addToCart(cartItem, userId)); // Dispatch action
+    dispatch(addToCart(cartItem, userId));
   };
 
   const [anchorEl, setAnchorEl] = useState(null);
 
-  if (isLoading) return <DiamondLoader />; // Show loader while fetching data
+  if (isLoading) return <DiamondLoader />;
   if (error) return <p className="error">{error.message}</p>;
 
   const handleClick = (event) => {
@@ -57,11 +67,11 @@ const DiamondsGrid = ({ diamond }) => {
 
   const handleClose = (perPage) => {
     if (typeof perPage === "number") {
-      dispatch(setItemsPerPage(perPage)); // Update itemsPerPage in the store
+      dispatch(setItemsPerPage(perPage));
     }
     setAnchorEl(null);
   };
-  
+
   const handleNextPage = () => {
     if (currentPage < totalPages) {
       dispatch(setCurrentPage(currentPage + 1));
@@ -79,7 +89,13 @@ const DiamondsGrid = ({ diamond }) => {
       <div className="row">
         {diamonds.map((diamond, index) => (
           <div key={index} className="col-md-3 col-sm-6">
-            <div className="diamond-card">
+            <div
+              className="diamond-card"
+              onClick={(e) => {
+                e.stopPropagation();
+                navigate("/diamonddetail", { state: { diamond } });
+              }}
+            >
               <div className="shopimg">
                 <img
                   src={diamond.Image}
@@ -93,7 +109,10 @@ const DiamondsGrid = ({ diamond }) => {
               <p className="price">${diamond.Price.toFixed(2)}</p>
               <span
                 className="add-to-cart"
-                onClick={() => handleAddToCart(diamond)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleAddToCart(diamond);
+                }}
               >
                 Add to cart <span className="arrowbtn">→</span>
               </span>
