@@ -1,4 +1,6 @@
 import React from 'react';
+import { Toaster } from "react-hot-toast";
+import { ToastContainer } from "react-toastify";
 import { Provider } from "react-redux";  // ✅ Import Provider
 import store from "./redux/store";  // ✅ Import store
 import { Routes, Route } from 'react-router-dom';
@@ -36,6 +38,8 @@ function App() {
           <Route path="/diamonddetail" element={<Diamonddetail />} />
           <Route path="*" element={<Pagenotfound />} />
         </Routes>
+        <Toaster />
+        <ToastContainer />
         <Footer />
       </div>
     </Provider>
