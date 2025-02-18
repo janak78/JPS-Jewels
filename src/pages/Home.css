@@ -26,7 +26,7 @@
 
 .brtag {
   font-size: 16px;
-  color: #C9A236;
+  color: #c9a236;
 }
 
 /* Center the overlay text */
@@ -45,7 +45,7 @@
   font-size: 20px;
   font-weight: bold;
   color: white;
-  background-color: #C9A236;
+  background-color: #c9a236;
   padding: 10px 20px;
   border-radius: 5px;
   border: none;
@@ -735,7 +735,7 @@ body {
   display: block;
   width: 30px;
   height: 2px;
-  background-color: #c19a6b;
+  background-color: #c9a236;
   margin: 4px auto 0;
 }
 
@@ -758,9 +758,8 @@ body {
 }
 
 .hovername:hover .category-name {
-  color: #c19a6b !important;
+  color: #c9a236 !important;
 }
-
 
 /* Navigation Buttons */
 button.prev,

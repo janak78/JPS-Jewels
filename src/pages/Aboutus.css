@@ -168,7 +168,7 @@
 
 /* / Testimonial Card / */
 .testimonial-card {
-  width: clamp(280px, 90%, 350px); 
+  width: clamp(280px, 90%, 350px);
   max-width: 100%;
   padding: 20px;
   background: white;
@@ -242,118 +242,118 @@
 
 /* / Container / */
 .jewelry-container {
-    max-width: 900px;
-    margin: auto;
-    padding: 40px 20px;
+  max-width: 900px;
+  margin: auto;
+  padding: 40px 20px;
 }
 
 /* / Grid Layout / */
 .jewelry-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: auto auto;
-    gap: 0px;
-    position: relative;
-    align-items: center;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto auto;
+  gap: 0px;
+  position: relative;
+  align-items: center;
 }
 
 /* / Image Styling / */
 .jewelry-item.image {
-    position: relative;
+  position: relative;
 }
 
 .image1 {
-    grid-column: 1 / 2;
-    grid-row: 1 / 2;
+  grid-column: 1 / 2;
+  grid-row: 1 / 2;
 }
 
 .image2 {
-    grid-column: 2 / 3;
-    grid-row: 2 / 3;
+  grid-column: 2 / 3;
+  grid-row: 2 / 3;
 }
 
 .jewelry-img {
-    width: 100%;
-    max-width: 450px;  
-    max-height: 450px; 
-    object-fit: cover;
+  width: 100%;
+  max-width: 450px;
+  max-height: 450px;
+  object-fit: cover;
 }
 
 /* / Text Styling / */
 .jewelry-item.text {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 40px;
 }
 
 /* / Positioning Text Next to Images / */
 .text1 {
-    grid-column: 2 / 3;
-    grid-row: 1 / 2;
-    text-align: left;  
+  grid-column: 2 / 3;
+  grid-row: 1 / 2;
+  text-align: left;
 }
 
 .text2 {
-    grid-column: 1 / 2;
-    grid-row: 2 / 3;
-    text-align: right;
+  grid-column: 1 / 2;
+  grid-row: 2 / 3;
+  text-align: right;
 }
 
 /* / Typography / */
 .tagline {
-    font-size: 12px;
-    font-weight: bold;
-    letter-spacing: 2px;
-    color: #b29d87;
-    margin-bottom: 8px;
+  font-size: 12px;
+  font-weight: bold;
+  letter-spacing: 2px;
+  color: #b29d87;
+  margin-bottom: 8px;
 }
 
 .title {
-    font-size: 22px;
-    font-weight: bold;
-    margin-bottom: 15px;
-    color: #333;
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 15px;
+  color: #333;
 }
 
 .aboutdescription {
-    font-size: 14px;
-    line-height: 1.5;
-    color: #555;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #555;
 }
 
 /* / Responsive Design / */
 @media (max-width: 768px) {
-    .jewelry-grid {
-        grid-template-columns: 1fr;
-    }
+  .jewelry-grid {
+    grid-template-columns: 1fr;
+  }
 
-    .image1 {
-        grid-column: 1 / 2;
-        grid-row: 1;
-    }
+  .image1 {
+    grid-column: 1 / 2;
+    grid-row: 1;
+  }
 
-    .text1 {
-        grid-column: 1 / 2;
-        grid-row: 2;
-        text-align: center;
-    }
+  .text1 {
+    grid-column: 1 / 2;
+    grid-row: 2;
+    text-align: center;
+  }
 
-    .image2 {
-        grid-column: 1 / 2;
-        grid-row: 3;
-    }
+  .image2 {
+    grid-column: 1 / 2;
+    grid-row: 3;
+  }
 
-    .text2 {
-        grid-column: 1 / 2;
-        grid-row: 4;
-        text-align: center;
-    }
+  .text2 {
+    grid-column: 1 / 2;
+    grid-row: 4;
+    text-align: center;
+  }
 
-    .jewelry-img {
-        max-width: 100%;
-        max-height: 350px; 
-    }
+  .jewelry-img {
+    max-width: 100%;
+    max-height: 350px;
+  }
 }
 
 /* / aboutus video image / */
@@ -361,131 +361,131 @@
 /* / Main container / */
 /* / Video Container / */
 .video-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-    cursor: pointer;
-    width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  cursor: pointer;
+  width: 100%;
 }
 
 /* / Thumbnail Image / */
 .thumbnail {
-    position: relative;
-    display: inline-block;
-    border-radius: 10px;
-    overflow: hidden;
-    width: 100%;
-    max-width: 1200px;
+  position: relative;
+  display: inline-block;
+  border-radius: 10px;
+  overflow: hidden;
+  width: 100%;
+  max-width: 1200px;
 }
 
 .thumbnail-img {
-    width: 100%;
-    display: block;
-    height: auto;
+  width: 100%;
+  display: block;
+  height: auto;
 
-    border-radius: 10px;
+  border-radius: 10px;
 }
 
 /* / Play Button / */
 .play-button {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: rgba(0, 0, 0, 0.6);
-    color: white;
-    font-size: 50px; 
-    border-radius: 50%;
-    width: 80px;
-    height: 80px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: 0.3s;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  font-size: 50px;
+  border-radius: 50%;
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 0.3s;
 }
 
 .thumbnail:hover .play-button {
-    background: rgba(0, 0, 0, 0.8);
-    transform: translate(-50%, -50%) scale(1.1); 
+  background: rgba(0, 0, 0, 0.8);
+  transform: translate(-50%, -50%) scale(1.1);
 }
 
 /* / Modal / */
 .modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.7);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
 }
 
 /* / Modal Content / */
 .modal-content {
-    position: relative;
-    width: 90%;
-    max-width: 900px; 
-    border-radius: 10px;
-    overflow: hidden;
+  position: relative;
+  width: 90%;
+  max-width: 900px;
+  border-radius: 10px;
+  overflow: hidden;
 }
 
 .video-player {
-    width: 100%;
-    height: auto;
-    border-radius: 10px;
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
 }
 
 /* / Responsive Design / */
 @media (max-width: 1024px) {
-    .thumbnail {
-        max-width: 700px;
-    }
+  .thumbnail {
+    max-width: 700px;
+  }
 
-    .play-button {
-        font-size: 40px;
-        width: 70px;
-        height: 70px;
-    }
+  .play-button {
+    font-size: 40px;
+    width: 70px;
+    height: 70px;
+  }
 
-    .modal-content {
-        max-width: 80%;
-    }
+  .modal-content {
+    max-width: 80%;
+  }
 }
 
 @media (max-width: 768px) {
-    .thumbnail {
-        max-width: 90%;
-    }
+  .thumbnail {
+    max-width: 90%;
+  }
 
-    .play-button {
-        font-size: 35px;
-        width: 60px;
-        height: 60px;
-    }
+  .play-button {
+    font-size: 35px;
+    width: 60px;
+    height: 60px;
+  }
 
-    .modal-content {
-        max-width: 95%;
-    }
+  .modal-content {
+    max-width: 95%;
+  }
 }
 
 @media (max-width: 480px) {
-    .thumbnail {
-        max-width: 100%;
-    }
+  .thumbnail {
+    max-width: 100%;
+  }
 
-    .play-button {
-        font-size: 30px;
-        width: 50px;
-        height: 50px;
-    }
+  .play-button {
+    font-size: 30px;
+    width: 50px;
+    height: 50px;
+  }
 
-    .modal-content {
-        max-width: 100%;
-    }
+  .modal-content {
+    max-width: 100%;
+  }
 }
 
 /* Category Carousel */
@@ -557,7 +557,7 @@
   display: block;
   width: 30px;
   height: 2px;
-  background-color: #c19a6b;
+  background-color: #c9a236;
   margin: 4px auto 0;
 }
 
@@ -580,9 +580,8 @@
 }
 
 .hovername:hover .category-name {
-  color: #c19a6b !important;
+  color: #c9a236 !important;
 }
-
 
 /* Navigation Buttons */
 button.prev,

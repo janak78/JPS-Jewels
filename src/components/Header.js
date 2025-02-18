@@ -279,7 +279,7 @@ const Header = () => {
               >
                 CART
               </Typography>
-              <div style={{height:"700px", overflowY:"auto"}}>
+              <div style={{height:"100%", overflowY:"auto"}}>
               {userName ? (
                 cartData && cartData.length > 0 ? (
                   cartData.map((item, index) => (
