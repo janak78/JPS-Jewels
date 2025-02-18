@@ -3,7 +3,7 @@ import { Grid, FormControl, InputLabel, Select, MenuItem, FormHelperText } from 
 
 const SelectInput = ({ label, name, value, onChange, onBlur, error, helperText, options }) => {
   return (
-    <Grid item xs={12} sm={4}>
+    <Grid item xs={12} sm={12}>
       <FormControl fullWidth variant="outlined" error={error}>
         <InputLabel>{label}</InputLabel>
         <Select

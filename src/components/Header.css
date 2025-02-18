@@ -1,7 +1,7 @@
 /* General Styling */
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
+  font-family: "Poppins";
   padding-top: clamp(50px, 10vh, 70px) !important;
 }
 
@@ -207,7 +207,7 @@ body {
 
 /* Login button */
 .login-btn-login {
-  background-color: #b8860b !important;
+  background-color: #C9A236 !important;
   color: white !important;
   width: 100%;
   margin-top: 10px;
@@ -224,7 +224,7 @@ body {
 .signup-link-signup {
   font-weight: bold;
   cursor: pointer;
-  color: #b8860b;
+  color: #C9A236;
 }
 
 /* Responsive adjustments */

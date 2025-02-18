@@ -342,7 +342,7 @@ li {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: Arial, sans-serif;
+  /* font-family: Arial, sans-serif; */
 }
 
 /* Main Container */
@@ -491,7 +491,7 @@ li {
 
 /* General Styling */
 body {
-  font-family: Arial, sans-serif;
+  font-family: "Poppins";
   background-color: white;
   margin: 0;
   padding: 0;
@@ -658,7 +658,7 @@ body {
 
 /* General Styles */
 body {
-  font-family: Arial, sans-serif;
+  font-family: "Poppins";
   background-color: white;
   text-align: center;
   margin: 0;

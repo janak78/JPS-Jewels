@@ -6,7 +6,7 @@ const PasswordInput = ({ label, name, value, onChange, onBlur, error, helperText
   const [showPassword, setShowPassword] = useState(false);
 
   return (
-    <Grid item xs={12} sm={4}>
+    <Grid item xs={12} sm={12}>
       <TextField 
         label={label} 
         name={name}

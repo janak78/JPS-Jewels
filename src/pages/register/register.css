@@ -1,31 +1,43 @@
 /* Container */
 .form-container {
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    margin-top: 30px;
-    margin-bottom: 30px;
-    max-width: 90% !important;
-  }
-  
-  /* Title */
-  .form-title {
-    text-align: left;
-    padding: 20px 0px;
-    font-weight: bold;
-  }
-  
-  /* Button Container */
-  .btn-container {
-    margin-top: 20px;
-    width: fit-content;
-    display: flex;
-    justify-content: left;
-  }
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  margin-top: 30px;
+  margin-bottom: 30px;
+  max-width: 90% !important;
+}
 
-  .btn-containermain {
-    display: flex;
-    justify-content: left;
-  }
-  
+/* Title */
+.form-title {
+  text-align: left;
+  padding: 20px 0px;
+  font-weight: bold;
+}
+
+/* Button Container */
+.btn-container {
+  margin-top: 20px;
+  width: fit-content;
+  display: flex;
+  justify-content: left;
+}
+
+.btn-containermain {
+  display: flex;
+  justify-content: left;
+}
+
+.button-colors {
+  background-color: #C9A236 !important;
+  color: white !important;
+}
+
+
+.css-14mwj1n-MuiGrid-root .next-buttons{
+  padding-left: 8px !important;
+} 
+/* .button-colors:hover {
+  background-color: 0; 
+} */

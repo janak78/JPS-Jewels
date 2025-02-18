@@ -3,7 +3,7 @@ import { TextField, Grid } from "@mui/material";
 
 const TextInput = ({ label, name, value, onChange, onBlur, error, helperText, required }) => {
   return (
-    <Grid item xs={12} sm={4}>
+    <Grid item xs={12} sm={12}>
       <TextField 
         label={label} 
         variant="outlined" 

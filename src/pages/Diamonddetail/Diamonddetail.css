@@ -1,0 +1,130 @@
+.diamond-product-container {
+  padding: 20px;
+  /* background-color: #f8f8f8; */
+}
+
+.diamond-product-wrapper {
+  max-width: 1200px;
+  margin: auto;
+}
+
+.diamond-product-image-container {
+  display: flex;
+  justify-content: center;
+  align-items: start;
+}
+
+.diamond-product-image {
+  max-width: 100%;
+  border-radius: 10px;
+}
+
+.diamond-product-details-container {
+  padding: 20px;
+  margin-top: 20px !important;
+}
+
+.diamond-product-title {
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.diamond-product-sku {
+  color: #000;
+  margin-bottom: 10px;
+}
+
+.diamond-product-buttons-container {
+  display: flex;
+  gap: 10px;
+  margin: 15px 0;
+  justify-content: center;
+}
+
+.diamond-product-video-btn,
+.diamond-product-certificate-btn {
+  background-color: #c9a236 !important;
+  color: white !important;
+}
+
+.diamond-product-price {
+  font-size: 28px;
+  font-weight: 600;
+  margin: 10px 0;
+}
+
+.diamond-product-quantity-input {
+  width: 80px;
+  margin: 10px 0;
+}
+
+.diamond-product-cart-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+  justify-content: center;
+}
+
+.diamond-product-cart-btn {
+  border: 1px solid #ccc !important;
+  color: black !important;
+}
+
+.diamond-product-buy-btn {
+  background-color: #c9a236 !important;
+  color: white !important;
+}
+
+.diamond-product-info-card {
+  margin-top: 20px;
+  background-color: #eeeeee !important;
+  padding: 15px;
+  border-radius: 8px;
+}
+
+.diamond-product-info-title {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.diamond-product-info-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.diamond-product-info-table td {
+  padding: 8px;
+  border-bottom: 1px solid #ddd;
+}
+
+.diamond-description-divider {
+  border: none;
+  height: 1px;
+  background-color: #ddd;
+  margin-bottom: 20px;
+}
+
+.diamond-description-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #222;
+  text-align: left;
+}
+
+.diamond-description-text {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #444;
+  text-align: left;
+}
+
+/* .diamond-description-last {
+  display: flex;
+  align-items: left !important;
+} */
+
+.categorytext{
+    color: #C9A236;
+}

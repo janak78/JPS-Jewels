@@ -2,31 +2,30 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "../../redux/cartSlice";
 import { fetchCartCount } from "../../redux/cartSlice";
-import { fetchShopData } from "../../redux/shopSlice";
-import axios from "axios";
+import { useFetchDiamondsQuery } from "../../redux/shopSlice";
 import { Star, StarBorder } from "@mui/icons-material";
 import DiamondLoader from "../../components/Loader/loader"; // Import Loader
 import "./shop.css"; // External CSS
 import { Button, Menu, MenuItem, IconButton, Typography } from "@mui/material";
 import ArrowLeftIcon from "@mui/icons-material/ArrowLeft";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
-import { fetchDiamonds, setCurrentPage, setItemsPerPage } from "../../redux/shopSlice";
+import { setCurrentPage, setItemsPerPage, setTotalPages } from "../../redux/shopSlice";
 
 const DiamondsGrid = ({ diamond }) => {
   console.log(diamond, "diamond");
   const dispatch = useDispatch();
   const userId = useSelector((state) => state.auth?.user?.UserId);
-  const {
-    diamondsByPage,
-    loading,
-    error,
-    totalPages,
-    currentPage,
-    itemsPerPage,
-  } = useSelector((state) => state.shop);
+  const { totalPages, currentPage, itemsPerPage } = useSelector((state) => state.shop);
+  
+  const { data, error, isLoading } = useFetchDiamondsQuery({ pageNumber: currentPage, pageSize: itemsPerPage });
+  const diamonds = data?.result?.data || [];
 
-  const diamonds = diamondsByPage[currentPage] || [];
-
+  useEffect(() => {
+    if (data?.result?.totalPages) {
+      dispatch(setTotalPages(data.result.totalPages));
+    }
+  }, [data, dispatch]);
+  
   useEffect(() => {
     if (userId) {
       dispatch(fetchCartCount(userId)); // Fetch cart count when page loads
@@ -47,45 +46,10 @@ const DiamondsGrid = ({ diamond }) => {
     dispatch(addToCart(cartItem, userId)); // Dispatch action
   };
 
-  // const [diamonds, setDiamonds] = useState([]);
-  // const [loading, setLoading] = useState(true);
-  // const [error, setError] = useState("");
   const [anchorEl, setAnchorEl] = useState(null);
-  // const [currentPage, setCurrentPage] = useState(1);
-  // const [itemsPerPage, setItemsPerPage] = useState(12);
-  // const [totalPages, setTotalPages] = useState(1);
 
-  // const fetchDiamonds = async () => {
-  //   try {
-  //     const response = await axios.get(
-  //       "http://localhost:5000/api/stock/data/page",
-  //       { params: { pageSize: itemsPerPage, pageNumber: currentPage } }
-  //     );
-  //     console.log(response, "resress");
-
-  //     if (response.data.result.statusCode === 200) {
-  //       setDiamonds(response.data.result.data);
-  //       setTotalPages(response.data?.result?.totalPages);
-  //     } else {
-  //       setError("No diamonds found.");
-  //     }
-  //   } catch (err) {
-  //     setError("Failed to fetch data.");
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
-  useEffect(() => {
-    if (!diamondsByPage[currentPage]) {
-      dispatch(
-        fetchDiamonds({ pageNumber: currentPage, pageSize: itemsPerPage })
-      );
-    }
-  }, [dispatch, currentPage, itemsPerPage, diamondsByPage]);
-
-  if (loading) return <DiamondLoader />; // Show loader while fetching data
-  if (error) return <p className="error">{error}</p>;
+  if (isLoading) return <DiamondLoader />; // Show loader while fetching data
+  if (error) return <p className="error">{error.message}</p>;
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -93,10 +57,11 @@ const DiamondsGrid = ({ diamond }) => {
 
   const handleClose = (perPage) => {
     if (typeof perPage === "number") {
-      setItemsPerPage(perPage);
+      dispatch(setItemsPerPage(perPage)); // Update itemsPerPage in the store
     }
     setAnchorEl(null);
   };
+  
   const handleNextPage = () => {
     if (currentPage < totalPages) {
       dispatch(setCurrentPage(currentPage + 1));
@@ -122,18 +87,9 @@ const DiamondsGrid = ({ diamond }) => {
                   className="diamond-img"
                 />
               </div>
-              <h6>
+              <h6 className="mt-3 diamond-name">
                 {diamond.Carats} CARAT {diamond.Shape} - {diamond.Lab}
               </h6>
-              <div className="star-rating">
-                {[...Array(5)].map((_, i) =>
-                  i < diamond.Rating ? (
-                    <Star key={i} className="filled-star" />
-                  ) : (
-                    <StarBorder key={i} className="empty-star" />
-                  )
-                )}
-              </div>
               <p className="price">${diamond.Price.toFixed(2)}</p>
               <span
                 className="add-to-cart"

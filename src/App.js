@@ -14,6 +14,7 @@ import Login from './pages/login/login';
 import Signup from './pages/register/register';
 import Shop from './pages/shop/shop';
 import Pagenotfound from './pages/Pagenotfound/Pagenotfound';
+import Diamonddetail from './pages/Diamonddetail/Diamonddetail';
 
 import './App.css';
 
@@ -32,6 +33,7 @@ function App() {
           <Route path="/signup" element={<Signup />} />
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/diamond" element={<Shop />} />
+          <Route path="/diamonddetail" element={<Diamonddetail />} />
           <Route path="*" element={<Pagenotfound />} />
         </Routes>
         <Footer />

@@ -43,13 +43,13 @@
   
   /* Links */
   .forgot-password {
-    color: #b8860b;
+    color: #C9A236;
     font-size: 14px;
     cursor: pointer;
   }
   
   .privacy-link, .terms-link {
-    color: #b8860b;
+    color: #C9A236;
     text-decoration: none;
     cursor: pointer;
   }
@@ -60,7 +60,7 @@
   
   /* Buttons */
   .login-btn, .register-btn {
-    background-color: #b8860b !important;
+    background-color: #C9A236 !important;
     color: white !important;
     margin-top: 15px;
     width: auto;
