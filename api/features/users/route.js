@@ -367,7 +367,7 @@ const loginUser = async (data) => {
 
     // Generate a JWT token
     const token = jwt.sign(
-      { UserId: user.UserId, Username: user.Username },
+      { UserId: user.UserId, Username: user.Username, Mail: user.PrimaryEmail },
       SECRET_KEY,
       { expiresIn: "5h" }
     );

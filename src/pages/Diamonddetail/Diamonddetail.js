@@ -27,6 +27,7 @@ import { useDispatch, useSelector } from "react-redux";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { addToCart } from "../../redux/cartSlice";
 import { fetchCartCount } from "../../redux/cartSlice";
+import showToast from "../../components/Toast/Toaster";
 
 const Diamonddetail = () => {
   const location = useLocation();
@@ -95,7 +96,7 @@ const Diamonddetail = () => {
   // add cart
   const handleAddToCart = (diamond) => {
     if (!userId) {
-      alert("Please log in to add items to the cart.");
+      showToast.warning("Please log in to add items to the cart.");
       return;
     }
 

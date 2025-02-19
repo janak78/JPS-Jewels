@@ -63,11 +63,11 @@ const Checkout = () => {
         // window.location.reload(); // Refresh the page
         dispatch(fetchCartCount(localStorage.getItem("UserId"))); 
       } else {
-        alert(response.data.message);
+        showToast.error(response.data.message);
       }
     } catch (error) {
       console.error("Error placing order:", error);
-      alert("Something went wrong. Please try again later.");
+      showToast.warning("Something went wrong. Please try again later.");
     } finally {
       setSubmitting(false);
     }

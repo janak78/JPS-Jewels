@@ -8,12 +8,14 @@ const getTokenData = () => {
     return undefined;
   }
 };
+// console.log(jwtDecode(localStorage.getItem("Token")),"gtd")
 
 const initialState = {
   isAuthenticated: !!localStorage.getItem("Token"),
   token: localStorage.getItem("Token") || null,
   user: getTokenData(),
   Username: getTokenData()?.Username,
+  Mail: getTokenData()?.Mail,
 };
 
 const authSlice = createSlice({
@@ -27,6 +29,7 @@ const authSlice = createSlice({
       state.Username = action.payload.user.Username;
       localStorage.setItem("Token", action.payload.token);
       localStorage.setItem("UserId", action.payload.user.UserId);
+      state.Mail = action.payload.Mail;
     },
     logout: (state) => {
       state.isAuthenticated = false;
