@@ -119,11 +119,15 @@ const RegistrationForm = () => {
         .required("Confirm Password is required"),
       LineofBusiness: Yup.string().required("Line of business is required"),
       PreferredContactDetails: Yup.string()
-        .matches(
-          /^([\w\-.]+@([\w-]+\.)+[\w-]{2,4},?\s*)*([\d\s\-\(\)]{7,15},?\s*)*$/,
-          "Provide valid contact details (email or phone)"
-        )
-        .nullable(),
+        .nullable()
+        .test(
+          "isValidContact",
+          "Provide valid contact details (email or phone)",
+          (value) =>
+            !value ||
+            /^[\w\-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(value) ||
+            /^\d{7,15}$/.test(value)
+        ),
     }),
     onSubmit: async (values) => {
       try {
@@ -142,17 +146,53 @@ const RegistrationForm = () => {
       }
     },
   });
+  console.log(formik.values);
+  console.log(formik.errors);
 
-  const handleNext = () =>
-    setStep((prev) => Math.min(prev + 1, steps.length - 1));
+  const handleNext = async () => {
+    const fieldsToValidate = steps[step];
+
+    await formik.setTouched(
+      fieldsToValidate.reduce((acc, field) => ({ ...acc, [field]: true }), {}),
+      true
+    );
+
+    const errors = await formik.validateForm();
+    const stepErrors = Object.keys(errors).filter((field) =>
+      fieldsToValidate.includes(field)
+    );
+
+    if (stepErrors.length === 0) {
+      setStep((prev) => Math.min(prev + 1, steps.length - 1));
+    }
+  };
+
   const handlePrev = () => setStep((prev) => Math.max(prev - 1, 0));
 
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    await formik.setTouched(
+      Object.keys(formik.initialValues).reduce(
+        (acc, field) => ({ ...acc, [field]: true }),
+        {}
+      ),
+      true
+    );
+
+    await formik.validateForm(); // Ensure validation completes before submission
+    if (formik.isValid) {
+      // Ensure form is valid
+      formik.handleSubmit();
+    }
+  };
+
   return (
-    <Container maxWidth="md" className="form-container">
+    <Container maxWidth="md" className="register-container">
       <Typography variant="h4" className="form-title">
         Sign Up & Start Shopping
       </Typography>
-      <form onSubmit={formik.handleSubmit}>
+      <form onSubmit={handleSubmit}>
         <Grid container spacing={2}>
           <Grid item xs={12} sm={6}>
             <Grid container spacing={2}>
@@ -203,7 +243,7 @@ const RegistrationForm = () => {
                         field.replace(/([A-Z])/g, " $1").trim() + " *"
                         // (formik.getFieldProps(field).required ? " *" : "")
                         // label={field.replace(/([A-Z])/g, " $1").trim() + " *"}
-                      } 
+                      }
                       {...formik.getFieldProps(field)}
                       error={
                         formik.touched[field] && Boolean(formik.errors[field])

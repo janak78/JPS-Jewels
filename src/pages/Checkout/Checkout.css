@@ -69,6 +69,8 @@
   margin-top: 25px;
 }
 
-.cart-boxs{
+.cart-boxs {
   padding-top: 30px;
+  height: 800px !important;
+  overflow-y: auto;
 }

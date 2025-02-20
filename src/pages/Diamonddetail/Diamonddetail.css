@@ -15,12 +15,16 @@
 
 .diamond-product-image {
   max-width: 100%;
-  border-radius: 10px;
+  /* border-radius: 10px;  */
 }
 
 .diamond-product-details-container {
   padding: 20px;
-  margin-top: 20px !important;
+  /* margin-top: 20px !important; */
+}
+
+.maingrid {
+  margin-top: 15px !important;
 }
 
 .diamond-product-title {
@@ -111,10 +115,7 @@
 }
 
 .diamond-product-info-card {
-  margin-top: 20px;
-  /* background-color: #eeeeee !important;
-  padding: 15px;
-  border-radius: 8px; */
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px !important;
 }
 
 .diamond-product-info-title {
@@ -167,4 +168,5 @@
 .imagemodalbtn {
   color: white !important;
   background-color: #c9a236 !important;
+  outline: none !important;
 }

@@ -220,7 +220,12 @@ const Header = () => {
     <header className="header">
       {/* Left Logo */}
       <div className="logo">
-        <img src={logo} alt="JPS Jewels" className="logo-image" />
+        <img
+          src={logo}
+          alt="JPS Jewels"
+          className="logo-image"
+          onClick={() => navigate("/")}
+        />
       </div>
 
       {/* Navigation Links (Hidden on Small Screens) */}

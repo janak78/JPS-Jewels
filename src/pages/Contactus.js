@@ -8,6 +8,8 @@ import email from "../assets/images/email.svg";
 import { FaStar } from "react-icons/fa";
 import showToast from "../components/Toast/Toaster";
 import "./Contactus.css";
+import TextInput from "../components/inputs/TextInput";
+import { Grid } from "@mui/material";
 
 const Contactus = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -78,8 +80,9 @@ const Contactus = () => {
             </p>
 
             <div className="contact-item">
-              <span className="icon">
-                <img src={pin} alt="pin" width="27px" /> <strong>Address:</strong>
+              <span className="contactext">
+                <img src={pin} alt="pin" width="27px" />{" "}
+                <strong>Address:</strong>
               </span>
               <a
                 href="https://www.google.com/maps/search/?q=315+Shashvat+Apartment,+Pipla+Sheri,+Mahidharpura,+Surat+-+395003"
@@ -94,8 +97,9 @@ const Contactus = () => {
             </div>
 
             <div className="contact-item">
-              <span className="icon">
-              <img src={telephonecall} alt="pin" width="27px" /> <strong>Phone:</strong>
+              <span className="contactext">
+                <img src={telephonecall} alt="pin" width="27px" />{" "}
+                <strong>Phone:</strong>
               </span>
               <a href="tel:+919825971176" className="note">
                 +91 9825971176
@@ -106,8 +110,9 @@ const Contactus = () => {
             </div>
 
             <div className="contact-item">
-              <span className="icon">
-              <img src={email} alt="pin" width="27px" /> <strong>Email:</strong>
+              <span className="contactext">
+                <img src={email} alt="pin" width="27px" />{" "}
+                <strong>Email:</strong>
               </span>
               <a href="mailto:info@uat.jpsjewels.com" className="note">
                 info@uat.jpsjewels.com
@@ -119,49 +124,64 @@ const Contactus = () => {
           <div className="form-container">
             <h2 className="headtext">WRITE TO US</h2>
             <form onSubmit={formik.handleSubmit}>
-              <input
-                type="text"
-                name="name"
-                placeholder="Your name"
-                {...formik.getFieldProps("Name")}
-              />
-              {formik.touched.Name && formik.errors.Name && (
-                <div className="error">{formik.errors.Name}</div>
-              )}
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <TextInput
+                    label="Your Name *"
+                    {...formik.getFieldProps("Name")}
+                    error={formik.touched.Name && Boolean(formik.errors.Name)}
+                    helperText={formik.touched.Name && formik.errors.Name}
+                    fullWidth
+                  />
+                </Grid>
 
-              <input
-                type="email"
-                name="Email"
-                placeholder="Your Email"
-                {...formik.getFieldProps("Email")}
-              />
-              {formik.touched.Email && formik.errors.Email && (
-                <div className="error">{formik.errors.Email}</div>
-              )}
+                <Grid item xs={12}>
+                  <TextInput
+                    label="Your Email *"
+                    type="email"
+                    {...formik.getFieldProps("Email")}
+                    error={formik.touched.Email && Boolean(formik.errors.Email)}
+                    helperText={formik.touched.Email && formik.errors.Email}
+                    fullWidth
+                  />
+                </Grid>
 
-              <input
-                type="text"
-                name="Subject"
-                placeholder="Subject"
-                {...formik.getFieldProps("Subject")}
-              />
-              {formik.touched.Subject && formik.errors.Subject && (
-                <div className="error">{formik.errors.Subject}</div>
-              )}
+                <Grid item xs={12}>
+                  <TextInput
+                    label="Subject *"
+                    {...formik.getFieldProps("Subject")}
+                    error={
+                      formik.touched.Subject && Boolean(formik.errors.Subject)
+                    }
+                    helperText={formik.touched.Subject && formik.errors.Subject}
+                    fullWidth
+                  />
+                </Grid>
 
-              <textarea
-                name="Message"
-                placeholder="Your Message (optional)"
-                {...formik.getFieldProps("Message")}
-              ></textarea>
+                <Grid item xs={12}>
+                  <TextInput
+                    label="Your Message (optional)"
+                    multiline // ✅ Enables textarea mode
+                    rows={4}
+                    {...formik.getFieldProps("Message")}
+                    error={
+                      formik.touched.Message && Boolean(formik.errors.Message)
+                    }
+                    helperText={formik.touched.Message && formik.errors.Message}
+                    fullWidth
+                  />
+                </Grid>
 
-              <button type="submit" disabled={formik.isSubmitting}>
-                {formik.isSubmitting ? "Sending..." : "Send Message"}
-              </button>
+                <Grid item xs={12}>
+                  <button type="submit" disabled={formik.isSubmitting}>
+                    {formik.isSubmitting ? "Sending..." : "Send Message"}
+                  </button>
+                </Grid>
+              </Grid>
             </form>
           </div>
         </div>
-      </div>  
+      </div>
     </>
   );
 };

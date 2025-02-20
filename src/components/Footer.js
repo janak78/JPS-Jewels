@@ -35,26 +35,26 @@ const Footer = () => {
         {/* {/ Account Section /} */}
         <div className="footer-section">
           <h3>ACCOUNT</h3>
-          <a href="#">Dashboard</a>
-          <a href="#">Orders</a>
-          <a href="#">Wishlist</a>
-          <a href="#">Addresses</a>
+          <p>Dashboard</p>
+          <p>Orders</p>
+          <p>Wishlist</p>
+          <p>Addresses</p>
         </div>
 
         {/* {/ Diamonds Section /} */}
         <div className="footer-section">
           <h3>DIAMONDS</h3>
-          <a href="#">Shop by category</a>
-          <a href="#">Shop by brand</a>
-          <a href="#">Promotions</a>
+          <p>Shop by category</p>
+          <p>Shop by brand</p>
+          <p>Promotions</p>
         </div>
 
         {/* {/ Help Section /} */}
         <div className="footer-section">
           <h3>HELP</h3>
-          <a href="#">FAQ</a>
-          <a href="#">About us</a>
-          <a href="#">Contact us</a>
+          <p>FAQ</p>
+          <p>About us</p>
+          <p>Contact us</p>
         </div>
 
         {/* {/ Contact Section /} */}
@@ -65,16 +65,16 @@ const Footer = () => {
             <div>
               <span>Call us 8 AM - 11 PM</span>
               <span>
-                <a href="tel:+919825971176" className="note">
+                <p href="tel:+919825971176" className="note">
                   +91 9825971176
-                </a>
+                </p>
               </span>
             </div>
           </div>
           <div className="addresssec">
           <img src={pin} alt="pin" width="27px" fill="#c9a236"/>
             <span>
-              <a
+              <p
                 href="https://www.google.com/maps/search/?q=315+Shashvat+Apartment,+Pipla+Sheri,+Mahidharpura,+Surat+-+395003"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -83,7 +83,7 @@ const Footer = () => {
                 315, Shashvat Apartment, <br />
                 Pipla Sheri, Mahidharpura, <br />
                 Surat - 395003
-              </a>
+              </p>
             </span>
           </div>
         </div>
@@ -91,28 +91,28 @@ const Footer = () => {
 
       {/* {/ Footer Bottom /} */}
       <div className="fm">
-        <div class="footermain">
+        <div className="footermain">
           <div className="footer-bottom">
             Copyright © 2025 JPS Jewels. All Rights Reserved
           </div>
           <div className="social-icons">
-            <a href="#">
+            <p>
               <FaFacebookF />
-            </a>
-            <a href="#">
+            </p>
+            <p>
               <FaInstagram />
-            </a>
-            <a href="#">
+            </p>
+            <p>
               <FaTelegram />
-            </a>
-            <a href="#">
+            </p>
+            <p>
               <FaTwitter />
-            </a>
-            <a href="#">
+            </p>
+            <p>
               <FaYoutube />
-            </a>
+            </p>
           </div>
-          <div class="pri-pol">
+          <div className="pri-pol">
             <div
               className="footer-bottom"
               style={{ cursor: "pointer" }}

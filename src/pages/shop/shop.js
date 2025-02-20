@@ -107,7 +107,7 @@ const DiamondsGrid = ({ diamond }) => {
               <h6 className="mt-3 diamond-name">
                 {diamond.Carats} CARAT {diamond.Shape} - {diamond.Lab}
               </h6>
-              <p className="price">${diamond.Price.toFixed(2)}</p>
+              <p className="price">${diamond.Amount.toFixed(2)}</p>
               <span
                 className="add-to-cart"
                 onClick={(e) => {

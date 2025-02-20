@@ -518,7 +518,7 @@
 
 /* Category Item */
 .category-item {
-  background-color: #f9eeee;
+  background-color: #f5f5f5;
   border: 1px solid transparent;
 
   /* padding: 20px; */
@@ -581,6 +581,15 @@
 
 .hovername:hover .category-name {
   color: #c9a236 !important;
+}
+.category-icon {
+  filter: brightness(0) saturate(100%) invert(53%) sepia(91%) saturate(413%)
+    hue-rotate(5deg) !important;
+}
+
+.hovername:hover .category-icon {
+  filter: none !important;
+  color: #000 !important;
 }
 
 /* Navigation Buttons */

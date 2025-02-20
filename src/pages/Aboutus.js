@@ -51,31 +51,32 @@ const Aboutus = () => {
   }, []);
 
   useEffect(() => {
-      if (!carouselRef.current) return;
-  
-      let scrollSpeed = 2; // Adjust for smoothness
-      let scrollDirection = 1; // 1 for forward, -1 for reverse
-  
-      const scrollCarousel = () => {
-        if (carouselRef.current) {
-          const maxScroll = carouselRef.current.scrollWidth - carouselRef.current.clientWidth;
-  
-          // Move carousel
-          carouselRef.current.scrollLeft += scrollSpeed * scrollDirection;
-  
-          // Reverse direction when reaching end/start
-          if (carouselRef.current.scrollLeft >= maxScroll) {
-            scrollDirection = -1;
-          } else if (carouselRef.current.scrollLeft <= 0) {
-            scrollDirection = 1;
-          }
+    if (!carouselRef.current) return;
+
+    let scrollSpeed = 2; // Adjust for smoothness
+    let scrollDirection = 1; // 1 for forward, -1 for reverse
+
+    const scrollCarousel = () => {
+      if (carouselRef.current) {
+        const maxScroll =
+          carouselRef.current.scrollWidth - carouselRef.current.clientWidth;
+
+        // Move carousel
+        carouselRef.current.scrollLeft += scrollSpeed * scrollDirection;
+
+        // Reverse direction when reaching end/start
+        if (carouselRef.current.scrollLeft >= maxScroll) {
+          scrollDirection = -1;
+        } else if (carouselRef.current.scrollLeft <= 0) {
+          scrollDirection = 1;
         }
-      };
-  
-      const scrollInterval = setInterval(scrollCarousel, 20); // Smooth scrolling
-  
-      return () => clearInterval(scrollInterval);
-    }, []);
+      }
+    };
+
+    const scrollInterval = setInterval(scrollCarousel, 20); // Smooth scrolling
+
+    return () => clearInterval(scrollInterval);
+  }, []);
 
   return (
     <>
@@ -216,19 +217,23 @@ const Aboutus = () => {
           SHOP OUR EXQUISITE JEWELRY COLLECTION TODAY!
         </h2>
         <div className="category-carousel">
-        <div className="category-container" ref={carouselRef}>
-          {categories.map((category, index) => (
-            <>
-              <div className="hovername" key={index}>
-                <div className="category-item">
-                  <img src={category.img} alt={category.name} />
+          <div className="category-container" ref={carouselRef}>
+            {categories.map((category, index) => (
+              <>
+                <div className="hovername" key={index}>
+                  <div className="category-item">
+                    <img
+                      src={category.img}
+                      alt={category.name}
+                      className="category-icon"
+                    />
+                  </div>
+                  <span className="category-name">{category.name}</span>
                 </div>
-                <span className="category-name">{category.name}</span>
-              </div>  
-            </>
-          ))}
+              </>
+            ))}
+          </div>
         </div>
-      </div>
       </div>
 
       {/* testinomial */}

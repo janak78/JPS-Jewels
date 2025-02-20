@@ -27,6 +27,7 @@ body {
 
 .logo-image {
   height: 40px;
+  cursor: pointer;
 }
 
 /* Navigation Bary */
@@ -45,15 +46,15 @@ body {
 
 .nav-link:hover,
 .nav-link.active {
-  color: rgb(163, 148, 66);
-  transition: color 300ms ease-out; 
+  color: #c9a236;
+  transition: color 300ms ease-out;
 }
 
 .nav-link.active::after {
   content: "";
   display: block;
   height: 2px;
-  background-color: rgb(163, 152, 89);
+  background-color: #c9a236;
   width: 100%;
   position: absolute;
   bottom: -5px;
@@ -111,7 +112,7 @@ body {
 }
 
 .mobile-menu:hover {
-  color: rgb(148, 135, 63);
+  color: #c9a236;
   transition: color 300ms ease-out;
 }
 
@@ -176,7 +177,6 @@ body {
   }
 }
 
-
 /* login */
 
 /* Main container */
@@ -207,7 +207,7 @@ body {
 
 /* Login button */
 .login-btn-login {
-  background-color: #C9A236 !important;
+  background-color: #c9a236 !important;
   color: white !important;
   width: 100%;
   margin-top: 10px;
@@ -270,7 +270,6 @@ body {
   }
 }
 
-
 /* cart */
 
 .cart-button {
@@ -280,14 +279,14 @@ body {
   background: transparent !important;
 }
 
-.closeicon{
+.closeicon {
   border: none !important;
   outline: none !important;
   box-shadow: none !important;
   background: transparent !important;
 }
 
-.checkoutbutton{
+.checkoutbutton {
   border: none !important;
   outline: none !important;
 }

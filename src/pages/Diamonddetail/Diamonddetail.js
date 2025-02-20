@@ -115,7 +115,7 @@ const Diamonddetail = () => {
   return (
     <div className="diamond-product-container">
       <div className="diamond-product-wrapper">
-        <Grid container spacing={3}>
+        <Grid container spacing={3} className="maingrid">
           {/* Left Side - Diamond Image */}
           <Grid item xs={12} md={4} className="diamond-product-image-container">
             <img
@@ -208,7 +208,10 @@ const Diamonddetail = () => {
                 ></iframe>
               </DialogContent>
               <DialogActions>
-                <Button onClick={handleCloseVideoModal} color="primary">
+                <Button
+                  onClick={handleCloseVideoModal}
+                  className="imagemodalbtn"
+                >
                   Close
                 </Button>
               </DialogActions>
@@ -232,14 +235,19 @@ const Diamonddetail = () => {
                 ></iframe>
               </DialogContent>
               <DialogActions>
-                <Button onClick={handleCloseCertificateModal} color="primary">
+                <Button
+                  onClick={handleCloseCertificateModal}
+                  className="imagemodalbtn"
+                >
                   Close
                 </Button>
               </DialogActions>
             </Dialog>
 
             {/* Price */}
-            <p className="diamond-product-price">${diamondData?.Amount}</p>
+            <p className="diamond-product-price">
+              ${diamondData?.Amount?.toFixed(2)}
+            </p>
 
             {/* Quantity Input */}
             <TextField
@@ -320,7 +328,13 @@ const Diamonddetail = () => {
               <Accordion defaultExpanded>
                 <AccordionSummary
                   expandIcon={<ExpandMoreIcon />}
-                  sx={{ outline: "none", border: "none" }}
+                  sx={{
+                    outline: "none",
+                    border: "none",
+                    "&:focus": { outline: "none" }, // Removes outline on focus
+                    "&:active": { outline: "none" }, // Removes outline on click
+                    "&:hover": { outline: "none" }, // Removes outline on hover
+                  }}
                 >
                   <Typography
                     variant="h6"
