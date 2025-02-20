@@ -17,8 +17,8 @@
 }
 
 /* Button Container */
-.btn-container {
-  margin-top: 20px;
+.btn-containerregister {
+  margin-top: 50px !important;
   width: fit-content;
   display: flex;
   justify-content: left;
@@ -30,14 +30,14 @@
 }
 
 .button-colors {
-  background-color: #C9A236 !important;
+  background-color: #c9a236 !important;
   color: white !important;
+  outline: none !important;
 }
 
-
-.css-14mwj1n-MuiGrid-root .next-buttons{
+.css-14mwj1n-MuiGrid-root .next-buttons {
   padding-left: 8px !important;
-} 
+}
 /* .button-colors:hover {
   background-color: 0; 
 } */
