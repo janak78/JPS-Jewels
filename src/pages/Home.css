@@ -51,6 +51,7 @@
   border: none;
   cursor: pointer;
   transition: background 0.3s ease-in-out;
+  outline: none !important;
 }
 
 .cardshopnow:hover {
@@ -696,7 +697,7 @@ body {
 
 /* Category Item */
 .category-item {
-  background-color: #f9eeee;
+  background-color: #f5f5f5;
   border: 1px solid transparent;
 
   /* padding: 20px; */
@@ -761,6 +762,15 @@ body {
   color: #c9a236 !important;
 }
 
+.category-icon {
+  filter: brightness(0) saturate(100%) invert(53%) sepia(91%) saturate(413%)
+    hue-rotate(5deg) !important;
+}
+
+.hovername:hover .category-icon {
+  filter: none !important;
+  color: #000 !important;
+}
 /* Navigation Buttons */
 button.prev,
 button.next {
@@ -781,6 +791,10 @@ button.next {
   right: 0;
 }
 
+.shop-link {
+  cursor: pointer;
+  color: #0056b3;
+}
 /* Responsive Design */
 @media (max-width: 1024px) {
   .category-container {

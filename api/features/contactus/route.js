@@ -107,7 +107,7 @@ const addContact = async (data) => {
   }
 };
 
-router.post("/addcontact",  async (req, res) => {
+router.post("/addcontact", async (req, res) => {
   try {
     req.body.ContactId = Date.now(); // Generate a unique Contact ID
     const response = await addContact(req.body);

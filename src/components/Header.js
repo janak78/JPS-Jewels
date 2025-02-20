@@ -62,8 +62,8 @@ const Header = () => {
     if (token) {
       try {
         const decoded = jwtDecode(token);
-        // setUserName(decoded.Username); 
-        setUserId(decoded.UserId); 
+        // setUserName(decoded.Username);
+        setUserId(decoded.UserId);
       } catch (error) {
         console.error("Error decoding token:", error);
       }
@@ -194,7 +194,12 @@ const Header = () => {
     <header className="header">
       {/* Left Logo */}
       <div className="logo">
-        <img src={logo} alt="JPS Jewels" className="logo-image" />
+        <img
+          src={logo}
+          alt="JPS Jewels"
+          className="logo-image"
+          onClick={() => navigate("/")}
+        />
       </div>
 
       {/* Navigation Links (Hidden on Small Screens) */}
@@ -279,10 +284,10 @@ const Header = () => {
               >
                 CART
               </Typography>
-              <div style={{height:"100%", overflowY:"auto"}}>
-              {userName ? (
-                cartData && cartData.length > 0 ? (
-                  cartData.map((item, index) => (
+              <div style={{ height: "100%", overflowY: "auto" }}>
+                {userName ? (
+                  cartData && cartData.length > 0 ? (
+                    cartData.map((item, index) => (
                       <div
                         style={{
                           marginBottom: "20px",
@@ -329,13 +334,13 @@ const Header = () => {
                           </div>
                         </div>
                       </div>
-                  ))
+                    ))
+                  ) : (
+                    <p>No items in the cart</p>
+                  )
                 ) : (
-                  <p>No items in the cart</p>
-                )
-              ) : (
-                <p>Please Log In To See Cart Details</p>
-              )}
+                  <p>Please Log In To See Cart Details</p>
+                )}
               </div>
 
               <Button

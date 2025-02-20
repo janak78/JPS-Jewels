@@ -73,7 +73,7 @@
     font-weight: bold;
   }
   
-  .footer-section a {
+  .footer-section p {
     color: #000;
     text-decoration: none;
     font-size: 14px;
@@ -81,8 +81,8 @@
     transition: color 0.3s;
   }
   
-  .footer-section a:hover {
-    color: #d4af37;
+  .footer-section p:hover {
+    color: #c9a236;
   }
   
   /* / ✅ Contact Section / */
@@ -99,7 +99,7 @@
   }
   
   .footer-contact svg {
-    color: #d4af37;
+    color: #c9a236;
   }
   
   /* / ✅ Social Icons / */
@@ -109,7 +109,7 @@
     margin-top: 10px;
   }
   
-  .social-icons a {
+  .social-icons p {
     background: #000;
     color: #fff;
     padding: 8px;
@@ -120,8 +120,8 @@
     transition: background 0.3s;
   }
   
-  .social-icons a:hover {
-    background: #d4af37;
+  .social-icons p:hover {
+    background: #c9a236;
   }
   
   /* / ✅ Responsive Social Icons / */
@@ -209,7 +209,7 @@
   }
   
   .footer-section svg {
-    color: #d4af37; /* Gold color */
+    color: #c9a236; /* Gold color */
     font-size: 18px; /* Adjust icon size */
   }
   

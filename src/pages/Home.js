@@ -35,6 +35,7 @@ import shop3 from "../assets/images/tripple-banner-img-1.webp";
 import "./Home.css";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import { useNavigate } from "react-router-dom";
 
 const images = [image1, image2, image3];
 
@@ -54,6 +55,7 @@ const categories = [
 const Home = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const carouselRef = useRef(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -78,7 +80,8 @@ const Home = () => {
 
     const scrollCarousel = () => {
       if (carouselRef.current) {
-        const maxScroll = carouselRef.current.scrollWidth - carouselRef.current.clientWidth;
+        const maxScroll =
+          carouselRef.current.scrollWidth - carouselRef.current.clientWidth;
 
         // Move carousel
         carouselRef.current.scrollLeft += scrollSpeed * scrollDirection;
@@ -123,7 +126,7 @@ const Home = () => {
                 </p>
 
                 <div className="btn-container">
-                  <button className="cardshopnow">Shop Now</button>
+                  <button className="cardshopnow" onClick={()=> navigate("/diamond")}>Shop Now</button>
                 </div>
               </div>
             </div>
@@ -136,54 +139,64 @@ const Home = () => {
             <>
               <div className="hovername" key={index}>
                 <div className="category-item">
-                  <img src={category.img} alt={category.name} />
+                  <img
+                    src={category.img}
+                    alt={category.name}
+                    className="category-icon"
+                  />
                 </div>
                 <span className="category-name">{category.name}</span>
-              </div>  
+              </div>
             </>
           ))}
         </div>
       </div>
 
-      <section class="collection-section">
-        <h2 class="shop-by-brands-title">New Collection</h2>
-        <div class="collection-grid">
-          <div class="collection-item large">
+      <section className="collection-section">
+        <h2 className="shop-by-brands-title">New Collection</h2>
+        <div className="collection-grid">
+          <div className="collection-item large">
             <div data-aos="fade-right">
               <img src={curtain1} alt="Jewelry Model" />
             </div>
           </div>
 
-          <div class="collection-item small">
+          <div className="collection-item small">
             <div data-aos="fade-left">
               <div>
                 <img src={curtain3} alt="Hand with Rings" />
               </div>
-              <div class="collection-text">
+              <div className="collection-text">
                 <h3>Discover New Arrivals</h3>
-                <a href="#" class="discover-button">
+                <button
+                  className="discover-button"
+                  onClick={() => navigate("/diamond")}
+                >
                   Discover more
-                </a>
+                </button>
               </div>
             </div>
           </div>
 
-          <div class="collection-item small">
+          <div className="collection-item small">
             <div data-aos="fade-right">
-              <div class="curtain3">
+              <div className="curtain3">
                 <img src={curtain5} alt="Necklace Close-up" />
               </div>
-              <div class="collection-text">
+              <div className="collection-text">
                 <h3>Jewelry Tells a Great Story</h3>
-                <a href="#" class="discover-button">
+                <button
+                  className="discover-button"
+                  onClick={() => navigate("/diamond")}
+                >
                   Discover more
-                </a>
+                </button>
               </div>
             </div>
           </div>
 
-          <div class="collection-item large">
-            <div class="curtain5">
+          <div className="collection-item large">
+            <div className="curtain5">
               <div data-aos="fade-left">
                 <img src={curtain2} alt="Woman with Necklace" />
               </div>
@@ -192,35 +205,41 @@ const Home = () => {
         </div>
       </section>
 
-      <section class="collection-container">
-        <div class="collection-box left-box">
-          <img src={bannerback6} alt="Wedding Ring" class="collection-image" />
-          <div class="collection-content">
-            <p class="collection-title">NEW COLLECTION</p>
-            <h2 class="collection-heading">WEDDING RINGS</h2>
-            <p class="collection-description">
+      <section className="collection-container">
+        <div className="collection-box left-box">
+          <img src={bannerback6} alt="Wedding Ring" className="collection-image" />
+          <div className="collection-content">
+            <p className="collection-title">NEW COLLECTION</p>
+            <h2 className="collection-heading">WEDDING RINGS</h2>
+            <p className="collection-description">
               Celebrate your love with our exquisite collection of wedding
               rings.
             </p>
-            <a href="#" class="collection-button">
+            <button
+              className="collection-button"
+              onClick={() => navigate("/diamond")}
+            >
               Discover more
-            </a>
+            </button>
           </div>
         </div>
 
-        <div class="collection-box right-box">
-          <div class="collection-content">
-            <p class="collection-title">TIMELESS BEAUTY</p>
-            <h2 class="collection-heading">LUXURY WATCHES</h2>
-            <p class="collection-description">
+        <div className="collection-box right-box">
+          <div className="collection-content">
+            <p className="collection-title">TIMELESS BEAUTY</p>
+            <h2 className="collection-heading">LUXURY WATCHES</h2>
+            <p className="collection-description">
               Discover the perfect accessory that defines your unique sense of
               luxury.
             </p>
-            <a href="#" class="collection-button">
+            <button
+              className="collection-button"
+              onClick={() => navigate("/diamond")}
+            >
               Discover more
-            </a>
+            </button>
           </div>
-          <img src={bannernack7} alt="Luxury Watch" class="collection-image" />
+          <img src={bannernack7} alt="Luxury Watch" className="collection-image" />
         </div>
       </section>
       <div id="swiper-custom" className="custom-swiper">
@@ -232,54 +251,54 @@ const Home = () => {
           <li className="row-item swiper-slide">
             <ul className="image-list">
               <li className="clients-item custom-item">
-                <a href="#" title="Celestial">
+                <p title="Celestial">
                   <img
                     decoding="async"
                     src={celestial}
                     alt="Celestial"
                     className="large-img"
                   />
-                </a>
+                </p>
               </li>
               <li className="clients-item custom-item">
-                <a href="#" title="Charm">
+                <p title="Charm">
                   <img
                     decoding="async"
                     src={charm}
                     alt="Charm"
                     className="large-img"
                   />
-                </a>
+                </p>
               </li>
               <li className="clients-item custom-item">
-                <a href="#" title="Eastern">
+                <p title="Eastern">
                   <img
                     decoding="async"
                     src={eastern}
                     alt="Eastern"
                     className="large-img"
                   />
-                </a>
+                </p>
               </li>
               <li className="clients-item custom-item">
-                <a href="#" title="Forest">
+                <p title="Forest">
                   <img
                     decoding="async"
                     src={forest}
                     alt="Forest"
                     className="large-img"
                   />
-                </a>
+                </p>
               </li>
               <li className="clients-item custom-item">
-                <a href="#" title="Goddess">
+                <p title="Goddess">
                   <img
                     decoding="async"
                     src={goddess}
                     alt="Goddess"
                     className="large-img"
                   />
-                </a>
+                </p>
               </li>
             </ul>
           </li>
@@ -290,54 +309,54 @@ const Home = () => {
           <li className="row-item swiper-slide">
             <ul className="image-list">
               <li className="clients-item custom-item">
-                <a href="#" title="Luxer">
+                <p title="Luxer">
                   <img
                     decoding="async"
                     src={luxer}
                     alt="Luxer"
                     className="large-img"
                   />
-                </a>
+                </p>
               </li>
               <li className="clients-item custom-item">
-                <a href="#" title="Opulence">
+                <p title="Opulence">
                   <img
                     decoding="async"
                     src={opulence}
                     alt="Opulence"
                     className="large-img"
                   />
-                </a>
+                </p>
               </li>
               <li className="clients-item custom-item">
-                <a href="#" title="Revival">
+                <p title="Revival">
                   <img
                     decoding="async"
                     src={retro}
                     alt="Revival"
                     className="large-img"
                   />
-                </a>
+                </p>
               </li>
               <li className="clients-item custom-item">
-                <a href="#" title="Romance">
+                <p title="Romance">
                   <img
                     decoding="async"
                     src={romance}
                     alt="Romance"
                     className="large-img"
                   />
-                </a>
+                </p>
               </li>
               <li className="clients-item custom-item">
-                <a href="#" title="Vintage">
+                <p title="Vintage">
                   <img
                     decoding="async"
                     src={vintage}
                     alt="Vintage"
                     className="large-img"
                   />
-                </a>
+                </p>
               </li>
             </ul>
           </li>
@@ -357,9 +376,9 @@ const Home = () => {
             <p className="shop-description">
               Discover our exquisite collection of elegant earrings.
             </p>
-            <a href="#" className="shop-link">
+            <p className="shop-link" onClick={() => navigate("/diamond")}>
               Discover more
-            </a>
+            </p>
           </div>
           <div className="shop-card">
             <img src={shop2} alt="Luxury Necklace" className="shop-image" />
@@ -372,9 +391,9 @@ const Home = () => {
             <p className="shop-description">
               Celebrate your love with our stunning collection.
             </p>
-            <a href="#" className="shop-link">
+            <p className="shop-link" onClick={() => navigate("/diamond")}>
               Discover more
-            </a>
+            </p>
           </div>
           <div className="shop-card">
             <img src={shop3} alt="Stud Earrings" className="shop-image" />
@@ -385,9 +404,9 @@ const Home = () => {
             <p className="shop-description">
               Elevate your elegance with our luxurious necklaces.
             </p>
-            <a href="#" className="shop-link">
+            <p className="shop-link" onClick={() => navigate("/diamond")}>
               Discover more
-            </a>
+            </p>
           </div>
         </div>
       </div>
