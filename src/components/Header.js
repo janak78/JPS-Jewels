@@ -58,6 +58,7 @@ const Header = () => {
   const handleLogout = () => {
     dispatch(logout());
     dispatch(removeCart());
+    navigate("/login"); 
   };
 
   const checkUserToken = () => {
@@ -165,6 +166,23 @@ const Header = () => {
         // setOpen(false);
 
         const { token, user } = res.data;
+
+        if (token) {
+          localStorage.setItem("authToken", token);
+  
+          // Set timeout to log out when the token expires
+          const decodedToken = JSON.parse(atob(token.split(".")[1]));
+          const expiryTime = decodedToken.exp * 1000 - Date.now();
+          const { SuperadminId, exp } = decodedToken;
+  
+          setTimeout(() => {
+            handleLogout();
+          }, expiryTime);
+
+          localStorage.setItem("SuperadminId", SuperadminId);
+
+
+        }
 
         dispatch(login({ user, token })); // Store user and token in Redux
         dispatch(fetchCartCount(user.UserId)); // Fetch cart count after login
@@ -409,7 +427,6 @@ const Header = () => {
                       <div className="forgot-signup">
                         <span
                           onClick={() => {
-                            navigate("/login");
                             localStorage.clear();
                             formik.resetForm();
                             // setUserName(null);

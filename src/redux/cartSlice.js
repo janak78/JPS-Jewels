@@ -26,13 +26,16 @@ const cartSlice = createSlice({
       state.cartCount += 1;
     },
     removeItemFromCart: (state, action) => {
-      state.cartData = state.cartData.filter(item => item.AddToCartId !== action.payload);
+      state.cartData = state.cartData.filter(
+        (item) => item.AddToCartId !== action.payload
+      );
       state.cartCount -= 1;
-    }
+    },
   },
 });
 
-export const { setCart, removeCart, addItemToCart, removeItemFromCart } = cartSlice.actions;
+export const { setCart, removeCart, addItemToCart, removeItemFromCart } =
+  cartSlice.actions;
 
 export const fetchCartCount = (userId) => async (dispatch) => {
   try {
@@ -67,37 +70,39 @@ export const addToCart = (item, userId) => async (dispatch) => {
       showToast.success("Item Added Successfully.");
     } else if (response.data.statusCode === 202) {
       showToast.error(response.data.message);
+    } else if (response.data.statusCode === 401) {
+      showToast.error("Your Session Expired.");
     } else {
       console.error("Failed to add item:", response.data.message);
-      showToast.error("Your Session Expired.");
+      showToast.warning("Your Session Expired.");
     }
   } catch (error) {
-    console.error("Add to cart error:", error);
+    showToast.error("Your Session Expired.");
   }
 };
 
 export const removeFromCart = (AddToCartId, userId) => async (dispatch) => {
-    // Show confirmation alert before deleting
-    const willDelete = await sendSwal();
-  
-    if (willDelete) {
-      try {
-        const response = await AxiosInstance.delete(
-          `http://localhost:5000/api/cart/updatecart/${AddToCartId}`
-        );
-  
-        if (response.data.statusCode === 200) {
-          dispatch(removeItemFromCart(AddToCartId));
-          dispatch(fetchCartCount(userId));
-          showToast.success("Item Removed Successfully.");
-        } else {
-          showToast.error("Failed to remove item.");
-        }
-      } catch (error) {
-        console.error("Remove from cart error:", error);
-        showToast.error("Something went wrong.");
+  // Show confirmation alert before deleting
+  const willDelete = await sendSwal();
+
+  if (willDelete) {
+    try {
+      const response = await AxiosInstance.delete(
+        `http://localhost:5000/api/cart/updatecart/${AddToCartId}`
+      );
+
+      if (response.data.statusCode === 200) {
+        dispatch(removeItemFromCart(AddToCartId));
+        dispatch(fetchCartCount(userId));
+        showToast.success("Item Removed Successfully.");
+      } else {
+        showToast.error("Failed to remove item.");
       }
+    } catch (error) {
+      console.error("Remove from cart error:", error);
+      showToast.error("Something went wrong.");
     }
-  };
+  }
+};
 
 export default cartSlice.reducer;

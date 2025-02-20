@@ -100,9 +100,6 @@ const createUser = async (data, req) => {
     const saltRounds = 10; // Number of salt rounds for bcrypt
     data.UserPassword = await bcrypt.hash(data.UserPassword, saltRounds);
 
-    // Optionally, remove ConfirmPassword as it's not needed in the database
-    delete data.ConfirmPassword;
-
     // Save user to database
     const userToSave = await Signup.create(data);
 
