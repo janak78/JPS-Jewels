@@ -14,6 +14,7 @@ import {
   setTotalPages,
 } from "../../redux/shopSlice";
 import { useNavigate } from "react-router-dom";
+import showToast from "../../components/Toast/Toaster";
 
 const DiamondsGrid = ({ diamond }) => {
   const navigate = useNavigate();
@@ -44,7 +45,7 @@ const DiamondsGrid = ({ diamond }) => {
 
   const handleAddToCart = (diamond) => {
     if (!userId) {
-      alert("Please log in to add items to the cart.");
+      showToast.warning("Please log in to add items to the cart.");
       return;
     }
 

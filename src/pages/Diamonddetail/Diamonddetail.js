@@ -27,6 +27,7 @@ import { useDispatch, useSelector } from "react-redux";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { addToCart } from "../../redux/cartSlice";
 import { fetchCartCount } from "../../redux/cartSlice";
+import showToast from "../../components/Toast/Toaster";
 
 const Diamonddetail = () => {
   const location = useLocation();
@@ -95,7 +96,7 @@ const Diamonddetail = () => {
   // add cart
   const handleAddToCart = (diamond) => {
     if (!userId) {
-      alert("Please log in to add items to the cart.");
+      showToast.warning("Please log in to add items to the cart.");
       return;
     }
 
@@ -346,33 +347,74 @@ const Diamonddetail = () => {
                   <Table className="diamond-product-info-table">
                     <TableBody>
                       {[
-                        ["Lab", diamondData?.Lab],
-                        ["Certificate No", diamondData?.CertificateNo],
-                        ["Diamond Type", "N/A"],
-                        ["Shape", diamondData?.Shape],
-                        ["Carat", diamondData?.Carats],
-                        ["Color", diamondData?.Color],
-                        ["Clarity", diamondData?.Clarity],
-                        ["Cut", diamondData?.Cut],
-                        ["Polish", diamondData?.Polish],
-                        ["Symmetry", diamondData?.Symm],
-                        ["Fluorescence", diamondData?.FluoInt],
-                        ["Rap $", diamondData?.Rap],
-                        ["Disc %", diamondData?.Disc],
-                        ["Price $/ct", diamondData?.Price],
-                        ["Amount $", diamondData?.Amount],
-                        ["Depth", diamondData?.Depth],
-                        ["Table", diamondData?.Table],
-                        ["EyeClean", diamondData?.EyeC],
-                        ["Milky", diamondData?.Milky],
-                        ["Tinge", diamondData?.Tinge],
-                      ].map(([key, value], index) => (
+                        [
+                          "Lab",
+                          diamondData?.Lab,
+                          "Fluorescence",
+                          diamondData?.FluoInt,
+                        ],
+                        [
+                          "Certificate No",
+                          diamondData?.CertificateNo,
+                          "Rap $",
+                          diamondData?.Rap,
+                        ],
+                        ["Diamond Type", "N/A", "Disc %", diamondData?.Disc],
+                        [
+                          "Shape",
+                          diamondData?.Shape,
+                          "Price $/ct",
+                          diamondData?.Price,
+                        ],
+                        [
+                          "Carat",
+                          diamondData?.Carats,
+                          "Amount $",
+                          diamondData?.Amount,
+                        ],
+                        [
+                          "Color",
+                          diamondData?.Color,
+                          "Depth",
+                          diamondData?.Depth,
+                        ],
+                        [
+                          "Clarity",
+                          diamondData?.Clarity,
+                          "Table",
+                          diamondData?.Table,
+                        ],
+                        [
+                          "Cut",
+                          diamondData?.Cut,
+                          "EyeClean",
+                          diamondData?.EyeC,
+                        ],
+                        [
+                          "Polish",
+                          diamondData?.Polish,
+                          "Milky",
+                          diamondData?.Milky,
+                        ],
+                        [
+                          "Symmetry",
+                          diamondData?.Symm,
+                          "Tinge",
+                          diamondData?.Tinge,
+                        ],
+                      ].map(([key1, value1, key2, value2], index) => (
                         <TableRow
                           key={index}
-                          className={getRowClass(key, value)}
+                          className={getRowClass(key1, value1)}
                         >
-                          <TableCell>{key}</TableCell>
-                          <TableCell>{value}</TableCell>
+                          <TableCell>
+                            <strong>{key1}</strong>
+                          </TableCell>
+                          <TableCell>{value1}</TableCell>
+                          <TableCell>
+                            <strong>{key2}</strong>
+                          </TableCell>
+                          <TableCell>{value2}</TableCell>
                         </TableRow>
                       ))}
                     </TableBody>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Grid, Button, Container, Typography } from "@mui/material";
 import TextInput from "../../components/inputs/TextInput";
 import SelectInput from "../../components/inputs/SelectInput";
@@ -10,10 +10,33 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import "./register.css";
 import shop2 from "../../assets/images/searching-rare-gem-valuable-diamond-business_1134986-17589.jpg";
+import logo from "../../assets/images/logo.svg";
+import gallery13 from "../../assets/gallery images/luxury-shine-diamonds-digital-art_23-2151695052.avif";
+import gallery12 from "../../assets/gallery images/female-jewelry_772702-3140.avif";
+import gallery11 from "../../assets/gallery images/diamond-antique-vintage-earrings_43379-1011.avif";
+import gallery10 from "../../assets/gallery images/necklace-with-green-stones-gold-necklace_907454-6.avif";
+import gallery9 from "../../assets/gallery images/queen-crown-still-life_23-2150409265.avif";
+import gallery8 from "../../assets/gallery images/women-s-jewelry_144962-4209.avif";
+import gallery7 from "../../assets/gallery images/luxury-jewelry-black-friday-advertisement-commercial-photography_950002-325682.avif";
+import gallery6 from "../../assets/gallery images/earring-ribbon_14972-12.avif";
+import gallery5 from "../../assets/gallery images/bangles.jpg";
+import gallery4 from "../../assets/gallery images/240_F_61207817_eVLm60K8BAHEkIpL9odBurd3Kp7CeLx8.jpg";
+import gallery3 from "../../assets/gallery images/still-life-object_1122-1942.avif";
+import gallery2 from "../../assets/gallery images/pexels-the-glorious-studio-3584518-10475789.jpg";
+import gallery1 from "../../assets/gallery images/pexels-the-glorious-studio-3584518-10983783.jpg";
 
 const RegistrationForm = () => {
   const navigate = useNavigate();
   const [step, setStep] = useState(0);
+
+  useEffect(() => {
+    document.body.classList.add("register-page");
+
+    return () => {
+      document.body.classList.remove("register-page");
+    };
+  }, []);
+
   const [formData, setFormData] = useState({
     Salutation: "",
     FirstName: "",
@@ -155,12 +178,48 @@ const RegistrationForm = () => {
   });
 
   return (
-    <Container maxWidth="md" className="register-container">
-      <Typography variant="h4" className="form-title">
-        Sign Up & Start Shopping
-      </Typography>
-      <Grid container spacing={2}>
-        <Grid item xs={12} sm={6}>
+    <Grid container className="signup-container" spacing={2}>
+      {/* Left Image Section */}
+      <Grid item xs={12} md={7} className="signup-image-container">
+        <div className="image-overlay">
+          {/* <Typography variant="h4" className="signup-heading">
+            To keep connected with the largest shop in the world.
+          </Typography> */}
+          <article class="gallery_wrapper">
+            <img src={gallery1} alt="Balloon with controled fire" />
+            <img src={gallery2} alt="Minimalists catchphrase" />
+            <img src={gallery3} alt="Hiking Directional Signs" />
+
+            <img src={gallery4} alt="drinks" />
+            <img src={gallery5} alt="breakfast" />
+
+            <img src={gallery6} alt="Alpine mountains under a clear sky" />
+            <img src={gallery7} alt="Gradient Glowing Laptop" />
+            <img src={gallery8} alt="Staples container" />
+
+            <img src={gallery9} alt="the island" />
+            <img src={gallery10} alt="Crystal Tower" />
+
+            <img src={gallery11} alt="Car with man on death valley" />
+            <img src={gallery12} alt="christmas elf looking dog" />
+            <img src={gallery13} alt="interior design" />
+          </article>
+        </div>
+      </Grid>
+      <Grid item xs={12} sm={5}>
+        <div className="logo-container">
+          <img src={logo} alt="logo" className="logo-image" />
+        </div>
+
+        <div className="input-place">
+          {/* Sign Up Title - Aligned to Left */}
+          <Typography
+            variant="h4"
+            className="form-title align-left"
+            gutterBottom
+          >
+            Sign Up
+          </Typography>
           {step === 0 && (
             <form onSubmit={formikStep1.handleSubmit}>
               <Grid container spacing={2}>
@@ -187,7 +246,7 @@ const RegistrationForm = () => {
                 spacing={2}
                 display="flex"
                 justifyContent="flex-start"
-                className="btn-containerregister" 
+                className="btn-containerregister"
               >
                 <Grid item>
                   <Button
@@ -230,7 +289,7 @@ const RegistrationForm = () => {
                 justifyContent="flex-start"
                 className="btn-containerregister"
               >
-                <Grid item>
+                <Grid item className="button-display">
                   <Button onClick={() => setStep(0)} className="button-colors">
                     Previous
                   </Button>
@@ -238,6 +297,7 @@ const RegistrationForm = () => {
                     type="submit"
                     variant="contained"
                     className="button-colors"
+                    sx={{ ml: 2 }}
                   >
                     Next
                   </Button>
@@ -282,6 +342,7 @@ const RegistrationForm = () => {
                     type="submit"
                     variant="contained"
                     className="button-colors"
+                    sx={{ ml: 2 }}
                   >
                     Register
                   </Button>
@@ -289,23 +350,9 @@ const RegistrationForm = () => {
               </Grid>
             </form>
           )}
-        </Grid>
-        <Grid
-          item
-          xs={12}
-          sm={6}
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-        >
-          <img
-            src={shop2}
-            alt="Luxury Necklace"
-            style={{ width: "100%", maxWidth: "400px" }}
-          />
-        </Grid>
+        </div>
       </Grid>
-    </Container>
+    </Grid>
   );
 };
 

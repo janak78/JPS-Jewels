@@ -72,14 +72,6 @@ h5 {
   cursor: pointer;
 }
 
-/* a {
-  display: block;
-  font-size: 0.9rem;
-  margin-bottom: 10px;
-  color: #007bff;
-  text-decoration: none;
-} */
-
 .arrowbtn {
   opacity: 0;
   width: 0;

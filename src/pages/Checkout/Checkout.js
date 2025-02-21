@@ -63,11 +63,11 @@ const Checkout = () => {
         // window.location.reload(); // Refresh the page
         dispatch(fetchCartCount(localStorage.getItem("UserId"))); 
       } else {
-        alert(response.data.message);
+        showToast.error(response.data.message);
       }
     } catch (error) {
       console.error("Error placing order:", error);
-      alert("Something went wrong. Please try again later.");
+      showToast.warning("Something went wrong. Please try again later.");
     } finally {
       setSubmitting(false);
     }
@@ -297,7 +297,7 @@ const Checkout = () => {
                           // alt={diamondType}
                           style={{
                             width: "70px",
-                            height: "auto",
+                            height: "70px",
                             borderRadius: "10px",
                           }}
                         />
@@ -313,9 +313,8 @@ const Checkout = () => {
                         </span>
                         <div style={{ display: "flex", marginTop: "0" }}>
                           <span>
-                            Quantity: <span>{item?.Quantity}</span> x{" "}
-                          </span>
-                          &nbsp; {item?.diamondDetails?.Price}
+                            Quantity: <span>{item?.Quantity}</span> x {item?.diamondDetails?.Price}
+                          </span> 
                         </div>
                       </div>
                     </div>

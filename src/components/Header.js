@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchCartCount } from "../redux/cartSlice";
+import { fetchCartCount, removeFromCart } from "../redux/cartSlice";
 import { removeCart } from "../redux/cartSlice";
 import { logout, login } from "../redux/authSlice";
 import {
@@ -30,6 +30,8 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import showToast from "../components/Toast/Toaster";
 import AxiosInstance from "../Axiosinstance";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTimes, faTrash } from "@fortawesome/free-solid-svg-icons";
 import "./Header.css";
 
 const Header = () => {
@@ -51,10 +53,12 @@ const Header = () => {
   const userName = useSelector((state) => state.auth.Username);
   const cartCount = useSelector((state) => state.cart.cartCount);
   const cartData = useSelector((state) => state.cart.cartData);
+  const Mail = useSelector((state) => state.auth.Mail);
 
   const handleLogout = () => {
     dispatch(logout());
     dispatch(removeCart());
+    navigate("/login"); 
   };
 
   const checkUserToken = () => {
@@ -163,6 +167,23 @@ const Header = () => {
 
         const { token, user } = res.data;
 
+        if (token) {
+          localStorage.setItem("authToken", token);
+  
+          // Set timeout to log out when the token expires
+          const decodedToken = JSON.parse(atob(token.split(".")[1]));
+          const expiryTime = decodedToken.exp * 1000 - Date.now();
+          const { SuperadminId, exp } = decodedToken;
+  
+          setTimeout(() => {
+            handleLogout();
+          }, expiryTime);
+
+          localStorage.setItem("SuperadminId", SuperadminId);
+
+
+        }
+
         dispatch(login({ user, token })); // Store user and token in Redux
         dispatch(fetchCartCount(user.UserId)); // Fetch cart count after login
 
@@ -170,6 +191,7 @@ const Header = () => {
 
         formik.resetForm();
         navigate("/");
+        setOpen(false);
       } else if (res.data.statusCode === 201) {
         showToast(res.data.message);
       } else if (res.data.statusCode === 202) {
@@ -186,6 +208,10 @@ const Header = () => {
     } finally {
       //   setLoader(false);
     }
+  };
+
+  const handleRemoveItem = (AddToCartId) => {
+    dispatch(removeFromCart(AddToCartId, userId)); // Dispatch Redux action
   };
 
   const location = useLocation();
@@ -289,11 +315,14 @@ const Header = () => {
                   cartData && cartData.length > 0 ? (
                     cartData.map((item, index) => (
                       <div
+                        key={item.AddToCartId}
                         style={{
                           marginBottom: "20px",
                           border: "1px solid #ddd",
                           borderRadius: "10px",
                           padding: "10px",
+                          display: "flex",
+                          justifyContent: "space-between",
                         }}
                       >
                         <div
@@ -302,6 +331,7 @@ const Header = () => {
                             display: "flex",
                             flexDirection: "row",
                             alignItems: "center",
+                            textAlign: "left",
                           }}
                         >
                           <div>
@@ -317,7 +347,7 @@ const Header = () => {
                             />
                           </div>
                           <div style={{ marginLeft: "15px" }}>
-                            <span style={{ marginBottom: "0" }}>
+                            <span>
                               <span>{item?.diamondDetails?.Carats || ""}</span>{" "}
                               Carat <span>{item?.diamondDetails?.Shape}</span>
                               <span>{item?.diamondDetails?.Color}</span> /
@@ -333,6 +363,17 @@ const Header = () => {
                             </div>
                           </div>
                         </div>
+                        <FontAwesomeIcon
+                          icon={faTrash}
+                          style={{
+                            color: "#C9A236",
+                            cursor: "pointer",
+                            fontSize: "18px",
+                          }}
+                          onClick={() =>
+                            dispatch(removeFromCart(item.AddToCartId, userId))
+                          }
+                        />
                       </div>
                     ))
                   ) : (
@@ -375,18 +416,22 @@ const Header = () => {
                 <div className="login-dropdown">
                   {userName ? (
                     <div className="user-info-container">
-                      <p className="user-welcome-text">Welcome, {userName}</p>
+                      <div className="userlogo_login">
+                        <div
+                          className="user-avatar"
+                          onClick={() => setOpen(!open)}
+                        >
+                          {userName ? userName.charAt(0).toUpperCase() : "?"}
+                        </div>
 
-                      <p
-                        className="forgot-signup"
-                        style={{
-                          display: "flex",
-                          justifyContent: "space-around",
-                        }}
-                      >
+                        <div className="user-welcome-text">
+                          Welcome, {userName}
+                          <div style={{fontSize:"10px"}}> {Mail} </div>
+                        </div>
+                      </div>
+                      <div className="forgot-signup">
                         <span
                           onClick={() => {
-                            navigate("/login");
                             localStorage.clear();
                             formik.resetForm();
                             // setUserName(null);
@@ -395,21 +440,11 @@ const Header = () => {
                             handleLogout();
                           }}
                           style={{ cursor: "pointer" }}
-                          className="logout-text"
+                          className="signup-link-signup"
                         >
-                          Log out
+                         <i className="fas fa-sign-out-alt"></i> Log out 
                         </span>
-                        <span
-                          onClick={() => {
-                            navigate("/signup");
-                            setOpen(false);
-                          }}
-                          style={{ cursor: "pointer" }}
-                          className="logout-text"
-                        >
-                          Sign Up
-                        </span>
-                      </p>
+                      </div>
                     </div>
                   ) : (
                     <form onSubmit={formik.handleSubmit}>
@@ -473,20 +508,15 @@ const Header = () => {
                           }
                         />
                       </div>
+                      <Button
+                        type="submit"
+                        variant="contained"
+                        className="login-btn-login"
+                      >
+                        Login
+                      </Button>
 
                       <p className="forgot-signup">
-                        <span
-                          onClick={() => {
-                            navigate("/login");
-                            localStorage.clear();
-                            formik.resetForm();
-                            setOpen(false);
-                            handleLogout();
-                          }}
-                          style={{ cursor: "pointer" }}
-                        >
-                          Log out
-                        </span>{" "}
                         <span
                           className="signup-link-signup"
                           onClick={() => {
@@ -498,14 +528,6 @@ const Header = () => {
                           Sign up
                         </span>
                       </p>
-
-                      <Button
-                        type="submit"
-                        variant="contained"
-                        className="login-btn-login"
-                      >
-                        Login
-                      </Button>
                     </form>
                   )}
                 </div>

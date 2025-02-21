@@ -1,22 +1,109 @@
-/* Container */
-.register-container {
-  background: white;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  margin-top: 30px;
-  margin-bottom: 30px;
-  max-width: 90% !important;
+/* CSS (register.css) */
+body.register-page {
+  padding-top: 0 !important;
 }
 
-/* Title */
-.form-title {
-  text-align: left;
-  padding: 20px 0px;
+.signup-container {
+  height: 101.7vh;
+  display: flex;
+}
+
+.signup-image-container {
+  background: #ffedbc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.image-overlay {
+  position: absolute;
+  /* top: 10%; */
+  /* left: 22%; */
+  color: white;
   font-weight: bold;
+  font-size: 2rem;
+  width: 100%;
+  /* height: 100%; */
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
 }
 
-/* Button Container */
+.signup-form-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.form-wrapper {
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+
+/* .form-title {
+  margin-bottom: 1rem;
+  font-weight: 600;
+} */
+.logo-container {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding-top: 20px;
+}
+
+.logo-image {
+  max-width: 130px;
+  height: auto;
+  margin-left: 15px;
+}
+
+/* Align Sign Up text to the left */
+.form-title {
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.align-left {
+  text-align: left !important;
+  width: 100%;
+}
+
+.signup-button {
+  margin-top: 1rem;
+  background-color: black;
+  color: white;
+}
+
+.signin-link {
+  margin-top: 1rem;
+}
+
+.input-place {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  align-items: center !important;
+  width: 100%;
+  height: 92%;
+  padding: 20px 20px;
+}
+
+.button-colors {
+  background-color: #c9a236 !important;
+  color: white !important;
+  outline: none !important;
+  width: 100px !important;
+  height: 40px !important;
+  font-weight: bold !important;
+}
+
+.button-display {
+  display: flex;
+}
+
 .btn-containerregister {
   margin-top: 50px !important;
   width: fit-content;
@@ -24,20 +111,55 @@
   justify-content: left;
 }
 
-.btn-containermain {
-  display: flex;
-  justify-content: left;
+/* gallery */
+.gallery_wrapper {
+  --img-size: calc(100px - 0.5rem / 2);
+  display: grid;
+  gap: 0.5rem;
+  grid-template-columns: repeat(6, var(--img-size));
+  grid-template-rows: repeat(4, var(--img-size));
 }
 
-.button-colors {
-  background-color: #c9a236 !important;
-  color: white !important;
-  outline: none !important;
+.gallery_wrapper img {
+  /* Scope styles only to gallery images */
+  max-width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  grid-column: span 2;
+  border-radius: 0.5rem;
+  clip-path: path(
+    "M 80 20 C 100 0 100 0 120 20 C 140 40 160 60 180 80 C 200 100 200 100 180 120 C 160 140 140 160 120 180 C 100 200 100 200 80 180 C 60 160 40 140 20 120 C 0 100 0 100 20 80 Z"
+  );
+  transition: filter 500ms, clip-path 500ms;
 }
 
-.css-14mwj1n-MuiGrid-root .next-buttons {
-  padding-left: 8px !important;
+.gallery_wrapper img:nth-of-type(4),
+.gallery_wrapper img:nth-of-type(9) {
+  grid-column: 2 / span 2;
 }
-/* .button-colors:hover {
-  background-color: 0; 
-} */
+
+.gallery_wrapper img:hover {
+  z-index: 100;
+  clip-path: path(
+    "M 0 0 C 100 0 100 0 200 0 C 200 50 200 50 200 80 C 200 100 200 100 200 120 C 200 150 200 150 200 200 C 100 200 100 200 0 200 C 0 150 0 150 0 120 C 0 100 0 100 0 80 Z"
+  );
+}
+
+.gallery_wrapper img:not(:hover) {
+  animation: zIndexFix 500ms;
+}
+
+.gallery_wrapper:hover > img {
+  filter: brightness(0.5) saturate(0.5);
+}
+
+.gallery_wrapper > img:hover {
+  filter: brightness(1) saturate(1.5);
+}
+
+@keyframes zIndexFix {
+  0%,
+  100% {
+    z-index: 10;
+  }
+}

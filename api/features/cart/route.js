@@ -41,6 +41,7 @@ const fetchCartDetails = async (UserId, SKU) => {
     {
       $project: {
         SKU: 1,
+        AddToCartId: 1,
         UserId: 1,
         diamondDetails: 1,
         Quantity: 1,
@@ -426,7 +427,7 @@ router.get("/orderdetail", verifyLoginToken, async function (req, res) {
 const deletecarddata = async (AddToCartId) => {
   try {
     const updatecart = await Cart.findOneAndUpdate(
-      { AddToCartId },
+      { AddToCartId, IsDelete: false },
       { $set: { IsDelete: true } },
       { new: true }
     );
@@ -434,18 +435,18 @@ const deletecarddata = async (AddToCartId) => {
     if (!updatecart) {
       return {
         statusCode: 404,
-        message: `No user found`,
+        message: `Item Not found`,
       };
     }
     return {
       statusCode: 200,
-      message: `User deleted successfully.`,
+      message: `Item Removed successfully.`,
       data: updatecart,
     };
   } catch (error) {
     return {
       statusCode: 500,
-      message: "Failed to soft delete user data.",
+      message: "Failed To Remove Item.",
       error: error.message,
     };
   }
