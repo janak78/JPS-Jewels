@@ -21,7 +21,7 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
 import DescriptionIcon from "@mui/icons-material/Description";
 import "./Diamonddetail.css";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { fetchDiamondDetail } from "../../redux/diamondDetailSlice";
 import { useDispatch, useSelector } from "react-redux";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
@@ -31,8 +31,11 @@ import showToast from "../../components/Toast/Toaster";
 
 const Diamonddetail = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const diamond = location.state?.diamond;
   const { SKU } = diamond || {};
+
+  const diamonds = useSelector((state) => state.shop.caretData);
 
   const [openVideoModal, setOpenVideoModal] = useState(false);
   const [openCertificateModal, setOpenCertificateModal] = useState(false);
@@ -453,6 +456,45 @@ const Diamonddetail = () => {
           collection. Whether for an engagement, anniversary, or any special
           occasion, this diamond is the epitome of beauty and luxury.
         </p>
+
+        <div>
+        <h2 className="shop-by-brands-title">Top Products</h2>
+        <div className="caretdata">
+          {diamonds.map((diamond, index) => (
+            <div key={index} className="col-md-3 col-sm-9">
+              <div
+                className="diamond-card1"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigate("/diamonddetail", { state: { diamond } });
+                }}
+              >
+                <div className="shopimg1">
+                  <img
+                    src={diamond.Image}
+                    alt={diamond.Shape}
+                    className="diamond-img1"
+                  />
+                </div>
+                <h6 className="mt-3 diamond-name1">
+                  {diamond.Carats} CARAT {diamond.Shape} - {diamond.Lab}
+                </h6>
+                <p className="price1">${diamond.Amount.toFixed(2)}</p>
+                <span
+                  className="add-to-cart1"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleAddToCart(diamond);
+                  }}
+                >
+                  Add to cart <span className="arrowbtn1">→</span>
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
       </div>
     </div>
   );

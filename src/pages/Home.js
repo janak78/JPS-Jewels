@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import image1 from "../assets/images/slide-1-asset-2-1.webp";
 import image2 from "../assets/images/slide-1-asset-3.webp";
 import image3 from "../assets/images/slide-1-asset-4.webp";
@@ -33,6 +34,9 @@ import shop1 from "../assets/images/tripple-banner-img-2.webp";
 import shop2 from "../assets/images/tripple-banner-img-3.webp";
 import shop3 from "../assets/images/tripple-banner-img-1.webp";
 import "./Home.css";
+import showToast from "../components/Toast/Toaster";
+import { addToCart } from "../redux/cartSlice";
+import { setCaretData, fetchCaretData } from "../redux/shopSlice";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { useNavigate } from "react-router-dom";
@@ -57,6 +61,12 @@ const Home = () => {
   const carouselRef = useRef(null);
   const navigate = useNavigate();
 
+  const dispatch = useDispatch();
+
+  const diamonds = useSelector((state) => state.shop.caretData);
+  console.log(diamonds,"diamonds")
+  const userId = useSelector((state) => state.auth?.user?.UserId);
+
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
@@ -64,6 +74,10 @@ const Home = () => {
 
     return () => clearInterval(interval);
   }, []);
+
+  useEffect(() => {
+        dispatch(fetchCaretData());
+    }, [dispatch]);
 
   useEffect(() => {
     AOS.init({
@@ -100,6 +114,20 @@ const Home = () => {
     return () => clearInterval(scrollInterval);
   }, []);
 
+  const handleAddToCart = (diamond) => {
+    if (!userId) {
+      showToast.warning("Please log in to add items to the cart.");
+      return;
+    }
+
+    const cartItem = {
+      SKU: diamond.SKU,
+      Quantity: 1,
+    };
+
+    dispatch(addToCart(cartItem, userId));
+  };
+
   return (
     <>
       <div className="hero border-1 pb-3">
@@ -126,7 +154,12 @@ const Home = () => {
                 </p>
 
                 <div className="btn-container">
-                  <button className="cardshopnow" onClick={()=> navigate("/diamond")}>Shop Now</button>
+                  <button
+                    className="cardshopnow"
+                    onClick={() => navigate("/diamond")}
+                  >
+                    Shop Now
+                  </button>
                 </div>
               </div>
             </div>
@@ -205,9 +238,51 @@ const Home = () => {
         </div>
       </section>
 
+      <div>
+        <h2 className="shop-by-brands-title">NEW COLLECTION</h2>
+        <div className="caretdata">
+          {diamonds.map((diamond, index) => (
+            <div key={index} className="col-md-2 col-sm-6">
+              <div
+                className="diamond-card1"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigate("/diamonddetail", { state: { diamond } });
+                }}
+              >
+                <div className="shopimg1">
+                  <img
+                    src={diamond.Image}
+                    alt={diamond.Shape}
+                    className="diamond-img1"
+                  />
+                </div>
+                <h6 className="mt-3 diamond-name1">
+                  {diamond.Carats} CARAT {diamond.Shape} - {diamond.Lab}
+                </h6>
+                <p className="price1">${diamond.Amount.toFixed(2)}</p>
+                <span
+                  className="add-to-cart1"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleAddToCart(diamond);
+                  }}
+                >
+                  Add to cart <span className="arrowbtn1">→</span>
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
       <section className="collection-container">
         <div className="collection-box left-box">
-          <img src={bannerback6} alt="Wedding Ring" className="collection-image" />
+          <img
+            src={bannerback6}
+            alt="Wedding Ring"
+            className="collection-image"
+          />
           <div className="collection-content">
             <p className="collection-title">NEW COLLECTION</p>
             <h2 className="collection-heading">WEDDING RINGS</h2>
@@ -239,7 +314,11 @@ const Home = () => {
               Discover more
             </button>
           </div>
-          <img src={bannernack7} alt="Luxury Watch" className="collection-image" />
+          <img
+            src={bannernack7}
+            alt="Luxury Watch"
+            className="collection-image"
+          />
         </div>
       </section>
       <div id="swiper-custom" className="custom-swiper">
