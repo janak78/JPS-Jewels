@@ -366,7 +366,7 @@ const loginUser = async (data) => {
     const token = jwt.sign(
       { UserId: user.UserId, Username: user.Username, Mail: user.PrimaryEmail },
       SECRET_KEY,
-      { expiresIn: "5h" }
+      { expiresIn: "5s" }
     );
 
     return {
@@ -378,6 +378,7 @@ const loginUser = async (data) => {
         Username: user.Username,
         FirstName: user.FirstName,
         LastName: user.LastName,
+        PrimaryEmail: user.PrimaryEmail,
       },
     };
   } catch (error) {

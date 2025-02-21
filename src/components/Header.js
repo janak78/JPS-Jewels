@@ -58,7 +58,7 @@ const Header = () => {
   const handleLogout = () => {
     dispatch(logout());
     dispatch(removeCart());
-    navigate("/login"); 
+    navigate("/login");
   };
 
   const checkUserToken = () => {
@@ -220,12 +220,7 @@ const Header = () => {
     <header className="header">
       {/* Left Logo */}
       <div className="logo">
-        <img
-          src={logo}
-          alt="JPS Jewels"
-          className="logo-image"
-          onClick={() => navigate("/")}
-        />
+        <img src={logo} alt="JPS Jewels" className="logo-image" />
       </div>
 
       {/* Navigation Links (Hidden on Small Screens) */}
@@ -358,7 +353,7 @@ const Header = () => {
                             <div style={{ display: "flex", marginTop: "0" }}>
                               <span>
                                 Quantity: <span>{item?.Quantity}</span> x{" "}
-                                {item?.diamondDetails?.Price}
+                                {item?.diamondDetails?.Amount}
                               </span>
                             </div>
                           </div>

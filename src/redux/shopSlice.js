@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import AxiosInstance from "../Axiosinstance";
 
 // API Slice using Redux Toolkit Query
 export const diamondsApi = createApi({
@@ -13,6 +14,25 @@ export const diamondsApi = createApi({
   }),
 });
 
+export const fetchCaretData = () => async (dispatch) => {
+  try {
+
+    const res = await AxiosInstance.get(
+      `http://localhost:5000/api/stock/caretdata`
+    );
+    console.log(res,"r")
+
+    if (res.data.result.statusCode === 200) {
+      console.log(res.data.statusCode,"res.data.statusCode")
+      dispatch(setCaretData(res.data.result.data.slice(0, 5)));
+    } else {
+      dispatch(setCaretData({ caretData: [] }));
+    }
+  } catch (error) {
+    console.error("Cart fetch error:", error);
+  }
+};
+
 export const { useFetchDiamondsQuery } = diamondsApi;
 
 const shopSlice = createSlice({
@@ -21,6 +41,7 @@ const shopSlice = createSlice({
     totalPages: 5,
     currentPage: 1,
     itemsPerPage: 12,
+    caretData: [],
   },
   reducers: {
     setItemsPerPage: (state, action) => {
@@ -32,8 +53,12 @@ const shopSlice = createSlice({
     setTotalPages: (state, action) => {
       state.totalPages = action.payload;
     },
+    setCaretData: (state, action) => {
+      state.caretData = action.payload; // Directly set the array
+    },
+    
   },
 });
 
-export const { setItemsPerPage, setCurrentPage, setTotalPages } = shopSlice.actions;
+export const { setItemsPerPage, setCurrentPage, setTotalPages, setCaretData } = shopSlice.actions;
 export default shopSlice.reducer;
