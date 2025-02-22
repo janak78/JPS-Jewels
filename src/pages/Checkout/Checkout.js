@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux";
 import { fetchCartCount } from "../../redux/cartSlice";
 import {
   Container,
@@ -18,14 +18,14 @@ import "./Checkout.css";
 import showToast from "../../components/Toast/Toaster";
 
 const Checkout = () => {
-    const dispatch = useDispatch();
-  
+  const dispatch = useDispatch();
+
   const userName = useSelector((state) => state.auth.Username);
   const cartData = useSelector((state) => state.cart.cartData);
 
   const initialValues = {
     ContactEmail: "",
-    Country: "Bahamas",
+    Country: "",
     FirstName: "",
     LastName: "",
     Appartment: "",
@@ -40,6 +40,7 @@ const Checkout = () => {
     FirstName: Yup.string().required("Required"),
     LastName: Yup.string().required("Required"),
     Appartment: Yup.string().required("Required"),
+    Country: Yup.string().required("Required"),
     City: Yup.string().required("Required"),
     State: Yup.string().required("Required"),
     PinCode: Yup.string().required("Required"),
@@ -61,7 +62,7 @@ const Checkout = () => {
       if (response.data.statusCode === 200) {
         showToast.success("Order placed successfully!"); // Redirect to confirmation page
         // window.location.reload(); // Refresh the page
-        dispatch(fetchCartCount(localStorage.getItem("UserId"))); 
+        dispatch(fetchCartCount(localStorage.getItem("UserId")));
       } else {
         showToast.error(response.data.message);
       }
@@ -72,12 +73,13 @@ const Checkout = () => {
       setSubmitting(false);
     }
   };
-
+  const grandTotal = cartData.reduce((total, item) => {
+    return total + (item?.diamondDetails?.Amount || 0);
+  }, 0);
   return (
-    <div className="unique-checkout-container w-100">
-      {/* <Container maxWidth="sm" > */}
+    <Container maxWidth="xl" className="mt-3 mb-3">
       <Grid container spacing={2}>
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12} md={8}>
           <Box className="checkout-box">
             <Typography variant="h5" gutterBottom>
               Contact Information
@@ -98,7 +100,7 @@ const Checkout = () => {
                     as={TextField}
                     fullWidth
                     value={values.ContactEmail}
-                    label="Email"
+                    label="Email *"
                     name="ContactEmail"
                     variant="outlined"
                     margin="normal"
@@ -113,19 +115,16 @@ const Checkout = () => {
 
                   <Field
                     as={TextField}
-                    select
                     value={values.Country}
                     fullWidth
-                    label="Country"
+                    label="Country *"
                     name="Country"
                     variant="outlined"
                     margin="normal"
+                    error={touched.Country && Boolean(errors.Country)}
+                    helperText={touched.Country && errors.Country}
                     onChange={handleChange}
-                  >
-                    <MenuItem value="Bahamas">Bahamas</MenuItem>
-                    <MenuItem value="USA">USA</MenuItem>
-                    <MenuItem value="Canada">Canada</MenuItem>
-                  </Field>
+                  />
 
                   <Grid container spacing={2}>
                     <Grid item xs={6}>
@@ -133,7 +132,7 @@ const Checkout = () => {
                         as={TextField}
                         fullWidth
                         value={values.FirstName}
-                        label="First Name"
+                        label="First Name *"
                         name="FirstName"
                         variant="outlined"
                         error={touched.FirstName && Boolean(errors.FirstName)}
@@ -146,7 +145,7 @@ const Checkout = () => {
                         as={TextField}
                         fullWidth
                         value={values.LastName}
-                        label="Last Name"
+                        label="Last Name *"
                         name="LastName"
                         variant="outlined"
                         error={touched.LastName && Boolean(errors.LastName)}
@@ -160,7 +159,7 @@ const Checkout = () => {
                     as={TextField}
                     fullWidth
                     value={values.Appartment}
-                    label="Address"
+                    label="Address *"
                     name="Appartment"
                     variant="outlined"
                     margin="normal"
@@ -175,7 +174,7 @@ const Checkout = () => {
                         as={TextField}
                         fullWidth
                         value={values.City}
-                        label="City"
+                        label="City *"
                         name="City"
                         variant="outlined"
                         error={touched.City && Boolean(errors.City)}
@@ -188,7 +187,7 @@ const Checkout = () => {
                         as={TextField}
                         fullWidth
                         value={values.State}
-                        label="State"
+                        label="State *"
                         name="State"
                         variant="outlined"
                         error={touched.State && Boolean(errors.State)}
@@ -204,7 +203,7 @@ const Checkout = () => {
                         as={TextField}
                         fullWidth
                         value={values.PinCode}
-                        label="Pin Code"
+                        label="Pin Code *"
                         name="PinCode"
                         variant="outlined"
                         error={touched.PinCode && Boolean(errors.PinCode)}
@@ -243,7 +242,7 @@ const Checkout = () => {
                     type="submit"
                     variant="contained"
                     fullWidth
-                    className="submit-button"
+                    className="submit-button mt-3"
                   >
                     Place Your Order
                   </Button>
@@ -252,85 +251,78 @@ const Checkout = () => {
             </Formik>
           </Box>
         </Grid>
-        <Grid item xs={12} md={3} sx={{ mx: 3 }}>
+        <Grid item xs={12} md={4}>
           <Box className="cart-boxs">
-            {/* <Paper className="order-summary" elevation={3}>
-            <Typography variant="h6" gutterBottom>
-              Your Order
-            </Typography>
-            {[4512.36, 5568.0, 3440.0, 4848.24].map((price, index) => (
-              <Box key={index} className="order-item">
-                <img src="/images/diamond.png" alt="Diamond" className="order-image" />
-                <Box>
-                  <Typography variant="body1">1 Carat RBC D / VS1 Diamond - GIA EX</Typography>
-                  <Typography variant="body2">Quantity: 1 x ${price.toFixed(2)}</Typography>
-                  <Typography variant="body2" fontWeight="bold">Item Total: ${price.toFixed(2)}</Typography>
-                </Box>
-              </Box>
-            ))}
-            
-          </Paper> */}
-            {userName ? (
-              cartData && cartData.length > 0 ? (
-                cartData.map((item, index) => (
-                  <div
-                    style={{
-                      marginBottom: "20px",
-                      border: "1px solid #ddd",
-                      borderRadius: "10px",
-                      padding: "10px",
-                    }}
-                  >
-                    <div
-                      className="widget_shopping_cart_content"
-                      style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        alignItems: "center",
-                        height: "70px",
-                      }}
-                    >
-                      <div>
-                        <img
-                          className="ImagessElement"
-                          src={item?.diamondDetails?.Image}
-                          // alt={diamondType}
+            <div className="cardstyle-checkout">
+              {userName ? (
+                cartData && cartData.length > 0 ? (
+                  cartData.map((item, index) => (
+                    <>
+                      <div
+                        className="mx-3 "
+                        style={{
+                          marginBottom: "20px",
+                          border: "1px solid #000",
+                          borderRadius: "10px",
+                          padding: "10px",
+                        }}
+                      >
+                        <div
+                          className="widget_shopping_cart_content"
                           style={{
-                            width: "70px",
+                            display: "flex",
+                            flexDirection: "row",
+                            alignItems: "center",
                             height: "70px",
-                            borderRadius: "10px",
                           }}
-                        />
-                      </div>
-                      <div style={{ marginLeft: "15px" }}>
-                        <span style={{ marginBottom: "0" }}>
-                          <span>{item?.diamondDetails?.Carats}</span> Carat{" "}
-                          <span>{item?.diamondDetails?.Shape}</span>
-                          <span>{item?.diamondDetails?.Colo}</span> /
-                          <span>{item?.diamondDetails?.Clarity}</span> -{" "}
-                          <span>{item?.diamondDetails?.Lab}</span>{" "}
-                          <span>{item?.diamondDetails?.Cut}</span>
-                        </span>
-                        <div style={{ display: "flex", marginTop: "0" }}>
-                          <span>
-                            Quantity: <span>{item?.Quantity}</span> x {item?.diamondDetails?.Price}
-                          </span> 
+                        >
+                          <div>
+                            <img
+                              className="ImagessElement"
+                              src={item?.diamondDetails?.Image}
+                              // alt={diamondType}
+                              style={{
+                                width: "70px",
+                                height: "70px",
+                                borderRadius: "10px",
+                              }}
+                            />
+                          </div>
+                          <div style={{ marginLeft: "15px" }}>
+                            <span style={{ marginBottom: "0" }}>
+                              <span>{item?.diamondDetails?.Carats}</span> Carat{" "}
+                              <span>{item?.diamondDetails?.Shape}</span>
+                              <span>{item?.diamondDetails?.Colo}</span> /
+                              <span>{item?.diamondDetails?.Clarity}</span> -{" "}
+                              <span>{item?.diamondDetails?.Lab}</span>{" "}
+                              <span>{item?.diamondDetails?.Cut}</span>
+                            </span>
+                            <div style={{ display: "flex", marginTop: "0" }}>
+                              <span>
+                                Quantity: <span>{item?.Quantity}</span> x{" "}
+                                {item?.diamondDetails?.Price}
+                              </span>
+                            </div>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </div>
-                ))
+                    </>
+                  ))
+                ) : (
+                  <p>No items in the cart</p>
+                )
               ) : (
-                <p>No items in the cart</p>
-              )
-            ) : (
-              <p>Please Log In To See Cart Details</p>
-            )}
+                <p>Please Log In To See Cart Details</p>
+              )}
+            </div>
+            <span className="grandtotal-checkout">
+              {" "}
+              Grand Total: {grandTotal.toFixed(2)}
+            </span>
           </Box>
         </Grid>
       </Grid>
-      {/* </Container> */}
-    </div>
+    </Container>
   );
 };
 

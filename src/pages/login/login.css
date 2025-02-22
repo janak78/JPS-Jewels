@@ -1,79 +1,110 @@
+body.login--page {
+  padding-top: 0 !important;
+}
+
 /* Main Container */
 .auth-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    max-width: 90%;
-    margin: 50px auto;
-    padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  max-width: 90%;
+  margin: 50px auto;
+  padding: 20px;
+}
 
+/* Box Styling */
+.auth-box {
+  width: 47%;
+  height: 50%;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #fff;
+  text-align: left;
+}
+
+/* Titles */
+.auth-title {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+/* Password Input */
+.password-container {
+  position: relative;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
+/* Links */
+.forgot-password {
+  font-size: 14px;
+  text-align: left;
+}
+.sign-ups {
+  color: #c9a236;
+  font-size: 14px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.privacy-link,
+.terms-link {
+  color: #c9a236;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.privacy-link:hover,
+.terms-link:hover {
+  text-decoration: underline;
+}
+
+/* Buttons */
+.login-btn,
+.register-btn {
+  background-color: #c9a236 !important;
+  color: white !important;
+  margin-top: 15px;
+  width: auto;
+  display: flex !important;
+  justify-content: start !important;
+  align-items: start !important;
+  font-weight: bold !important;
+}
+
+.loginpage-inputs {
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: start;
+}
+
+.logininput-place {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  /* align-items: center !important; */
+  width: 100%;
+  height: 92%;
+  padding: 20px 20px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .auth-container {
+    flex-direction: column;
   }
-  
-  /* Box Styling */
   .auth-box {
-    width: 47%;
-    height: 50%;
-    padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    background: #fff;
-    text-align: left;
+    width: 90%;
+    margin-bottom: 20px;
   }
-  
-  /* Titles */
-  .auth-title {
-    font-size: 20px;
-    font-weight: bold;
-    margin-bottom: 15px;
-  }
-  
-  /* Password Input */
-  .password-container {
-    position: relative;
-  }
-  
-  .toggle-password {
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    cursor: pointer;
-  }
-  
-  /* Links */
-  .forgot-password {
-    color: #C9A236;
-    font-size: 14px;
-    cursor: pointer;
-  }
-  
-  .privacy-link, .terms-link {
-    color: #C9A236;
-    text-decoration: none;
-    cursor: pointer;
-  }
-  
-  .privacy-link:hover, .terms-link:hover {
-    text-decoration: underline;
-  }
-  
-  /* Buttons */
-  .login-btn, .register-btn {
-    background-color: #C9A236 !important;
-    color: white !important;
-    margin-top: 15px;
-    width: auto;
-  }
-  
-  /* Responsive */
-  @media (max-width: 768px) {
-    .auth-container {
-      flex-direction: column;
-    }
-    .auth-box {
-      width: 90%;
-      margin-bottom: 20px;
-    }
-  }
-  
+}

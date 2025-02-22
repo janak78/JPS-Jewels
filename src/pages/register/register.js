@@ -208,7 +208,7 @@ const RegistrationForm = () => {
       </Grid>
       <Grid item xs={12} sm={5}>
         <div className="logo-container">
-          <img src={logo} alt="logo" className="logo-image" />
+          <img src={logo} alt="logo" className="logo-image-register" />
         </div>
 
         <div className="input-place">
@@ -217,6 +217,7 @@ const RegistrationForm = () => {
             variant="h4"
             className="form-title align-left"
             gutterBottom
+            sx={{ fontFamily: "Poppins" }}
           >
             Sign Up
           </Typography>
@@ -240,6 +241,28 @@ const RegistrationForm = () => {
                     />
                   </Grid>
                 ))}
+              </Grid>
+              <Grid
+                container
+                spacing={2}
+                display="flex"
+                justifyContent="flex-start"
+                // className="btn-containerregister"
+              >
+                <Grid item sx={{ mt: 2 }}>
+                  <div className="back-to-login-container">
+                    <Typography className="back-to-login" gutterBottom>
+                      Already have an account?{" "}
+                      <span
+                        className="have-an-account-login"
+                        onClick={() => navigate("/login")}
+                      >
+                        {" "}
+                        login
+                      </span>
+                    </Typography>
+                  </div>
+                </Grid>
               </Grid>
               <Grid
                 container

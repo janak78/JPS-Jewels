@@ -10,8 +10,9 @@
 .checkout-box {
   background: white;
   padding: 20px;
+  /* border: 1px solid #000; */
   border-radius: 8px;
-  /* box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); */
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
   width: 100%;
   max-width: 90%;
   text-align: left;
@@ -71,6 +72,18 @@
 
 .cart-boxs {
   padding-top: 30px;
-  height: 800px !important;
+  border-radius: 8px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+.cardstyle-checkout {
+  height: 751px !important;
   overflow-y: auto;
+}
+.grandtotal-checkout {
+  text-align: left !important;
+  align-items: start !important;
+  display: flex;
+  font-family: "Poppins";
+  font-weight: bold;
+  padding: 20px;
 }

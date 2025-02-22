@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { login } from "../../redux/authSlice";
 import { fetchCartCount } from "../../redux/cartSlice";
@@ -10,6 +10,8 @@ import {
   FormGroup,
   InputAdornment,
   FormControlLabel,
+  Grid,
+  Typography,
 } from "@mui/material";
 // import InputText from "../InputFields/InputText";
 import VisibilityIcon from "@mui/icons-material/Visibility";
@@ -20,6 +22,20 @@ import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
 import showToast from "../../components/Toast/Toaster";
 import "./login.css";
+import logo from "../../assets/images/logo.svg";
+import gallery13 from "../../assets/gallery images/luxury-shine-diamonds-digital-art_23-2151695052.avif";
+import gallery12 from "../../assets/gallery images/female-jewelry_772702-3140.avif";
+import gallery11 from "../../assets/gallery images/diamond-antique-vintage-earrings_43379-1011.avif";
+import gallery10 from "../../assets/gallery images/necklace-with-green-stones-gold-necklace_907454-6.avif";
+import gallery9 from "../../assets/gallery images/queen-crown-still-life_23-2150409265.avif";
+import gallery8 from "../../assets/gallery images/women-s-jewelry_144962-4209.avif";
+import gallery7 from "../../assets/gallery images/luxury-jewelry-black-friday-advertisement-commercial-photography_950002-325682.avif";
+import gallery6 from "../../assets/gallery images/earring-ribbon_14972-12.avif";
+import gallery5 from "../../assets/gallery images/bangles.jpg";
+import gallery4 from "../../assets/gallery images/240_F_61207817_eVLm60K8BAHEkIpL9odBurd3Kp7CeLx8.jpg";
+import gallery3 from "../../assets/gallery images/still-life-object_1122-1942.avif";
+import gallery2 from "../../assets/gallery images/pexels-the-glorious-studio-3584518-10475789.jpg";
+import gallery1 from "../../assets/gallery images/pexels-the-glorious-studio-3584518-10983783.jpg";
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -34,20 +50,26 @@ const Login = () => {
     validateOnChange: false,
     validateOnBlur: false,
     validationSchema: Yup.object().shape({
-      Username: Yup.string()
-        .required("Email is required"),
+      Username: Yup.string().required("Email is required"),
       UserPassword: Yup.string().required("Password is required"),
     }),
     onSubmit: (values) => {
-        handleSubmit(values);
+      handleSubmit(values);
     },
   });
 
-//   const baseurl = 
+   useEffect(() => {
+      document.body.classList.add("login--page");
+  
+      return () => {
+        document.body.classList.remove("login--page");
+      };
+    }, []);
+  //   const baseurl =
 
   const handleSubmit = async (values) => {
     try {
-    //   setLoader(true);
+      //   setLoader(true);
       const res = await axios.post(`http://localhost:5000/api/user/login`, {
         ...values,
       });
@@ -55,13 +77,13 @@ const Login = () => {
       if (res.data.statusCode === 200) {
         const { token, user } = res.data;
 
-      dispatch(login({ user, token })); // Store user and token in Redux
-      dispatch(fetchCartCount(user.UserId)); // Fetch cart count after login
+        dispatch(login({ user, token })); // Store user and token in Redux
+        dispatch(fetchCartCount(user.UserId)); // Fetch cart count after login
 
-      showToast.success(res.data.message, { autoClose: 3000 });
+        showToast.success(res.data.message, { autoClose: 3000 });
 
-      formik.resetForm();
-      navigate("/");
+        formik.resetForm();
+        navigate("/");
       } else if (res.data.statusCode === 201) {
         showToast(res.data.message);
       } else if (res.data.statusCode === 202) {
@@ -76,96 +98,128 @@ const Login = () => {
         showToast.error("Something went wrong. Please try again later.");
       }
     } finally {
-    //   setLoader(false);
+      //   setLoader(false);
     }
   };
 
-
   return (
     <>
-      <div className="auth-container">
-        {/* Login Section */}
-        <div className="auth-box">
-      <h2 className="auth-title">LOGIN</h2>
-      <form onSubmit={formik.handleSubmit}>
-        <FormGroup className="text-boxes" style={{ width: "100%", marginTop: "24px" }}>
-          <TextField
-            value={formik.values.Username}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            error={formik.touched.Username && Boolean(formik.errors.Username)}
-            helperText={formik.touched.Username && formik.errors.Username}
-            name="Username"
-            type="text"
-            className="text-blue-color w-100"
-            fullWidth
-            label="Username"
-          />
-        </FormGroup>
-        <div className="password-container">
-          <TextField
-            value={formik.values.UserPassword}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            name="UserPassword"
-            label="Password"
-            type={showPassword ? "text" : "password"}
-            fullWidth
-            margin="normal"
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton
-                    aria-label="toggle password visibility"
-                    onClick={() => setShowPassword(!showPassword)}
-                    edge="end"
-                  >
-                    {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-            error={formik.touched.UserPassword && Boolean(formik.errors.UserPassword)}
-            helperText={formik.touched.UserPassword && formik.errors.UserPassword}
-          />
-        </div>
-        <p className="forgot-password">Lost your password?</p>
-        <Button type="submit" variant="contained" className="login-btn">
-          Login
-        </Button>
-      </form>
-    </div>
+      <Grid container className="signup-container" spacing={2}>
+        {/* Left Image Section */}
+        <Grid item xs={12} md={7} className="signup-image-container">
+          <div className="image-overlay">
+            {/* <Typography variant="h4" className="signup-heading">
+            To keep connected with the largest shop in the world.
+          </Typography> */}
+            <article class="gallery_wrapper">
+              <img src={gallery1} alt="Balloon with controled fire" />
+              <img src={gallery2} alt="Minimalists catchphrase" />
+              <img src={gallery3} alt="Hiking Directional Signs" />
 
-        {/* Register Section */}
-        <div className="auth-box">
-          <h2 className="auth-title">REGISTER</h2>
-          <p>
-            To sign up or register, please click the link below. By registering,
-            you agree to our{" "}
-            <span
-              className="privacy-link"
-              onClick={() => navigate("/privacypolicy")}
+              <img src={gallery4} alt="drinks" />
+              <img src={gallery5} alt="breakfast" />
+
+              <img src={gallery6} alt="Alpine mountains under a clear sky" />
+              <img src={gallery7} alt="Gradient Glowing Laptop" />
+              <img src={gallery8} alt="Staples container" />
+
+              <img src={gallery9} alt="the island" />
+              <img src={gallery10} alt="Crystal Tower" />
+
+              <img src={gallery11} alt="Car with man on death valley" />
+              <img src={gallery12} alt="christmas elf looking dog" />
+              <img src={gallery13} alt="interior design" />
+            </article>
+          </div>
+        </Grid>
+        <Grid item xs={12} sm={5}>
+          <div className="logo-container">
+            <img src={logo} alt="logo" className="logo-image" />
+          </div>
+
+          <div className="logininput-place">
+            {/* Sign Up Title - Aligned to Left */}
+            <Typography
+              variant="h4"
+              className="form-title align-left"
+              gutterBottom
+              sx={{fontFamily:"Poppins"}}
             >
-              Privacy Policy
-            </span>{" "}
-            and{" "}
-            <span
-              className="terms-link"
-              onClick={() => navigate("/termsofuse")}
-            >
-              Terms & Conditions
-            </span>
-            .
-          </p>
-          <FormControlLabel
-            control={<Checkbox color="primary" />}
-            label="I agree to the Privacy Policy and Terms & Conditions"
-          />
-          <Button variant="contained" className="register-btn">
-            Register or Sign Up
-          </Button>
-        </div>
-      </div>
+              Login
+            </Typography>
+            {/* <div className="auth-container"> */}
+            {/* Login Section */}
+            {/* <div className="auth-box"> */}
+            {/* <h2 className="auth-title">LOGIN</h2> */}
+            {/* <div className="loginpage-inputs"> */}
+            <form onSubmit={formik.handleSubmit}>
+              <FormGroup
+                className="text-boxes"
+                style={{ width: "100%", marginTop: "24px" }}
+              >
+                <TextField
+                  value={formik.values.Username}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  error={
+                    formik.touched.Username && Boolean(formik.errors.Username)
+                  }
+                  helperText={formik.touched.Username && formik.errors.Username}
+                  name="Username"
+                  type="text"
+                  className="text-blue-color w-100"
+                  fullWidth
+                  label="Username"
+                />
+              </FormGroup>
+              <div className="password-container">
+                <TextField
+                  value={formik.values.UserPassword}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  name="UserPassword"
+                  label="Password"
+                  type={showPassword ? "text" : "password"}
+                  fullWidth
+                  margin="normal"
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={() => setShowPassword(!showPassword)}
+                          edge="end"
+                        >
+                          {showPassword ? (
+                            <VisibilityOffIcon />
+                          ) : (
+                            <VisibilityIcon />
+                          )}
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
+                  error={
+                    formik.touched.UserPassword &&
+                    Boolean(formik.errors.UserPassword)
+                  }
+                  helperText={
+                    formik.touched.UserPassword && formik.errors.UserPassword
+                  }
+                />
+              </div>
+              <p className="forgot-password">Don't have an account? <span className="sign-ups" onClick={()=> navigate("/signup")}>Sign Up</span></p>
+              <Button type="submit" variant="contained" className="login-btn">
+                Login
+              </Button>
+            </form>
+            {/* </div> */}
+
+            {/* </div>
+            </div> */}
+          </div>
+        </Grid>
+      </Grid>
     </>
   );
 };

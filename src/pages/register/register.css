@@ -54,7 +54,7 @@ body.register-page {
   padding-top: 20px;
 }
 
-.logo-image {
+.logo-image-register {
   max-width: 130px;
   height: auto;
   margin-left: 15px;
@@ -104,8 +104,26 @@ body.register-page {
   display: flex;
 }
 
+.back-to-login-container{
+  /* padding-top: 20px; */
+  width: 100%;
+}
+
+.back-to-login{
+  font-family: "Poppins" !important;
+  /* font-size: 16px;
+  font-weight: 600; */
+}
+.have-an-account-login{
+  font-family: "Poppins" !important;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  color: #c9a236;
+}
+
 .btn-containerregister {
-  margin-top: 50px !important;
+  margin-top: 40px !important;
   width: fit-content;
   display: flex;
   justify-content: left;
