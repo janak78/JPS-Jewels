@@ -12,121 +12,87 @@ const { verifyLoginToken } = require("../authentication/authentication");
 
 const router = express.Router();
 
-const createUser = async (data, req) => {
-  const UserId = Date.now();
-  const uniqueId = UserId;
-
-  data.UserId = uniqueId;
-  data["createdAt"] = moment().utcOffset(330).format("YYYY-MM-DD HH:mm:ss");
-  data["updatedAt"] = moment().utcOffset(330).format("YYYY-MM-DD HH:mm:ss");
-
+const createUser = async (data) => {
   try {
+    // Define required fields
+    const requiredFields = [
+      "Salulation",
+      "FirstName",
+      "LastName",
+      "CompanyName",
+      "Designation",
+      "RegisterType",
+      "City",
+      "State",
+      "Country",
+      "Pincode",
+      "CityPhoneCode",
+      "PhoneNo",
+      "PrimaryEmail",
+      "Username",
+      "UserPassword",
+      "ConfirmPassword",
+      "PreferredContactMethod",
+      "PreferredContactDetails",
+    ];
+
+    // Check for missing fields
+    const missingFields = requiredFields.filter((field) => !data[field]);
+    if (missingFields.length > 0) {
+      return {
+        statusCode: 400,
+        message: `Required fields missing: ${missingFields.join(", ")}`,
+      };
+    }
+
+    // Password validation
     if (data.UserPassword !== data.ConfirmPassword) {
-      return {
-        statusCode: 400,
-        message: "Password and Confirm Password do not match.",
-      };
+      return { statusCode: 400, message: "Passwords do not match." };
     }
 
-    const companyNameExists = await Signup.findOne({
-      CompanyName: data.CompanyName,
+    // Check for unique fields in a single query
+    const existingUser = await Signup.findOne({
+      $or: [
+        { CompanyName: data.CompanyName },
+        { PhoneNo: data.PhoneNo },
+        { PrimaryEmail: data.PrimaryEmail },
+        { SecondaryEmail: data.SecondaryEmail },
+        { PreferredContactDetails: data.PreferredContactDetails },
+        { Username: data.Username },
+      ],
     });
-    if (companyNameExists) {
-      return {
-        statusCode: 400,
-        message: "CompanyName already exists.",
-      };
+
+    if (existingUser) {
+      const duplicateField = Object.keys(data).find((key) => existingUser[key] === data[key]);
+      return { statusCode: 400, message: `${duplicateField} already exists.` };
     }
 
-    const phoneNoExists = await Signup.findOne({ PhoneNo: data.PhoneNo });
-    if (phoneNoExists) {
-      return {
-        statusCode: 400,
-        message: "PhoneNo already exists.",
-      };
-    }
+    // Generate unique UserId and timestamps
+    data.UserId = Date.now().toString();
+    data.createdAt = moment().utcOffset(330).format("YYYY-MM-DD HH:mm:ss");
+    data.updatedAt = data.createdAt;
 
-    const primaryEmailExists = await Signup.findOne({
-      PrimaryEmail: data.PrimaryEmail,
-    });
-    if (primaryEmailExists) {
-      return {
-        statusCode: 400,
-        message: "PrimaryEmail already exists.",
-      };
-    }
+    // Hash the password
+    data.UserPassword = await bcrypt.hash(data.UserPassword, 10);
 
-    const secondaryEmailExists = await Signup.findOne({
-      SecondaryEmail: data.SecondaryEmail,
-    });
-    if (secondaryEmailExists) {
-      return {
-        statusCode: 400,
-        message: "SecondaryEmail already exists.",
-      };
-    }
-
-    const preferredContactExists = await Signup.findOne({
-      PreferredContactDetails: data.PreferredContactDetails,
-    });
-    if (preferredContactExists) {
-      return {
-        statusCode: 400,
-        message: "PreferredContactDetails already exists.",
-      };
-    }
-
-    const userNameExists = await Signup.findOne({
-      Username: data.Username,
-    });
-    if (userNameExists) {
-      return {
-        statusCode: 400,
-        message: "Username already exists.",
-      };
-    }
-
-    const UserPasswordExists = await Signup.findOne({
-      UserPassword: data.UserPassword,
-    });
-    if (UserPasswordExists) {
-      return {
-        statusCode: 400,
-        message: "UserPassword already exists.",
-      };
-    }
-
-    // Hash the password using bcrypt
-    const saltRounds = 10; // Number of salt rounds for bcrypt
-    data.UserPassword = await bcrypt.hash(data.UserPassword, saltRounds);
-
-    // Save user to database
+    // Save user to the database
     const userToSave = await Signup.create(data);
 
-    return {
-      statusCode: 200,
-      message: "User Created Successfully",
-      data: userToSave,
-    };
+    return { statusCode: 200, message: "User Created Successfully", data: userToSave };
   } catch (error) {
-    return {
-      statusCode: 400,
-      message: "Failed to create User.",
-      error: error.message,
-    };
+    console.error("Error creating user:", error.message);
+    return { statusCode: 500, message: "Failed to create user.", error: error.message };
   }
 };
 
+// Signup route
 router.post("/signup", async (req, res) => {
   try {
-    const response = await createUser(req.body, req);
+    const response = await createUser(req.body);
     res.status(response.statusCode).json(response);
   } catch (error) {
-    console.error(error.message);
-    res.status(500).json({
-      statusCode: 500,
-      message: "Something went wrong, please try later!",
-    });
+    console.error("Signup error:", error.message);
+    res.status(500).json({ statusCode: 500, message: "Something went wrong, please try later!" });
   }
 });
 
@@ -366,7 +332,7 @@ const loginUser = async (data) => {
     const token = jwt.sign(
       { UserId: user.UserId, Username: user.Username, Mail: user.PrimaryEmail },
       SECRET_KEY,
-      { expiresIn: "5s" }
+      { expiresIn: "5h" }
     );
 
     return {

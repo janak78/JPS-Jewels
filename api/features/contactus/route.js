@@ -76,7 +76,7 @@ const addContact = async (data) => {
           <div class="email-container">
             <div class="email-header">Contact Confirmation</div>
             <div class="email-body">
-              <h2>Hello</h2>
+              <h2>Hello ${data.Name}</h2>
               <p>Thank you for reaching out to us! We have received your contact details and will get back to you shortly.</p>
               <p><strong>Email:</strong> ${data.Email}</p>
             </div>
@@ -148,7 +148,7 @@ const contactDetails = async () => {
   };
 };
 
-router.get("/contactdetails", async (req, res) => {
+router.get("/contactdetails", verifyLoginToken, async (req, res) => {
   try {
     const response = await contactDetails();
     res.status(response.statusCode).json(response);
@@ -175,7 +175,7 @@ const contactDetailsPopup = async (ContactId) => {
   if (rawCartData.length === 0) {
     return {
       statusCode: 204,
-      message: "No quotes found",
+      message: "No Contactdetail found",
       data: [],
     };
   }
@@ -199,7 +199,7 @@ const contactDetailsPopup = async (ContactId) => {
   return {
     statusCode: stockCount > 0 ? 200 : 204,
     message:
-      stockCount > 0 ? "Quotes retrieved successfully" : "No Contact found",
+      stockCount > 0 ? "contactdetail retrieved successfully" : "No Contact found",
     data: contact,
     TotalCount: stockCount,
   };
@@ -222,7 +222,7 @@ router.get("/contactdetailspopup", verifyLoginToken, async (req, res) => {
 const deletecontact = async (ContactId) => {
   try {
     const deleteconta = await Contact.findOneAndUpdate(
-      { ContactId },
+      { ContactId, IsDelete: false },
       { $set: { IsDelete: true } },
       { new: true }
     );
@@ -230,18 +230,18 @@ const deletecontact = async (ContactId) => {
     if (!deleteconta) {
       return {
         statusCode: 404,
-        message: `No user found`,
+        message: `No contactdetail found`,
       };
     }
     return {
       statusCode: 200,
-      message: `User deleted successfully.`,
+      message: `contactdetails deleted successfully.`,
       data: deleteconta,
     };
   } catch (error) {
     return {
       statusCode: 500,
-      message: "Failed to soft delete user data.",
+      message: "Failed to soft delete contactdetail.",
       error: error.message,
     };
   }
