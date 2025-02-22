@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const multer = require("multer");
 const XLSX = require("xlsx");
 const userSchema = require("./model");
+const { verifyLoginToken } = require("../authentication/authentication");
 
 const router = express.Router();
 
@@ -17,65 +18,70 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-router.post("/students", upload.single("file"), async (req, res) => {
-  try {
-    // data["createdAt"] = moment().utcOffset(330).format("YYYY-MM-DD HH:mm:ss");
-    // data["updatedAt"] = moment().utcOffset(330).format("YYYY-MM-DD HH:mm:ss");
+router.post(
+  "/addstocks",
+  verifyLoginToken,
+  upload.single("file"),
+  async (req, res) => {
+    try {
+      // data["createdAt"] = moment().utcOffset(330).format("YYYY-MM-DD HH:mm:ss");
+      // data["updatedAt"] = moment().utcOffset(330).format("YYYY-MM-DD HH:mm:ss");
 
-    const fileName = req.file.filename;
-    const fileData = `./${fileName}`;
-    const workbook = XLSX.readFile(fileData);
-    const sheetName = workbook.SheetNames[0];
-    const worksheet = workbook.Sheets[sheetName];
-    const jsonData = XLSX.utils.sheet_to_json(worksheet);
+      const fileName = req.file.filename;
+      const fileData = `./${fileName}`;
+      const workbook = XLSX.readFile(fileData);
+      const sheetName = workbook.SheetNames[0];
+      const worksheet = workbook.Sheets[sheetName];
+      const jsonData = XLSX.utils.sheet_to_json(worksheet);
 
-    for (const data of jsonData) {
-      await userSchema.findOneAndUpdate(
-        { SKU: data.SKU },
-        {
-          Image: data.Image,
-          Video: data.Video,
-          DiamondType: data["Diamond Type"],
-          HA: data["H&A"],
-          Ratio: data.Ratio,
-          Tinge: data.Tinge,
-          Milky: data.Milky,
-          EyeC: data.EyeC,
-          Table: data["Table(%)"],
-          Depth: data["Depth(%)"],
-          measurements: data.measurements,
-          Amount: data["Amount U$"],
-          Price: data["Price $/ct"],
-          Disc: data["Disc %"],
-          Rap: data["Rap $"],
-          FluoInt: data["Fluo Int"],
-          Symm: data.Symm,
-          Polish: data.Polish,
-          Cut: data.Cut,
-          Clarity: data.Clarity,
-          Color: data.Color,
-          Carats: data.Carats,
-          Shape: data.Shape,
-          CertificateNo: data["Certificate No"],
-          Lab: data.Lab,
-          SKU: data.SKU,
-          SrNo: data["Sr.No"],
-        },
-        { upsert: true, new: true }
-      );
+      for (const data of jsonData) {
+        await userSchema.findOneAndUpdate(
+          { SKU: data.SKU },
+          {
+            Image: data.Image,
+            Video: data.Video,
+            DiamondType: data["Diamond Type"],
+            HA: data["H&A"],
+            Ratio: data.Ratio,
+            Tinge: data.Tinge,
+            Milky: data.Milky,
+            EyeC: data.EyeC,
+            Table: data["Table(%)"],
+            Depth: data["Depth(%)"],
+            measurements: data.measurements,
+            Amount: data["Amount U$"],
+            Price: data["Price $/ct"],
+            Disc: data["Disc %"],
+            Rap: data["Rap $"],
+            FluoInt: data["Fluo Int"],
+            Symm: data.Symm,
+            Polish: data.Polish,
+            Cut: data.Cut,
+            Clarity: data.Clarity,
+            Color: data.Color,
+            Carats: data.Carats,
+            Shape: data.Shape,
+            CertificateNo: data["Certificate No"],
+            Lab: data.Lab,
+            SKU: data.SKU,
+            SrNo: data["Sr.No"],
+          },
+          { upsert: true, new: true }
+        );
+      }
+
+      res
+        .status(200)
+        .json({ success: true, message: "Excel file processed successfully" });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({
+        success: false,
+        message: "An error occurred while processing the request",
+      });
     }
-
-    res
-      .status(200)
-      .json({ success: true, message: "Excel file processed successfully" });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({
-      success: false,
-      message: "An error occurred while processing the request",
-    });
   }
-});
+);
 
 const labUrlMap = {
   HRD: "https://my.hrdantwerp.com/Download/GetGradingReportPdf/?reportNumber=",
@@ -107,7 +113,7 @@ function getCertificateUrl(lab, certificateNo) {
 }
 
 const fetchQuoteDetails = async () => {
-  const quotes = await userSchema.aggregate([
+  const diamondsdetail = await userSchema.aggregate([
     {
       $match: { IsDelete: false },
     },
@@ -144,13 +150,15 @@ const fetchQuoteDetails = async () => {
     },
   ]);
 
-  const stockCount = quotes.length;
+  const stockCount = diamondsdetail.length;
 
   return {
-    statusCode: quotes.length > 0 ? 200 : 204,
+    statusCode: diamondsdetail.length > 0 ? 200 : 204,
     message:
-      quotes.length > 0 ? "Quotes retrieved successfully" : "No quotes found",
-    data: quotes,
+      diamondsdetail.length > 0
+        ? "diamondsdetail retrieved successfully"
+        : "No diamondsdetail found",
+    data: diamondsdetail,
     TotalCount: stockCount,
   };
 };
@@ -189,13 +197,12 @@ router.get("/data", async function (req, res) {
 
 const fetchDiamondsPageDetails = async (query) => {
   try {
-    
-    const pageSize = parseInt(query.pageSize) || 10; 
-    let pageNumber = parseInt(query.pageNumber) || 1; 
+    const pageSize = parseInt(query.pageSize) || 10;
+    let pageNumber = parseInt(query.pageNumber) || 1;
 
     pageNumber = pageNumber - 1;
 
-    const quotes = await userSchema.aggregate([
+    const diamondDetailsPage = await userSchema.aggregate([
       {
         $match: { IsDelete: false },
       },
@@ -232,23 +239,29 @@ const fetchDiamondsPageDetails = async (query) => {
       },
       {
         $sort: { createdAt: 1 },
-      }
+      },
     ]);
 
-    const stockCount = quotes.length;
+    const stockCount = diamondDetailsPage.length;
 
-    const totalCount = quotes.length;
+    const totalCount = diamondDetailsPage.length;
     const totalPages = Math.ceil(totalCount / pageSize);
 
-    const paginatedDiamonds = quotes.slice(pageNumber * pageSize, (pageNumber + 1) * pageSize);
+    const paginatedDiamonds = diamondDetailsPage.slice(
+      pageNumber * pageSize,
+      (pageNumber + 1) * pageSize
+    );
 
     return {
-      statusCode: quotes.length > 0 ? 200 : 204,
+      statusCode: diamondDetailsPage.length > 0 ? 200 : 204,
       message:
-        quotes.length > 0 ? "Quotes retrieved successfully" : "No quotes found",
-      data: paginatedDiamonds.length > 0 ? paginatedDiamonds : quotes,
+        diamondDetailsPage.length > 0
+          ? "diamondDetailsPage retrieved successfully"
+          : "No diamondDetailsPage found",
+      data:
+        paginatedDiamonds.length > 0 ? paginatedDiamonds : diamondDetailsPage,
       totalPages: totalPages,
-      currentPage: pageNumber + 1,  // Convert back to 1-based page number
+      currentPage: pageNumber + 1, // Convert back to 1-based page number
       TotalCount: stockCount,
     };
   } catch (error) {
@@ -264,7 +277,7 @@ const fetchDiamondsPageDetails = async (query) => {
 router.get("/data/page", async function (req, res) {
   try {
     const { pageSize, pageNumber } = req.query;
-    
+
     const result = await fetchDiamondsPageDetails({ pageSize, pageNumber });
 
     if (result.statusCode === 200) {
@@ -439,10 +452,18 @@ function getDefaultImageUrl(Shape) {
 }
 
 const fetchDaimondDetails = async (SkuId) => {
-  const diamondSearchQuery = {
+  const diamondSearchQuery = await userSchema.findOne({
     SKU: SkuId,
     IsDelete: false,
-  };
+  });
+  // console.log(diamondSearchQuery, "diamondSearchQuery");
+
+  if (!diamondSearchQuery) {
+    return {
+      statusCode: 400,
+      message: "stock item not found",
+    };
+  }
 
   const diamonds = await userSchema.aggregate([
     { $match: diamondSearchQuery },
@@ -526,7 +547,7 @@ router.get("/data/:SkuId", async function (req, res) {
   }
 });
 
-router.get("/stockpopup", async function (req, res) {
+router.get("/stockpopup", verifyLoginToken, async function (req, res) {
   try {
     const { SkuId } = req.query;
     const result = await fetchDaimondDetails(SkuId);
@@ -566,7 +587,7 @@ router.get("/stockpopup", async function (req, res) {
 const deletestock = async (SKU) => {
   try {
     const updatestock = await userSchema.findOneAndUpdate(
-      { SKU },
+      { SKU, IsDelete: false },
       { $set: { IsDelete: true } },
       { new: true }
     );
@@ -574,24 +595,24 @@ const deletestock = async (SKU) => {
     if (!updatestock) {
       return {
         statusCode: 404,
-        message: `No user found`,
+        message: `No stock item found`,
       };
     }
     return {
       statusCode: 200,
-      message: `User deleted successfully.`,
+      message: `stock item deleted successfully.`,
       data: updatestock,
     };
   } catch (error) {
     return {
       statusCode: 500,
-      message: "Failed to soft delete user data.",
+      message: "Failed to soft delete stock item data.",
       error: error.message,
     };
   }
 };
 
-router.delete("/deletestock/:SKU", async (req, res) => {
+router.delete("/deletestock/:SKU", verifyLoginToken, async (req, res) => {
   try {
     const { SKU } = req.params;
     const response = await deletestock(SKU);

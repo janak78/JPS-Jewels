@@ -14,7 +14,7 @@ const fetchCartDetails = async (UserId, SKU) => {
   const quoteSearchQuery = { UserId, IsDelete: false, IsCheckout: false }; // Start with UserId
   if (SKU) quoteSearchQuery.SKU = SKU; // Add SKU if it's provided
 
-  const quotes = await Cart.aggregate([
+  const cartDetails = await Cart.aggregate([
     { $match: quoteSearchQuery },
     {
       $lookup: {
@@ -50,13 +50,13 @@ const fetchCartDetails = async (UserId, SKU) => {
   ]);
   // console.log(quotes,"aaaaaqoutes")
 
-  const cartCount = quotes.length;
+  const cartCount = cartDetails.length;
 
   return {
-    statusCode: quotes.length > 0 ? 200 : 204,
+    statusCode: cartDetails.length > 0 ? 200 : 204,
     message:
-      quotes.length > 0 ? "Quotes retrieved successfully" : "No quotes found",
-    data: quotes,
+      cartDetails.length > 0 ? "CcartDetails retrieved successfully" : "No cartDetails found",
+    data: cartDetails,
     TotalCount: cartCount,
   };
 };
@@ -93,7 +93,7 @@ router.get("/cart", verifyLoginToken, async function (req, res) {
 const fetchCartWithoutCheckout = async () => {
   const quoteSearchQuery = { IsDelete: false, IsCheckout: false }; // Start with UserId// Add SKU if it's provided
 
-  const quotes = await Cart.aggregate([
+  const cartItems = await Cart.aggregate([
     { $match: quoteSearchQuery },
     {
       $lookup: {
@@ -148,10 +148,10 @@ const fetchCartWithoutCheckout = async () => {
   });
 
   return {
-    statusCode: quotes.length > 0 ? 200 : 204,
+    statusCode: cartItems.length > 0 ? 200 : 204,
     message:
-      quotes.length > 0 ? "Quotes retrieved successfully" : "No quotes found",
-    data: quotes,
+      cartItems.length > 0 ? "Cart items retrieved successfully" : "No cartItems found",
+    data: cartItems,
     TotalConut: usersCount,
   };
 };
@@ -194,7 +194,7 @@ const fetchCartWithoutCheckoutPopup = async (AddToCartId) => {
     if (rawCartData.length === 0) {
       return {
         statusCode: 204,
-        message: "No quotes found",
+        message: "No items found",
         data: [],
       };
     }
@@ -252,7 +252,7 @@ const fetchCartWithoutCheckoutPopup = async (AddToCartId) => {
     return {
       statusCode: quotes.length > 0 ? 200 : 204,
       message:
-        quotes.length > 0 ? "Quotes retrieved successfully" : "No quotes found",
+        quotes.length > 0 ? "cart item retrieved successfully" : "No item found",
       data: quotes,
     };
   } catch (error) {
@@ -300,13 +300,20 @@ const addToCart = async (data) => {
       data.AddToCartId = Date.now().toString(); // You can also prepend a prefix or make this more complex if needed
     }
 
+    if(!data.SKU){
+      return {
+        statusCode: 400,
+        message: "SKU is required",
+      }
+    }
+    
     const existingItem = await Cart.findOne({
       UserId: data.UserId,
       SKU: data.SKU, // Match SKU along with UserId
       IsCheckout: false,
       IsDelete: false,
     });
-
+    
     if (existingItem) {
       return {
         statusCode: 202,
