@@ -2,6 +2,38 @@ body.login--page {
   padding-top: 0 !important;
 }
 
+@media (max-width: 5120px) and (min-width: 1066px) {
+  .login-image-gallery {
+    display: flex !important;
+  }
+  .allimage-login {
+    display: none !important;
+  }
+}
+
+@media (max-width: 1065px) and (min-width: 901px) {
+  .allimage-login {
+    display: flex !important;
+    width: 540px;
+    justify-content: center !important;
+    align-items: center !important;
+  }
+  .gallery-login {
+    display: none !important;
+  }
+}
+@media (max-width: 900px) {
+  .login-image-gallery {
+    display: none !important;
+  }
+}
+
+.logo-image-login {
+  max-width: 130px;
+  height: auto;
+  margin-left: 15px;
+}
+
 /* Main Container */
 .auth-container {
   display: flex;

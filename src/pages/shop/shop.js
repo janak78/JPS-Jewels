@@ -18,7 +18,6 @@ import showToast from "../../components/Toast/Toaster";
 
 const DiamondsGrid = ({ diamond }) => {
   const navigate = useNavigate();
-  console.log(diamond, "diamond");
   const dispatch = useDispatch();
   const userId = useSelector((state) => state.auth?.user?.UserId);
   const { totalPages, currentPage, itemsPerPage } = useSelector(

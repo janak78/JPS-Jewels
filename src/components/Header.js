@@ -11,11 +11,9 @@ import {
   Badge,
   Box,
   ClickAwayListener,
-  Checkbox,
   IconButton,
   FormGroup,
   InputAdornment,
-  FormControlLabel,
 } from "@mui/material";
 import logo from "../assets/images/logo.svg";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
@@ -29,7 +27,6 @@ import axios from "axios";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import showToast from "../components/Toast/Toaster";
-import AxiosInstance from "../Axiosinstance";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes, faTrash } from "@fortawesome/free-solid-svg-icons";
 import "./Header.css";
@@ -169,19 +166,17 @@ const Header = () => {
 
         if (token) {
           localStorage.setItem("authToken", token);
-  
+
           // Set timeout to log out when the token expires
           const decodedToken = JSON.parse(atob(token.split(".")[1]));
           const expiryTime = decodedToken.exp * 1000 - Date.now();
           const { SuperadminId, exp } = decodedToken;
-  
+
           setTimeout(() => {
             handleLogout();
           }, expiryTime);
 
           localStorage.setItem("SuperadminId", SuperadminId);
-
-
         }
 
         dispatch(login({ user, token })); // Store user and token in Redux
@@ -228,6 +223,7 @@ const Header = () => {
         <Link
           to="/"
           className={`nav-link ${location.pathname === "/" ? "active" : ""}`}
+          onClick={() => setMenuOpen(false)}
         >
           HOME
         </Link>
@@ -236,6 +232,7 @@ const Header = () => {
           className={`nav-link ${
             location.pathname === "/diamond" ? "active" : ""
           }`}
+          onClick={() => setMenuOpen(false)}
         >
           DIAMOND
         </Link>
@@ -244,6 +241,7 @@ const Header = () => {
           className={`nav-link ${
             location.pathname === "/aboutus" ? "active" : ""
           }`}
+          onClick={() => setMenuOpen(false)}
         >
           ABOUT US
         </Link>
@@ -252,6 +250,7 @@ const Header = () => {
           className={`nav-link ${
             location.pathname === "/contactus" ? "active" : ""
           }`}
+          onClick={() => setMenuOpen(false)}
         >
           CONTACT US
         </Link>
@@ -421,7 +420,7 @@ const Header = () => {
 
                         <div className="user-welcome-text">
                           Welcome, {userName}
-                          <div style={{fontSize:"10px"}}> {Mail} </div>
+                          <div style={{ fontSize: "10px" }}> {Mail} </div>
                         </div>
                       </div>
                       <div className="forgot-signup">
@@ -437,7 +436,7 @@ const Header = () => {
                           style={{ cursor: "pointer" }}
                           className="signup-link-signup"
                         >
-                         <i className="fas fa-sign-out-alt"></i> Log out 
+                          <i className="fas fa-sign-out-alt"></i> Log out
                         </span>
                       </div>
                     </div>

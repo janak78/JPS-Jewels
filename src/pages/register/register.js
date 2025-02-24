@@ -24,6 +24,7 @@ import gallery4 from "../../assets/gallery images/240_F_61207817_eVLm60K8BAHEkIp
 import gallery3 from "../../assets/gallery images/still-life-object_1122-1942.avif";
 import gallery2 from "../../assets/gallery images/pexels-the-glorious-studio-3584518-10475789.jpg";
 import gallery1 from "../../assets/gallery images/pexels-the-glorious-studio-3584518-10983783.jpg";
+import allimage from "../../assets/gallery images/allimage.png";
 
 const RegistrationForm = () => {
   const navigate = useNavigate();
@@ -180,12 +181,12 @@ const RegistrationForm = () => {
   return (
     <Grid container className="signup-container" spacing={2}>
       {/* Left Image Section */}
-      <Grid item xs={12} md={7} className="signup-image-container">
+      <Grid item xs={12} md={7} className="signup-image-container register-image-gallery ">
         <div className="image-overlay">
           {/* <Typography variant="h4" className="signup-heading">
             To keep connected with the largest shop in the world.
           </Typography> */}
-          <article class="gallery_wrapper">
+          <article class="gallery_wrapper gallery-register">
             <img src={gallery1} alt="Balloon with controled fire" />
             <img src={gallery2} alt="Minimalists catchphrase" />
             <img src={gallery3} alt="Hiking Directional Signs" />
@@ -204,9 +205,10 @@ const RegistrationForm = () => {
             <img src={gallery12} alt="christmas elf looking dog" />
             <img src={gallery13} alt="interior design" />
           </article>
+          <img src={allimage} alt="all image"  className="allimage-register"/>
         </div>
       </Grid>
-      <Grid item xs={12} sm={5}>
+      <Grid item xs={12} sm={12} md={5}>
         <div className="logo-container">
           <img src={logo} alt="logo" className="logo-image-register" />
         </div>

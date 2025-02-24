@@ -52,9 +52,6 @@ const Diamonddetail = () => {
     }
   }, [dispatch, SKU]);
 
-  console.log(diamondDetail, "daimond");
-  console.log(SKU, "daimond");
-
   const diamondData = diamondDetail?.[0] || {};
 
   useEffect(() => {

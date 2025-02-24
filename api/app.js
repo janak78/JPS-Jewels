@@ -32,8 +32,8 @@ app.set("view engine", "jade");
 // app.use(cors());
 app.use(
   cors({
-    origin: "http://localhost:3000", // Allow frontend to access backend
-    credentials: true, // Allow cookies if needed
+    origin: "http://localhost:3000",
+    credentials: true,
   })
 );
 

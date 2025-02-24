@@ -20,10 +20,8 @@ export const fetchCaretData = () => async (dispatch) => {
     const res = await AxiosInstance.get(
       `http://localhost:5000/api/stock/caretdata`
     );
-    console.log(res,"r")
 
     if (res.data.result.statusCode === 200) {
-      console.log(res.data.statusCode,"res.data.statusCode")
       dispatch(setCaretData(res.data.result.data.slice(0, 5)));
     } else {
       dispatch(setCaretData({ caretData: [] }));

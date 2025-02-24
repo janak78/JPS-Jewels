@@ -1,42 +1,42 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import image1 from "../assets/images/slide-1-asset-2-1.webp";
-import image2 from "../assets/images/slide-1-asset-3.webp";
-import image3 from "../assets/images/slide-1-asset-4.webp";
-import rings from "../assets/images/rings (1).svg";
-import bracelete from "../assets/images/bracelet.svg";
-import chain from "../assets/images/chain.svg";
-import choker from "../assets/images/choker (1).svg";
-import cufflinks from "../assets/images/cufflinks.svg";
-// import earrings from "../assets/images/earrings.svg";
-import gemstone from "../assets/images/gemstone.svg";
-import giftset from "../assets/images/gift.svg";
-import necklace from "../assets/images/necklace.svg";
-import watch from "../assets/images/watch.svg";
-import ster from "../assets/images/diamond-pendant.svg";
-import curtain1 from "../assets/images/curtain-1.webp";
-import curtain3 from "../assets/images/curtain-3.webp";
-import curtain5 from "../assets/images/curtain-5.webp";
-import curtain2 from "../assets/images/curtain-2.webp";
-import bannerback6 from "../assets/images/banner-back-6.webp";
-import bannernack7 from "../assets/images/banner-back-7.webp";
-import vintage from "../assets/images/Vintage.svg";
-import romance from "../assets/images/Rommance.svg";
-import celestial from "../assets/images/Celestial.svg";
-import goddess from "../assets/images/Goddess.svg";
-import opulence from "../assets/images/Opulence.svg";
-import charm from "../assets/images/Charm.svg";
-import forest from "../assets/images/Forest.svg";
-import luxer from "../assets/images/Luxer.svg";
-import retro from "../assets/images/Retro-Revival.svg";
-import eastern from "../assets/images/Eastern.svg";
-import shop1 from "../assets/images/tripple-banner-img-2.webp";
-import shop2 from "../assets/images/tripple-banner-img-3.webp";
-import shop3 from "../assets/images/tripple-banner-img-1.webp";
+import image1 from "../../assets/images/slide-1-asset-2-1.webp";
+import image2 from "../../assets/images/slide-1-asset-3.webp";
+import image3 from "../../assets/images/slide-1-asset-4.webp";
+import rings from "../../assets/images/rings (1).svg";
+import bracelete from "../../assets/images/bracelet.svg";
+import chain from "../../assets/images/chain.svg";
+import choker from "../../assets/images/choker (1).svg";
+import cufflinks from "../../assets/images/cufflinks.svg";
+// import earrings from "../../assets/images/earrings.svg";
+import gemstone from "../../assets/images/gemstone.svg";
+import giftset from "../../assets/images/gift.svg";
+import necklace from "../../assets/images/necklace.svg";
+import watch from "../../assets/images/watch.svg";
+import ster from "../../assets/images/diamond-pendant.svg";
+import curtain1 from "../../assets/images/curtain-1.webp";
+import curtain3 from "../../assets/images/curtain-3.webp";
+import curtain5 from "../../assets/images/curtain-5.webp";
+import curtain2 from "../../assets/images/curtain-2.webp";
+import bannerback6 from "../../assets/images/banner-back-6.webp";
+import bannernack7 from "../../assets/images/banner-back-7.webp";
+import vintage from "../../assets/images/Vintage.svg";
+import romance from "../../assets/images/Rommance.svg";
+import celestial from "../../assets/images/Celestial.svg";
+import goddess from "../../assets/images/Goddess.svg";
+import opulence from "../../assets/images/Opulence.svg";
+import charm from "../../assets/images/Charm.svg";
+import forest from "../../assets/images/Forest.svg";
+import luxer from "../../assets/images/Luxer.svg";
+import retro from "../../assets/images/Retro-Revival.svg";
+import eastern from "../../assets/images/Eastern.svg";
+import shop1 from "../../assets/images/tripple-banner-img-2.webp";
+import shop2 from "../../assets/images/tripple-banner-img-3.webp";
+import shop3 from "../../assets/images/tripple-banner-img-1.webp";
 import "./Home.css";
-import showToast from "../components/Toast/Toaster";
-import { addToCart } from "../redux/cartSlice";
-import { setCaretData, fetchCaretData } from "../redux/shopSlice";
+import showToast from "../../components/Toast/Toaster";
+import { addToCart } from "../../redux/cartSlice";
+import { fetchCaretData } from "../../redux/shopSlice";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { useNavigate } from "react-router-dom";
@@ -64,7 +64,6 @@ const Home = () => {
   const dispatch = useDispatch();
 
   const diamonds = useSelector((state) => state.shop.caretData);
-  console.log(diamonds,"diamonds")
   const userId = useSelector((state) => state.auth?.user?.UserId);
 
   useEffect(() => {
@@ -76,8 +75,8 @@ const Home = () => {
   }, []);
 
   useEffect(() => {
-        dispatch(fetchCaretData());
-    }, [dispatch]);
+    dispatch(fetchCaretData());
+  }, [dispatch]);
 
   useEffect(() => {
     AOS.init({
@@ -239,10 +238,10 @@ const Home = () => {
       </section>
 
       <div>
-        <h2 className="shop-by-brands-title">NEW COLLECTION</h2>
-        <div className="caretdata">
+        <h2 className="shop-by-brands-title">TOP PRODUCTS</h2>
+        <div className="caretdata row w-100">
           {diamonds.map((diamond, index) => (
-            <div key={index} className="col-md-2 col-sm-6">
+            <div key={index} className="col-lg-2 col-md-4 col-sm-6">
               <div
                 className="diamond-card1"
                 onClick={(e) => {

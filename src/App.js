@@ -1,16 +1,16 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Toaster } from "react-hot-toast";
 import { ToastContainer } from "react-toastify";
 import { Provider } from "react-redux";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import store from "./redux/store";
 
 import MainLayout from "./layout/MainLayout";
 import AuthLayout from "./layout/AuthLayout";
 
-import Home from "./pages/Home";
-import Aboutus from "./pages/Aboutus";
-import Contactus from "./pages/Contactus";
+import Home from "./pages/Home/Home";
+import Aboutus from "./pages/About/Aboutus";
+import Contactus from "./pages/Contactus/Contactus";
 import Privacypolicy from "./pages/privacypolicy/privacypolicy";
 import Termsofuse from "./pages/Termsofuse/Termsofuse";
 import Checkout from "./pages/Checkout/Checkout";
@@ -23,8 +23,22 @@ import Diamonddetail from "./pages/Diamonddetail/Diamonddetail";
 import "./App.css";
 
 function App() {
+  console.error = () => {};
+  console.warn = () => {};
+
+  const ScrollToTop = () => {
+    const { pathname } = useLocation();
+
+    useEffect(() => {
+      window.scrollTo(0, 0);
+    }, [pathname]);
+
+    return null;
+  };
+
   return (
     <Provider store={store}>
+      <ScrollToTop />
       <Routes>
         {/* Routes with Header & Footer */}
         <Route

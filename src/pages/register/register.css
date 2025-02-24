@@ -16,6 +16,32 @@ body.register-page {
   position: relative;
 }
 
+@media (max-width: 5120px) and (min-width: 1066px) {
+  .register-image-gallery {
+    display: flex !important;
+  }
+  .allimage-register {
+    display: none !important;
+  }
+}
+
+@media (max-width: 1065px) and (min-width: 950px) {
+  .allimage-register {
+    display: flex !important;
+    width: 540px;
+    justify-content: center !important;
+    align-items: center !important;
+  }
+  .gallery-register {
+    display: none !important;
+  }
+}
+@media (max-width: 949px) {
+  .register-image-gallery {
+    display: none !important;
+  }
+}
+
 .image-overlay {
   position: absolute;
   /* top: 10%; */
@@ -104,17 +130,17 @@ body.register-page {
   display: flex;
 }
 
-.back-to-login-container{
+.back-to-login-container {
   /* padding-top: 20px; */
   width: 100%;
 }
 
-.back-to-login{
+.back-to-login {
   font-family: "Poppins" !important;
   /* font-size: 16px;
   font-weight: 600; */
 }
-.have-an-account-login{
+.have-an-account-login {
   font-family: "Poppins" !important;
   font-size: 16px;
   font-weight: 600;
