@@ -253,6 +253,7 @@ const Checkout = () => {
         </Grid>
         <Grid item xs={12} md={4}>
           <Box className="cart-boxs">
+              <div className="Itemtitle">Cart Items</div>
             <div className="cardstyle-checkout">
               {userName ? (
                 cartData && cartData.length > 0 ? (
@@ -300,7 +301,7 @@ const Checkout = () => {
                             <div style={{ display: "flex", marginTop: "0" }}>
                               <span>
                                 Quantity: <span>{item?.Quantity}</span> x{" "}
-                                {item?.diamondDetails?.Price}
+                                {item?.diamondDetails?.Amount}
                               </span>
                             </div>
                           </div>

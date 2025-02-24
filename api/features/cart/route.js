@@ -11,11 +11,11 @@ const fetchCartDetails = async (UserId, SKU) => {
     throw new Error("UserId is required to fetch cart details.");
   }
 
-  const quoteSearchQuery = { UserId, IsDelete: false, IsCheckout: false }; // Start with UserId
-  if (SKU) quoteSearchQuery.SKU = SKU; // Add SKU if it's provided
+  const cartSearchQuery = { UserId, IsDelete: false, IsCheckout: false }; // Start with UserId
+  if (SKU) cartSearchQuery.SKU = SKU; // Add SKU if it's provided
 
   const cartDetails = await Cart.aggregate([
-    { $match: quoteSearchQuery },
+    { $match: cartSearchQuery },
     {
       $lookup: {
         from: "stocks",
@@ -48,7 +48,6 @@ const fetchCartDetails = async (UserId, SKU) => {
       },
     },
   ]);
-  // console.log(quotes,"aaaaaqoutes")
 
   const cartCount = cartDetails.length;
 
@@ -91,10 +90,10 @@ router.get("/cart", verifyLoginToken, async function (req, res) {
 });
 
 const fetchCartWithoutCheckout = async () => {
-  const quoteSearchQuery = { IsDelete: false, IsCheckout: false }; // Start with UserId// Add SKU if it's provided
+  const cartwcSearchQuery = { IsDelete: false, IsCheckout: false }; // Start with UserId// Add SKU if it's provided
 
   const cartItems = await Cart.aggregate([
-    { $match: quoteSearchQuery },
+    { $match: cartwcSearchQuery },
     {
       $lookup: {
         from: "stocks",
@@ -182,14 +181,14 @@ const fetchCartWithoutCheckoutPopup = async (AddToCartId) => {
       throw new Error("AddToCartId is required.");
     }
 
-    const quoteSearchQuery = {
+    const cartPopupSearchQuery = {
       AddToCartId,
       IsDelete: false,
       IsCheckout: false,
     };
 
     // Fetch raw cart data before aggregation for debugging
-    const rawCartData = await Cart.find(quoteSearchQuery);
+    const rawCartData = await Cart.find(cartPopupSearchQuery);
 
     if (rawCartData.length === 0) {
       return {
@@ -200,8 +199,8 @@ const fetchCartWithoutCheckoutPopup = async (AddToCartId) => {
     }
 
     // Aggregation pipeline
-    const quotes = await Cart.aggregate([
-      { $match: quoteSearchQuery },
+    const carts = await Cart.aggregate([
+      { $match: cartPopupSearchQuery },
       {
         $lookup: {
           from: "stocks",
@@ -250,10 +249,10 @@ const fetchCartWithoutCheckoutPopup = async (AddToCartId) => {
     ]);
 
     return {
-      statusCode: quotes.length > 0 ? 200 : 204,
+      statusCode: carts.length > 0 ? 200 : 204,
       message:
-        quotes.length > 0 ? "cart item retrieved successfully" : "No item found",
-      data: quotes,
+        carts.length > 0 ? "cart item retrieved successfully" : "No item found",
+      data: carts,
     };
   } catch (error) {
     console.error("Error in fetchCartWithoutCheckoutPopup:", error.message);

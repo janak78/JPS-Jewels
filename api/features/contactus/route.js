@@ -2,7 +2,7 @@ var express = require("express");
 const mongoose = require("mongoose");
 const multer = require("multer");
 const XLSX = require("xlsx");
-const userSchema = require("../stock/model");
+const stockSchema = require("../stock/model");
 const moment = require("moment");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -44,6 +44,22 @@ const addContact = async (data) => {
     const timestamp = moment().utcOffset(330).format("YYYY-MM-DD HH:mm:ss");
     data.createdAt = timestamp;
     data.updatedAt = timestamp;
+
+    const requiredFields = [
+      "Name",
+      "Email",
+      "Subject",
+      "Message",
+    ];
+
+    // Check for missing fields
+    const missingFields = requiredFields.filter((field) => !data[field]);
+    if (missingFields.length > 0) {
+      return {
+        statusCode: 400,
+        message: `Required fields missing: ${missingFields.join(", ")}`,
+      };
+    }
 
     // Save contact details
     const newContact = await Contact.create(data);
@@ -137,14 +153,14 @@ const contactDetails = async () => {
     },
   ]);
 
-  const stockCount = contact.length;
+  const contactCount = contact.length;
 
   return {
-    statusCode: stockCount > 0 ? 200 : 204,
+    statusCode: contactCount > 0 ? 200 : 204,
     message:
-      stockCount > 0 ? "Quotes retrieved successfully" : "No Contact found",
+      contactCount > 0 ? "Contact details retrieved successfully" : "No Contact found",
     data: contact,
-    TotalCount: stockCount,
+    TotalCount: contactCount,
   };
 };
 
@@ -162,15 +178,15 @@ router.get("/contactdetails", verifyLoginToken, async (req, res) => {
 
 const contactDetailsPopup = async (ContactId) => {
   if (!ContactId) {
-    throw new Error("AddToCartId is required.");
+    throw new Error("ContactId is required.");
   }
 
-  const quoteSearchQuery = {
+  const contactSearchQuery = {
     ContactId,
     IsDelete: false,
   };
 
-  const rawCartData = await Contact.find(quoteSearchQuery);
+  const rawCartData = await Contact.find(contactSearchQuery);
 
   if (rawCartData.length === 0) {
     return {
@@ -181,7 +197,7 @@ const contactDetailsPopup = async (ContactId) => {
   }
 
   const contact = await Contact.aggregate([
-    { $match: quoteSearchQuery },
+    { $match: contactSearchQuery },
     {
       $project: {
         Email: 1,

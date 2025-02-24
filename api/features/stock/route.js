@@ -2,7 +2,7 @@ var express = require("express");
 const mongoose = require("mongoose");
 const multer = require("multer");
 const XLSX = require("xlsx");
-const userSchema = require("./model");
+const stockSchema = require("./model");
 const { verifyLoginToken } = require("../authentication/authentication");
 
 const router = express.Router();
@@ -24,8 +24,9 @@ router.post(
   upload.single("file"),
   async (req, res) => {
     try {
-      // data["createdAt"] = moment().utcOffset(330).format("YYYY-MM-DD HH:mm:ss");
-      // data["updatedAt"] = moment().utcOffset(330).format("YYYY-MM-DD HH:mm:ss");
+      if (!req.file) {
+        return res.status(400).json({ success: false, message: "No file uploaded" });
+      }
 
       const fileName = req.file.filename;
       const fileData = `./${fileName}`;
@@ -34,8 +35,28 @@ router.post(
       const worksheet = workbook.Sheets[sheetName];
       const jsonData = XLSX.utils.sheet_to_json(worksheet);
 
+      // ✅ Define Allowed Fields
+      const allowedFields = [
+        "Image", "Video", "Diamond Type", "H&A", "Ratio", "Tinge", "Milky",
+        "EyeC", "Table(%)", "Depth(%)", "measurements", "Amount U$", "Price $/ct",
+        "Disc %", "Rap $", "Fluo Int", "Symm", "Polish", "Cut", "Clarity", "Color",
+        "Carats", "Shape", "Certificate No", "Lab", "SKU", "Sr.No"
+      ];
+
       for (const data of jsonData) {
-        await userSchema.findOneAndUpdate(
+        // ✅ Check for Extra Fields
+        const dataFields = Object.keys(data);
+        const extraFields = dataFields.filter(field => !allowedFields.includes(field));
+
+        if (extraFields.length > 0) {
+          return res.status(400).json({
+            success: false,
+            message: `Invalid fields detected: ${extraFields.join(", ")}. Only allowed fields are: ${allowedFields.join(", ")}`
+          });
+        }
+
+        // ✅ Proceed with Inserting Data
+        await stockSchema.findOneAndUpdate(
           { SKU: data.SKU },
           {
             Image: data.Image,
@@ -70,9 +91,7 @@ router.post(
         );
       }
 
-      res
-        .status(200)
-        .json({ success: true, message: "Excel file processed successfully" });
+      res.status(200).json({ success: true, message: "Excel file processed successfully" });
     } catch (error) {
       console.error(error);
       res.status(500).json({
@@ -112,8 +131,8 @@ function getCertificateUrl(lab, certificateNo) {
   return `${urlBase}${encodeURIComponent(certificateNo)}`;
 }
 
-const fetchQuoteDetails = async () => {
-  const diamondsdetail = await userSchema.aggregate([
+const fetchStockDetails = async () => {
+  const diamondsdetail = await stockSchema.aggregate([
     {
       $match: { IsDelete: false },
     },
@@ -165,7 +184,7 @@ const fetchQuoteDetails = async () => {
 
 router.get("/data", async function (req, res) {
   try {
-    const result = await fetchQuoteDetails();
+    const result = await fetchStockDetails();
 
     if (result.statusCode === 200) {
       result.data.forEach((diamond) => {
@@ -202,7 +221,7 @@ const fetchDiamondsPageDetails = async (query) => {
 
     pageNumber = pageNumber - 1;
 
-    const diamondDetailsPage = await userSchema.aggregate([
+    const diamondDetailsPage = await stockSchema.aggregate([
       {
         $match: { IsDelete: false },
       },
@@ -265,7 +284,6 @@ const fetchDiamondsPageDetails = async (query) => {
       TotalCount: stockCount,
     };
   } catch (error) {
-    console.error("Error fetching quote details:", error);
     return {
       statusCode: 500,
       message: "Internal Server Error",
@@ -309,7 +327,7 @@ router.get("/data/page", async function (req, res) {
 });
 
 const fetchcaratsDetails = async () => {
-  const quotes = await userSchema.aggregate([
+  const Carets = await stockSchema.aggregate([
     {
       $match: {
         Carats: 1.32,
@@ -349,13 +367,13 @@ const fetchcaratsDetails = async () => {
     },
   ]);
 
-  const stockCount = quotes.length;
+  const stockCount = Carets.length;
 
   return {
-    statusCode: quotes.length > 0 ? 200 : 204,
+    statusCode: Carets.length > 0 ? 200 : 204,
     message:
-      quotes.length > 0 ? "Quotes retrieved successfully" : "No quotes found",
-    data: quotes,
+      Carets.length > 0 ? "Carets retrieved successfully" : "No Carets found",
+    data: Carets,
     TotalCount: stockCount,
   };
 };
@@ -452,7 +470,7 @@ function getDefaultImageUrl(Shape) {
 }
 
 const fetchDaimondDetails = async (SkuId) => {
-  const diamondSearchQuery = await userSchema.findOne({
+  const diamondSearchQuery = await stockSchema.findOne({
     SKU: SkuId,
     IsDelete: false,
   });
@@ -465,7 +483,7 @@ const fetchDaimondDetails = async (SkuId) => {
     };
   }
 
-  const diamonds = await userSchema.aggregate([
+  const diamonds = await stockSchema.aggregate([
     { $match: diamondSearchQuery },
     {
       $project: {
@@ -586,7 +604,7 @@ router.get("/stockpopup", verifyLoginToken, async function (req, res) {
 
 const deletestock = async (SKU) => {
   try {
-    const updatestock = await userSchema.findOneAndUpdate(
+    const updatestock = await stockSchema.findOneAndUpdate(
       { SKU, IsDelete: false },
       { $set: { IsDelete: true } },
       { new: true }

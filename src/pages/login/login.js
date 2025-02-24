@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { login } from "../../redux/authSlice";
-import { fetchCartCount } from "../../redux/cartSlice";
+import { login, logout } from "../../redux/authSlice";
+import { fetchCartCount, removeCart } from "../../redux/cartSlice";
 import {
   TextField,
   Button,
@@ -67,6 +67,12 @@ const Login = () => {
     }, []);
   //   const baseurl =
 
+  const handleLogout = () => {
+      dispatch(logout());
+      dispatch(removeCart());
+      navigate("/login");
+    };
+
   const handleSubmit = async (values) => {
     try {
       //   setLoader(true);
@@ -76,6 +82,21 @@ const Login = () => {
 
       if (res.data.statusCode === 200) {
         const { token, user } = res.data;
+
+        if (token) {
+  
+          // Set timeout to log out when the token expires
+          const decodedToken = JSON.parse(atob(token.split(".")[1]));
+          const expiryTime = decodedToken.exp * 1000 - Date.now();
+          const { UserId, exp } = decodedToken;
+  
+          setTimeout(() => {
+            handleLogout();
+          }, expiryTime);
+
+
+
+        }
 
         dispatch(login({ user, token })); // Store user and token in Redux
         dispatch(fetchCartCount(user.UserId)); // Fetch cart count after login
