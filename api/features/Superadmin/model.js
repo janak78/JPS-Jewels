@@ -19,6 +19,9 @@
       LastName: {
         type: String,
       },
+      role: {
+        type: String, default: "Superadmin"
+      },
       IsDelete: {
         type: Boolean,
         default: false,

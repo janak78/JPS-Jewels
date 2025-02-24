@@ -30,6 +30,7 @@ import showToast from "../components/Toast/Toaster";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes, faTrash } from "@fortawesome/free-solid-svg-icons";
 import "./Header.css";
+import AxiosInstance from "../Axiosinstance";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -82,39 +83,6 @@ const Header = () => {
     checkUserToken();
   }, []);
 
-  // const cartcount = async (userId) => {
-  //   try {
-  //     //   setLoader(true);
-  //     const res = await AxiosInstance.get(
-  //       `http://localhost:5000/api/cart/cart?userId=${userId}`
-  //     );
-  //     console.log(res, "resres");
-
-  //     console.log(res, "resss");
-  //     if (res.data.statusCode === 200) {
-  //       setCountData(res.data.TotalCount);
-  //       setCartData(res.data.data);
-  //       formik.resetForm();
-  //       navigate("/");
-  //       setOpen(false);
-  //     } else if (res.data.statusCode === 201) {
-  //       showToast.error(res.data.message);
-  //     } else if (res.data.statusCode === 202) {
-  //       showToast.error(res.data.message);
-  //     } else if (res.data.statusCode === 204) {
-  //       showToast.error(res.data.message);
-  //     }
-  //   } catch (error) {
-  //     if (error.response) {
-  //       showToast.error(error.response?.data.message || "An error occurred");
-  //     } else {
-  //       showToast.error("Something went wrong. Please try again later.");
-  //     }
-  //   } finally {
-  //     //   setLoader(false);
-  //   }
-  // };
-
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 768);
@@ -147,9 +115,12 @@ const Header = () => {
   const handleSubmit = async (values) => {
     try {
       //   setLoader(true);
-      const res = await axios.post(`http://localhost:5000/api/user/login`, {
-        ...values,
-      });
+      const res = await AxiosInstance.post(
+        `http://localhost:5000/api/user/login`,
+        {
+          ...values,
+        }
+      );
 
       if (res.data.statusCode === 200) {
         // localStorage.setItem("Token", res.data.token);
@@ -165,18 +136,14 @@ const Header = () => {
         const { token, user } = res.data;
 
         if (token) {
-          localStorage.setItem("authToken", token);
-
           // Set timeout to log out when the token expires
           const decodedToken = JSON.parse(atob(token.split(".")[1]));
           const expiryTime = decodedToken.exp * 1000 - Date.now();
-          const { SuperadminId, exp } = decodedToken;
+          const { UserId, exp } = decodedToken;
 
           setTimeout(() => {
             handleLogout();
           }, expiryTime);
-
-          localStorage.setItem("SuperadminId", SuperadminId);
         }
 
         dispatch(login({ user, token })); // Store user and token in Redux
