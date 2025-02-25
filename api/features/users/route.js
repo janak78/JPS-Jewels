@@ -320,7 +320,7 @@ const loginUser = async (data) => {
     // consle.log(user, UserPassword);
 
     // Validate the password
-    const isPasswordValid = bcrypt.compare(UserPassword, user.UserPassword);
+    const isPasswordValid = await bcrypt.compare(UserPassword, user.UserPassword);
     if (!isPasswordValid) {
       return {
         statusCode: 401,

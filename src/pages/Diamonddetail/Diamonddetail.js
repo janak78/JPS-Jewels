@@ -38,6 +38,7 @@ const Diamonddetail = () => {
   const diamonds = useSelector((state) => state.shop.caretData);
 
   const [openVideoModal, setOpenVideoModal] = useState(false);
+  const [isAddToCart, setIsAddToCart] = useState(false);
   const [openCertificateModal, setOpenCertificateModal] = useState(false);
   const [openImageModal, setOpenImageModal] = useState(false);
   const userId = useSelector((state) => state.auth?.user?.UserId);
@@ -94,7 +95,7 @@ const Diamonddetail = () => {
   };
 
   // add cart
-  const handleAddToCart = (diamond) => {
+  const handleAddToCart = (diamond, shouldShowToast) => {
     if (!userId) {
       showToast.warning("Please log in to add items to the cart.");
       return;
@@ -105,7 +106,7 @@ const Diamonddetail = () => {
       Quantity: 1,
     };
 
-    dispatch(addToCart(cartItem, userId));
+    dispatch(addToCart(cartItem, userId, shouldShowToast));
   };
 
   if (loading) return <p>Loading diamond details...</p>;
@@ -269,7 +270,7 @@ const Diamonddetail = () => {
                 fullWidth
                 onClick={(e) => {
                   e.stopPropagation();
-                  handleAddToCart(diamond);
+                  handleAddToCart(diamond, true);
                 }}
               >
                 Add to cart
@@ -280,6 +281,11 @@ const Diamonddetail = () => {
                 variant="contained"
                 className="diamond-product-buy-btn"
                 fullWidth
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleAddToCart(diamond, false);
+                  navigate("/checkout");
+                }}
               >
                 Buy now
               </Button>

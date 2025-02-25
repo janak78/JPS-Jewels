@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCartCount } from "../../redux/cartSlice";
+import { diamondsApi } from "../../redux/shopSlice"; 
 import {
   Container,
   TextField,
@@ -63,12 +64,13 @@ const Checkout = () => {
         showToast.success("Order placed successfully!"); // Redirect to confirmation page
         // window.location.reload(); // Refresh the page
         dispatch(fetchCartCount(localStorage.getItem("UserId")));
+        dispatch(diamondsApi.util.invalidateTags(["Diamonds"]));
       } else {
         showToast.error(response.data.message);
       }
     } catch (error) {
       console.error("Error placing order:", error);
-      showToast.warning("Something went wrong. Please try again later.");
+      // showToast.warning(response.data.messag);
     } finally {
       setSubmitting(false);
     }

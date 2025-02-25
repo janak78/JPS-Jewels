@@ -55,7 +55,7 @@ export const fetchCartCount = (userId) => async (dispatch) => {
   }
 };
 
-export const addToCart = (item, userId) => async (dispatch) => {
+export const addToCart = (item, userId, shouldShowToast) => async (dispatch) => {
   try {
     const token = localStorage.getItem("Token");
 
@@ -67,9 +67,15 @@ export const addToCart = (item, userId) => async (dispatch) => {
     if (response.data.statusCode === 200) {
       dispatch(addItemToCart(response.data.data)); // Add item optimistically
       dispatch(fetchCartCount(userId));
-      showToast.success("Item Added Successfully.");
+
+      if(shouldShowToast){
+        showToast.success(response.data.message);
+      }
+
     } else if (response.data.statusCode === 202) {
-      showToast.error(response.data.message);
+      if(shouldShowToast){
+      showToast.warning(response.data.message);
+    }
     } else if (response.data.statusCode === 401) {
       showToast.error("Your Session Expired.");
     } else {
@@ -78,7 +84,7 @@ export const addToCart = (item, userId) => async (dispatch) => {
     }
   } catch (error) {
     showToast.error("Your Session Expired.");
-  }
+  } 
 };
 
 export const removeFromCart = (AddToCartId, userId) => async (dispatch) => {
