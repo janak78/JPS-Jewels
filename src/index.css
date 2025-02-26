@@ -22,3 +22,22 @@ body {
 code {
   font-family: "Poppins", sans-serif;
 }
+
+@font-face {
+  font-family: "jps";
+  src: url("/public/fonts/jpsicon.ttf") format("truetype");
+  font-display: auto;
+}
+
+.jps-icon {
+  font-size: 55px !important;
+  color: #c9a236;
+  font-family: "jps";
+  font-weight: normal;
+  font-style: normal;
+}
+
+.jps-icons .MuiGrid-item {
+  padding-left: 0 !important;
+  padding-top: 0 !important;
+}

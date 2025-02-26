@@ -134,7 +134,7 @@ const Login = () => {
             {/* <Typography variant="h4" className="signup-heading">
             To keep connected with the largest shop in the world.
           </Typography> */}
-            <article class="gallery_wrapper gallery-login">
+            <article className="gallery_wrapper gallery-login">
               <img src={gallery1} alt="Balloon with controled fire" />
               <img src={gallery2} alt="Minimalists catchphrase" />
               <img src={gallery3} alt="Hiking Directional Signs" />
