@@ -165,12 +165,12 @@ const privacypolicy = () => {
           Copyright 2022 JPS Jewels. All Rights Reserved.
         </p>
         <p className="footer-links">
-          <p className="privacy-link">Privacy Policy</p> |
-          <p className="privacy-link"> Terms of Use</p> |
-          <p className="privacy-link"> Contact Us</p>
+          <p className="privacy-link-policy mr-2">Privacy Policy</p> |
+          <p className="privacy-link-policy mx-2"> Terms of Use</p> |
+          <p className="privacy-link-policy mx-2"> Contact Us</p>
         </p>
       </div>
-    </>
+    </> 
   );
 };
 

@@ -93,7 +93,16 @@
   }
 
   .about2-img {
-    grid-template-columns: 1fr; /* Single column for smallest screens */
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 374px) {
+  .about1-img { 
+    min-width: 0px !important;
+  }
+  .about2-img { 
+    min-width: 0px !important;
   }
 }
 

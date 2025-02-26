@@ -54,12 +54,13 @@ p {
   margin-bottom: 15px;
 }
 
-.privacy-link {
-  color: #007bff;
+.privacy-link-policy {
+  color: #c9a236;
   text-decoration: none;
+  cursor: pointer;
 }
 
-.privacy-link:hover {
+.privacy-link-policy:hover {
   text-decoration: underline;
 }
 
@@ -71,4 +72,5 @@ p {
 
 .footer-links {
   text-align: left;
+  display: flex;
 }

@@ -181,7 +181,12 @@ const RegistrationForm = () => {
   return (
     <Grid container className="signup-container" spacing={2}>
       {/* Left Image Section */}
-      <Grid item xs={12} md={7} className="signup-image-container register-image-gallery ">
+      <Grid
+        item
+        xs={12}
+        md={7}
+        className="signup-image-container register-image-gallery "
+      >
         <div className="image-overlay">
           {/* <Typography variant="h4" className="signup-heading">
             To keep connected with the largest shop in the world.
@@ -205,12 +210,15 @@ const RegistrationForm = () => {
             <img src={gallery12} alt="christmas elf looking dog" />
             <img src={gallery13} alt="interior design" />
           </article>
-          <img src={allimage} alt="all image"  className="allimage-register"/>
+          <img src={allimage} alt="all image" className="allimage-register" />
         </div>
       </Grid>
       <Grid item xs={12} sm={12} md={5}>
         <div className="logo-container">
           <img src={logo} alt="logo" className="logo-image-register" />
+          <span className="mr-2 back-to-home" onClick={() => navigate("/")}>
+            <i className="fa-solid fa-arrow-left" /> Back to home
+          </span>
         </div>
 
         <div className="input-place">

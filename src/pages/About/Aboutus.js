@@ -93,10 +93,10 @@ const Aboutus = () => {
           handpicked for its timeless elegance and unparalleled quality.
         </p>
         <div className="image-gallery">
-          <div className="about1-img" data-aos="fade-right">
+          <div className="about1-img">
             <img src={about1} alt="Jewelry 1" />
           </div>
-          <div className="about2-img" data-aos="fade-left">
+          <div className="about2-img">
             <img src={about2} alt="Jewelry 2" />
             <img src={about4} alt="Jewelry 3" />
             <img src={about5} alt="Jewelry 4" />
@@ -166,7 +166,7 @@ const Aboutus = () => {
         <div className="jewelry-grid">
           {/* {/ First Image /} */}
           <div className="jewelry-item image image1">
-            <div data-aos="fade-right">
+            <div>
               <img
                 src={craftsmanshipImg}
                 alt="Jewelry 1"
@@ -201,7 +201,7 @@ const Aboutus = () => {
           </div>
           {/* {/ Second Image /} */}
           <div className="jewelry-item image image2">
-            <div data-aos="fade-left">
+            <div>
               <img
                 src={whyChooseUsImg}
                 alt="Jewelry 2"

@@ -28,6 +28,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { addToCart } from "../../redux/cartSlice";
 import { fetchCartCount } from "../../redux/cartSlice";
 import showToast from "../../components/Toast/Toaster";
+import { fetchCaretData } from "../../redux/shopSlice";
 
 const Diamonddetail = () => {
   const location = useLocation();
@@ -59,6 +60,10 @@ const Diamonddetail = () => {
       dispatch(fetchCartCount(userId));
     }
   }, [userId]);
+
+  useEffect(() => {
+    dispatch(fetchCaretData());
+  }, [dispatch]);
 
   // Functions to handle modal opening
   const handleVideoClick = () => {
@@ -454,44 +459,43 @@ const Diamonddetail = () => {
           occasion, this diamond is the epitome of beauty and luxury.
         </p>
 
-        <div>
-        <h2 className="shop-by-brands-title">Top Products</h2>
-        <div className="caretdata">
-          {diamonds.map((diamond, index) => (
-            <div key={index} className="col-md-3 col-sm-9">
-              <div
-                className="diamond-card1"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  navigate("/diamonddetail", { state: { diamond } });
-                }}
-              >
-                <div className="shopimg1">
-                  <img
-                    src={diamond.Image}
-                    alt={diamond.Shape}
-                    className="diamond-img1"
-                  />
-                </div>
-                <h6 className="mt-3 diamond-name1">
-                  {diamond.Carats} CARAT {diamond.Shape} - {diamond.Lab}
-                </h6>
-                <p className="price1">${diamond.Amount.toFixed(2)}</p>
-                <span
-                  className="add-to-cart1"
+        {/* <div>
+          <h2 className="shop-by-brands-title">Top Products</h2>
+          <div className="caretdata  row w-100">
+            {diamonds.map((diamond, index) => (
+              <div key={index} className="col-lg-3 col-md-4 col-sm-6">
+                <div
+                  className="diamond-card1"
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleAddToCart(diamond);
+                    navigate("/diamonddetail", { state: { diamond } });
                   }}
                 >
-                  Add to cart <span className="arrowbtn1">→</span>
-                </span>
+                  <div className="shopimg1">
+                    <img
+                      src={diamond.Image}
+                      alt={diamond.Shape}
+                      className="diamond-img1"
+                    />
+                  </div>
+                  <h6 className="mt-3 diamond-name1">
+                    {diamond.Carats} CARAT {diamond.Shape} - {diamond.Lab}
+                  </h6>
+                  <p className="price1">${diamond.Amount.toFixed(2)}</p>
+                  <span
+                    className="add-to-cart1"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleAddToCart(diamond);
+                    }}
+                  >
+                    Add to cart <span className="arrowbtn1">→</span>
+                  </span>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
+            ))}
+          </div>
+        </div> */}
       </div>
     </div>
   );

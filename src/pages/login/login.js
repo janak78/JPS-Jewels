@@ -59,20 +59,20 @@ const Login = () => {
     },
   });
 
-   useEffect(() => {
-      document.body.classList.add("login--page");
-  
-      return () => {
-        document.body.classList.remove("login--page");
-      };
-    }, []);
+  useEffect(() => {
+    document.body.classList.add("login--page");
+
+    return () => {
+      document.body.classList.remove("login--page");
+    };
+  }, []);
   //   const baseurl =
 
   const handleLogout = () => {
-      dispatch(logout());
-      dispatch(removeCart());
-      navigate("/login");
-    };
+    dispatch(logout());
+    dispatch(removeCart());
+    navigate("/login");
+  };
 
   const handleSubmit = async (values) => {
     try {
@@ -85,18 +85,14 @@ const Login = () => {
         const { token, user } = res.data;
 
         if (token) {
-  
           // Set timeout to log out when the token expires
           const decodedToken = JSON.parse(atob(token.split(".")[1]));
           const expiryTime = decodedToken.exp * 1000 - Date.now();
           const { UserId, exp } = decodedToken;
-  
+
           setTimeout(() => {
             handleLogout();
           }, expiryTime);
-
-
-
         }
 
         dispatch(login({ user, token })); // Store user and token in Redux
@@ -128,7 +124,12 @@ const Login = () => {
     <>
       <Grid container className="signup-container" spacing={2}>
         {/* Left Image Section */}
-        <Grid item xs={12} md={7} className="signup-image-container login-image-gallery">
+        <Grid
+          item
+          xs={12}
+          md={7}
+          className="signup-image-container login-image-gallery"
+        >
           <div className="image-overlay">
             {/* <Typography variant="h4" className="signup-heading">
             To keep connected with the largest shop in the world.
@@ -152,12 +153,15 @@ const Login = () => {
               <img src={gallery12} alt="christmas elf looking dog" />
               <img src={gallery13} alt="interior design" />
             </article>
-            <img src={allimage} alt="all image"  className="allimage-login"/>
+            <img src={allimage} alt="all image" className="allimage-login" />
           </div>
         </Grid>
         <Grid item xs={12} sm={8} md={5}>
-          <div className="logo-container">
+          <div className="logo-page-container">
             <img src={logo} alt="logo" className="logo-image-login" />
+            <span className="mr-2 backto-home" onClick={() => navigate("/")}>
+              <i className="fa-solid fa-arrow-left" /> Back to home
+            </span>
           </div>
 
           <div className="logininput-place">
@@ -166,7 +170,7 @@ const Login = () => {
               variant="h4"
               className="form-title align-left"
               gutterBottom
-              sx={{fontFamily:"Poppins"}}
+              sx={{ fontFamily: "Poppins" }}
             >
               Login
             </Typography>
@@ -231,7 +235,12 @@ const Login = () => {
                   }
                 />
               </div>
-              <p className="forgot-password">Don't have an account? <span className="sign-ups" onClick={()=> navigate("/signup")}>Sign Up</span></p>
+              <p className="forgot-password">
+                Don't have an account?{" "}
+                <span className="sign-ups" onClick={() => navigate("/signup")}>
+                  Sign Up
+                </span>
+              </p>
               <Button type="submit" variant="contained" className="login-btn">
                 Login
               </Button>
