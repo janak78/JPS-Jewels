@@ -4,13 +4,20 @@ const sendSwal = () => {
   return swal({
     title: "Are you sure?",
     text: "Once deleted, you will not be able to recover this item!",
-    icon: "warning",
-    buttons: { 
-      cancel: "Cancel",
+    buttons: {
       confirm: {
         text: "Delete",
+        className: "swal-button-confirm",
+        value: true,
+        visible: true,
         closeModal: true,
-        className: "swal-button--danger",
+      },
+      cancel: {
+        text: "Cancel",
+        value: false,
+        visible: true,
+        className: "swal-button-cancel",
+        closeModal: true,
       },
     },
     dangerMode: true,

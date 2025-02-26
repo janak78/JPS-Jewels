@@ -2,8 +2,8 @@ var express = require("express");
 const mongoose = require("mongoose");
 const multer = require("multer");
 const XLSX = require("xlsx");
-const stockSchema = require("../stock/model");
 const moment = require("moment");
+const stockSchema = require("../stock/model");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const SECRET_KEY = "your_secret_key";
@@ -165,7 +165,7 @@ const addBilling = async (data, UserId) => {
       updatedAt: timestamp,
     }));
 
-    // console.log(billingEntries, "be");
+    console.log(billingEntries, "be");
 
     // Save all billing entries
     const newBillings = await Billing.insertMany(billingEntries);
@@ -183,10 +183,10 @@ const addBilling = async (data, UserId) => {
       )
       .join("");
 
-      await sendEmail(
-        data.ContactEmail,
-        "Your Billing Details Have Been Successfully Added!",
-        `
+    await sendEmail(
+      data.ContactEmail,
+      "Your Billing Details Have Been Successfully Added!",
+      `
           <!DOCTYPE html>
           <html lang="en">
           <head>
@@ -278,7 +278,9 @@ const addBilling = async (data, UserId) => {
               </div>
       
               <div class="email-body">
-                <h2>Hello ${data.FirstName || "Customer"} ${data.LastName || ""},</h2>
+                <h2>Hello ${data.FirstName || "Customer"} ${
+        data.LastName || ""
+      },</h2>
                 <p>Thank you for choosing our services. Here are your billing details:</p>
       
                 <table class="billing-table">
@@ -323,13 +325,21 @@ const addBilling = async (data, UserId) => {
           </body>
           </html>
         `
-      );
-      
+    );
 
-    // const updateCheckoutStatus = await Cart.updateMany(
-    //   { UserId, IsCheckout: false, IsDelete: false },
-    //   { $set: { IsCheckout: true, IsDelete: true } }
-    // );
+    const updateCheckoutStatus = await Cart.updateMany(
+      { UserId, IsCheckout: false, IsDelete: false },
+      { $set: { IsCheckout: true, IsDelete: true } }
+    );
+
+    const updateStock = await stockSchema.updateMany(
+      {
+        SKU: { $in: cartDetails.map((item) => item.SKU) },
+        IsDelete: false,
+      },
+      { $set: { IsDelete: true } }
+    );
+    console.log(updateStock, "updateStock");
 
     return {
       statusCode: 200,

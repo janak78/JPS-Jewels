@@ -49,6 +49,8 @@ const fetchCartDetails = async (UserId, SKU) => {
     },
   ]);
 
+  console.log(cartDetails,"cartDetails")
+
   const cartCount = cartDetails.length;
 
   return {
@@ -325,7 +327,7 @@ const addToCart = async (data) => {
       return {
         statusCode: 200,
         data: newCartItem,
-        message: "Item added to the cart",
+        message: "Diamond added to the cart",
       };
     }
   } catch (error) {

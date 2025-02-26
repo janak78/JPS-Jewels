@@ -42,7 +42,7 @@ const DiamondsGrid = ({ diamond }) => {
     }
   }, [userId]);
 
-  const handleAddToCart = (diamond) => {
+  const handleAddToCart = (diamond, shouldShowToast) => {
     if (!userId) {
       showToast.warning("Please log in to add items to the cart.");
       return;
@@ -53,7 +53,7 @@ const DiamondsGrid = ({ diamond }) => {
       Quantity: 1,
     };
 
-    dispatch(addToCart(cartItem, userId));
+    dispatch(addToCart(cartItem, userId, shouldShowToast));
   };
 
   const [anchorEl, setAnchorEl] = useState(null);
@@ -111,7 +111,7 @@ const DiamondsGrid = ({ diamond }) => {
                 className="add-to-cart"
                 onClick={(e) => {
                   e.stopPropagation();
-                  handleAddToCart(diamond);
+                  handleAddToCart(diamond, true);
                 }}
               >
                 Add to cart <span className="arrowbtn">→</span>

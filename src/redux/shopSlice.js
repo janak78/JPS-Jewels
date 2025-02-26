@@ -6,10 +6,12 @@ import AxiosInstance from "../Axiosinstance";
 export const diamondsApi = createApi({
   reducerPath: "diamondsApi",
   baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:5000/api" }),
+  tagTypes: ["Diamonds"], // Add tag
   endpoints: (builder) => ({
     fetchDiamonds: builder.query({
       query: ({ pageNumber, pageSize }) =>
         `/stock/data/page?pageNumber=${pageNumber}&pageSize=${pageSize}`,
+      providesTags: ["Diamonds"], // Provide tag to enable invalidation
     }),
   }),
 });
