@@ -25,7 +25,9 @@ router.post(
   async (req, res) => {
     try {
       if (!req.file) {
-        return res.status(400).json({ success: false, message: "No file uploaded" });
+        return res
+          .status(400)
+          .json({ success: false, message: "No file uploaded" });
       }
 
       const fileName = req.file.filename;
@@ -37,21 +39,48 @@ router.post(
 
       // ✅ Define Allowed Fields
       const allowedFields = [
-        "Image", "Video", "Diamond Type", "H&A", "Ratio", "Tinge", "Milky",
-        "EyeC", "Table(%)", "Depth(%)", "measurements", "Amount U$", "Price $/ct",
-        "Disc %", "Rap $", "Fluo Int", "Symm", "Polish", "Cut", "Clarity", "Color",
-        "Carats", "Shape", "Certificate No", "Lab", "SKU", "Sr.No"
+        "Image",
+        "Video",
+        "Diamond Type",
+        "H&A",
+        "Ratio",
+        "Tinge",
+        "Milky",
+        "EyeC",
+        "Table(%)",
+        "Depth(%)",
+        "measurements",
+        "Amount U$",
+        "Price $/ct",
+        "Disc %",
+        "Rap $",
+        "Fluo Int",
+        "Symm",
+        "Polish",
+        "Cut",
+        "Clarity",
+        "Color",
+        "Carats",
+        "Shape",
+        "Certificate No",
+        "Lab",
+        "SKU",
+        "Sr.No",
       ];
 
       for (const data of jsonData) {
         // ✅ Check for Extra Fields
         const dataFields = Object.keys(data);
-        const extraFields = dataFields.filter(field => !allowedFields.includes(field));
+        const extraFields = dataFields.filter(
+          (field) => !allowedFields.includes(field)
+        );
 
         if (extraFields.length > 0) {
           return res.status(400).json({
             success: false,
-            message: `Invalid fields detected: ${extraFields.join(", ")}. Only allowed fields are: ${allowedFields.join(", ")}`
+            message: `Invalid fields detected: ${extraFields.join(
+              ", "
+            )}. Only allowed fields are: ${allowedFields.join(", ")}`,
           });
         }
 
@@ -91,7 +120,9 @@ router.post(
         );
       }
 
-      res.status(200).json({ success: true, message: "Excel file processed successfully" });
+      res
+        .status(200)
+        .json({ success: true, message: "Excel file processed successfully" });
     } catch (error) {
       console.error(error);
       res.status(500).json({
@@ -218,13 +249,192 @@ const fetchDiamondsPageDetails = async (query) => {
   try {
     const pageSize = parseInt(query.pageSize) || 10;
     let pageNumber = parseInt(query.pageNumber) || 1;
+    pageNumber = pageNumber - 1; // Convert to zero-based index
 
-    pageNumber = pageNumber - 1;
+    const matchStage = { IsDelete: false };
+
+    if (query.Shape) {
+      matchStage.Shape = Array.isArray(query.Shape)
+        ? { $in: query.Shape }
+        : query.Shape;
+    }
+
+    if (query.Color) {
+      matchStage.Color = Array.isArray(query.Color)
+        ? { $in: query.Color }
+        : query.Color;
+    }
+
+    if (query.Clarity) {
+      matchStage.Clarity = Array.isArray(query.Clarity)
+        ? { $in: query.Clarity }
+        : query.Clarity;
+    }
+
+    if (query.Cut) {
+      matchStage.Cut = Array.isArray(query.Cut)
+        ? { $in: query.Cut }
+        : query.Cut;
+    }
+
+    if (query.Polish) {
+      matchStage.Polish = Array.isArray(query.Polish)
+        ? { $in: query.Polish }
+        : query.Polish;
+    }
+
+    if (query.Symm) {
+      matchStage.Symm = Array.isArray(query.Symm)
+        ? { $in: query.Symm }
+        : query.Symm;
+    }
+
+    if (query.FluoInt) {
+      matchStage.FluoInt = Array.isArray(query.FluoInt)
+        ? { $in: query.FluoInt }
+        : query.FluoInt;
+    }
+
+    if (query.Lab) {
+      matchStage.Lab = Array.isArray(query.Lab)
+        ? { $in: query.Lab }
+        : query.Lab;
+    }
+
+    if (query.minCt || query.maxCt) {
+      matchStage.Carats = {};
+      if (query.minCt) matchStage.Carats.$gte = parseFloat(query.minCt);
+      if (query.maxCt) matchStage.Carats.$lte = parseFloat(query.maxCt);
+    }
+
+    if (query.minDepth || query.maxDepth) {
+      matchStage.Depth = {};
+      if (query.minDepth) matchStage.Depth.$gte = parseFloat(query.minDepth);
+      if (query.maxDepth) matchStage.Depth.$lte = parseFloat(query.maxDepth);
+    }
+
+    if (query.minTable || query.maxTable) {
+      matchStage.Table = {};
+      if (query.minTable) matchStage.Table.$gte = parseFloat(query.minTable);
+      if (query.maxTable) matchStage.Table.$lte = parseFloat(query.maxTable);
+    }
+
+    if (query.minRatio || query.maxRatio) {
+      matchStage.Ratio = {};
+      if (query.minRatio) matchStage.Ratio.$gte = parseFloat(query.minRatio);
+      if (query.maxRatio) matchStage.Ratio.$lte = parseFloat(query.maxRatio);
+    }
+
+    if (query.isAmount) {
+      if (query.minAmount || query.maxAmount) {
+        matchStage.Amount = {};
+        if (query.minAmount)
+          matchStage.Amount.$gte = parseFloat(query.minAmount);
+        if (query.maxAmount)
+          matchStage.Amount.$lte = parseFloat(query.maxAmount);
+      }
+    }
+
+    if (query.isPrice) {
+      if (query.minPrice || query.maxPrice) {
+        matchStage.Price = {};
+        if (query.minPrice) matchStage.Price.$gte = parseFloat(query.minPrice);
+        if (query.maxPrice) matchStage.Price.$lte = parseFloat(query.maxPrice);
+      }
+    }
+
+    // **Measurements Filtering**
+    if (
+      query.minLength ||
+      query.maxLength ||
+      query.minWidth ||
+      query.maxWidth ||
+      query.minDepthmm ||
+      query.maxDepthmm
+    ) {
+      matchStage.$expr = { $and: [] };
+
+      if (query.minLength) {
+        matchStage.$expr.$and.push({
+          $gte: [
+            {
+              $toDouble: {
+                $arrayElemAt: [{ $split: ["$measurements", "*"] }, 0],
+              },
+            },
+            parseFloat(query.minLength),
+          ],
+        });
+      }
+
+      if (query.maxLength) {
+        matchStage.$expr.$and.push({
+          $lte: [
+            {
+              $toDouble: {
+                $arrayElemAt: [{ $split: ["$measurements", "*"] }, 0],
+              },
+            },
+            parseFloat(query.maxLength),
+          ],
+        });
+      }
+
+      if (query.minWidth) {
+        matchStage.$expr.$and.push({
+          $gte: [
+            {
+              $toDouble: {
+                $arrayElemAt: [{ $split: ["$measurements", "*"] }, 1],
+              },
+            },
+            parseFloat(query.minWidth),
+          ],
+        });
+      }
+
+      if (query.maxWidth) {
+        matchStage.$expr.$and.push({
+          $lte: [
+            {
+              $toDouble: {
+                $arrayElemAt: [{ $split: ["$measurements", "*"] }, 1],
+              },
+            },
+            parseFloat(query.maxWidth),
+          ],
+        });
+      }
+
+      if (query.minDepthmm) {
+        matchStage.$expr.$and.push({
+          $gte: [
+            {
+              $toDouble: {
+                $arrayElemAt: [{ $split: ["$measurements", "*"] }, 2],
+              },
+            },
+            parseFloat(query.minDepthmm),
+          ],
+        });
+      }
+
+      if (query.maxDepthmm) {
+        matchStage.$expr.$and.push({
+          $lte: [
+            {
+              $toDouble: {
+                $arrayElemAt: [{ $split: ["$measurements", "*"] }, 2],
+              },
+            },
+            parseFloat(query.maxDepthmm),
+          ],
+        });
+      }
+    }
 
     const diamondDetailsPage = await stockSchema.aggregate([
-      {
-        $match: { IsDelete: false },
-      },
+      { $match: matchStage },
       {
         $project: {
           Image: 1,
@@ -256,16 +466,11 @@ const fetchDiamondsPageDetails = async (query) => {
           SrNo: 1,
         },
       },
-      {
-        $sort: { createdAt: 1 },
-      },
+      { $sort: { createdAt: 1 } },
     ]);
 
     const stockCount = diamondDetailsPage.length;
-
-    const totalCount = diamondDetailsPage.length;
-    const totalPages = Math.ceil(totalCount / pageSize);
-
+    const totalPages = Math.ceil(stockCount / pageSize);
     const paginatedDiamonds = diamondDetailsPage.slice(
       pageNumber * pageSize,
       (pageNumber + 1) * pageSize
@@ -279,8 +484,8 @@ const fetchDiamondsPageDetails = async (query) => {
           : "No diamondDetailsPage found",
       data:
         paginatedDiamonds.length > 0 ? paginatedDiamonds : diamondDetailsPage,
-      totalPages: totalPages,
-      currentPage: pageNumber + 1, // Convert back to 1-based page number
+      totalPages,
+      currentPage: pageNumber + 1,
       TotalCount: stockCount,
     };
   } catch (error) {
@@ -292,37 +497,102 @@ const fetchDiamondsPageDetails = async (query) => {
   }
 };
 
+// **Route Handler**
 router.get("/data/page", async function (req, res) {
   try {
     const { pageSize, pageNumber } = req.query;
+    let {
+      Shape,
+      minCt,
+      maxCt,
+      Color,
+      Clarity,
+      Cut,
+      Polish,
+      Symm,
+      FluoInt,
+      Lab,
+      minDepth,
+      maxDepth,
+      minTable,
+      maxTable,
+      minRatio,
+      maxRatio,
+      minLength,
+      maxLength,
+      minWidth,
+      maxWidth,
+      minDepthmm,
+      maxDepthmm,
+      isAmount,
+      isPrice,
+      minAmount,
+      maxAmount,
+      minPrice,
+      maxPrice,
+    } = req.body;
 
-    const result = await fetchDiamondsPageDetails({ pageSize, pageNumber });
+    [Shape, Color, Clarity, Cut, Polish, Symm, FluoInt, Lab] = [
+      Shape,
+      Color,
+      Clarity,
+      Cut,
+      Polish,
+      Symm,
+      FluoInt,
+      Lab,
+    ].map((val) => (val && !Array.isArray(val) ? [val] : val));
+
+    const result = await fetchDiamondsPageDetails({
+      pageSize,
+      pageNumber,
+      Shape,
+      minCt,
+      maxCt,
+      Color,
+      Clarity,
+      Cut,
+      Polish,
+      Symm,
+      FluoInt,
+      Lab,
+      minDepth,
+      maxDepth,
+      minTable,
+      maxTable,
+      minRatio,
+      maxRatio,
+      minLength,
+      maxLength,
+      minWidth,
+      maxWidth,
+      minDepthmm,
+      maxDepthmm,
+      isAmount,
+      isPrice,
+      minAmount,
+      maxAmount,
+      minPrice,
+      maxPrice,
+    });
 
     if (result.statusCode === 200) {
       result.data.forEach((diamond) => {
-        // Add certificate URL
-        const certificateUrl = getCertificateUrl(
+        diamond.certificateUrl = getCertificateUrl(
           diamond.Lab,
           diamond.CertificateNo
         );
-        diamond.certificateUrl = certificateUrl;
-
-        // Add default image URL based on the shape
-        const defaultImageUrl = getDefaultImageUrl(diamond.Shape);
         diamond.Image =
           diamond.Image && diamond.Image.length > 0
             ? diamond.Image
-            : defaultImageUrl;
+            : getDefaultImageUrl(diamond.Shape);
       });
     }
 
     res.status(result.statusCode).json({ result });
   } catch (error) {
     console.error(error.message);
-    res.status(500).json({
-      statusCode: 500,
-      message: error.message,
-    });
+    res.status(500).json({ statusCode: 500, message: error.message });
   }
 });
 
