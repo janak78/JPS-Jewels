@@ -28,113 +28,140 @@ import {
 import { useNavigate } from "react-router-dom";
 import showToast from "../../components/Toast/Toaster";
 import TextInput from "../../components/inputs/TextInput";
+import { Diversity1 } from "@mui/icons-material";
 
-const DiamondsGrid = ({ diamond }) => {
-  // const navigate = useNavigate();
-  // const dispatch = useDispatch();
-  // const userId = useSelector((state) => state.auth?.user?.UserId);
-  // const { totalPages, currentPage, itemsPerPage } = useSelector(
-  //   (state) => state.shop
-  // );
+const DiamondsGrid = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const userId = useSelector((state) => state.auth?.user?.UserId);
+  const { totalPages, currentPage, itemsPerPage } = useSelector(
+    (state) => state.shop
+  );
 
-  // const { data, error, isLoading } = useFetchDiamondsQuery({
-  //   pageNumber: currentPage,
-  //   pageSize: itemsPerPage,
-  // });
-  // const diamonds = data?.result?.data || [];
+  const [filterData, setFilterData] = useState(undefined);
 
-  // useEffect(() => {
-  //   if (data?.result?.totalPages) {
-  //     dispatch(setTotalPages(data.result.totalPages));
-  //   }
-  // }, [data, dispatch]);
+  const { data, error, isLoading } = useFetchDiamondsQuery({
+    pageNumber: currentPage,
+    pageSize: itemsPerPage,
+    filterData: filterData,
+  });
+  const diamonds = data?.result?.data || [];
 
-  // useEffect(() => {
-  //   if (userId) {
-  //     dispatch(fetchCartCount(userId));
-  //   }
-  // }, [userId]);
+  useEffect(() => {
+    dispatch(setTotalPages(data?.result?.totalPages || 0));
+  }, [data?.result?.totalPages, dispatch]);
 
-  // const handleAddToCart = (diamond, shouldShowToast) => {
-  //   if (!userId) {
-  //     showToast.warning("Please log in to add items to the cart.");
-  //     return;
-  //   }
+  useEffect(() => {
+    if (userId) {
+      dispatch(fetchCartCount(userId));
+    }
+  }, [userId]);
 
-  //   const cartItem = {
-  //     SKU: diamond.SKU,
-  //     Quantity: 1,
-  //   };
+  const handleAddToCart = (diamond, shouldShowToast) => {
+    if (!userId) {
+      showToast.warning("Please log in to add items to the cart.");
+      return;
+    }
 
-  //   dispatch(addToCart(cartItem, userId, shouldShowToast));
-  // };
+    const cartItem = {
+      SKU: diamond.SKU,
+      Quantity: 1,
+    };
 
-  // const [anchorEl, setAnchorEl] = useState(null);
+    dispatch(addToCart(cartItem, userId, shouldShowToast));
+  };
 
-  // if (isLoading) return <DiamondLoader />;
-  // if (error) return <p className="error">{error.message}</p>;
+  const [anchorEl, setAnchorEl] = useState(null);
 
-  // const handleClick = (event) => {
-  //   setAnchorEl(event.currentTarget);
-  // };
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
 
-  // const handleClose = (perPage) => {
-  //   if (typeof perPage === "number") {
-  //     dispatch(setItemsPerPage(perPage));
-  //   }
-  //   setAnchorEl(null);
-  // };
+  const handleClose = (perPage) => {
+    if (typeof perPage === "number") {
+      dispatch(setItemsPerPage(perPage));
+    }
+    setAnchorEl(null);
+  };
 
-  // const handleNextPage = () => {
-  //   if (currentPage < totalPages) {
-  //     dispatch(setCurrentPage(currentPage + 1));
-  //   }
-  // };
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      dispatch(setCurrentPage(currentPage + 1));
+    }
+  };
 
-  // const handlePrevPage = () => {
-  //   if (currentPage > 1) {
-  //     dispatch(setCurrentPage(currentPage - 1));
-  //   }
-  // };
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      dispatch(setCurrentPage(currentPage - 1));
+    }
+  };
+  // Filter api fetch
 
   // Total price and p/ct section
   const [tabValue, setTabValue] = useState(0);
+  const [isAmount, setIsAmount] = useState(true);
+  const [isPrice, setIsPrice] = useState(false);
+  const [isNatural, setIsNatural] = useState(false);
+  const [islabGrown, setIsLabGrown] = useState(false);
 
   const handleChange = (event, newValue) => {
     setTabValue(newValue);
+
+    // Toggle boolean values based on selected tab
+    if (newValue === 0) {
+      setIsAmount(true);
+      setIsPrice(false);
+    } else {
+      setIsAmount(false);
+      setIsPrice(true);
+    }
+  };
+  const [diamondType, setDiamondType] = useState("0");
+
+  const handleTypeChange = (event, newValue) => {
+    setDiamondType(`${newValue}`);
+    // Toggle boolean values based on selected tab
+    if (newValue === 0) {
+      setIsNatural(true);
+      setIsLabGrown(false);
+    } else {
+      setIsNatural(false);
+      setIsLabGrown(true);
+    }
+    resetAll();
   };
 
   const icon = [
-    { icon: "", name: "Round" },
-    { icon: "", name: "Oval" },
-    { icon: "", name: "pear" },
-    { icon: "", name: "Cush Mod" },
-    { icon: "", name: "Cush Brill" },
-    { icon: "", name: "Emerald" },
-    { icon: "", name: "Radiant" },
-    { icon: "", name: "Princess" },
-    { icon: "", name: "Asscher" },
-    { icon: "", name: "Square" },
-    { icon: "", name: "Marquise" },
-    { icon: "", name: "Heart" },
-    { icon: "", name: "Trilliant" },
-    { icon: "", name: "Euro Cut" },
-    { icon: "", name: "Old Miner" },
-    { icon: "", name: "Briolette" },
-    { icon: "", name: "Rose Cut" },
-    { icon: "", name: "Lozenge" },
-    { icon: "", name: "Baguette" },
-    { icon: "", name: "Tap Bag" },
-    { icon: "", name: "Half Moon" },
-    { icon: "", name: "Flanders" },
-    { icon: "", name: "Trapezoid" },
-    { icon: "", name: "Bullets" },
-    { icon: "", name: "Kite" },
-    { icon: "", name: "Shield" },
-    { icon: "", name: "Star" },
-    { icon: "", name: "Pentagonal" },
-    { icon: "", name: "Hexagonal" },
-    { icon: "", name: "Octagonal" },
+    { icon: "", name: "Round", value: "RBC" },
+    { icon: "", name: "Oval", value: "Oval" },
+    { icon: "", name: "Pear", value: "Pear" },
+    { icon: "", name: "Cush Mod", value: "" },
+    { icon: "", name: "Cush Brill", value: "" },
+    { icon: "", name: "Emerald", value: "Emerald" },
+    { icon: "", name: "Radiant", value: "Radiant" },
+    { icon: "", name: "Princess", value: "Princess" },
+    { icon: "", name: "Asscher", value: "" },
+    { icon: "", name: "Square", value: "" },
+    { icon: "", name: "Marquise", value: "Marquise" },
+    { icon: "", name: "Heart", value: "Heart" },
+    { icon: "", name: "Trilliant", value: "" },
+    { icon: "", name: "Euro Cut", value: "" },
+    { icon: "", name: "Old Miner", value: "" },
+    { icon: "", name: "Briolette", value: "" },
+    { icon: "", name: "Rose Cut", value: "" },
+    { icon: "", name: "Lozenge", value: "" },
+    { icon: "", name: "Baguette", value: "BUG" },
+    { icon: "", name: "Tap Bag", value: "" },
+    { icon: "", name: "Half Moon", value: "" },
+    { icon: "", name: "Flanders", value: "" },
+    { icon: "", name: "Trapezoid", value: "" },
+    { icon: "", name: "Bullets", value: "" },
+    { icon: "", name: "Kite", value: "KITE" },
+    { icon: "", name: "Shield", value: "" },
+    { icon: "", name: "Star", value: "" },
+    { icon: "", name: "Pentagonal", value: "" },
+    { icon: "", name: "Hexagonal", value: "" },
+    { icon: "", name: "Octagonal", value: "" },
   ];
 
   const clarity = [
@@ -151,38 +178,129 @@ const DiamondsGrid = ({ diamond }) => {
     { name: "I2" },
     { name: "I3" },
   ];
+
+  const color = [
+    { name: "D" },
+    { name: "E" },
+    { name: "E+" },
+    { name: "F" },
+    { name: "F+" },
+    { name: "G" },
+    { name: "G+" },
+    { name: "H" },
+    { name: "H+" },
+    { name: "I" },
+    { name: "I+" },
+    { name: "J" },
+    { name: "J+" },
+    { name: "K" },
+    { name: "K+" },
+    { name: "L" },
+    { name: "M" },
+    { name: "N" },
+    { name: "O" },
+    { name: "P" },
+    { name: "Q" },
+    { name: "R" },
+    { name: "S" },
+    { name: "T" },
+    { name: "U" },
+    { name: "V" },
+    { name: "W" },
+    { name: "X" },
+    { name: "Y" },
+    { name: "Z" },
+  ];
+
+  const milky = [
+    { name: "M0" },
+    { name: "M1" },
+    { name: "M2" },
+    { name: "NON" },
+  ];
+
+  const tinge = [
+    { name: "LBR" },
+    { name: "MIX" },
+    { name: "NO" },
+    { name: "NON" },
+    { name: "NV" },
+    { name: "OT" },
+    { name: "VLB" },
+    { name: "VLBY" },
+    { name: "VLYB" },
+    { name: "VVLB" },
+  ];
+
   const heart = [{ name: "3X" }, { name: "3VG+" }];
 
   const cut = [
-    { name: "Ideal" },
-    { name: "Excellent" },
-    { name: "Very Good" },
-    { name: "Good" },
-    { name: "Fair" },
-    { name: "Poor" },
+    { name: "Ideal", value: "ID" },
+    { name: "Excellent", value: "EX" },
+    { name: "Very Good", value: "VG" },
+    { name: "Very Good+", value: "VG+" },
+    { name: "Good", value: "GD" },
+    // { name: "Fair", value:""},
+    // { name: "Poor", value:""},
   ];
+
   const polish = [
-    { name: "Ideal" },
-    { name: "Excellent" },
-    { name: "Very Good" },
-    { name: "Good" },
-    { name: "Fair" },
-    { name: "Poor" },
+    // { name: "Excellent" },
+    // { name: "Very Good" },
+    // { name: "Good" },
+    // { name: "Fair" },
+    // { name: "Poor" },
+    { name: "Ideal", value: "ID" },
+    { name: "Excellent", value: "EX" },
+    { name: "Very Good", value: "VG" },
+    { name: "Very Good+", value: "VG+" },
+    { name: "Good", value: "GD" },
   ];
   const symmetry = [
-    { name: "Ideal" },
-    { name: "Excellent" },
+    // { name: "Ideal" },
+    // { name: "Excellent" },
+    // { name: "Very Good" },
+    // { name: "Good" },
+    // { name: "Fair" },
+    // { name: "Poor" },
+    // { name: "Ideal",value:"ID" },
+    { name: "Excellent", value: "EX" },
+    { name: "Very Good", value: "VG" },
+    // { name: "Very Good+", value:"VG+"},
+    { name: "Good", value: "GD" },
+  ];
+
+  const labheart = [{ name: "8X" }, { name: "3X+" }, { name: "3VG+" }];
+  const labcut = [
+    { name: "8X" },
+    { name: "EX/Ideal" },
+    { name: "Very Good" },
+    { name: "Good" },
+    { name: "Fair" },
+    { name: "Poor" },
+  ];
+  const labpolish = [
+    { name: "8X" },
+    { name: "EX/Ideal" },
+    { name: "Very Good" },
+    { name: "Good" },
+    { name: "Fair" },
+    { name: "Poor" },
+  ];
+  const labsymmetry = [
+    { name: "8X" },
+    { name: "EX/Ideal" },
     { name: "Very Good" },
     { name: "Good" },
     { name: "Fair" },
     { name: "Poor" },
   ];
   const fluorescence = [
-    { name: "None" },
-    { name: "Faint" },
-    { name: "Medium" },
-    { name: "Strong" },
-    { name: "V Strong" },
+    { name: "None", value: "NON" },
+    { name: "Faint", value: "FNT" },
+    { name: "Medium", value: "MED" },
+    { name: "Strong", value: "STG" },
+    { name: "V Strong", value: "VST" },
   ];
   const lab = [
     { name: "GIA" },
@@ -191,623 +309,2165 @@ const DiamondsGrid = ({ diamond }) => {
     { name: "Other" },
     { name: "None" },
   ];
+  const labgrownlab = [
+    { name: "IGI" },
+    { name: "GIA" },
+    { name: "GCAL" },
+    { name: "Other" },
+    { name: "None" },
+  ];
+
+  // icons selection array
+
+  const [shape, setShape] = useState([]);
+
+  const toggleShape = (name) => {
+    setShape((prevShapes) =>
+      prevShapes.includes(name)
+        ? prevShapes.filter((s) => s !== name)
+        : [...prevShapes, name]
+    );
+  };
+
+  // clarity selection array
+  const [selectedClarity, setSelectedClarity] = useState([]);
+
+  const toggleClarity = (name) => {
+    setSelectedClarity((prevClarity) =>
+      prevClarity.includes(name)
+        ? prevClarity.filter((c) => c !== name)
+        : [...prevClarity, name]
+    );
+  };
+  // Color selection array
+  const [selectedColor, setSelectedColor] = useState([]);
+
+  const toggleColor = (name) => {
+    setSelectedColor((prevColor) =>
+      prevColor.includes(name)
+        ? prevColor.filter((c) => c !== name)
+        : [...prevColor, name]
+    );
+  };
+
+  //Milky selection array
+  const [selectedMilky, setSelectedMilky] = useState([]);
+
+  const toggleMilky = (name) => {
+    setSelectedMilky((prevMilky) =>
+      prevMilky.includes(name)
+        ? prevMilky.filter((c) => c !== name)
+        : [...prevMilky, name]
+    );
+  };
+
+  //Tinge selection array
+  const [selectedTinge, setSelectedTinge] = useState([]);
+
+  const toggleTinge = (name) => {
+    setSelectedTinge((prevTinge) =>
+      prevTinge.includes(name)
+        ? prevTinge.filter((c) => c !== name)
+        : [...prevTinge, name]
+    );
+  };
+
+  // Hearts and Arrows selection array
+  const [selectedHeart, setSelectedHeart] = useState([]);
+
+  const toggleSelection = (name) => {
+    setSelectedHeart((prevHeart) =>
+      prevHeart.includes(name)
+        ? prevHeart.filter((c) => c !== name)
+        : [...prevHeart, name]
+    );
+  };
+
+  // cut, polish and symmetry selection array
+  const [selectedCut, setSelectedCut] = useState([]);
+  const [selectedPolish, setSelectedPolish] = useState([]);
+  const [selectedSymmetry, setSelectedSymmetry] = useState([]);
+
+  const toggleCut = (name) => {
+    setSelectedCut((prevCut) =>
+      prevCut.includes(name)
+        ? prevCut.filter((item) => item !== name)
+        : [...prevCut, name]
+    );
+  };
+  const togglePolish = (name) => {
+    setSelectedPolish((prevPolish) =>
+      prevPolish.includes(name)
+        ? prevPolish.filter((item) => item !== name)
+        : [...prevPolish, name]
+    );
+  };
+  const toggleSymmetry = (name) => {
+    setSelectedSymmetry((prevSymmetry) =>
+      prevSymmetry.includes(name)
+        ? prevSymmetry.filter((item) => item !== name)
+        : [...prevSymmetry, name]
+    );
+  };
+
+  // fluroescene lab selection array
+  const [selectedFluroescene, setSelectedFluroescene] = useState([]);
+  const [selectedLab, setSelectedLab] = useState([]);
+
+  const toggleFluroescene = (name) => {
+    setSelectedFluroescene((prevFluroescene) =>
+      prevFluroescene.includes(name)
+        ? prevFluroescene.filter((item) => item !== name)
+        : [...prevFluroescene, name]
+    );
+  };
+  const toggleLab = (name) => {
+    setSelectedLab((prevLab) =>
+      prevLab.includes(name)
+        ? prevLab.filter((item) => item !== name)
+        : [...prevLab, name]
+    );
+  };
+
+  // Show only checkboxes
+  const [filters, setFilters] = useState({
+    media: false,
+    available: false,
+  });
+
+  const handleCheckboxChange = (event) => {
+    const { name, checked } = event.target;
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      [name]: checked,
+    }));
+  };
+
+  const [clarityCheckbox, setClarityCheckbox] = useState({
+    eyeClean: false,
+    clarityEnhanced: false,
+    drill: false,
+  });
+
+  const handleClarityCheckbox = (event) => {
+    const { name, checked } = event.target;
+    setClarityCheckbox((prevClarityCheckbox) => ({
+      ...prevClarityCheckbox,
+      [name]: checked,
+    }));
+  };
+  const [heartandarrowCheckbox, setHeartAndArrowCheckbox] = useState({
+    heartandarrow: false,
+  });
+
+  const handleHeartCheckbox = (event) => {
+    const { name, checked } = event.target;
+    setHeartAndArrowCheckbox((prevHeartCheckbox) => ({
+      ...prevHeartCheckbox,
+      [name]: checked,
+    }));
+  };
+  // Growth type checkbox
+  const [growthtypeCheckbox, setGrowthTypeCheckbox] = useState({
+    cvd: false,
+    hpht: false,
+    others: false,
+  });
+
+  const handleGrowthTypeCheckbox = (event) => {
+    const { name, checked } = event.target;
+    setGrowthTypeCheckbox((prevGrowthTypeCheckbox) => ({
+      ...prevGrowthTypeCheckbox,
+      [name]: checked,
+    }));
+  };
+  // Treatment checkbox
+  const [treatmentCheckbox, setTreatmentCheckbox] = useState({
+    asGrown: false,
+    treated: false,
+    unknown: false,
+  });
+
+  const handleTreatmentCheckbox = (event) => {
+    const { name, checked } = event.target;
+    setTreatmentCheckbox((prevTreamentCheckbox) => ({
+      ...prevTreamentCheckbox,
+      [name]: checked,
+    }));
+  };
+
+  // carat textinput
+  const [caratRange, setCaratRange] = useState({
+    min: "",
+    max: "",
+  });
+
+  const handleCaratChange = (event) => {
+    const { name, value } = event.target;
+
+    // Allow only numbers with up to 3 decimal places
+    if (/^\d*\.?\d{0,3}$/.test(value) || value === "") {
+      setCaratRange((prevRange) => ({
+        ...prevRange,
+        [name]: value,
+      }));
+    }
+  };
+
+  // Total price textinput
+  const [totalPriceRange, setTotalPriceRange] = useState({
+    min: "",
+    max: "",
+  });
+
+  const handlePriceChange = (event) => {
+    let { name, value } = event.target;
+
+    value = value.replace(/[^0-9.]/g, "");
+
+    if (/^\d*\.?\d*$/.test(value) || value === "") {
+      setTotalPriceRange((prevRange) => ({
+        ...prevRange,
+        [name]: value,
+      }));
+    }
+  };
+
+  const handlePriceBlur = (event) => {
+    let { name, value } = event.target;
+
+    if (value !== "" && !isNaN(value)) {
+      setTotalPriceRange((prevRange) => ({
+        ...prevRange,
+        [name]: parseFloat(value).toFixed(2),
+      }));
+    }
+  };
+
+  // Depth textinput
+  const [depthRange, setDepthRange] = useState({
+    min: "",
+    max: "",
+  });
+
+  const handleDepthChange = (event) => {
+    const { name, value } = event.target;
+
+    // Allow only numbers with up to 3 decimal places
+    if (/^\d*\.?\d{0,3}$/.test(value) || value === "") {
+      setDepthRange((prevRange) => ({
+        ...prevRange,
+        [name]: value,
+      }));
+    }
+  };
+
+  // Table textinput
+  const [tableRange, setTableRange] = useState({
+    min: "",
+    max: "",
+  });
+
+  const handleTableChange = (event) => {
+    const { name, value } = event.target;
+
+    // Allow only numbers with up to 3 decimal places
+    if (/^\d*\.?\d{0,3}$/.test(value) || value === "") {
+      setTableRange((prevRange) => ({
+        ...prevRange,
+        [name]: value,
+      }));
+    }
+  };
+
+  // Radio Textinput
+  const [radioRange, setRadioRange] = useState({
+    min: "",
+    max: "",
+  });
+
+  const handleRadioChange = (event) => {
+    const { name, value } = event.target;
+
+    // Allow only numbers with up to 3 decimal places
+    if (/^\d*\.?\d{0,3}$/.test(value) || value === "") {
+      setRadioRange((prevRange) => ({
+        ...prevRange,
+        [name]: value,
+      }));
+    }
+  };
+
+  //length textinput
+  const [lengthrange, setLengthRange] = useState({
+    min: "",
+    max: "",
+  });
+
+  const handleLengthChange = (event) => {
+    const { name, value } = event.target;
+
+    // Allow only numbers with up to 3 decimal places
+    if (/^\d*\.?\d{0,3}$/.test(value) || value === "") {
+      setLengthRange((prevRange) => ({
+        ...prevRange,
+        [name]: value,
+      }));
+    }
+  };
+  // width textinput
+  const [widthrange, setWidthRange] = useState({
+    min: "",
+    max: "",
+  });
+
+  const handleWidthChange = (event) => {
+    const { name, value } = event.target;
+
+    // Allow only numbers with up to 3 decimal places
+    if (/^\d*\.?\d{0,3}$/.test(value) || value === "") {
+      setWidthRange((prevRange) => ({
+        ...prevRange,
+        [name]: value,
+      }));
+    }
+  };
+
+  // depth MM textinput
+  const [depthmmrange, setDepthMMRange] = useState({
+    min: "",
+    max: "",
+  });
+
+  const handleDepthMMChange = (event) => {
+    const { name, value } = event.target;
+
+    // Allow only numbers with up to 3 decimal places
+    if (/^\d*\.?\d{0,3}$/.test(value) || value === "") {
+      setDepthMMRange((prevRange) => ({
+        ...prevRange,
+        [name]: value,
+      }));
+    }
+  };
+
+  const resetAll = () => {
+    setShape([]);
+    setSelectedClarity([]);
+    setSelectedColor([]);
+    setSelectedHeart([]);
+    setSelectedCut([]);
+    setSelectedPolish([]);
+    setSelectedSymmetry([]);
+    setSelectedFluroescene([]);
+    setSelectedLab([]);
+    setSelectedMilky([]);
+    setSelectedTinge([]);
+    setFilters({
+      media: false,
+      available: false,
+    });
+    setClarityCheckbox({
+      eyeClean: false,
+      clarityEnhanced: false,
+      drill: false,
+    });
+    setHeartAndArrowCheckbox({
+      heartandarrow: false,
+    });
+    setGrowthTypeCheckbox({
+      cvd: false,
+      hpht: false,
+      others: false,
+    });
+    setTreatmentCheckbox({
+      asGrown: false,
+      treated: false,
+      unknown: false,
+    });
+    setCaratRange({
+      min: "",
+      max: "",
+    });
+    setTotalPriceRange({
+      min: "",
+      max: "",
+    });
+    setDepthRange({
+      min: "",
+      max: "",
+    });
+    setTableRange({
+      min: "",
+      max: "",
+    });
+    setRadioRange({
+      min: "",
+      max: "",
+    });
+    setLengthRange({
+      min: "",
+      max: "",
+    });
+    setWidthRange({
+      min: "",
+      max: "",
+    });
+    setDepthMMRange({
+      min: "",
+      max: "",
+    });
+
+    setFilterData(undefined);
+  };
+
+  const [isApplyfilter, setApplyfilter] = useState(false);
+  const applyFilter = () => {
+    setApplyfilter(true);
+    const payload = {
+      Shape: shape,
+      minCt: caratRange.min,
+      maxCt: caratRange.max,
+      Color: selectedColor,
+      Clarity: selectedClarity,
+      Milky: selectedMilky,
+      Tinge: selectedTinge,
+      Cut: selectedCut,
+      Polish: selectedPolish,
+      Symm: selectedSymmetry,
+      FluoInt: selectedFluroescene,
+      Lab: selectedLab,
+      minDepth: depthRange.min,
+      maxDepth: depthRange.max,
+      minTable: tableRange.min,
+      maxTable: tableRange.max,
+      minRatio: radioRange.min,
+      maxRatio: radioRange.max,
+      minLength: lengthrange.min,
+      maxLength: lengthrange.max,
+      minWidth: widthrange.min,
+      maxWidth: widthrange.max,
+      minDepthmm: depthmmrange.min,
+      maxDepthmm: depthmmrange.max,
+      isAmount: isAmount,
+      isPrice: isPrice,
+      minAmount: isAmount ? totalPriceRange.min : null,
+      maxAmount: isAmount ? totalPriceRange.max : null,
+      minPrice: isPrice ? totalPriceRange.min : null,
+      maxPrice: isPrice ? totalPriceRange.max : null,
+      IsNatural: diamondType == 0,
+      IsLabgrown: diamondType == 1,
+    };
+
+    setFilterData(payload);
+    console.log(payload);
+  };
+
+  if (isLoading) return <DiamondLoader />;
+  if (error) return <p className="error">{error.message}</p>;
 
   return (
     <>
-      <Container sx={{ p: 0 }}>
-        <Grid
-          container
-          spacing={2}
-          alignItems="start"
-          sx={{
-            p: 2,
-            borderRadius: 2,
-            border: "1px solid #E0E0E0",
-            backgroundColor: "#F8F9FA",
-            mt: 3,
-          }}
-        >
-          <Grid item xs={12}>
-            <Typography
-              variant="body1"
-              fontWeight="bold"
-              sx={{ textAlign: "left" }}
-            >
-              Show Only
-            </Typography>
-          </Grid>
-          <Grid item>
-            <FormControlLabel
-              control={<Checkbox defaultChecked />}
-              label="Items with Media"
-            />
-          </Grid>
-          <Grid item>
-            <FormControlLabel
-              control={<Checkbox defaultChecked />}
-              label="Available Items"
-            />
-          </Grid>
-        </Grid>
-        <Grid
-          container
-          spacing={2}
-          alignItems="start"
-          sx={{
-            p: 2,
-            borderRadius: 2,
-            border: "1px solid #E0E0E0",
-            backgroundColor: "#F8F9FA",
-            mt: 3,
-          }}
-        >
-          <Grid item xs={12}>
-            <Typography
-              variant="body1"
-              fontWeight="bold"
-              sx={{ textAlign: "left" }}
-            >
-              Shape
-            </Typography>
-          </Grid>
-          <Grid item xs={12}>
+      {!isApplyfilter ? (
+        // <div className="container my-lg-5 my-4">
+        <div className="" style={{ padding: "30px" }}>
+          {/* <Grid
+            container
+            spacing={2}
+            sx={{
+              p: 2,
+              borderRadius: 2,
+              border: "1px solid #E0E0E0",
+              backgroundColor: "#F8F9FA",
+              mt: 3,
+            }}
+          >
             <Grid
               container
-              spacing={1}
-              sx={{
-                display: "grid",
-                gridTemplateColumns: "repeat(auto-fill, minmax(80px, 1fr))",
-                gap: "8px",
-                mt: 1,
-              }}
-              className="jps-icons"
-            >
-              {icon.map((value) => (
-                <Grid
-                  key={value.name}
-                  item
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    textAlign: "center",
-                    border: "1px solid  #ccc",
-                    borderRadius: "5px",
-                    height: "100px",
-                    width: "100%",
-                    fontSize: "12px",
-                    fontWeight: "500",
-                    padding: 0,
-                  }}
-                >
-                  {value?.icon && (
-                    <div className="jps-icon">{value?.icon || ""}</div>
-                  )}
-
-                  {value?.name || ""}
-                </Grid>
-              ))}
-            </Grid>
-          </Grid>
-        </Grid>
-        <Grid
-          container
-          spacing={2}
-          sx={{
-            p: 2,
-            borderRadius: 2,
-            border: "1px solid #E0E0E0",
-            backgroundColor: "#F8F9FA",
-            mt: 3,
-          }}
-        >
-          <Grid container item xs={12} style={{ display: "flex" }} spacing={2}>
-            <Grid item xs={6}>
-              <Typography
-                variant="body1"
-                fontWeight="bold"
-                sx={{ textAlign: "left" }}
-              >
-                Caret
-              </Typography>
-            </Grid>
-
-            <Grid item xs={6}>
-              <Typography
-                variant="body1"
-                fontWeight="bold"
-                sx={{ textAlign: "left" }}
-              >
-                Clarity
-              </Typography>
-            </Grid>
-
-            <Grid item xs={6} container style={{ display: "flex" }} spacing={2}>
-              <Grid item alignItems={"center"} style={{ display: "flex" }}>
-                <TextInput label={"Min, ct"} />
-              </Grid>
-
-              <Grid item alignItems={"center"} style={{ display: "flex" }}>
-                <i class="fa-solid fa-greater-than"></i>
-              </Grid>
-
-              <Grid item alignItems={"center"} style={{ display: "flex" }}>
-                <TextInput label={"Max, ct"} />
-              </Grid>
-            </Grid>
-
-            <Grid container item xs={6}>
-              <Grid item>
-                <FormControlLabel
-                  control={<Checkbox defaultChecked />}
-                  label="Eye Clean"
-                />
-              </Grid>
-              <Grid item>
-                <FormControlLabel
-                  control={<Checkbox defaultChecked />}
-                  label="Clarity Enhanced"
-                />
-              </Grid>
-              <Grid item>
-                <FormControlLabel
-                  control={<Checkbox defaultChecked />}
-                  label="Drill"
-                />
-              </Grid>
-              <Grid
-                container
-                spacing={1}
-                sx={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(auto-fill, minmax(80px, 1fr))",
-                  gap: "8px",
-                  mt: 1,
-                }}
-                className="jps-icons"
-              >
-                {clarity.map((value) => (
-                  <Grid
-                    key={value.name}
-                    item
-                    sx={{
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      textAlign: "center",
-                      border: "1px solid  #ccc",
-                      borderRadius: "5px",
-                      height: "50px",
-                      width: "100%",
-                      fontSize: "12px",
-                      fontWeight: "500",
-                      padding: 0,
-                      borderRadius: "8px",
-                      // textTransform: "uppercase",
-                    }}
-                  >
-                    {value?.name || ""}
-                  </Grid>
-                ))}
-              </Grid>
-            </Grid>
-          </Grid>
-        </Grid>
-        <Grid
-          container
-          spacing={2}
-          sx={{
-            p: 2,
-            borderRadius: 2,
-            border: "1px solid #E0E0E0",
-            backgroundColor: "#F8F9FA",
-            mt: 3,
-          }}
-        >
-          <Grid container item xs={12} style={{ display: "flex" }} spacing={2}>
-            <Grid item xs={12}>
-              <Typography
-                variant="body1"
-                fontWeight="bold"
-                sx={{ textAlign: "left" }}
-              >
-                Cut, Polish, Symmetry
-              </Typography>
-            </Grid>
-            <Grid container item xs={6}>
-              <Grid item>
-                <FormControlLabel
-                  control={<Checkbox defaultChecked />}
-                  label="Hearts and Arrows"
-                />
-              </Grid>
-              <Grid
-                container
-                spacing={1}
-                sx={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(auto-fill, minmax(80px, 1fr))",
-                  gap: "8px",
-                  mt: 1,
-                }}
-                className="jps-icons"
-              >
-                {heart.map((value) => (
-                  <Grid
-                    key={value.name}
-                    item
-                    sx={{
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      textAlign: "center",
-                      border: "1px solid  #ccc",
-                      borderRadius: "5px",
-                      height: "50px",
-                      width: "100%",
-                      fontSize: "12px",
-                      fontWeight: "500",
-                      padding: 0,
-                      borderRadius: "8px",
-                      // textTransform: "uppercase",
-                    }}
-                  >
-                    {value?.name || ""}
-                  </Grid>
-                ))}
-              </Grid>
-            </Grid>
-          </Grid>
-          <Grid container item xs={12} style={{ display: "flex" }} spacing={2}>
-            <Grid item xs={12}>
-              <Typography
-                variant="body1"
-                fontWeight="bold"
-                sx={{ textAlign: "left" }}
-              >
-                Cut
-              </Typography>
-            </Grid>
-            <Grid container item xs={12}>
-              <Grid
-                container
-                spacing={1}
-                sx={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(auto-fill, minmax(80px, 1fr))",
-                  gap: "8px",
-                  mt: 1,
-                }}
-                className="jps-icons"
-              >
-                {cut.map((value) => (
-                  <Grid
-                    key={value.name}
-                    item
-                    sx={{
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      textAlign: "center",
-                      border: "1px solid  #ccc",
-                      borderRadius: "5px",
-                      height: "50px",
-                      width: "100%",
-                      fontSize: "12px",
-                      fontWeight: "500",
-                      padding: 0,
-                      borderRadius: "8px",
-                      // textTransform: "uppercase",
-                    }}
-                  >
-                    {value?.name || ""}
-                  </Grid>
-                ))}
-              </Grid>
-            </Grid>
-          </Grid>
-          <Grid container item xs={12} style={{ display: "flex" }} spacing={2}>
-            <Grid item xs={12}>
-              <Typography
-                variant="body1"
-                fontWeight="bold"
-                sx={{ textAlign: "left" }}
-              >
-                Polish
-              </Typography>
-            </Grid>
-            <Grid container item xs={12}>
-              <Grid
-                container
-                spacing={1}
-                sx={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(auto-fill, minmax(80px, 1fr))",
-                  gap: "8px",
-                  mt: 1,
-                }}
-                className="jps-icons"
-              >
-                {polish.map((value) => (
-                  <Grid
-                    key={value.name}
-                    item
-                    sx={{
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      textAlign: "center",
-                      border: "1px solid  #ccc",
-                      borderRadius: "5px",
-                      height: "50px",
-                      width: "100%",
-                      fontSize: "12px",
-                      fontWeight: "500",
-                      padding: 0,
-                      borderRadius: "8px",
-                      // textTransform: "uppercase",
-                    }}
-                  >
-                    {value?.name || ""}
-                  </Grid>
-                ))}
-              </Grid>
-            </Grid>
-          </Grid>
-          <Grid container item xs={12} style={{ display: "flex" }} spacing={2}>
-            <Grid item xs={12}>
-              <Typography
-                variant="body1"
-                fontWeight="bold"
-                sx={{ textAlign: "left" }}
-              >
-                Symmetry
-              </Typography>
-            </Grid>
-            <Grid container item xs={12}>
-              <Grid
-                container
-                spacing={1}
-                sx={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(auto-fill, minmax(80px, 1fr))",
-                  gap: "8px",
-                  mt: 1,
-                }}
-                className="jps-icons"
-              >
-                {symmetry.map((value) => (
-                  <Grid
-                    key={value.name}
-                    item
-                    sx={{
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      textAlign: "center",
-                      border: "1px solid  #ccc",
-                      borderRadius: "5px",
-                      height: "50px",
-                      width: "100%",
-                      fontSize: "12px",
-                      fontWeight: "500",
-                      padding: 0,
-                      borderRadius: "8px",
-                      // textTransform: "uppercase",
-                    }}
-                  >
-                    {value?.name || ""}
-                  </Grid>
-                ))}
-              </Grid>
-            </Grid>
-          </Grid>
-        </Grid>
-        <Grid
-          container
-          spacing={2}
-          sx={{
-            p: 2,
-            borderRadius: 2,
-            border: "1px solid #E0E0E0",
-            backgroundColor: "#F8F9FA",
-            mt: 3,
-          }}
-        >
-          <Grid container item xs={6} style={{ display: "flex" }} spacing={2}>
-            <Grid item xs={6}>
-              <Typography
-                variant="body1"
-                fontWeight="bold"
-                sx={{ textAlign: "left" }}
-              >
-                Fluorescence
-              </Typography>
-            </Grid>
-            <Grid container item xs={12}>
-              <Grid
-                container
-                spacing={1}
-                sx={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(auto-fill, minmax(80px, 1fr))",
-                  gap: "8px",
-                  mt: 1,
-                }}
-                className="jps-icons"
-              >
-                {fluorescence.map((value) => (
-                  <Grid
-                    key={value.name}
-                    item
-                    sx={{
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      textAlign: "center",
-                      border: "1px solid  #ccc",
-                      borderRadius: "5px",
-                      height: "50px",
-                      width: "100%",
-                      fontSize: "12px",
-                      fontWeight: "500",
-                      padding: 0,
-                      borderRadius: "8px",
-                      // textTransform: "uppercase",
-                    }}
-                  >
-                    {value?.name || ""}
-                  </Grid>
-                ))}
-              </Grid>
-            </Grid>
-          </Grid>
-
-          <Grid container item xs={6} style={{ display: "flex" }} spacing={2}>
-            <Grid item xs={6}>
-              <Typography
-                variant="body1"
-                fontWeight="bold"
-                sx={{ textAlign: "left" }}
-              >
-                Lab
-              </Typography>
-            </Grid>
-            <Grid container item xs={12}>
-              <Grid
-                container
-                spacing={1}
-                sx={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(auto-fill, minmax(80px, 1fr))",
-                  gap: "8px",
-                  mt: 1,
-                }}
-                className="jps-icons"
-              >
-                {lab.map((value) => (
-                  <Grid
-                    key={value.name}
-                    item
-                    sx={{
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      textAlign: "center",
-                      border: "1px solid  #ccc",
-                      borderRadius: "5px",
-                      height: "50px",
-                      width: "100%",
-                      fontSize: "12px",
-                      fontWeight: "500",
-                      padding: 0,
-                      borderRadius: "8px",
-                      // textTransform: "uppercase",
-                    }}
-                  >
-                    {value?.name || ""}
-                  </Grid>
-                ))}
-              </Grid>
-            </Grid>
-          </Grid>
-        </Grid>
-
-        <Grid
-          container
-          spacing={2}
-          sx={{
-            p: 2,
-            borderRadius: 2,
-            border: "1px solid #E0E0E0",
-            backgroundColor: "#F8F9FA",
-            mt: 3,
-          }}
-        >
-          <Grid container item xs={12} style={{ display: "flex" }} spacing={2}>
-            <Grid item xs={12}>
-              <Tabs
-                value={tabValue}
-                onChange={handleChange}
-                aria-label="price tabs"
-                sx={{
-                  minHeight: "40px",
-                  "& .MuiTab-root": { minWidth: "auto", textTransform: "none" },
-                }}
-              >
-                <Tab
-                  label={
-                    <Typography variant="body1" fontWeight="bold">
-                      Total Price
-                    </Typography>
-                  }
-                  sx={{
-                    px: 2,
-                    outline: "none !important",
-                    "&:focus": { outline: "none" },
-                    "&.Mui-selected:focus": { outline: "none" },
-                    "&.Mui-focusVisible": { outline: "none" },
-                  }}
-                />
-                <Tab
-                  label={
-                    <Typography variant="body1" fontWeight="bold">
-                      P/ct
-                    </Typography>
-                  }
-                  sx={{
-                    px: 2,
-                    outline: "none !important",
-                    "&:focus": { outline: "none" },
-                    "&.Mui-selected:focus": { outline: "none" },
-                    "&.Mui-focusVisible": { outline: "none" },
-                  }}
-                />
-              </Tabs>
-            </Grid>
-
-            <Grid
               item
               xs={12}
-              container
               style={{ display: "flex" }}
               spacing={2}
             >
-              <Grid item alignItems={"center"} style={{ display: "flex" }}>
-                <TextInput label={"Min, $"} />
-              </Grid>
-
-              <Grid item alignItems={"center"} style={{ display: "flex" }}>
-                <i class="fa-solid fa-greater-than"></i>
-              </Grid>
-
-              <Grid item alignItems={"center"} style={{ display: "flex" }}>
-                <TextInput label={"Max, $"} />
+              <Grid item xs={12}>
+                <Tabs
+                  value={diamondType}
+                  onChange={handleTypeChange}
+                  aria-label="price tabs"
+                  sx={{
+                    minHeight: "40px",
+                    "& .MuiTab-root": {
+                      minWidth: "auto",
+                      textTransform: "none",
+                    },
+                  }}
+                >
+                  <Tab
+                    label={
+                      <Typography variant="body1" fontWeight="bold">
+                        Natural Diamonds
+                      </Typography>
+                    }
+                    sx={{
+                      px: 2,
+                      outline: "none !important",
+                      "&:focus": { outline: "none" },
+                      "&.Mui-selected:focus": { outline: "none" },
+                      "&.Mui-focusVisible": { outline: "none" },
+                    }}
+                  />
+                  <Tab
+                    label={
+                      <Typography variant="body1" fontWeight="bold">
+                        Lab-Grown Diamonds
+                      </Typography>
+                    }
+                    sx={{
+                      px: 2,
+                      outline: "none !important",
+                      "&:focus": { outline: "none" },
+                      "&.Mui-selected:focus": { outline: "none" },
+                      "&.Mui-focusVisible": { outline: "none" },
+                    }}
+                  />
+                </Tabs>
               </Grid>
             </Grid>
-          </Grid>
-        </Grid>
-        <Grid
-          container
-          spacing={2}
-          sx={{
-            p: 2,
-            borderRadius: 2,
-            border: "1px solid #E0E0E0",
-            backgroundColor: "#F8F9FA",
-            mt: 3,
-          }}
-        >
-          <Grid container item xs={12} style={{ display: "flex" }} spacing={2}>
+          </Grid> */}
+
+          {/* <Grid
+            container
+            spacing={2}
+            alignItems="start"
+            sx={{
+              p: 2,
+              borderRadius: 2,
+              border: "1px solid #E0E0E0",
+              backgroundColor: "#F8F9FA",
+              mt: 3,
+            }}
+          >
             <Grid item xs={12}>
+              <Typography
+                variant="body1"
+                fontWeight="bold"
+                sx={{ textAlign: "left" }}
+              >
+                Show Only
+              </Typography>
+            </Grid>
+            <Grid item>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={filters.media}
+                    onChange={handleCheckboxChange}
+                    name="media"
+                  />
+                }
+                label="Items with Media"
+              />
+            </Grid>
+            <Grid item>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={filters.available}
+                    onChange={handleCheckboxChange}
+                    name="available"
+                  />
+                }
+                label="Available Items"
+              />
+            </Grid>
+            <Grid item sx={{ ml: "auto" }}>
+              <Button
+                variant="contained"
+                onClick={resetAll}
+                sx={{
+                  backgroundColor: "#c9a236",
+                  color: "#fff",
+                  fontWeight: "Bold",
+                }}
+              >
+                Reset All
+              </Button>
+              <Button
+                variant="contained"
+                className="ml-2"
+                onClick={applyFilter}
+                sx={{
+                  backgroundColor: "#c9a236",
+                  color: "#fff",
+                  fontWeight: "Bold",
+                }}
+              >
+                Apply Filter
+              </Button>
+            </Grid>
+          </Grid> */}
+
+          <div className="bg-box mb-3">
+            <div className="jps-measurements row">
+              <div className="col-md-6 col-12">
+                <div item>
+                  <Tabs
+                    value={diamondType}
+                    onChange={handleTypeChange}
+                    aria-label="price tabs"
+                    sx={{
+                      minHeight: "40px",
+                      "& .MuiTab-root": {
+                        minWidth: "auto",
+                        textTransform: "none",
+                      },
+                    }}
+                  >
+                    <Tab
+                      label={
+                        <Typography
+                          variant="body1"
+                          fontWeight="bold"
+                          className="natural-diamond"
+                        >
+                          Natural Diamonds
+                        </Typography>
+                      }
+                      value={"0"}
+                      sx={{
+                        px: 2,
+                        outline: "none !important",
+                        "&:focus": { outline: "none" },
+                        "&.Mui-selected:focus": { outline: "none" },
+                        "&.Mui-focusVisible": { outline: "none" },
+                      }}
+                    />
+                    <Tab
+                      label={
+                        <Typography
+                          variant="body1"
+                          fontWeight="bold"
+                          className="lab-grown-diamond"
+                        >
+                          Lab-Grown Diamonds
+                        </Typography>
+                      }
+                      value={"1"}
+                      sx={{
+                        px: 2,
+                        outline: "none !important",
+                        "&:focus": { outline: "none" },
+                        "&.Mui-selected:focus": { outline: "none" },
+                        "&.Mui-focusVisible": { outline: "none" },
+                      }}
+                    />
+                  </Tabs>
+                </div>
+              </div>
+              <div className="col-md-6 col-12">
+                <div className="jps-measur-box">
+                  <div
+                    item
+                    className="reset-buttons"
+                    style={{ marginLeft: "auto" }}
+                  >
+                    <Button
+                      variant="contained"
+                      onClick={resetAll}
+                      sx={{
+                        backgroundColor: "#c9a236",
+                        color: "#fff",
+                        fontWeight: "Bold",
+                      }}
+                    >
+                      Reset All
+                    </Button>
+                    <Button
+                      variant="contained"
+                      className="ml-2 apply-filter"
+                      onClick={applyFilter}
+                      sx={{
+                        backgroundColor: "#c9a236",
+                        color: "#fff",
+                        fontWeight: "Bold",
+                      }}
+                    >
+                      Apply Filter
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* <Grid
+            container
+            spacing={2}
+            alignItems="start"
+            sx={{
+              p: 2,
+              borderRadius: 2,
+              border: "1px solid #E0E0E0",
+              backgroundColor: "#F8F9FA",
+              mt: 3,
+            }}
+          >
+            <Grid item xs={12}>
+              <Typography
+                variant="body1"
+                fontWeight="bold"
+                sx={{ textAlign: "left" }}
+              >
+                Shape
+              </Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <Grid
+                container
+                spacing={1}
+                sx={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(auto-fill, minmax(80px, 1fr))",
+                  gap: "8px",
+                  mt: 1,
+                }}
+                className="jps-icons"
+              >
+                {icon.map((value) => (
+                  <Grid
+                    key={value.name}
+                    item
+                    onClick={() => toggleShape(value.value)}
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      textAlign: "center",
+                      border: shape.includes(value.value)
+                        ? "1px solid #1976D2"
+                        : "1px solid #ccc",
+                      borderRadius: "5px",
+                      height: "100px",
+                      width: "100%",
+                      fontSize: "12px",
+                      fontWeight: "500",
+                      padding: 0,
+                      cursor: "pointer",
+                      backgroundColor: shape.includes(value.value)
+                        ? "#1976D250"
+                        : "#fff",
+                      color: "#000",
+                      transition: "background-color 0.3s",
+                    }}
+                  >
+                    <div className="jps-icon">{value.icon}</div>
+                    {value.name}
+                  </Grid>
+                ))}
+              </Grid>
+            </Grid>
+          </Grid> */}
+
+          <div className="bg-box mb-3 pb-0">
+            <div className="jps-measurements row">
+              <div className="col-md-12 col-12 mb-3">
+                <div item>
+                  <Typography
+                    variant="body1"
+                    fontWeight="bold"
+                    sx={{ textAlign: "left" }}
+                  >
+                    Shape
+                  </Typography>
+                </div>
+
+                <Grid item xs={12}>
+                  <Grid
+                    container
+                    spacing={1}
+                    sx={{
+                      display: "grid",
+                      gridTemplateColumns:
+                        "repeat(auto-fill, minmax(80px, 1fr))",
+                      gap: "8px",
+                      mt: 1,
+                    }}
+                    className="jps-icons"
+                  >
+                    {icon.map((value) => (
+                      <Grid
+                        key={value.name}
+                        item
+                        onClick={() => toggleShape(value.value)}
+                        sx={{
+                          display: "flex",
+                          flexDirection: "column",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          textAlign: "center",
+                          border: shape.includes(value.value)
+                            ? "1px solid #1976D2"
+                            : "1px solid #ccc",
+                          borderRadius: "5px",
+                          height: "115px",
+                          width: "100%",
+                          fontSize: "12px",
+                          fontWeight: "500",
+                          padding: 0,
+                          cursor: "pointer",
+                          backgroundColor: shape.includes(value.value)
+                            ? "#1976D250"
+                            : "#fff",
+                          color: "#000",
+                          transition: "background-color 0.3s",
+                        }}
+                      >
+                        <div className="jps-icon">{value.icon}</div>
+                        {value.name}
+                      </Grid>
+                    ))}
+                  </Grid>
+                </Grid>
+              </div>
+            </div>
+          </div>
+
+          {/* <Grid
+            container
+            spacing={2}
+            sx={{
+              p: 2,
+              borderRadius: 2,
+              border: "1px solid #E0E0E0",
+              backgroundColor: "#F8F9FA",
+              mt: 3,
+            }}
+          >
+            <Grid
+              container
+              item
+              xs={12}
+              style={{ display: "flex" }}
+              spacing={2}
+            >
+              <Grid item xs={6}>
+                <Typography
+                  variant="body1"
+                  fontWeight="bold"
+                  sx={{ textAlign: "left" }}
+                >
+                  Caret
+                </Typography>
+              </Grid>
+
+              <Grid item xs={6}>
+                <Typography
+                  variant="body1"
+                  fontWeight="bold"
+                  sx={{ textAlign: "left" }}
+                >
+                  Clarity
+                </Typography>
+              </Grid>
+
+              <Grid
+                item
+                xs={6}
+                container
+                style={{ display: "flex" }}
+                spacing={2}
+              >
+                <Grid item alignItems={"center"} style={{ display: "flex" }}>
+                  <TextInput
+                    label={"Min, ct"}
+                    name="min"
+                    type="number"
+                    value={caratRange.min}
+                    onChange={handleCaratChange}
+                    customBg={true}
+                  />
+                </Grid>
+
+                <Grid item alignItems={"center"} style={{ display: "flex" }}>
+                  <i class="fa-solid fa-chevron-right"></i>
+                </Grid>
+
+                <Grid item alignItems={"center"} style={{ display: "flex" }}>
+                  <TextInput
+                    label={"Max, ct"}
+                    name="max"
+                    type="number"
+                    value={caratRange.max}
+                    onChange={handleCaratChange}
+                    customBg={true}
+                  />
+                </Grid>
+              </Grid>
+
+              <Grid container item xs={6}>
+                <Grid item>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={clarityCheckbox.eyeClean}
+                        onChange={handleClarityCheckbox}
+                        name="eyeClean"
+                      />
+                    }
+                    label="Eye Clean"
+                  />
+                </Grid>
+                {diamondType === 0 && (
+                  <>
+                    <Grid item>
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            checked={clarityCheckbox.clarityEnhanced}
+                            onChange={handleClarityCheckbox}
+                            name="clarityEnhanced"
+                          />
+                        }
+                        label="Clarity Enhanced"
+                      />
+                    </Grid>
+                    <Grid item>
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            checked={clarityCheckbox.drill}
+                            onChange={handleClarityCheckbox}
+                            name="drill"
+                          />
+                        }
+                        label="Drill"
+                      />
+                    </Grid>
+                  </>
+                )}
+                <Grid
+                  container
+                  spacing={1}
+                  sx={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(auto-fill, minmax(80px, 1fr))",
+                    gap: "8px",
+                    mt: 1,
+                  }}
+                  className="jps-icons"
+                >
+                  {clarity.map((value) => (
+                    <Grid
+                      key={value.name}
+                      item
+                      onClick={() => toggleClarity(value.name)}
+                      sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        textAlign: "center",
+                        border: selectedClarity.includes(value.name)
+                          ? "1px solid #1976D2"
+                          : "1px solid #ccc",
+                        borderRadius: "8px",
+                        height: "50px",
+                        width: "100%",
+                        fontSize: "12px",
+                        fontWeight: "500",
+                        padding: 0,
+                        cursor: "pointer",
+                        backgroundColor: selectedClarity.includes(value.name)
+                          ? "#1976D250"
+                          : "#fff",
+                        color: "#000",
+                        transition: "background-color 0.3s",
+                      }}
+                    >
+                      {value.name}
+                    </Grid>
+                  ))}
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid> */}
+          <div className="bg-box mb-3 pb-0">
+            <div className="jps-measurements row">
+              {/* <div className="col-md-6 col-12 mb-3">
+                <div item>
+                  <Typography
+                    variant="body1"
+                    fontWeight="bold"
+                    sx={{ textAlign: "left" }}
+                  >
+                    Caret
+                  </Typography>
+                </div>
+
+                <div className="jps-measur-box">
+                  <div item>
+                    <TextInput
+                      label={"Min, ct"}
+                      name="min"
+                      type="number"
+                      value={caratRange.min}
+                      onChange={handleCaratChange}
+                      customBg={true}
+                    />
+                  </div>
+
+                  <div item>
+                    <i class="fa-solid fa-chevron-right"></i>
+                  </div>
+
+                  <div item>
+                    <TextInput
+                      label={"Max, ct"}
+                      name="max"
+                      type="number"
+                      value={caratRange.max}
+                      onChange={handleCaratChange}
+                      customBg={true}
+                    />
+                  </div>
+                </div>
+              </div> */}
+              <div className="col-md-6 col-12 mb-3">
+                <div item>
+                  <Typography
+                    variant="body1"
+                    fontWeight="bold"
+                    sx={{ textAlign: "left" }}
+                  >
+                    Clarity
+                  </Typography>
+                </div>
+                {/* <div className="row ml-2">
+                  <div item style={{ textAlign: "left" }}>
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={clarityCheckbox.eyeClean}
+                          onChange={handleClarityCheckbox}
+                          name="eyeClean"
+                        />
+                      }
+                      label="Eye Clean"
+                    />
+                  </div>
+                  {diamondType === 0 && (
+                    <>
+                      <div item style={{ textAlign: "left" }}>
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              checked={clarityCheckbox.clarityEnhanced}
+                              onChange={handleClarityCheckbox}
+                              name="clarityEnhanced"
+                            />
+                          }
+                          label="Clarity Enhanced"
+                        />
+                      </div>
+                      <div item style={{ textAlign: "left" }}>
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              checked={clarityCheckbox.drill}
+                              onChange={handleClarityCheckbox}
+                              name="drill"
+                            />
+                          }
+                          label="Drill"
+                        />
+                      </div>
+                    </>
+                  )}
+                </div> */}
+                <div item>
+                  <div className="jps-lab-box">
+                    {clarity.map((value) => (
+                      <Grid
+                        key={value.name}
+                        item
+                        onClick={() => toggleClarity(value.name)}
+                        sx={{
+                          display: "flex",
+                          flexDirection: "column",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          textAlign: "center",
+                          border: selectedClarity.includes(value.name)
+                            ? "1px solid #1976D2"
+                            : "1px solid #ccc",
+                          borderRadius: "4px",
+                          // height: "50px",
+                          // width: "100%",
+                          fontSize: "12px",
+                          fontWeight: "500",
+                          padding: 0,
+                          cursor: "pointer",
+                          backgroundColor: selectedClarity.includes(value.name)
+                            ? "#1976D250"
+                            : "#fff",
+                          color: "#000",
+                          transition: "background-color 0.3s",
+                        }}
+                      >
+                        {value.name}
+                      </Grid>
+                    ))}
+                  </div>
+                </div>
+              </div>
+              <div className="col-md-6 col-12 mb-3">
+                <div item>
+                  <Typography
+                    variant="body1"
+                    fontWeight="bold"
+                    sx={{ textAlign: "left" }}
+                  >
+                    Colors
+                  </Typography>
+                </div>
+
+                <div item>
+                  <div className="jps-lab-box">
+                    {color.map((value) => (
+                      <Grid
+                        key={value.name}
+                        item
+                        onClick={() => toggleColor(value.name)}
+                        sx={{
+                          display: "flex",
+                          flexDirection: "column",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          textAlign: "center",
+                          border: selectedColor.includes(value.name)
+                            ? "1px solid #1976D2"
+                            : "1px solid #ccc",
+                          borderRadius: "4px",
+                          // height: "50px",
+                          // width: "100%",
+                          fontSize: "12px",
+                          fontWeight: "500",
+                          padding: 0,
+                          cursor: "pointer",
+                          backgroundColor: selectedColor.includes(value.name)
+                            ? "#1976D250"
+                            : "#fff",
+                          color: "#000",
+                          transition: "background-color 0.3s",
+                        }}
+                      >
+                        {value.name}
+                      </Grid>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          {/* <div className="bg-box mb-3 pb-0">
+            <div className="jps-measurements row">
+              <div className="col-md-6 col-12 mb-3">
+                <div item>
+                  <Typography
+                    variant="body1"
+                    fontWeight="bold"
+                    sx={{ textAlign: "left" }}
+                  >
+                    Colors
+                  </Typography>
+                </div>
+
+                <div item>
+                  <div className="jps-lab-box">
+                    {color.map((value) => (
+                      <Grid
+                        key={value.name}
+                        item
+                        onClick={() => toggleColor(value.name)}
+                        sx={{
+                          display: "flex",
+                          flexDirection: "column",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          textAlign: "center",
+                          border: selectedColor.includes(value.name)
+                            ? "1px solid #1976D2"
+                            : "1px solid #ccc",
+                          borderRadius: "4px",
+                          // height: "50px",
+                          // width: "100%",
+                          fontSize: "12px",
+                          fontWeight: "500",
+                          padding: 0,
+                          cursor: "pointer",
+                          backgroundColor: selectedColor.includes(value.name)
+                            ? "#1976D250"
+                            : "#fff",
+                          color: "#000",
+                          transition: "background-color 0.3s",
+                        }}
+                      >
+                        {value.name}
+                      </Grid>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div> */}
+
+          <div className="bg-box mb-3 pb-0">
+            <div className="jps-measurements row">
+              <div className="col-md-6 col-12 mb-3">
+                <div item>
+                  <Typography
+                    variant="body1"
+                    fontWeight="bold"
+                    sx={{ textAlign: "left" }}
+                  >
+                    Milky
+                  </Typography>
+                </div>
+                {/* <div className="row ml-2">
+                  <div item style={{ textAlign: "left" }}>
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={clarityCheckbox.eyeClean}
+                          onChange={handleClarityCheckbox}
+                          name="eyeClean"
+                        />
+                      }
+                      label="Eye Clean"
+                    />
+                  </div>
+                  {diamondType === 0 && (
+                    <>
+                      <div item style={{ textAlign: "left" }}>
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              checked={clarityCheckbox.clarityEnhanced}
+                              onChange={handleClarityCheckbox}
+                              name="clarityEnhanced"
+                            />
+                          }
+                          label="Clarity Enhanced"
+                        />
+                      </div>
+                      <div item style={{ textAlign: "left" }}>
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              checked={clarityCheckbox.drill}
+                              onChange={handleClarityCheckbox}
+                              name="drill"
+                            />
+                          }
+                          label="Drill"
+                        />
+                      </div>
+                    </>
+                  )}
+                </div> */}
+                <div item>
+                  <div className="jps-lab-box">
+                    {milky.map((value) => (
+                      <Grid
+                        key={value.name}
+                        item
+                        onClick={() => toggleMilky(value.name)}
+                        sx={{
+                          display: "flex",
+                          flexDirection: "column",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          textAlign: "center",
+                          border: selectedMilky.includes(value.name)
+                            ? "1px solid #1976D2"
+                            : "1px solid #ccc",
+                          borderRadius: "4px",
+                          // height: "50px",
+                          // width: "100%",
+                          fontSize: "12px",
+                          fontWeight: "500",
+                          padding: 0,
+                          cursor: "pointer",
+                          backgroundColor: selectedMilky.includes(value.name)
+                            ? "#1976D250"
+                            : "#fff",
+                          color: "#000",
+                          transition: "background-color 0.3s",
+                        }}
+                      >
+                        {value.name}
+                      </Grid>
+                    ))}
+                  </div>
+                </div>
+              </div>
+              <div className="col-md-6 col-12 mb-3">
+                <div item>
+                  <Typography
+                    variant="body1"
+                    fontWeight="bold"
+                    sx={{ textAlign: "left" }}
+                  >
+                    Tinge
+                  </Typography>
+                </div>
+
+                <div item>
+                  <div className="jps-lab-box">
+                    {tinge.map((value) => (
+                      <Grid
+                        key={value.name}
+                        item
+                        onClick={() => toggleTinge(value.name)}
+                        sx={{
+                          display: "flex",
+                          flexDirection: "column",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          textAlign: "center",
+                          border: selectedTinge.includes(value.name)
+                            ? "1px solid #1976D2"
+                            : "1px solid #ccc",
+                          borderRadius: "4px",
+                          // height: "50px",
+                          // width: "100%",
+                          fontSize: "12px",
+                          fontWeight: "500",
+                          padding: 0,
+                          cursor: "pointer",
+                          backgroundColor: selectedTinge.includes(value.name)
+                            ? "#1976D250"
+                            : "#fff",
+                          color: "#000",
+                          transition: "background-color 0.3s",
+                        }}
+                      >
+                        {value.name}
+                      </Grid>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="row">
+            <div className="col-md-6 col-12 mb-3">
+              <div className="bg-box mb-3 pb-0">
+                <div className="jps-measurements row">
+                  <div className="col-md-12 col-12 ">
+                    <div item>
+                      <Typography
+                        variant="body1"
+                        fontWeight="bold"
+                        sx={{ textAlign: "left" }}
+                      >
+                        Cut, Polish, Symmetry
+                      </Typography>
+                    </div>
+                    <div
+                      className="col-md-12 col-12"
+                      style={{ padding: "0px" }}
+                    >
+                      {/* <div item style={{ textAlign: "left" }}>
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            checked={heartandarrowCheckbox.heartandarrow}
+                            onChange={handleHeartCheckbox}
+                            name="heartandarrow"
+                          />
+                        }
+                        label="Hearts and Arrows"
+                      />
+                    </div> */}
+                      {/* <div className="jps-lab-box">
+                      {(diamondType === 0 ? heart : labheart).map((value) => (
+                        <Grid
+                          key={value.name}
+                          item
+                          onClick={() => toggleSelection(value.name)}
+                          sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            textAlign: "center",
+                            border: selectedHeart.includes(value.name)
+                              ? "1px solid #1976D2"
+                              : "1px solid #ccc",
+                            borderRadius: "4px",
+                            // height: "50px",
+                            // width: "100%",
+                            fontSize: "12px",
+                            fontWeight: "500",
+                            padding: 0,
+                            cursor: "pointer",
+                            backgroundColor: selectedHeart.includes(value.name)
+                              ? "#1976D250"
+                              : "#fff",
+                            color: "#000",
+                            transition: "background-color 0.3s",
+                          }}
+                        >
+                          {value.name}
+                        </Grid>
+                      ))}
+                    </div> */}
+                    </div>
+                  </div>
+                  <div className="col-md-12 col-12 mb-3">
+                    <div item>
+                      <Typography
+                        variant="body1"
+                        fontWeight="bold"
+                        sx={{ textAlign: "left" }}
+                      >
+                        Cut
+                      </Typography>
+                    </div>
+                    <div item>
+                      <div className="jps-lab-box">
+                        {(diamondType === 0 ? cut : labcut).map((value) => (
+                          <Grid
+                            key={value.name}
+                            item
+                            onClick={() => toggleCut(value.value)}
+                            sx={{
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              textAlign: "center",
+                              border: selectedCut.includes(value.value)
+                                ? "1px solid #1976D2"
+                                : "1px solid #ccc",
+                              borderRadius: "4px",
+                              // height: "50px",
+                              // width: "100%",
+                              fontSize: "12px",
+                              fontWeight: "500",
+                              cursor: "pointer",
+                              backgroundColor: selectedCut.includes(value.value)
+                                ? "#1976D250"
+                                : "#fff",
+                              color: "#000",
+                              transition: "background-color 0.3s",
+                            }}
+                          >
+                            {value?.name || ""}
+                          </Grid>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="col-md-12 col-12 mb-3">
+                    <div item>
+                      <Typography
+                        variant="body1"
+                        fontWeight="bold"
+                        sx={{ textAlign: "left" }}
+                      >
+                        Polish
+                      </Typography>
+                    </div>
+                    <div item>
+                      <div className="jps-lab-box">
+                        {(diamondType === 0 ? polish : labpolish).map(
+                          (value) => (
+                            <Grid
+                              key={value.name}
+                              item
+                              onClick={() => togglePolish(value.value)}
+                              sx={{
+                                display: "flex",
+                                flexDirection: "column",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                textAlign: "center",
+                                border: selectedPolish.includes(value.value)
+                                  ? "1px solid #1976D2"
+                                  : "1px solid #ccc",
+                                borderRadius: "4px",
+                                // height: "50px",
+                                // width: "100%",
+                                fontSize: "12px",
+                                fontWeight: "500",
+                                padding: 0,
+                                cursor: "pointer",
+                                backgroundColor: selectedPolish.includes(
+                                  value.value
+                                )
+                                  ? "#1976D250"
+                                  : "#fff",
+                                color: "#000",
+                                transition: "background-color 0.3s",
+                              }}
+                            >
+                              {value?.name || ""}
+                            </Grid>
+                          )
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="col-md-12 col-12 mb-3">
+                    <div item>
+                      <Typography
+                        variant="body1"
+                        fontWeight="bold"
+                        sx={{ textAlign: "left" }}
+                      >
+                        Symmetry
+                      </Typography>
+                    </div>
+                    <div item>
+                      <div className="jps-lab-box">
+                        {(diamondType === 0 ? symmetry : labsymmetry).map(
+                          (value) => (
+                            <Grid
+                              key={value.name}
+                              item
+                              onClick={() => toggleSymmetry(value.value)}
+                              sx={{
+                                display: "flex",
+                                flexDirection: "column",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                textAlign: "center",
+                                border: selectedSymmetry.includes(value.value)
+                                  ? "1px solid #1976D2"
+                                  : "1px solid #ccc",
+                                borderRadius: "4px",
+                                // height: "50px",
+                                // width: "100%",
+                                fontSize: "12px",
+                                fontWeight: "500",
+                                padding: 0,
+                                cursor: "pointer",
+                                backgroundColor: selectedSymmetry.includes(
+                                  value.value
+                                )
+                                  ? "#1976D250"
+                                  : "#fff",
+                                color: "#000",
+                                transition: "background-color 0.3s",
+                              }}
+                            >
+                              {value?.name || ""}
+                            </Grid>
+                          )
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="col-md-6 col-12 mb-3">
+              {/* <div className="bg-box mb-2 pb-0">
+                <div className="jps-measurements row">
+                  <div className="col-md-6 col-12 mb-3">
+                    <div item>
+                      <Typography
+                        variant="body1"
+                        fontWeight="bold"
+                        sx={{ textAlign: "left" }}
+                      >
+                        Caret
+                      </Typography>
+                    </div>
+
+                    <div className="jps-measur-box">
+                      <div item>
+                        <TextInput
+                          label={"Min, ct"}
+                          name="min"
+                          type="number"
+                          value={caratRange.min}
+                          onChange={handleCaratChange}
+                          customBg={true}
+                        />
+                      </div>
+
+                      <div item>
+                        <i class="fa-solid fa-chevron-right"></i>
+                      </div>
+
+                      <div item>
+                        <TextInput
+                          label={"Max, ct"}
+                          name="max"
+                          type="number"
+                          value={caratRange.max}
+                          onChange={handleCaratChange}
+                          customBg={true}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div> */}
+              <div className="bg-box mb-2 pb-0">
+                <div className="jps-measurements row">
+                  <div className="col-md-6 col-12 mb-3">
+                    <div item>
+                      <Typography
+                        variant="body1"
+                        fontWeight="bold"
+                        sx={{ textAlign: "left" }}
+                      >
+                        Fluorescence
+                      </Typography>
+                    </div>
+                    <div item>
+                      <div className="jps-lab-box">
+                        {fluorescence.map((value) => (
+                          <Grid
+                            key={value.name}
+                            item
+                            onClick={() => toggleFluroescene(value.value)}
+                            sx={{
+                              display: "flex",
+                              flexDirection: "column",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              textAlign: "center",
+                              border: selectedFluroescene.includes(value.value)
+                                ? "1px solid #1976D2"
+                                : "1px solid #ccc",
+                              borderRadius: "4px",
+                              fontSize: "12px",
+                              fontWeight: "500",
+                              padding: 0,
+                              cursor: "pointer",
+                              backgroundColor: selectedFluroescene.includes(
+                                value.value
+                              )
+                                ? "#1976D250"
+                                : "#fff",
+                              color: "#000",
+                              transition: "background-color 0.3s",
+                            }}
+                          >
+                            {value?.name || ""}
+                          </Grid>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="col-md-6 col-12 mb-3">
+                    <div item>
+                      <Typography
+                        variant="body1"
+                        fontWeight="bold"
+                        sx={{ textAlign: "left" }}
+                      >
+                        Lab
+                      </Typography>
+                    </div>
+                    <div item>
+                      <div className="jps-lab-box">
+                        {(diamondType === 0 ? lab : labgrownlab).map(
+                          (value) => (
+                            <Grid
+                              key={value.name}
+                              item
+                              onClick={() => toggleLab(value.name)}
+                              sx={{
+                                display: "flex",
+                                flexDirection: "column",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                textAlign: "center",
+                                border: selectedLab.includes(value.name)
+                                  ? "1px solid #1976D2"
+                                  : "1px solid #ccc",
+                                borderRadius: "4px",
+                                fontSize: "12px",
+                                fontWeight: "500",
+                                padding: 0,
+                                cursor: "pointer",
+                                backgroundColor: selectedLab.includes(
+                                  value.name
+                                )
+                                  ? "#1976D250"
+                                  : "#fff",
+                                color: "#000",
+                                transition: "background-color 0.3s",
+                              }}
+                            >
+                              {value?.name || ""}
+                            </Grid>
+                          )
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="bg-box mb-2">
+                {/* <div item>
+                  <Tabs
+                    value={tabValue}
+                    onChange={handleChange}
+                    aria-label="price tabs"
+                    sx={{
+                      minHeight: "40px",
+                      "& .MuiTab-root": {
+                        minWidth: "auto",
+                        textTransform: "none",
+                      },
+                    }}
+                  >
+                    <Tab
+                      label={
+                        <Typography variant="body1" fontWeight="bold">
+                          Total Price
+                        </Typography>
+                      }
+                      sx={{
+                        px: 2,
+                        outline: "none !important",
+                        "&:focus": { outline: "none" },
+                        "&.Mui-selected:focus": { outline: "none" },
+                        "&.Mui-focusVisible": { outline: "none" },
+                      }}
+                    />
+                    <Tab
+                      label={
+                        <Typography variant="body1" fontWeight="bold">
+                          P/ct
+                        </Typography>
+                      }
+                      sx={{
+                        px: 2,
+                        outline: "none !important",
+                        "&:focus": { outline: "none" },
+                        "&.Mui-selected:focus": { outline: "none" },
+                        "&.Mui-focusVisible": { outline: "none" },
+                      }}
+                    />
+                  </Tabs>
+                </div>
+
+                <div className="jps-measurements row">
+                  <div className="col-lg-8 col-md-12 col-12">
+                    <div className="jps-measur-box">
+                      <div item>
+                        <TextInput
+                          label={"Min, $"}
+                          name="min"
+                          type="text"
+                          value={
+                            totalPriceRange.min !== ""
+                              ? `$${totalPriceRange.min}`
+                              : ""
+                          }
+                          onChange={handlePriceChange}
+                          onBlur={handlePriceBlur}
+                          customBg={true}
+                        />
+                      </div>
+
+                      <div item>
+                        <i class="fa-solid fa-chevron-right"></i>
+                      </div>
+
+                      <div item>
+                        <TextInput
+                          label={"Max, $"}
+                          name="max"
+                          type="text"
+                          value={
+                            totalPriceRange.max ? `$${totalPriceRange.max}` : ""
+                          }
+                          onChange={handlePriceChange}
+                          onBlur={handlePriceBlur}
+                          customBg={true}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div> */}
+                <div className="row">
+                  <div className="col-lg-6 col-md-12 col-12 mb-3">
+                    <div item>
+                      <Typography
+                        variant="body1"
+                        fontWeight="bold"
+                        sx={{ textAlign: "left" }}
+                      >
+                        Caret
+                      </Typography>
+                    </div>
+
+                    <div
+                      className="jps-measur-box"
+                      style={{ marginTop: "39px" }}
+                    >
+                      <div item>
+                        <TextInput
+                          label={"Min, ct"}
+                          name="min"
+                          type="number"
+                          value={caratRange.min}
+                          onChange={handleCaratChange}
+                          customBg={true}
+                        />
+                      </div>
+
+                      <div item>
+                        <i class="fa-solid fa-chevron-right"></i>
+                      </div>
+
+                      <div item>
+                        <TextInput
+                          label={"Max, ct"}
+                          name="max"
+                          type="number"
+                          value={caratRange.max}
+                          onChange={handleCaratChange}
+                          customBg={true}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="col-lg-6 col-md-12 col-12 mb-3">
+                    <div item>
+                      <Tabs
+                        value={tabValue}
+                        onChange={handleChange}
+                        aria-label="price tabs"
+                        sx={{
+                          minHeight: "40px",
+                          "& .MuiTab-root": {
+                            minWidth: "auto",
+                            textTransform: "none",
+                          },
+                        }}
+                      >
+                        <Tab
+                          label={
+                            <Typography variant="body1" fontWeight="bold">
+                              Total Price
+                            </Typography>
+                          }
+                          sx={{
+                            px: 2,
+                            outline: "none !important",
+                            "&:focus": { outline: "none" },
+                            "&.Mui-selected:focus": { outline: "none" },
+                            "&.Mui-focusVisible": { outline: "none" },
+                          }}
+                        />
+                        <Tab
+                          label={
+                            <Typography variant="body1" fontWeight="bold">
+                              P/ct
+                            </Typography>
+                          }
+                          sx={{
+                            px: 2,
+                            outline: "none !important",
+                            "&:focus": { outline: "none" },
+                            "&.Mui-selected:focus": { outline: "none" },
+                            "&.Mui-focusVisible": { outline: "none" },
+                          }}
+                        />
+                      </Tabs>
+                    </div>
+
+                    <div className="jps-measurements row">
+                      <div className=" col-md-12 col-12">
+                        <div className="jps-measur-box">
+                          <div item>
+                            <TextInput
+                              label={"Min, $"}
+                              name="min"
+                              type="text"
+                              value={
+                                totalPriceRange.min !== ""
+                                  ? `$${totalPriceRange.min}`
+                                  : ""
+                              }
+                              onChange={handlePriceChange}
+                              onBlur={handlePriceBlur}
+                              customBg={true}
+                            />
+                          </div>
+
+                          <div item>
+                            <i class="fa-solid fa-chevron-right"></i>
+                          </div>
+
+                          <div item>
+                            <TextInput
+                              label={"Max, $"}
+                              name="max"
+                              type="text"
+                              value={
+                                totalPriceRange.max
+                                  ? `$${totalPriceRange.max}`
+                                  : ""
+                              }
+                              onChange={handlePriceChange}
+                              onBlur={handlePriceBlur}
+                              customBg={true}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* {diamondType !== 0 && (
+            <Grid
+              container
+              spacing={2}
+              sx={{
+                p: 2,
+                borderRadius: 2,
+                border: "1px solid #E0E0E0",
+                backgroundColor: "#F8F9FA",
+                mt: 3,
+              }}
+            >
+              <Grid
+                container
+                item
+                xs={6}
+                style={{ display: "flex" }}
+                spacing={2}
+              >
+                <Grid item xs={6}>
+                  <Typography
+                    variant="body1"
+                    fontWeight="bold"
+                    sx={{ textAlign: "left" }}
+                  >
+                    Growth Type
+                  </Typography>
+                </Grid>
+                <Grid container item xs={12}>
+                  <Grid item>
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={growthtypeCheckbox.cvd}
+                          onChange={handleGrowthTypeCheckbox}
+                          name="cvd"
+                        />
+                      }
+                      label="CVD"
+                    />
+                  </Grid>
+                  <Grid item>
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={growthtypeCheckbox.hpht}
+                          onChange={handleGrowthTypeCheckbox}
+                          name="hpht"
+                        />
+                      }
+                      label="HPHT"
+                    />
+                  </Grid>
+                  <Grid item>
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={growthtypeCheckbox.others}
+                          onChange={handleGrowthTypeCheckbox}
+                          name="others"
+                        />
+                      }
+                      label="Others"
+                    />
+                  </Grid>
+                </Grid>
+              </Grid>
+
+              <Grid
+                container
+                item
+                xs={6}
+                style={{ display: "flex" }}
+                spacing={2}
+              >
+                <Grid item xs={6}>
+                  <Typography
+                    variant="body1"
+                    fontWeight="bold"
+                    sx={{ textAlign: "left" }}
+                  >
+                    Treatment
+                  </Typography>
+                </Grid>
+                <Grid container item xs={12}>
+                  <Grid item>
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={treatmentCheckbox.asGrown}
+                          onChange={handleTreatmentCheckbox}
+                          name="asGrown"
+                        />
+                      }
+                      label="As Grown"
+                    />
+                  </Grid>
+                  <Grid item>
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={treatmentCheckbox.treated}
+                          onChange={handleTreatmentCheckbox}
+                          name="treated"
+                        />
+                      }
+                      label="Treated"
+                    />
+                  </Grid>
+                  <Grid item>
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={treatmentCheckbox.unknown}
+                          onChange={handleTreatmentCheckbox}
+                          name="unknown"
+                        />
+                      }
+                      label="Unknown"
+                    />
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+          )} */}
+          {diamondType !== 0 && (
+            <div className="bg-box mb-3 pb-0">
+              <div className="jps-measurements row">
+                <div className="col-md-6 col-12 mb-3">
+                  <div item>
+                    <Typography
+                      variant="body1"
+                      fontWeight="bold"
+                      sx={{ textAlign: "left" }}
+                    >
+                      Growth Type
+                    </Typography>
+                  </div>
+                  <div className="row ml-2">
+                    <div item style={{ textAlign: "left" }}>
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            checked={growthtypeCheckbox.cvd}
+                            onChange={handleGrowthTypeCheckbox}
+                            name="cvd"
+                          />
+                        }
+                        label="CVD"
+                      />
+                    </div>
+                    <div item style={{ textAlign: "left" }}>
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            checked={growthtypeCheckbox.hpht}
+                            onChange={handleGrowthTypeCheckbox}
+                            name="hpht"
+                          />
+                        }
+                        label="HPHT"
+                      />
+                    </div>
+                    <div item style={{ textAlign: "left" }}>
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            checked={growthtypeCheckbox.others}
+                            onChange={handleGrowthTypeCheckbox}
+                            name="others"
+                          />
+                        }
+                        label="Others"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* <div className="col-md-6 col-12 mb-3">
+                  <div item>
+                    <Typography
+                      variant="body1"
+                      fontWeight="bold"
+                      sx={{ textAlign: "left" }}
+                    >
+                      Treatment
+                    </Typography>
+                  </div>
+                  <div className="row ml-2">
+                    <div item style={{ textAlign: "left" }}>
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            checked={treatmentCheckbox.asGrown}
+                            onChange={handleTreatmentCheckbox}
+                            name="asGrown"
+                          />
+                        }
+                        label="As Grown"
+                      />
+                    </div>
+                    <div item style={{ textAlign: "left" }}>
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            checked={treatmentCheckbox.treated}
+                            onChange={handleTreatmentCheckbox}
+                            name="treated"
+                          />
+                        }
+                        label="Treated"
+                      />
+                    </div>
+                    <div item style={{ textAlign: "left" }}>
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            checked={treatmentCheckbox.unknown}
+                            onChange={handleTreatmentCheckbox}
+                            name="unknown"
+                          />
+                        }
+                        label="Unknown"
+                      />
+                    </div>
+                  </div>
+                </div> */}
+              </div>
+            </div>
+          )}
+          <div className="bg-box">
+            <div item xs={12}>
               <Typography
                 variant="body1"
                 fontWeight="bold"
@@ -815,132 +2475,285 @@ const DiamondsGrid = ({ diamond }) => {
               >
                 Measurements
               </Typography>
-            </Grid>
-            <Grid
-              container
-              item
-              xs={12}
-              style={{ display: "flex" }}
-              spacing={2}
+            </div>
+            <div className="jps-measurements row">
+              <div className="col-md-4 col-12">
+                <div className="jps-measur-box">
+                  <div item>
+                    <TextInput
+                      label={"Depth, Min, %"}
+                      name="min"
+                      type="number"
+                      value={depthRange.min}
+                      onChange={handleDepthChange}
+                      customBg={true}
+                    />
+                  </div>
+
+                  <div item>
+                    <i class="fa-solid fa-chevron-right"></i>
+                  </div>
+
+                  <div item>
+                    <TextInput
+                      label={"Depth, Max, %"}
+                      name="max"
+                      type="number"
+                      value={depthRange.max}
+                      onChange={handleDepthChange}
+                      customBg={true}
+                    />
+                  </div>
+                </div>
+                <div className="jps-measur-box">
+                  <div item>
+                    <TextInput
+                      label={"Length, Min, mm"}
+                      name="min"
+                      type="number"
+                      value={lengthrange.min}
+                      onChange={handleLengthChange}
+                      customBg={true}
+                    />
+                  </div>
+
+                  <div item>
+                    <i class="fa-solid fa-chevron-right"></i>
+                  </div>
+
+                  <div item>
+                    <TextInput
+                      label={"Length, Max, mm"}
+                      name="max"
+                      type="number"
+                      value={lengthrange.max}
+                      onChange={handleLengthChange}
+                      customBg={true}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="col-md-4 col-12">
+                <div className="jps-measur-box">
+                  <div item>
+                    <TextInput
+                      label={"Table, Min, %"}
+                      name="min"
+                      type="number"
+                      value={tableRange.min}
+                      onChange={handleTableChange}
+                      customBg={true}
+                    />
+                  </div>
+
+                  <div item>
+                    <i class="fa-solid fa-chevron-right"></i>
+                  </div>
+
+                  <div item>
+                    <TextInput
+                      label={"Table, Max, %"}
+                      name="max"
+                      type="number"
+                      value={tableRange.max}
+                      onChange={handleTableChange}
+                      customBg={true}
+                    />
+                  </div>
+                </div>
+
+                <div className="jps-measur-box">
+                  <div item>
+                    <TextInput
+                      label={"Width, Min, mm"}
+                      name="min"
+                      type="number"
+                      value={widthrange.min}
+                      onChange={handleWidthChange}
+                      customBg={true}
+                    />
+                  </div>
+
+                  <div item>
+                    <i class="fa-solid fa-chevron-right"></i>
+                  </div>
+
+                  <div item>
+                    <TextInput
+                      label={"Width, Max, mm"}
+                      name="max"
+                      type="number"
+                      value={widthrange.max}
+                      onChange={handleWidthChange}
+                      customBg={true}
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="col-md-4 col-12">
+                <div className="jps-measur-box">
+                  <div item>
+                    <TextInput
+                      label={"Radio, Min"}
+                      name="min"
+                      type="number"
+                      value={radioRange.min}
+                      onChange={handleRadioChange}
+                      customBg={true}
+                    />
+                  </div>
+
+                  <div item>
+                    <i class="fa-solid fa-chevron-right"></i>
+                  </div>
+
+                  <div item>
+                    <TextInput
+                      label={"Radio, Max"}
+                      name="max"
+                      type="number"
+                      value={radioRange.max}
+                      onChange={handleRadioChange}
+                      customBg={true}
+                    />
+                  </div>
+                </div>
+
+                <div className="jps-measur-box">
+                  <div item>
+                    <TextInput
+                      label={"Depth, Min, mm"}
+                      name="min"
+                      type="number"
+                      value={depthmmrange.min}
+                      onChange={handleDepthMMChange}
+                      customBg={true}
+                    />
+                  </div>
+
+                  <div item>
+                    <i class="fa-solid fa-chevron-right"></i>
+                  </div>
+
+                  <div item>
+                    <TextInput
+                      label={"Depth, Max, mm"}
+                      name="max"
+                      type="number"
+                      value={depthmmrange.max}
+                      onChange={handleDepthMMChange}
+                      customBg={true}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div className="container">
+          <div className="row">
+            {diamonds.map((diamond, index) => (
+              <div key={index} className="col-md-3 col-sm-6">
+                <div
+                  className="diamond-card"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    navigate("/diamonddetail", { state: { diamond } });
+                  }}
+                >
+                  <div className="shopimg">
+                    <img
+                      src={diamond.Image}
+                      alt={diamond.Shape}
+                      className="diamond-img"
+                    />
+                  </div>
+                  <h6 className="mt-3 diamond-name">
+                    {diamond.Carats} CARAT {diamond.Shape} - {diamond.Lab}
+                  </h6>
+                  <p className="price">${diamond.Amount.toFixed(2)}</p>
+                  <span
+                    className="add-to-cart"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleAddToCart(diamond, true);
+                    }}
+                  >
+                    Add to cart <span className="arrowbtn">→</span>
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div
+            className="mb-3"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "10px",
+              justifyContent: "end",
+            }}
+          >
+            <Button
+              variant="contained"
+              onClick={handleClick}
+              style={{
+                textTransform: "none",
+                backgroundColor: "#C9A236",
+                color: "#fff",
+              }}
             >
-              <Grid
-                item
-                xs={6}
-                container
-                style={{ display: "flex" }}
-                spacing={2}
-              >
-                <Grid item alignItems={"center"} style={{ display: "flex" }}>
-                  <TextInput label={"Depth, Min, %"} />
-                </Grid>
+              {itemsPerPage}
+            </Button>
+            <Menu
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={handleClose}
+              style={{ outline: "none", border: "none" }}
+            >
+              {[12, 28, 52, 100].map((perPage) => (
+                <MenuItem
+                  key={perPage}
+                  onClick={() => handleClose(perPage)}
+                  style={{ outline: "none", border: "none" }}
+                >
+                  {perPage}
+                </MenuItem>
+              ))}
+            </Menu>
 
-                <Grid item alignItems={"center"} style={{ display: "flex" }}>
-                  <i class="fa-solid fa-greater-than"></i>
-                </Grid>
+            <IconButton
+              onClick={handlePrevPage}
+              disabled={currentPage === 1}
+              style={{
+                backgroundColor: "#C9A236",
+                color: "#fff",
+                outline: "none",
+              }}
+            >
+              <ArrowLeftIcon />
+            </IconButton>
 
-                <Grid item alignItems={"center"} style={{ display: "flex" }}>
-                  <TextInput label={"Depth, Max, %"} />
-                </Grid>
-              </Grid>
-              <Grid
-                item
-                xs={6}
-                container
-                style={{ display: "flex" }}
-                spacing={2}
-              >
-                <Grid item alignItems={"center"} style={{ display: "flex" }}>
-                  <TextInput label={"Table, Min, %"} />
-                </Grid>
+            <Typography variant="body1">
+              Page {currentPage} of {totalPages}
+            </Typography>
 
-                <Grid item alignItems={"center"} style={{ display: "flex" }}>
-                  <i class="fa-solid fa-greater-than"></i>
-                </Grid>
-
-                <Grid item alignItems={"center"} style={{ display: "flex" }}>
-                  <TextInput label={"Table, Max, %"} />
-                </Grid>
-              </Grid>
-              <Grid
-                item
-                xs={6}
-                container
-                style={{ display: "flex" }}
-                spacing={2}
-              >
-                <Grid item alignItems={"center"} style={{ display: "flex" }}>
-                  <TextInput label={"Radio, Min"} />
-                </Grid>
-
-                <Grid item alignItems={"center"} style={{ display: "flex" }}>
-                  <i class="fa-solid fa-greater-than"></i>
-                </Grid>
-
-                <Grid item alignItems={"center"} style={{ display: "flex" }}>
-                  <TextInput label={"Radio, Max"} />
-                </Grid>
-              </Grid>
-              <Grid
-                item
-                xs={6}
-                container
-                style={{ display: "flex" }}
-                spacing={2}
-              >
-                <Grid item alignItems={"center"} style={{ display: "flex" }}>
-                  <TextInput label={"Length, Min, mm"} />
-                </Grid>
-
-                <Grid item alignItems={"center"} style={{ display: "flex" }}>
-                  <i class="fa-solid fa-greater-than"></i>
-                </Grid>
-
-                <Grid item alignItems={"center"} style={{ display: "flex" }}>
-                  <TextInput label={"Length, Max, mm"} />
-                </Grid>
-              </Grid>
-              <Grid
-                item
-                xs={6}
-                container
-                style={{ display: "flex" }}
-                spacing={2}
-              >
-                <Grid item alignItems={"center"} style={{ display: "flex" }}>
-                  <TextInput label={"Width, Min, mm"} />
-                </Grid>
-
-                <Grid item alignItems={"center"} style={{ display: "flex" }}>
-                  <i class="fa-solid fa-greater-than"></i>
-                </Grid>
-
-                <Grid item alignItems={"center"} style={{ display: "flex" }}>
-                  <TextInput label={"Width, Max, mm"} />
-                </Grid>
-              </Grid>
-              <Grid
-                item
-                xs={6}
-                container
-                style={{ display: "flex" }}
-                spacing={2}
-              >
-                <Grid item alignItems={"center"} style={{ display: "flex" }}>
-                  <TextInput label={"Depth, Min, mm"} />
-                </Grid>
-
-                <Grid item alignItems={"center"} style={{ display: "flex" }}>
-                  <i class="fa-solid fa-greater-than"></i>
-                </Grid>
-
-                <Grid item alignItems={"center"} style={{ display: "flex" }}>
-                  <TextInput label={"Depth, Max, mm"} />
-                </Grid>
-              </Grid>
-            </Grid>
-          </Grid>
-        </Grid>
-      </Container>
+            <IconButton
+              onClick={handleNextPage}
+              disabled={currentPage === totalPages}
+              style={{
+                backgroundColor: "#C9A236",
+                color: "#fff",
+                outline: "none",
+              }}
+            >
+              <ArrowRightIcon />
+            </IconButton>
+          </div>
+        </div>
+      )}
     </>
   );
 };

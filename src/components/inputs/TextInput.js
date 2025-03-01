@@ -12,6 +12,7 @@ const TextInput = ({
   required,
   multiline,
   rows,
+  customBg,
 }) => {
   return (
     <Grid item xs={12} sm={12}>
@@ -22,12 +23,15 @@ const TextInput = ({
         required={required}
         name={name}
         value={value}
-        onChange={onChange} // ✅ Handles input change
-        onBlur={onBlur} // ✅ Triggers validation on blur
-        error={error} // ✅ Displays error if validation fails
-        helperText={helperText} // ✅ Shows validation message
-        multiline={multiline} // ✅ Enables textarea mode
+        onChange={onChange}
+        onBlur={onBlur}
+        error={error}
+        helperText={helperText}
+        multiline={multiline}
         rows={multiline ? rows : undefined}
+        InputProps={{
+          style: customBg ? { backgroundColor: "#fff" } : {},
+        }}
       />
     </Grid>
   );

@@ -9,16 +9,21 @@ export const diamondsApi = createApi({
   tagTypes: ["Diamonds"], // Add tag
   endpoints: (builder) => ({
     fetchDiamonds: builder.query({
-      query: ({ pageNumber, pageSize }) =>
-        `/stock/data/page?pageNumber=${pageNumber}&pageSize=${pageSize}`,
-      providesTags: ["Diamonds"], // Provide tag to enable invalidation
+      query: ({pageNumber, pageSize, filterData}) => ({
+        url: `/stock/data/page?pageNumber=${pageNumber}&pageSize=${pageSize}`,
+        method: "POST",
+        body: filterData,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }),
+      invalidatesTags: ["Diamonds"],
     }),
   }),
 });
 
 export const fetchCaretData = () => async (dispatch) => {
   try {
-
     const res = await AxiosInstance.get(
       `http://localhost:5000/api/stock/caretdata`
     );
@@ -56,9 +61,9 @@ const shopSlice = createSlice({
     setCaretData: (state, action) => {
       state.caretData = action.payload; // Directly set the array
     },
-    
   },
 });
 
-export const { setItemsPerPage, setCurrentPage, setTotalPages, setCaretData } = shopSlice.actions;
+export const { setItemsPerPage, setCurrentPage, setTotalPages, setCaretData } =
+  shopSlice.actions;
 export default shopSlice.reducer;

@@ -253,52 +253,71 @@ const fetchDiamondsPageDetails = async (query) => {
 
     const matchStage = { IsDelete: false };
 
-    if (query.Shape) {
+    if (query.IsNatural === true) {
+      matchStage.IsNatural = true;
+    }
+    if (query.IsLabgrown === true) {
+      matchStage.IsLabgrown = true;
+    }
+
+    if (query.Shape?.length) {
       matchStage.Shape = Array.isArray(query.Shape)
         ? { $in: query.Shape }
         : query.Shape;
     }
 
-    if (query.Color) {
+    if (query.Color?.length) {
       matchStage.Color = Array.isArray(query.Color)
         ? { $in: query.Color }
         : query.Color;
     }
 
-    if (query.Clarity) {
+    if (query.Clarity?.length) {
       matchStage.Clarity = Array.isArray(query.Clarity)
         ? { $in: query.Clarity }
         : query.Clarity;
     }
 
-    if (query.Cut) {
+    if (query.Cut?.length) {
       matchStage.Cut = Array.isArray(query.Cut)
         ? { $in: query.Cut }
         : query.Cut;
     }
 
-    if (query.Polish) {
+    if (query.Polish?.length) {
       matchStage.Polish = Array.isArray(query.Polish)
         ? { $in: query.Polish }
         : query.Polish;
     }
 
-    if (query.Symm) {
+    if (query.Symm?.length) {
       matchStage.Symm = Array.isArray(query.Symm)
         ? { $in: query.Symm }
         : query.Symm;
     }
 
-    if (query.FluoInt) {
+    if (query.FluoInt?.length) {
       matchStage.FluoInt = Array.isArray(query.FluoInt)
         ? { $in: query.FluoInt }
         : query.FluoInt;
     }
 
-    if (query.Lab) {
+    if (query.Lab?.length) {
       matchStage.Lab = Array.isArray(query.Lab)
         ? { $in: query.Lab }
         : query.Lab;
+    }
+    
+    if (query.Milky?.length) {
+      matchStage.Milky = Array.isArray(query.Milky)
+        ? { $in: query.Milky }
+        : query.Milky;
+    }
+
+    if (query.Tinge?.length) {
+      matchStage.Tinge = Array.isArray(query.Tinge)
+        ? { $in: query.Tinge }
+        : query.Tinge;
     }
 
     if (query.minCt || query.maxCt) {
@@ -477,7 +496,7 @@ const fetchDiamondsPageDetails = async (query) => {
     );
 
     return {
-      statusCode: diamondDetailsPage.length > 0 ? 200 : 204,
+      statusCode: 200,
       message:
         diamondDetailsPage.length > 0
           ? "diamondDetailsPage retrieved successfully"
@@ -498,10 +517,12 @@ const fetchDiamondsPageDetails = async (query) => {
 };
 
 // **Route Handler**
-router.get("/data/page", async function (req, res) {
+router.post("/data/page", async function (req, res) {
   try {
     const { pageSize, pageNumber } = req.query;
     let {
+      IsNatural,
+      IsLabgrown,
       Shape,
       minCt,
       maxCt,
@@ -512,6 +533,8 @@ router.get("/data/page", async function (req, res) {
       Symm,
       FluoInt,
       Lab,
+      Milky,
+      Tinge,
       minDepth,
       maxDepth,
       minTable,
@@ -532,7 +555,7 @@ router.get("/data/page", async function (req, res) {
       maxPrice,
     } = req.body;
 
-    [Shape, Color, Clarity, Cut, Polish, Symm, FluoInt, Lab] = [
+    [Shape, Color, Clarity, Cut, Polish, Symm, FluoInt, Lab, Milky, Tinge, ] = [
       Shape,
       Color,
       Clarity,
@@ -541,11 +564,15 @@ router.get("/data/page", async function (req, res) {
       Symm,
       FluoInt,
       Lab,
+      Milky,
+      Tinge,
     ].map((val) => (val && !Array.isArray(val) ? [val] : val));
 
     const result = await fetchDiamondsPageDetails({
       pageSize,
       pageNumber,
+      IsNatural,
+      IsLabgrown,
       Shape,
       minCt,
       maxCt,
@@ -556,6 +583,8 @@ router.get("/data/page", async function (req, res) {
       Symm,
       FluoInt,
       Lab,
+      Milky,
+      Tinge,
       minDepth,
       maxDepth,
       minTable,

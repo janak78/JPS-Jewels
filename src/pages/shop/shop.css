@@ -56,7 +56,7 @@ h5 {
 }
 
 .diamond-name:hover {
-  color: #C9A236;
+  color: #c9a236;
 }
 
 .price {
@@ -68,7 +68,7 @@ h5 {
 }
 
 .price:hover {
-  color: #C9A236;
+  color: #c9a236;
   cursor: pointer;
 }
 
@@ -104,7 +104,7 @@ a:hover {
 }
 
 .add-to-cart:hover {
-  color: #C9A236;
+  color: #c9a236;
   transform: translateX(5px);
 }
 
@@ -167,3 +167,51 @@ a:hover {
     max-width: 100%;
   }
 } */
+.jps-measurements {
+  /* display: flex; */
+  /* gap: 20px; */
+}
+.jps-measur-box {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+  align-items: center;
+  justify-content: space-between;
+}
+.bg-box {
+  padding: 16px;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  background-color: #f8f9fa;
+}
+.jps-lab-box {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 15px;
+}
+.jps-lab-box div {
+  width: fit-content !important;
+  padding: 15px 20px;
+}
+
+@media (max-width: 348px) {
+  .reset-buttons {
+    text-align: left !important;
+    display: flex;
+    flex-direction: column;
+    margin-left: 0px !important;
+    /* justify-content: start !important;
+    align-items: start !important; */
+  }
+  .apply-filter {
+    margin-left: 0px !important;
+    margin-top: 10px !important;
+  }
+  .lab-grown-diamond {
+    font-size: 14px !important;
+  }
+  .natural-diamond {
+    font-size: 14px !important;
+  }
+}
