@@ -30,6 +30,9 @@ router.post(
           .json({ success: false, message: "No file uploaded" });
       }
 
+      const isNatural = req.body.IsNatural; 
+      const isLabgrown = req.body.IsLabgrown;
+
       const fileName = req.file.filename;
       const fileData = `./${fileName}`;
       const workbook = XLSX.readFile(fileData);
@@ -66,6 +69,8 @@ router.post(
         "Lab",
         "SKU",
         "Sr.No",
+        "IsNatural",
+        "IsLabgrown",
       ];
 
       for (const data of jsonData) {
@@ -115,6 +120,8 @@ router.post(
             Lab: data.Lab,
             SKU: data.SKU,
             SrNo: data["Sr.No"],
+            IsNatural: isNatural,
+            IsLabgrown: isLabgrown,
           },
           { upsert: true, new: true }
         );

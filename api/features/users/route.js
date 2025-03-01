@@ -9,6 +9,7 @@ const Billing = require("../billing/model");
 const addtocart = require("../cart/model");
 const signup = require("./model");
 const { verifyLoginToken } = require("../authentication/authentication");
+const { decryptData, encryptData } = require("../../authentication");
 
 const router = express.Router();
 
@@ -63,7 +64,9 @@ const createUser = async (data) => {
     });
 
     if (existingUser) {
-      const duplicateField = Object.keys(data).find((key) => existingUser[key] === data[key]);
+      const duplicateField = Object.keys(data).find(
+        (key) => existingUser[key] === data[key]
+      );
       return { statusCode: 400, message: `${duplicateField} already exists.` };
     }
 
@@ -72,16 +75,24 @@ const createUser = async (data) => {
     data.createdAt = moment().utcOffset(330).format("YYYY-MM-DD HH:mm:ss");
     data.updatedAt = data.createdAt;
 
-    // Hash the password
-    data.UserPassword = await bcrypt.hash(data.UserPassword, 10);
+    // Hash the password using the separate function
+    data.UserPassword = await encryptData(data.UserPassword);
 
     // Save user to the database
     const userToSave = await Signup.create(data);
 
-    return { statusCode: 200, message: "User Created Successfully", data: userToSave };
+    return {
+      statusCode: 200,
+      message: "User Created Successfully",
+      data: userToSave,
+    };
   } catch (error) {
     console.error("Error creating user:", error.message);
-    return { statusCode: 500, message: "Failed to create user.", error: error.message };
+    return {
+      statusCode: 500,
+      message: "Failed to create user.",
+      error: error.message,
+    };
   }
 };
 
@@ -92,7 +103,10 @@ router.post("/signup", async (req, res) => {
     res.status(response.statusCode).json(response);
   } catch (error) {
     console.error("Signup error:", error.message);
-    res.status(500).json({ statusCode: 500, message: "Something went wrong, please try later!" });
+    res.status(500).json({
+      statusCode: 500,
+      message: "Something went wrong, please try later!",
+    });
   }
 });
 
@@ -118,14 +132,19 @@ const getUser = async (UserId, req) => {
           PrimaryEmail: 1,
           FirstName: 1,
           LastName: 1,
+          UserPassword: 1,
         },
       },
     ]);
 
+    if (Userdata[0]?.UserPassword) {
+      Userdata[0].UserPassword = decryptData(Userdata[0]?.UserPassword);
+    }
+
     return {
       statusCode: 200,
       message: "User geted Successfully",
-      data: Userdata,
+      data: Userdata[0],
     };
   } catch (error) {
     return {
@@ -136,10 +155,68 @@ const getUser = async (UserId, req) => {
   }
 };
 
-router.get("/userdata", verifyLoginToken, async (req, res) => {
+router.get("/userdata", async (req, res) => {
   try {
     const { UserId } = req.query;
     const response = await getUser(UserId);
+    res.status(response.statusCode).json(response);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({
+      statusCode: 500,
+      message: "Something went wrong, please try later!",
+    });
+  }
+});
+
+const updateUserProfile = async (UserId, data) => {
+  try {
+    const userExists = await Signup.findOne({ UserId, IsDelete: false });
+
+    if (!userExists) {
+      return {
+        statusCode: 400,
+        message: "User does not exist.",
+      };
+    }
+    // Decrypt the password before sending response
+    if (data?.UserPassword) {
+      data.UserPassword = encryptData(data.UserPassword);
+    }
+
+    const updatedUserdata = await Signup.findOneAndUpdate(
+      { UserId },
+      { $set: data },
+      { new: true }
+    );
+
+    return {
+      statusCode: 200,
+      message: "User Profile Updated Successfully",
+      data: updatedUserdata,
+    };
+  } catch (error) {
+    return {
+      statusCode: 400,
+      message: "Failed to update the user.",
+      error: error.message,
+    };
+  }
+};
+
+router.put("/updateuserprofile", async (req, res) => {
+  try {
+    const { UserId } = req.query;
+    const data = req.body;
+
+    if (!UserId || !data || Object.keys(data).length === 0) {
+      return res.status(400).json({
+        statusCode: 400,
+        message: "UserId and update data are required.",
+      });
+    }
+
+    const response = await updateUserProfile(UserId, data);
     res.status(response.statusCode).json(response);
   } catch (error) {
     console.error(error.message);
@@ -317,11 +394,16 @@ const loginUser = async (data) => {
       };
     }
 
-    // consle.log(user, UserPassword);
+    console.log(user, UserPassword);
 
     // Validate the password
-    const isPasswordValid = await bcrypt.compare(UserPassword, user.UserPassword);
-    if (!isPasswordValid) {
+    const isPasswordValid = await decryptData(
+      user.UserPassword
+    );
+
+    console.log(isPasswordValid, "isPasswordValid");
+
+    if (UserPassword !== isPasswordValid) {
       return {
         statusCode: 401,
         message: "Invalid credentials",
@@ -359,7 +441,7 @@ const loginUser = async (data) => {
 router.post("/login", async (req, res) => {
   try {
     const response = await loginUser(req.body);
-    res.setHeader("Access-Control-Allow-Credentials", "true"); 
+    res.setHeader("Access-Control-Allow-Credentials", "true");
     res.status(response.statusCode).json(response);
   } catch (error) {
     console.error(error.message);
