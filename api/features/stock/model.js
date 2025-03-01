@@ -29,6 +29,8 @@ const userSchema = new mongoose.Schema(
     Lab: { type: String },
     SKU: { type: String },
     SrNo: { type: String },
+    IsNatural: { type: Boolean, default: false },
+    IsLabgrown: { type: Boolean, default: false }, 
     IsDelete: { type: Boolean, default: false }, 
   },
   {

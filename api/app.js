@@ -24,6 +24,7 @@ var cartroutes = require("./features/cart/route");
 var stockroutes = require("./features/stock/route");
 var userroutes = require("./features/users/route");
 var contactroutes = require("./features/contactus/route");
+var resetpasswordroutes = require("./features/resetpassword/route");
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
@@ -57,6 +58,7 @@ app.use("/api/cart", cartroutes);
 app.use("/api/stock", stockroutes);
 app.use("/api/user", userroutes);
 app.use("/api/contact", contactroutes);
+app.use("/api/resetpassword", resetpasswordroutes);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
