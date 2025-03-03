@@ -97,6 +97,7 @@ const Login = () => {
 
         dispatch(login({ user, token })); // Store user and token in Redux
         dispatch(fetchCartCount(user.UserId)); // Fetch cart count after login
+        // localStorage.removeItem("visitedDiamonds");
 
         showToast.success(res.data.message, { autoClose: 3000 });
 

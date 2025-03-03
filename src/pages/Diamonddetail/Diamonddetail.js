@@ -37,6 +37,13 @@ const Diamonddetail = () => {
   const { SKU } = diamond || {};
 
   const diamonds = useSelector((state) => state.shop.caretData);
+  const [visitedDiamonds, setVisitedDiamonds] = useState([]);
+
+  const [visibleCount, setVisibleCount] = useState(8);
+
+  const handleViewMore = () => {
+    setVisibleCount(visitedDiamonds.length);
+  };
 
   const [openVideoModal, setOpenVideoModal] = useState(false);
   const [isAddToCart, setIsAddToCart] = useState(false);
@@ -62,9 +69,9 @@ const Diamonddetail = () => {
     }
   }, [userId]);
 
-  useEffect(() => {
-    dispatch(fetchCaretData());
-  }, [dispatch]);
+  // useEffect(() => {
+  //   dispatch(fetchCaretData());
+  // }, [dispatch]);
 
   // Functions to handle modal opening
   const handleVideoClick = () => {
@@ -113,6 +120,28 @@ const Diamonddetail = () => {
 
     dispatch(addToCart(cartItem, userId, shouldShowToast));
   };
+
+  useEffect(() => {
+    if (diamond) {
+      let visitedDiamonds =
+        JSON.parse(localStorage.getItem("visitedDiamonds")) || [];
+
+      // Avoid duplicates
+      if (!visitedDiamonds.find((d) => d.SKU === diamond.SKU)) {
+        visitedDiamonds.push(diamond);
+        localStorage.setItem(
+          "visitedDiamonds",
+          JSON.stringify(visitedDiamonds)
+        );
+      }
+    }
+  }, [diamond]);
+
+  useEffect(() => {
+    const storedDiamonds =
+      JSON.parse(localStorage.getItem("visitedDiamonds")) || [];
+    setVisitedDiamonds(storedDiamonds);
+  }, []);
 
   if (loading) return <p>Loading diamond details...</p>;
   if (error) return <p>Error: {error}</p>;
@@ -342,9 +371,9 @@ const Diamonddetail = () => {
                   sx={{
                     outline: "none",
                     border: "none",
-                    "&:focus": { outline: "none" }, // Removes outline on focus
-                    "&:active": { outline: "none" }, // Removes outline on click
-                    "&:hover": { outline: "none" }, // Removes outline on hover
+                    "&:focus": { outline: "none" },
+                    "&:active": { outline: "none" },
+                    "&:hover": { outline: "none" },
                   }}
                 >
                   <Typography
@@ -355,81 +384,108 @@ const Diamonddetail = () => {
                   </Typography>
                 </AccordionSummary>
                 <AccordionDetails>
-                  <Table className="diamond-product-info-table">
-                    <TableBody>
-                      {[
-                        [
-                          "Lab",
-                          diamondData?.Lab,
-                          "Fluorescence",
-                          diamondData?.FluoInt,
-                        ],
-                        [
-                          "Certificate No",
-                          diamondData?.CertificateNo,
-                          "Rap $",
-                          diamondData?.Rap,
-                        ],
-                        ["Diamond Type", "N/A", "Disc %", diamondData?.Disc],
-                        [
-                          "Shape",
-                          diamondData?.Shape,
-                          "Price $/ct",
-                          diamondData?.Price,
-                        ],
-                        [
-                          "Carat",
-                          diamondData?.Carats,
-                          "Amount $",
-                          diamondData?.Amount,
-                        ],
-                        [
-                          "Color",
-                          diamondData?.Color,
-                          "Depth",
-                          diamondData?.Depth,
-                        ],
-                        [
-                          "Clarity",
-                          diamondData?.Clarity,
-                          "Table",
-                          diamondData?.Table,
-                        ],
-                        [
-                          "Cut",
-                          diamondData?.Cut,
-                          "EyeClean",
-                          diamondData?.EyeC,
-                        ],
-                        [
-                          "Polish",
-                          diamondData?.Polish,
-                          "Milky",
-                          diamondData?.Milky,
-                        ],
-                        [
-                          "Symmetry",
-                          diamondData?.Symm,
-                          "Tinge",
-                          diamondData?.Tinge,
-                        ],
-                      ].map(([key1, value1, key2, value2], index) => (
-                        <TableRow
-                          key={index}
-                          className={getRowClass(key1, value1)}
-                        >
-                          <TableCell>
-                            <strong>{key1}</strong>
-                          </TableCell>
-                          <TableCell>{value1}</TableCell>
-                          <TableCell>
-                            <strong>{key2}</strong>
-                          </TableCell>
-                          <TableCell>{value2}</TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
+                  <div
+                    style={{
+                      overflowX: "auto",
+                      scrollbarWidth: "thin",
+                      width: "100%",
+                    }}
+                  >
+                    <Table
+                      className="diamond-product-info-table"
+                      style={{
+                        border: "1px solid #ccc",
+                        borderRadius: "5px",
+                      }}
+                    >
+                      <TableBody>
+                        {[
+                          [
+                            "Lab",
+                            diamondData?.Lab ? diamondData?.Lab : "N/A",
+                            "Fluorescence",
+                            diamondData?.FluoInt ? diamondData?.FluoInt : "N/A",
+                          ],
+                          [
+                            "Certificate No",
+                            diamondData?.CertificateNo
+                              ? diamondData?.CertificateNo
+                              : " N/A",
+                            "Rap $",
+                            diamondData?.Rap ? diamondData?.Rap : "N/A",
+                          ],
+                          [
+                            "Diamond Type",
+                            diamondData?.DiamondType
+                              ? diamondData?.DiamondType
+                              : "N/A",
+                            "Disc %",
+                            diamondData?.Disc ? diamondData?.Disc : "N/A",
+                          ],
+                          [
+                            "Shape",
+                            diamondData?.Shape ? diamondData?.Shape : "N/A",
+                            "Price $/ct",
+                            diamondData?.Price ? diamondData?.Price : "N/A",
+                          ],
+                          [
+                            "Carat",
+                            diamondData?.Carats ? diamondData?.Carats : "N/A",
+                            "Amount $",
+                            diamondData?.Amount ? diamondData?.Amount : "N/A",
+                          ],
+                          [
+                            "Color",
+                            diamondData?.Color ? diamondData?.Color : "N/A",
+                            "Depth",
+                            diamondData?.Depth ? diamondData?.Depth : "N/A",
+                          ],
+                          [
+                            "Clarity",
+                            diamondData?.Clarity ? diamondData?.Clarity : "N/A",
+                            "Table",
+                            diamondData?.Table ? diamondData?.Table : "N/A",
+                          ],
+                          [
+                            "Cut",
+                            diamondData?.Cut ? diamondData?.Cut : "N/A",
+                            "EyeClean",
+                            diamondData?.EyeC ? diamondData?.EyeC : "N/A",
+                          ],
+                          [
+                            "Polish",
+                            diamondData?.Polish ? diamondData?.Polish : "N/A",
+                            "Milky",
+                            diamondData?.Milky ? diamondData?.Milky : "N/A",
+                          ],
+                          [
+                            "Symmetry",
+                            diamondData?.Symm ? diamondData?.Symm : "N/A",
+                            "Tinge",
+                            diamondData?.Tinge ? diamondData?.Tinge : "N/A",
+                          ],
+                        ].map(([key1, value1, key2, value2], index) => (
+                          <TableRow
+                            key={index}
+                            className={getRowClass(key1, value1)}
+                          >
+                            <TableCell>
+                              <strong>{key1}</strong>
+                            </TableCell>
+                            <TableCell
+                              style={{ borderRight: "1px solid #ccc" }}
+                            >
+                              {value1}
+                            </TableCell>
+                            <TableCell>
+                              <strong>{key2}</strong>
+                            </TableCell>
+                            <TableCell>{value2}</TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </div>
                 </AccordionDetails>
               </Accordion>
             </Card>
@@ -464,6 +520,51 @@ const Diamonddetail = () => {
           collection. Whether for an engagement, anniversary, or any special
           occasion, this diamond is the epitome of beauty and luxury.
         </p>
+
+        <h3 className="mt-3">Recently Visited Diamonds</h3>
+        <Grid container spacing={2} className="mt-3">
+          {visitedDiamonds.slice(0, visibleCount).map((diamond, index) => (
+            <div className="col-md-3 col-sm-6" key={index}>
+              <div
+                className="diamond-card"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigate("/diamonddetail", { state: { diamond } });
+                }}
+              >
+                <div className="shopimg">
+                  <img
+                    src={diamond.Image}
+                    alt={diamond.Shape}
+                    className="diamond-img"
+                  />
+                </div>
+                <h6 className="mt-3 diamond-name">
+                  {diamond.Carats} CARAT {diamond.Shape} - {diamond.Lab}
+                </h6>
+                <p className="price">${diamond.Amount.toFixed(2)}</p>
+                <p className="price">{diamond.Shape}</p>
+                <span
+                  className="add-to-cart"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleAddToCart(diamond, true);
+                  }}
+                >
+                  Add to cart <span className="arrowbtn">→</span>
+                </span>
+              </div>
+            </div>
+          ))}
+        </Grid>
+
+        {visibleCount < visitedDiamonds.length && (
+          <div className="text-center mt-3">
+            <button className="btn btn-primary" onClick={handleViewMore}>
+              View More
+            </button>
+          </div>
+        )}
 
         {/* <div>
           <h2 className="shop-by-brands-title">Top Products</h2>
