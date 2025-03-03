@@ -195,7 +195,7 @@ const Header = () => {
           HOME
         </Link>
         <Link
-          to="/diamond"
+          to="/diamond?q=filter"
           className={`nav-link ${
             location.pathname === "/diamond" ? "active" : ""
           }`}

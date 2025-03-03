@@ -61,7 +61,7 @@ h5 {
 
 .price {
   font-weight: bold;
-  font-size: 20px;
+  font-size: 14px;
   margin: auto;
   width: fit-content;
   transition: color 0.3s ease-in-out;
@@ -214,4 +214,26 @@ a:hover {
   .natural-diamond {
     font-size: 14px !important;
   }
+}
+
+/* shop filter buttons */
+.reset-btn{
+  background-color: #c9a236 !important;
+  color: #fff !important;
+  font-weight: bold !important;
+  cursor: pointer;
+  outline: none !important;
+}
+
+.apply-btn{
+  background-color: #c9a236 !important;
+  color: #fff !important;
+  font-weight: bold !important;
+  cursor: pointer;
+  outline: none !important;
+}
+
+.pagination-dropdown{
+  outline: none !important;
+  padding: 6px 10px !important;
 }

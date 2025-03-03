@@ -4,6 +4,7 @@ const multer = require("multer");
 const XLSX = require("xlsx");
 const stockSchema = require("./model");
 const { verifyLoginToken } = require("../authentication/authentication");
+const jwt = require("jsonwebtoken");
 
 const router = express.Router();
 
@@ -30,7 +31,7 @@ router.post(
           .json({ success: false, message: "No file uploaded" });
       }
 
-      const isNatural = req.body.IsNatural; 
+      const isNatural = req.body.IsNatural;
       const isLabgrown = req.body.IsLabgrown;
 
       const fileName = req.file.filename;
@@ -314,7 +315,7 @@ const fetchDiamondsPageDetails = async (query) => {
         ? { $in: query.Lab }
         : query.Lab;
     }
-    
+
     if (query.Milky?.length) {
       matchStage.Milky = Array.isArray(query.Milky)
         ? { $in: query.Milky }
@@ -495,6 +496,8 @@ const fetchDiamondsPageDetails = async (query) => {
       { $sort: { createdAt: 1 } },
     ]);
 
+    // const filterToken = createUnsignedJWT(query);
+
     const stockCount = diamondDetailsPage.length;
     const totalPages = Math.ceil(stockCount / pageSize);
     const paginatedDiamonds = diamondDetailsPage.slice(
@@ -513,8 +516,10 @@ const fetchDiamondsPageDetails = async (query) => {
       totalPages,
       currentPage: pageNumber + 1,
       TotalCount: stockCount,
+      // filterToken,
     };
   } catch (error) {
+    console.log(error);
     return {
       statusCode: 500,
       message: "Internal Server Error",
@@ -562,7 +567,7 @@ router.post("/data/page", async function (req, res) {
       maxPrice,
     } = req.body;
 
-    [Shape, Color, Clarity, Cut, Polish, Symm, FluoInt, Lab, Milky, Tinge, ] = [
+    [Shape, Color, Clarity, Cut, Polish, Symm, FluoInt, Lab, Milky, Tinge] = [
       Shape,
       Color,
       Clarity,
