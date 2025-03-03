@@ -1,0 +1,239 @@
+.container {
+  margin-top: 20px;
+}
+
+.diamond-card {
+  border: 1px solid #ddd;
+  border-radius: 15px;
+  height: 400px;
+  text-align: center;
+  box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.12);
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  background: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  margin-bottom: 15px;
+  cursor: pointer;
+}
+
+.diamond-card:hover {
+  /* transform: scale(1.01);   */
+  box-shadow: 4px 4px 20px rgba(0, 0, 0, 0.15);
+  border: 2px solid #c9a236 !important ;
+  transform: scale(1.02);
+  transition: transform 0.6s cubic-bezier(0.19, 1, 0.22, 1) !important;
+}
+
+.shopimg {
+  width: 100%;
+  height: 250px;
+  display: flex;
+  justify-content: center;
+  align-items: start;
+  overflow: hidden;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+}
+
+.diamond-img {
+  width: 100%;
+  max-height: 100%;
+  object-fit: cover;
+}
+
+h5 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+  margin: 8px 0;
+}
+
+.diamond-name {
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.diamond-name:hover {
+  color: #c9a236;
+}
+
+.price {
+  font-weight: bold;
+  font-size: 14px;
+  margin: auto;
+  width: fit-content;
+  transition: color 0.3s ease-in-out;
+}
+
+.price:hover {
+  color: #c9a236;
+  cursor: pointer;
+}
+
+.arrowbtn {
+  opacity: 0;
+  width: 0;
+  overflow: hidden;
+  transform: translateX(-5px);
+  transition: opacity 0.5s ease-in-out, width 0.5s ease-in-out,
+    transform 0.5s ease-in-out;
+}
+
+.add-to-cart:hover .arrowbtn {
+  opacity: 1;
+  width: auto;
+  transform: translateX(0);
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.add-to-cart {
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  width: fit-content;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: color 0.5s ease-in-out, color 0.5s ease-in-out;
+}
+
+.add-to-cart:hover {
+  color: #c9a236;
+  transform: translateX(5px);
+}
+
+/* responsive */
+/* @media (max-width: 992px) {
+  .diamond-card {
+    height: auto;
+    padding: 10px;
+  }
+  .shopimg {
+    height: 30vh;
+  }
+} */
+
+/* @media (max-width: 768px) {
+  .col-md-3 {
+    flex: 0 0 50%;
+    max-width: 50%;
+  }
+  .shopimg {
+    height: 25vh;
+  }
+} */
+
+@media (max-width: 576px) {
+  /* .col-md-3 {
+    flex: 0 0 100%;
+    max-width: 100%;
+  } */
+  /* .shopimg {
+    height: 20vh;
+  } */
+  .diamond-img {
+    width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
+}
+
+/* @media (max-width: 768px) {
+  .shopimg {
+    height: 200px;
+  }
+
+  .diamond-img {
+    width: auto;
+    max-width: 100%;
+    height: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .shopimg {
+    height: 180px;
+  }
+
+  .diamond-img {
+    width: auto;
+    height: 100%;
+    max-width: 100%;
+  }
+} */
+.jps-measurements {
+  /* display: flex; */
+  /* gap: 20px; */
+}
+.jps-measur-box {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+  align-items: center;
+  justify-content: space-between;
+}
+.bg-box {
+  padding: 16px;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  background-color: #f8f9fa;
+}
+.jps-lab-box {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 15px;
+}
+.jps-lab-box div {
+  width: fit-content !important;
+  padding: 15px 20px;
+}
+
+@media (max-width: 348px) {
+  .reset-buttons {
+    text-align: left !important;
+    display: flex;
+    flex-direction: column;
+    margin-left: 0px !important;
+    /* justify-content: start !important;
+    align-items: start !important; */
+  }
+  .apply-filter {
+    margin-left: 0px !important;
+    margin-top: 10px !important;
+  }
+  .lab-grown-diamond {
+    font-size: 14px !important;
+  }
+  .natural-diamond {
+    font-size: 14px !important;
+  }
+}
+
+/* shop filter buttons */
+.reset-btn{
+  background-color: #c9a236 !important;
+  color: #fff !important;
+  font-weight: bold !important;
+  cursor: pointer;
+  outline: none !important;
+}
+
+.apply-btn{
+  background-color: #c9a236 !important;
+  color: #fff !important;
+  font-weight: bold !important;
+  cursor: pointer;
+  outline: none !important;
+}
+
+.pagination-dropdown{
+  outline: none !important;
+  padding: 6px 10px !important;
+}

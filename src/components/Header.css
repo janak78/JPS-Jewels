@@ -1,167 +1,308 @@
 /* General Styling */
 body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-  }
-  
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px 60px;
-    background-color: white;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    flex-wrap: wrap;
-  }
-  
-  .logo {
-    display: flex;
-    align-items: center;
-  }
-  
-  .logo-image {
-    height: 40px;
-    margin-right: 10px;
-  }
-  
+  margin: 0;
+  font-family: "Poppins";
+  padding-top: clamp(50px, 10vh, 70px) !important;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 30px;
+  background-color: white;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+}
+
+/* Left Logo */
+.logo {
+  display: flex;
+  align-items: center;
+}
+
+.logo-image {
+  height: 40px;
+  cursor: pointer;
+}
+
+/* Navigation Bary */
+.nav {
+  display: flex;
+  gap: 20px;
+}
+
+.nav-link {
+  text-decoration: none;
+  font-size: 16px;
+  color: #333;
+  position: relative;
+  padding: 10px 15px;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  color: #c9a236;
+  transition: color 300ms ease-out;
+}
+
+.nav-link.active::after {
+  content: "";
+  display: block;
+  height: 2px;
+  background-color: #c9a236;
+  width: 100%;
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+}
+
+/* Right Section: Icons + Mobile Menu */
+.right-section {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+/* Icons Section */
+.icons {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+/* Individual Icons */
+.icon {
+  font-size: 18px;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.icon:hover {
+  color: gold;
+}
+
+/* Cart Icon with Badge */
+.cart-icon-container {
+  position: relative;
+}
+
+.cart-badge {
+  position: absolute;
+  top: -5px;
+  right: -10px;
+  background-color: gold;
+  color: white;
+  font-size: 12px;
+  border-radius: 50%;
+  padding: 2px 6px;
+}
+
+/* Mobile Menu */
+.mobile-menu {
+  display: none;
+  font-size: 22px;
+  cursor: pointer;
+  color: black;
+  transition: transform 0.3s ease;
+}
+
+.mobile-menu:hover {
+  color: #c9a236;
+  transition: color 300ms ease-out;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  /* Hide Navigation */
   .nav {
-    display: flex;
-    gap: 20px;
-    flex: 1;
-    justify-content: center;
-    transition: all 0.3s ease;
-  }
-  
-  .nav-link {
-    text-decoration: none;
-    font-size: 16px;
-    color: #333;
-    position: relative;
-  }
-  
-  .nav-link:hover {
-    color: gold;
-  }
-  
-  .nav-link.active {
-    color: gold;
-  }
-  
-  .nav-link.active::after {
-    content: "";
-    display: block;
-    height: 2px;
-    background-color: gold;
-    width: 100%;
+    display: none;
+    flex-direction: column;
     position: absolute;
-    bottom: -5px;
-    left: 0;
+    top: 60px;
+    right: 0;
+    background-color: white;
+    width: 100%;
+    padding: 10px 0;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    text-align: center;
   }
-  
-  .icons {
+
+  /* Show Navigation When Open */
+  .nav.nav-open {
     display: flex;
-    align-items: center;
-    gap: 15px;
+    z-index: 1;
   }
-  
+
+  /* Show Mobile Menu Icon */
+  .mobile-menu {
+    display: block;
+  }
+
+  .header {
+    padding: 10px 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .header {
+    padding: 15px 20px;
+  }
+
+  .logo-image {
+    height: 30px;
+  }
+
+  .nav-link {
+    font-size: 14px;
+    padding: 10px 20px;
+    text-align: center;
+  }
+
   .icon {
     font-size: 18px;
-    cursor: pointer;
   }
-  
-  .cart-icon-container {
-    position: relative;
-  }
-  
+
   .cart-badge {
-    position: absolute;
-    top: -5px;
-    right: -10px;
-    background-color: gold;
-    color: white;
-    font-size: 12px;
-    border-radius: 50%;
-    padding: 2px 6px;
+    font-size: 10px;
+    padding: 2px 5px;
   }
-  
-  /* Responsive Styling */
-  @media (max-width: 1024px) {
-    .header {
-      padding: 15px 30px;
-    }
-  
-    .logo-text {
-      font-size: 16px;
-    }
-  
-    .nav-link {
-      font-size: 14px;
-    }
-  
-    .icons {
-      gap: 10px;
-    }
+
+  .right-section {
+    gap: 10px;
   }
-  
-  @media (max-width: 768px) {
-    .nav {
-      display: none; /* Hide navigation links by default */
-      flex-direction: column;
-      position: absolute;
-      top: 60px;
-      right: 0;
-      background-color: white;
-      width: 100%;
-      padding: 10px 0;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    }
-  
-    .nav.nav-open {
-      display: flex; /* Show navigation links when menu is open */
-    }
-  
-    .mobile-menu {
-      display: block;
-      font-size: 20px;
-      cursor: pointer;
-      margin-left: 10px;
-    }
-  
-    .header {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-  
-    .icons {
-      display: flex;
-      justify-content: space-between;
-      width: 100%;
-      margin-top: 10px;
-    }
+}
+
+/* login */
+
+/* Main container */
+.user-login-container {
+  position: relative;
+  display: inline-block;
+}
+
+/* User icon */
+.user-icon {
+  font-size: 28px !important;
+  cursor: pointer;
+  color: #000;
+}
+
+/* Dropdown login form */
+.login-dropdown {
+  position: absolute;
+  top: 50px;
+  right: 0;
+  width: 280px;
+  background: white;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  padding: 15px;
+  z-index: 100;
+}
+
+/* Login button */
+.login-btn-login {
+  background-color: #c9a236 !important;
+  color: white !important;
+  width: 100%;
+  margin-top: 10px;
+}
+
+/* Forgot password & Signup */
+.forgot-signup {
+  font-size: 14px;
+  text-align: right;
+  margin-top: 10px;
+  color: #333;
+}
+
+.signup-link-signup {
+  font-weight: bold;
+  cursor: pointer;
+  color: #C9A236;
+  text-align: right;
+  align-items:center;
+}
+
+.userlogo_login{
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  padding-left: 10px;
+  align-items: center;
+}
+
+.user-welcome-text{
+  padding-left: 15px;
+  text-align: left
+  ;
+}
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #C9A236; /* Change to dynamic colors if needed */
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+
+/* Responsive adjustments */
+@media (max-width: 500px) {
+  .login-dropdown {
+    width: 240px;
   }
-  
-  @media (max-width: 480px) {
-    .header {
-      padding: 10px 20px;
-    }
-  
-    .logo-image {
-      height: 30px;
-    }
-  
-    .nav-link {
-      font-size: 14px;
-      padding: 10px 20px;
-      text-align: center;
-    }
-  
-    .icon {
-      font-size: 16px;
-    }
-  
-    .cart-badge {
-      font-size: 10px;
-      padding: 1px 4px;
-    }
+}
+
+@media (max-width: 320px) {
+  .login-dropdown {
+    width: 200px;
   }
-  
+}
+
+/* cart */
+
+.cart-button {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+
+.closeicon {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+
+.checkoutbutton {
+  border: none !important;
+  outline: none !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 500px) {
+  .cart-drawer {
+    width: 280px !important;
+    text-align: left;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 320px) {
+  .cart-drawer {
+    width: 250px !important;
+    text-align: left;
+  }
+}

@@ -1,0 +1,49 @@
+
+.swal-icon--warning {
+    animation: swal-pulse 1.5s infinite;
+  }
+  
+  @keyframes swal-pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+  }
+  /*
+  .swal-footer {
+    display: flex !important;
+    justify-content: space-between !important;
+  }
+  
+  .swal-button-cancel {
+    background-color: #6c757d !important;
+    color: white !important;
+    border-radius: 6px !important;
+    padding: 10px 20px !important;
+  }
+  
+  .swal-button-delete {
+    background-color: #d33 !important;
+    color: white !important;
+    border-radius: 6px !important;
+    padding: 10px 20px !important;
+  }
+   */
+
+   /* .swal-button-delete {
+    background-color: #d9534f !important;
+    color: white !important;
+    border-radius: 8px !important;
+    padding: 10px 16px !important;
+  }
+   */
+  .swal-button-cancel {
+    background-color: #6c757d !important; /* Bootstrap gray */
+    color: white !important;
+    border-radius: 8px !important;
+    padding: 10px 16px !important;
+  }
+  
+
+  .swal-button-confirm{
+    background-color: #c19a6b !important; /* Bootstrap danger red */
+  }

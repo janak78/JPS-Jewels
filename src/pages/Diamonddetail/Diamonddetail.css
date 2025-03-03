@@ -1,0 +1,172 @@
+.diamond-product-container {
+  padding: 20px;
+}
+
+.diamond-product-wrapper {
+  max-width: 1300px;
+  margin: auto;
+}
+
+.diamond-product-image-container {
+  display: flex;
+  justify-content: center;
+  align-items: start;
+}
+
+.diamond-product-image {
+  max-width: 100%;
+  /* border-radius: 10px;  */
+}
+
+.diamond-product-details-container {
+  padding: 20px;
+  /* margin-top: 20px !important; */
+}
+
+.maingrid {
+  margin-top: 15px !important;
+}
+
+.diamond-product-title {
+  font-size: 28px;
+  font-weight: 500;
+  text-align: left;
+}
+
+.diamond-product-sku {
+  color: #000;
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+.diamond-product-buttons-container {
+  display: flex;
+  gap: 10px;
+  margin: 15px 0;
+  justify-content: start;
+}
+
+.diamond-product-video-btn,
+.diamond-product-certificate-btn {
+  background-color: #c9a236 !important;
+  color: white !important;
+  outline: none !important;
+  padding: 15px !important;
+  border-radius: 0px !important;
+  font-size: 16px !important;
+  font-family: "Poppins" !important;
+}
+
+.diamond-product-price {
+  font-size: 24px;
+  font-weight: 400;
+  margin: 10px 0;
+  text-align: left;
+}
+
+.diamond-product-quantity-input {
+  width: 80px;
+  margin: 10px 0;
+  border: 1px solid black !important;
+  border-radius: 4px;
+  display: flex !important;
+  text-align: center;
+  justify-content: start;
+}
+
+/* Add black border on focus */
+.diamond-product-quantity-input
+  .MuiOutlinedInput-root.Mui-focused
+  .MuiOutlinedInput-notchedOutline {
+  border: none !important;
+}
+
+/* Remove hover and default borders */
+.diamond-product-quantity-input .MuiOutlinedInput-notchedOutline {
+  border: none !important;
+}
+
+.diamond-product-cart-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+  justify-content: start;
+}
+
+.diamond-product-cart-btn {
+  border: 1px solid #f8f1eb !important;
+  color: black !important;
+  outline: none !important;
+  background-color: #f8f1eb !important;
+  border-radius: 0 !important;
+  padding: 15px !important;
+  font-size: 16px !important;
+  font-family: "Poppins" !important;
+}
+
+.diamond-product-buy-btn {
+  background-color: #c9a236 !important;
+  color: white !important;
+  outline: none !important;
+  border-radius: 0 !important;
+  padding: 15px !important;
+  font-size: 16px !important;
+  font-family: "Poppins" !important;
+}
+
+.diamond-product-info-card {
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px !important;
+}
+
+.diamond-product-info-title {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.diamond-product-info-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.diamond-product-info-table td {
+  padding: 8px;
+  border-bottom: 1px solid #ddd;
+}
+
+.diamond-description-divider {
+  border: none;
+  height: 1px;
+  background-color: #ddd;
+  margin-bottom: 20px;
+}
+
+.diamond-description-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #222;
+  text-align: left;
+}
+
+.diamond-description-text {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #444;
+  text-align: left;
+}
+
+/* .diamond-description-last {
+  display: flex;
+  align-items: left !important;
+} */
+
+.categorytext {
+  color: #c9a236;
+}
+
+.imagemodalbtn {
+  color: white !important;
+  background-color: #c9a236 !important;
+  outline: none !important;
+}

@@ -1,0 +1,76 @@
+.policy-container {
+  max-width: 90%;
+  margin: 20px auto;
+  padding: 20px 20px;
+  font-family: "Poppins";
+  color: #333;
+  text-align: left;
+}
+
+.policy-title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-top: 20px;
+  padding-bottom: 20px;
+}
+
+.policy-list {
+  list-style-type: disc;
+  padding-left: 20px;
+}
+
+.policy-list li {
+  font-size: 14px;
+  margin-bottom: 8px;
+  line-height: 1.6;
+  list-style-type: disc;
+}
+
+/* privacy */
+
+.privacy-policy-container {
+  max-width: 90%;
+  margin: 20px auto;
+  padding: 20px;
+  font-family: "Poppins";
+  color: #000000;
+  text-align: left;
+}
+
+.privacy-title {
+  font-size: 36px;
+  margin-bottom: 15px;
+}
+
+.privacy-subtitle {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+p {
+  font-size: 16px;
+  line-height: 1.6;
+  margin-bottom: 15px;
+}
+
+.privacy-link-policy {
+  color: #c9a236;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.privacy-link-policy:hover {
+  text-decoration: underline;
+}
+
+.footer-text {
+  margin-top: 20px;
+  font-size: 14px;
+  text-align: left;
+}
+
+.footer-links {
+  text-align: left;
+  display: flex;
+}

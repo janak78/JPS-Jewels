@@ -3,7 +3,7 @@
     color: #000;
     padding: 40px 20px;
     text-align: left;
-    font-family: Arial, sans-serif;
+    font-family: "Poppins";
     border-top: 1px solid #ddd;
   }
   
@@ -15,7 +15,7 @@
     margin: auto;
   }
   
-  /* / ✅ Responsive Layout / */
+  /* Responsive Layout */
   @media (max-width: 768px) {
     .footer-container {
       flex-direction: column;
@@ -43,16 +43,16 @@
     }
   }
   
-  /* / ✅ Footer Logo / */
+  /* Footer Logo */
   .footer-logo {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: left;
     gap: 10px;
   }
   
   .footer-logo img {
-    width: 50px;
+    width: 150px;
   }
   
   .footer-description {
@@ -61,7 +61,7 @@
     line-height: 1.6;
   }
   
-  /* / ✅ Footer Sections / */
+  /* Footer Sections */
   .footer-section {
     display: flex;
     flex-direction: column;
@@ -73,7 +73,7 @@
     font-weight: bold;
   }
   
-  .footer-section a {
+  .footer-section p {
     color: #000;
     text-decoration: none;
     font-size: 14px;
@@ -81,11 +81,11 @@
     transition: color 0.3s;
   }
   
-  .footer-section a:hover {
-    color: #d4af37;
+  .footer-section p:hover {
+    color: #c9a236;
   }
   
-  /* / ✅ Contact Section / */
+  /* Contact Section */
   .footer-contact {
     display: flex;
     flex-direction: column;
@@ -99,17 +99,17 @@
   }
   
   .footer-contact svg {
-    color: #d4af37;
+    color: #c9a236;
   }
   
-  /* / ✅ Social Icons / */
+  /* Social Icons */
   .social-icons {
     display: flex;
     gap: 10px;
     margin-top: 10px;
   }
   
-  .social-icons a {
+  .social-icons p {
     background: #000;
     color: #fff;
     padding: 8px;
@@ -120,11 +120,11 @@
     transition: background 0.3s;
   }
   
-  .social-icons a:hover {
-    background: #d4af37;
+  .social-icons p:hover {
+    background: #c9a236;
   }
   
-  /* / ✅ Responsive Social Icons / */
+  /* Responsive Social Icons */
   @media (max-width: 600px) {
     .social-icons {
       flex-wrap: wrap;
@@ -132,7 +132,7 @@
     }
   }
   
-  /* / ✅ Footer Bottom / */
+  /* Footer Bottom */
   .footer-bottom {
     text-align: center;
     margin-top: 20px;
@@ -140,7 +140,7 @@
     color: #666;
   }
   
-  /* / ✅ Footermain - Flex Row to Column / */
+  /* Footermain - Flex Row to Column */
   .footermain {
     display: flex;
     flex-direction: row;
@@ -149,20 +149,15 @@
     max-width: 1200px;
     margin: auto;
   }
-
-  /* .fm{
-    display: flex;
-    justify-content: center;
-  } */
   
-  /* / ✅ Pri-Pol - Flex Row to Column / */
+  /* Pri-Pol - Flex Row to Column */
   .pri-pol {
     display: flex;
     flex-direction: row;
     gap: 20px;
   }
   
-  /* / 📱 Make footermain & pri-pol responsive / */
+  /* Make footermain & pri-pol responsive */
   @media (max-width: 768px) {
     .footermain {
       flex-direction: column;
@@ -177,7 +172,6 @@
     }
   }
   
-  
   ul, li {
     margin: 0;
     padding: 0;
@@ -189,3 +183,37 @@
     height: 20px;
     object-fit: contain;
   }
+  .phoneno,
+  .addresssec {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .phoneno div {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .phoneno span,
+  .addresssec span {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  
+  .footer-section svg {
+    color: #c9a236; /* Gold color */
+    font-size: 18px; /* Adjust icon size */
+  }
+  
+  /* Responsive Adjustments */
+  @media (max-width: 600px) {
+    .phoneno,
+    .addresssec {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+  }
+  
