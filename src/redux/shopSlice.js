@@ -22,6 +22,24 @@ export const diamondsApi = createApi({
   }),
 });
 
+export const fetchSimilarDiamonds = (carat, color, clarity, shape) => async (dispatch) => {
+  try {
+    const res = await AxiosInstance.get(
+      `http://localhost:5000/api/stock/similarproducts?carat=${carat}&color=${color}&clarity=${clarity}&shape=${shape}`
+    );
+
+    if (res.data.statusCode === 200) {
+      dispatch(setSimilarDiamonds(res.data.data.slice(0, 4)));
+    } else {
+      dispatch(setSimilarDiamonds([]));
+    }
+  } catch (error) {
+    console.error("Error fetching similar diamonds:", error);
+  }
+};
+
+
+
 export const fetchCaretData = () => async (dispatch) => {
   try {
     const res = await AxiosInstance.get(
@@ -47,6 +65,7 @@ const shopSlice = createSlice({
     currentPage: 1,
     itemsPerPage: 12,
     caretData: [],
+    similarDiamonds: [],
   },
   reducers: {
     setItemsPerPage: (state, action) => {
@@ -61,9 +80,12 @@ const shopSlice = createSlice({
     setCaretData: (state, action) => {
       state.caretData = action.payload; // Directly set the array
     },
+    setSimilarDiamonds: (state, action) => {
+      state.similarDiamonds = action.payload;  // Store Similar Diamonds
+    },
   },
 });
 
-export const { setItemsPerPage, setCurrentPage, setTotalPages, setCaretData } =
+export const { setItemsPerPage, setCurrentPage, setTotalPages, setCaretData, setSimilarDiamonds } =
   shopSlice.actions;
 export default shopSlice.reducer;

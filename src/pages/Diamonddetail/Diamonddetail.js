@@ -28,7 +28,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { addToCart } from "../../redux/cartSlice";
 import { fetchCartCount } from "../../redux/cartSlice";
 import showToast from "../../components/Toast/Toaster";
-import { fetchCaretData } from "../../redux/shopSlice";
+import { fetchCaretData, fetchSimilarDiamonds } from "../../redux/shopSlice";
 
 const Diamonddetail = () => {
   const location = useLocation();
@@ -68,6 +68,21 @@ const Diamonddetail = () => {
       dispatch(fetchCartCount(userId));
     }
   }, [userId]);
+
+  const similarDiamonds = useSelector((state) => state.shop.similarDiamonds);
+
+  useEffect(() => {
+    if (diamond) {
+      dispatch(
+        fetchSimilarDiamonds(
+          diamond.Carats,
+          diamond.Color,
+          diamond.Clarity,
+          diamond.Shape
+        )
+      );
+    }
+  }, [dispatch, diamond]);
 
   // useEffect(() => {
   //   dispatch(fetchCaretData());
@@ -521,6 +536,50 @@ const Diamonddetail = () => {
           occasion, this diamond is the epitome of beauty and luxury.
         </p>
 
+        <div className="similar-diamonds-section">
+          <h3>Similar Diamonds</h3>
+          {similarDiamonds.length === 0 ? (
+            <p>No similar diamonds found.</p>
+          ) : (
+            <Grid container spacing={2} className="mt-3">
+              {similarDiamonds.slice(0, visibleCount).map((diamond, index) => (
+                <div className="col-md-3 col-sm-6" key={index}>
+                  {console.log(similarDiamonds, "smlrdiamnds")}
+                  <div
+                    className="diamond-card"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      navigate("/diamonddetail", { state: { diamond } });
+                    }}
+                  >
+                    <div className="shopimg">
+                      <img
+                        src={diamond.Image}
+                        alt={diamond.Shape}
+                        className="diamond-img"
+                      />
+                    </div>
+                    <h6 className="mt-3 diamond-name">
+                      {diamond.Carats} CARAT {diamond.Shape} - {diamond.Lab}
+                    </h6>
+                    <p className="price">${diamond.Amount.toFixed(2)}</p>
+                    <p className="price">{diamond.Shape}</p>
+                    <span
+                      className="add-to-cart"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleAddToCart(diamond, true);
+                      }}
+                    >
+                      Add to cart <span className="arrowbtn">→</span>
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </Grid>
+          )}
+        </div>
+
         <h3 className="mt-3">Recently Visited Diamonds</h3>
         <Grid container spacing={2} className="mt-3">
           {visitedDiamonds.slice(0, visibleCount).map((diamond, index) => (
@@ -560,8 +619,12 @@ const Diamonddetail = () => {
 
         {visibleCount < visitedDiamonds.length && (
           <div className="text-center mt-3">
-            <button className="btn btn-primary" onClick={handleViewMore}>
-              View More
+            <button
+              className="btn"
+              style={{ backgroundColor: "#c9a236" }}
+              onClick={handleViewMore}
+            >
+              View More {">"}
             </button>
           </div>
         )}
