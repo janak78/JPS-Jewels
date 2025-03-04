@@ -25,8 +25,10 @@ import gallery3 from "../../assets/gallery images/still-life-object_1122-1942.av
 import gallery2 from "../../assets/gallery images/pexels-the-glorious-studio-3584518-10475789.jpg";
 import gallery1 from "../../assets/gallery images/pexels-the-glorious-studio-3584518-10983783.jpg";
 import allimage from "../../assets/gallery images/allimage.png";
+import AxiosInstance from "../../Axiosinstance";
 
 const RegistrationForm = () => {
+  const baseUrl = process.env.REACT_APP_BASE_API;
   const navigate = useNavigate();
   const [step, setStep] = useState(0);
 
@@ -162,8 +164,8 @@ const RegistrationForm = () => {
     onSubmit: async (values) => {
       const finalData = { ...formData, ...values };
       try {
-        const res = await axios.post(
-          "http://localhost:5000/api/user/signup",
+        const res = await AxiosInstance.post(
+          `${baseUrl}/user/signup`,
           finalData
         );
         if (res.data.statusCode === 200) {

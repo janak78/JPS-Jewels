@@ -21,7 +21,8 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
 import showToast from "../../components/Toast/Toaster";
-import "./login.css";
+import "../login/login.css";
+import "./Resetpassword.css";
 import logo from "../../assets/images/logo.svg";
 import gallery13 from "../../assets/gallery images/luxury-shine-diamonds-digital-art_23-2151695052.avif";
 import gallery12 from "../../assets/gallery images/female-jewelry_772702-3140.avif";
@@ -39,22 +40,25 @@ import gallery1 from "../../assets/gallery images/pexels-the-glorious-studio-358
 import allimage from "../../assets/gallery images/allimage.png";
 import AxiosInstance from "../../Axiosinstance";
 
-const Login = () => {
+const Resetpassword = () => {
   const baseUrl = process.env.REACT_APP_BASE_API;
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const formik = useFormik({
     initialValues: {
       Username: "",
       UserPassword: "",
+      UserConfirmPassword: "",
     },
     validateOnChange: false,
     validateOnBlur: false,
     validationSchema: Yup.object().shape({
       Username: Yup.string().required("Email is required"),
       UserPassword: Yup.string().required("Password is required"),
+      UserConfirmPassword: Yup.string().required("Password is required"),
     }),
     onSubmit: (values) => {
       handleSubmit(values);
@@ -175,34 +179,33 @@ const Login = () => {
               gutterBottom
               sx={{ fontFamily: "Poppins" }}
             >
-              Login
+              Reset Password
             </Typography>
             {/* <div className="auth-container"> */}
             {/* Login Section */}
             {/* <div className="auth-box"> */}
             {/* <h2 className="auth-title">LOGIN</h2> */}
             {/* <div className="loginpage-inputs"> */}
+
             <form onSubmit={formik.handleSubmit}>
-              <FormGroup
+              {/* <FormGroup
                 className="text-boxes"
                 style={{ width: "100%", marginTop: "24px" }}
               >
                 <TextField
-                  value={formik.values.Username}
+                  value={formik.values.Email}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  error={
-                    formik.touched.Username && Boolean(formik.errors.Username)
-                  }
-                  helperText={formik.touched.Username && formik.errors.Username}
-                  name="Username"
+                  error={formik.touched.Email && Boolean(formik.errors.Email)}
+                  helperText={formik.touched.Email && formik.errors.Email}
+                  name="Email"
                   type="text"
                   className="text-blue-color w-100"
                   fullWidth
-                  label="Username"
+                  label="Email"
                 />
-              </FormGroup>
-              <div className="password-container">
+              </FormGroup> */}
+              {/* <div className="password-container">
                 <TextField
                   value={formik.values.UserPassword}
                   onChange={formik.handleChange}
@@ -237,28 +240,90 @@ const Login = () => {
                     formik.touched.UserPassword && formik.errors.UserPassword
                   }
                 />
+              </div> */}
+              {/* <p className="forgot-password">
+                Don't worry, happens to all of us. Enter your email below to
+                recover your password.
+              </p> */}
+              <div className="password-container">
+                <TextField
+                  value={formik.values.UserPassword}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  name="UserPassword"
+                  label="Password"
+                  type={showPassword ? "text" : "password"}
+                  fullWidth
+                  margin="normal"
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={() => setShowPassword(!showPassword)}
+                          edge="end"
+                          className="password-field"
+                        >
+                          {showPassword ? (
+                            <VisibilityOffIcon />
+                          ) : (
+                            <VisibilityIcon />
+                          )}
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
+                  error={
+                    formik.touched.UserPassword &&
+                    Boolean(formik.errors.UserPassword)
+                  }
+                  helperText={
+                    formik.touched.UserPassword && formik.errors.UserPassword
+                  }
+                />
+                <TextField
+                  value={formik.values.UserConfirmPassword}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  name="UserConfirmPassword"
+                  label="Password"
+                  type={showPassword ? "text" : "password"}
+                  fullWidth
+                  margin="normal"
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                          edge="end"
+                          className="password-field"
+                        >
+                          {showConfirmPassword ? (
+                            <VisibilityOffIcon />
+                          ) : (
+                            <VisibilityIcon />
+                          )}
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
+                  error={
+                    formik.touched.UserConfirmPassword &&
+                    Boolean(formik.errors.UserConfirmPassword)
+                  }
+                  helperText={
+                    formik.touched.UserConfirmPassword &&
+                    formik.errors.UserConfirmPassword
+                  }
+                />
               </div>
-              <div className="loginpage-texts">
-                <p className="forgot-password">
-                  Don't have an account?{" "}
-                  <span
-                    className="sign-ups"
-                    onClick={() => navigate("/signup")}
-                  >
-                    Sign Up
-                  </span>
-                </p>
-                <p className="forgot-password">
-                  <span
-                    className="sign-ups"
-                    onClick={() => navigate("/forgotpassword")}
-                  >
-                    Forgot password?
-                  </span>
-                </p>
-              </div>
-              <Button type="submit" variant="contained" className="login-btn">
-                Login
+              <Button
+                type="submit"
+                variant="contained"
+                className="login-btn mt-3"
+              >
+                Submit
               </Button>
             </form>
             {/* </div> */}
@@ -272,4 +337,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Resetpassword;

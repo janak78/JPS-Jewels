@@ -155,3 +155,8 @@ body.login--page {
   cursor: pointer;
   font-weight: bold;
 }
+
+.loginpage-texts{
+  display: flex;
+  justify-content: space-between;
+}

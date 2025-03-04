@@ -33,6 +33,7 @@ import "./Header.css";
 import AxiosInstance from "../Axiosinstance";
 
 const Header = () => {
+  const baseUrl = process.env.REACT_APP_BASE_API;
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
@@ -116,7 +117,7 @@ const Header = () => {
     try {
       //   setLoader(true);
       const res = await AxiosInstance.post(
-        `http://localhost:5000/api/user/login`,
+        `${baseUrl}/user/login`,
         {
           ...values,
         }

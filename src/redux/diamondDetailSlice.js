@@ -1,6 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 import AxiosInstance from "../Axiosinstance";
 
+const baseUrl = process.env.REACT_APP_BASE_API;
+
 const initialState = {
   diamondDetail: null,
   loading: false,
@@ -35,7 +37,7 @@ export const fetchDiamondDetail = (skuId) => async (dispatch) => {
   dispatch(setLoading());
   try {
     const response = await AxiosInstance.get(
-      `http://localhost:5000/api/stock/data/${skuId}`
+      `${baseUrl}/stock/data/${skuId}`
     );
 
     if (response.data.statusCode === 200) {

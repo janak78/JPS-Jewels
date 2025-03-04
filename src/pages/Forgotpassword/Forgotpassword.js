@@ -21,7 +21,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
 import showToast from "../../components/Toast/Toaster";
-import "./login.css";
+import "../login/login.css";
 import logo from "../../assets/images/logo.svg";
 import gallery13 from "../../assets/gallery images/luxury-shine-diamonds-digital-art_23-2151695052.avif";
 import gallery12 from "../../assets/gallery images/female-jewelry_772702-3140.avif";
@@ -39,7 +39,7 @@ import gallery1 from "../../assets/gallery images/pexels-the-glorious-studio-358
 import allimage from "../../assets/gallery images/allimage.png";
 import AxiosInstance from "../../Axiosinstance";
 
-const Login = () => {
+const Forgotpassword = () => {
   const baseUrl = process.env.REACT_APP_BASE_API;
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -175,34 +175,42 @@ const Login = () => {
               gutterBottom
               sx={{ fontFamily: "Poppins" }}
             >
-              Login
+              Forgot Password
             </Typography>
             {/* <div className="auth-container"> */}
             {/* Login Section */}
             {/* <div className="auth-box"> */}
             {/* <h2 className="auth-title">LOGIN</h2> */}
             {/* <div className="loginpage-inputs"> */}
+            <p className="forgot-password">
+              Don't worry, happens to all of us. Enter your email below to
+              recover your password.
+            </p>
             <form onSubmit={formik.handleSubmit}>
               <FormGroup
                 className="text-boxes"
                 style={{ width: "100%", marginTop: "24px" }}
               >
                 <TextField
-                  value={formik.values.Username}
+                  value={formik.values.Email}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  error={
-                    formik.touched.Username && Boolean(formik.errors.Username)
-                  }
-                  helperText={formik.touched.Username && formik.errors.Username}
-                  name="Username"
+                  error={formik.touched.Email && Boolean(formik.errors.Email)}
+                  helperText={formik.touched.Email && formik.errors.Email}
+                  name="Email"
                   type="text"
                   className="text-blue-color w-100"
                   fullWidth
-                  label="Username"
+                  label="Email"
                 />
               </FormGroup>
-              <div className="password-container">
+              <p className="forgot-password mt-2">
+                
+                <span className="sign-ups" onClick={() => navigate("/login")}>
+                 Back to login
+                </span>
+              </p>
+              {/* <div className="password-container">
                 <TextField
                   value={formik.values.UserPassword}
                   onChange={formik.handleChange}
@@ -237,28 +245,17 @@ const Login = () => {
                     formik.touched.UserPassword && formik.errors.UserPassword
                   }
                 />
-              </div>
-              <div className="loginpage-texts">
-                <p className="forgot-password">
-                  Don't have an account?{" "}
-                  <span
-                    className="sign-ups"
-                    onClick={() => navigate("/signup")}
-                  >
-                    Sign Up
-                  </span>
-                </p>
-                <p className="forgot-password">
-                  <span
-                    className="sign-ups"
-                    onClick={() => navigate("/forgotpassword")}
-                  >
-                    Forgot password?
-                  </span>
-                </p>
-              </div>
-              <Button type="submit" variant="contained" className="login-btn">
-                Login
+              </div> */}
+              {/* <p className="forgot-password">
+                Don't worry, happens to all of us. Enter your email below to
+                recover your password.
+              </p> */}
+              <Button
+                type="submit"
+                variant="contained"
+                className="login-btn mt-3"
+              >
+                Submit
               </Button>
             </form>
             {/* </div> */}
@@ -272,4 +269,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Forgotpassword;

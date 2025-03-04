@@ -2,10 +2,12 @@ import { createSlice } from "@reduxjs/toolkit";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import AxiosInstance from "../Axiosinstance";
 
+const baseUrl = process.env.REACT_APP_BASE_API;
+
 // API Slice using Redux Toolkit Query
 export const diamondsApi = createApi({
   reducerPath: "diamondsApi",
-  baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:5000/api" }),
+  baseQuery: fetchBaseQuery({ baseUrl: `${baseUrl}` }),
   tagTypes: ["Diamonds"], // Add tag
   endpoints: (builder) => ({
     fetchDiamonds: builder.query({
@@ -25,7 +27,7 @@ export const diamondsApi = createApi({
 export const fetchCaretData = () => async (dispatch) => {
   try {
     const res = await AxiosInstance.get(
-      `http://localhost:5000/api/stock/caretdata`
+      `${baseUrl}/stock/caretdata`
     );
 
     if (res.data.result.statusCode === 200) {

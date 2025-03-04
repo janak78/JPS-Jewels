@@ -2489,7 +2489,7 @@ const DiamondsGrid = () => {
                     </div>
                     <div className="bg-box mb-2">
                       <div className="row">
-                        <div className="col-lg-6 col-md-12 col-12 mb-3">
+                        <div className=" col-md-12 col-12">
                           <div item>
                             <Typography
                               variant="body1"
@@ -2502,7 +2502,7 @@ const DiamondsGrid = () => {
 
                           <div
                             className="jps-measur-box"
-                            style={{ marginTop: "39px" }}
+                            // style={{ marginTop: "39px" }}
                           >
                             <div item>
                               <TextInput
@@ -2531,7 +2531,11 @@ const DiamondsGrid = () => {
                             </div>
                           </div>
                         </div>
-                        <div className="col-lg-6 col-md-12 col-12 mb-3">
+                      </div>
+                    </div>
+                    <div className="bg-box mb-2">
+                      <div className="row">
+                        <div className="col-md-12 col-12">
                           <div item>
                             <Tabs
                               value={tabValue}
@@ -2689,7 +2693,7 @@ const DiamondsGrid = () => {
                     </Typography>
                   </div>
                   <div className="jps-measurements row">
-                    <div className="col-md-4 col-12">
+                    <div className="col-md-6 col-12">
                       <div className="jps-measur-box">
                         <div item>
                           <TextInput
@@ -2744,9 +2748,6 @@ const DiamondsGrid = () => {
                           />
                         </div>
                       </div>
-                    </div>
-
-                    <div className="col-md-4 col-12">
                       <div className="jps-measur-box">
                         <div item>
                           <TextInput
@@ -2774,7 +2775,9 @@ const DiamondsGrid = () => {
                           />
                         </div>
                       </div>
+                    </div>
 
+                    <div className="col-md-6 col-12">
                       <div className="jps-measur-box">
                         <div item>
                           <TextInput
@@ -2802,8 +2805,6 @@ const DiamondsGrid = () => {
                           />
                         </div>
                       </div>
-                    </div>
-                    <div className="col-md-4 col-12">
                       <div className="jps-measur-box">
                         <div item>
                           <TextInput
