@@ -27,7 +27,7 @@ export const diamondsApi = createApi({
 export const fetchSimilarDiamonds = (carat, color, clarity, shape) => async (dispatch) => {
   try {
     const res = await AxiosInstance.get(
-      `http://localhost:5000/api/stock/similarproducts?carat=${carat}&color=${color}&clarity=${clarity}&shape=${shape}`
+      `${baseUrl}/stock/similarproducts?carat=${carat}&color=${color}&clarity=${clarity}&shape=${shape}`
     );
 
     if (res.data.statusCode === 200) {
