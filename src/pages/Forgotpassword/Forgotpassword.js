@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { login, logout } from "../../redux/authSlice";
 import { fetchCartCount, removeCart } from "../../redux/cartSlice";
 import {
@@ -38,26 +38,25 @@ import gallery2 from "../../assets/gallery images/pexels-the-glorious-studio-358
 import gallery1 from "../../assets/gallery images/pexels-the-glorious-studio-3584518-10983783.jpg";
 import allimage from "../../assets/gallery images/allimage.png";
 import AxiosInstance from "../../Axiosinstance";
+import { sendResetPasswordEmail, resetState } from "../../redux/forgotPasswordSlice";
+
 
 const Forgotpassword = () => {
   const baseUrl = process.env.REACT_APP_BASE_API;
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const { loading, success, error } = useSelector((state) => state.forgotPasswordSlice);
 
   const formik = useFormik({
     initialValues: {
-      Username: "",
-      UserPassword: "",
+      PrimaryEmail: "",
     },
-    validateOnChange: false,
-    validateOnBlur: false,
-    validationSchema: Yup.object().shape({
-      Username: Yup.string().required("Email is required"),
-      UserPassword: Yup.string().required("Password is required"),
+    validationSchema: Yup.object({
+      PrimaryEmail: Yup.string().email("Invalid email").required("Email is required"),
     }),
     onSubmit: (values) => {
-      handleSubmit(values);
+      dispatch(sendResetPasswordEmail(values.PrimaryEmail));
     },
   });
 
@@ -68,60 +67,60 @@ const Forgotpassword = () => {
       document.body.classList.remove("login--page");
     };
   }, []);
-  //   const baseurl =
+//   //   const baseurl =
 
-  const handleLogout = () => {
-    dispatch(logout());
-    dispatch(removeCart());
-    navigate("/login");
-  };
+//   const handleLogout = () => {
+//     dispatch(logout());
+//     dispatch(removeCart());
+//     navigate("/login");
+//   };
 
-  const handleSubmit = async (values) => {
-    try {
-      //   setLoader(true);
-      const res = await AxiosInstance.post(`${baseUrl}/user/login`, {
-        ...values,
-      });
+//   const handleSubmit = async (values) => {
+//     try {
+//       //   setLoader(true);
+//       const res = await AxiosInstance.post(`${baseUrl}/user/login`, {
+//         ...values,
+//       });
 
-      if (res.data.statusCode === 200) {
-        const { token, user } = res.data;
+//       if (res.data.statusCode === 200) {
+//         const { token, user } = res.data;
 
-        if (token) {
-          // Set timeout to log out when the token expires
-          const decodedToken = JSON.parse(atob(token.split(".")[1]));
-          const expiryTime = decodedToken.exp * 1000 - Date.now();
-          const { UserId, exp } = decodedToken;
+//         if (token) {
+//           // Set timeout to log out when the token expires
+//           const decodedToken = JSON.parse(atob(token.split(".")[1]));
+//           const expiryTime = decodedToken.exp * 1000 - Date.now();
+//           const { UserId, exp } = decodedToken;
 
-          setTimeout(() => {
-            handleLogout();
-          }, expiryTime);
-        }
+//           setTimeout(() => {
+//             handleLogout();
+//           }, expiryTime);
+//         }
 
-        dispatch(login({ user, token })); // Store user and token in Redux
-        dispatch(fetchCartCount(user.UserId)); // Fetch cart count after login
-        // localStorage.removeItem("visitedDiamonds");
+//         dispatch(login({ user, token })); // Store user and token in Redux
+//         dispatch(fetchCartCount(user.UserId)); // Fetch cart count after login
+//         // localStorage.removeItem("visitedDiamonds");
 
-        showToast.success(res.data.message, { autoClose: 3000 });
+//         showToast.success(res.data.message, { autoClose: 3000 });
 
-        formik.resetForm();
-        navigate("/");
-      } else if (res.data.statusCode === 201) {
-        showToast(res.data.message);
-      } else if (res.data.statusCode === 202) {
-        showToast(res.data.message);
-      } else if (res.data.statusCode === 204) {
-        showToast(res.data.message);
-      }
-    } catch (error) {
-      if (error.response) {
-        showToast.error(error.response?.data.message || "An error occurred");
-      } else {
-        showToast.error("Something went wrong. Please try again later.");
-      }
-    } finally {
-      //   setLoader(false);
-    }
-  };
+//         formik.resetForm();
+//         navigate("/");
+//       } else if (res.data.statusCode === 201) {
+//         showToast(res.data.message);
+//       } else if (res.data.statusCode === 202) {
+//         showToast(res.data.message);
+//       } else if (res.data.statusCode === 204) {
+//         showToast(res.data.message);
+//       }
+//     } catch (error) {
+//       if (error.response) {
+//         showToast.error(error.response?.data.message || "An error occurred");
+//       } else {
+//         showToast.error("Something went wrong. Please try again later.");
+//       }
+//     } finally {
+//       //   setLoader(false);
+//     }
+//   };
 
   return (
     <>
@@ -192,12 +191,12 @@ const Forgotpassword = () => {
                 style={{ width: "100%", marginTop: "24px" }}
               >
                 <TextField
-                  value={formik.values.Email}
+                  value={formik.values.PrimaryEmail}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  error={formik.touched.Email && Boolean(formik.errors.Email)}
-                  helperText={formik.touched.Email && formik.errors.Email}
-                  name="Email"
+                  error={formik.touched.PrimaryEmail && Boolean(formik.errors.PrimaryEmail)}
+                  helperText={formik.touched.PrimaryEmail && formik.errors.PrimaryEmail}
+                  name="PrimaryEmail"
                   type="text"
                   className="text-blue-color w-100"
                   fullWidth
@@ -205,9 +204,8 @@ const Forgotpassword = () => {
                 />
               </FormGroup>
               <p className="forgot-password mt-2">
-                
                 <span className="sign-ups" onClick={() => navigate("/login")}>
-                 Back to login
+                  Back to login
                 </span>
               </p>
               {/* <div className="password-container">

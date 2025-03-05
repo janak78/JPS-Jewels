@@ -8,7 +8,7 @@ import bracelete from "../../assets/images/bracelet.svg";
 import chain from "../../assets/images/chain.svg";
 import choker from "../../assets/images/choker (1).svg";
 import cufflinks from "../../assets/images/cufflinks.svg";
-// import earrings from "../../assets/images/earrings.svg";
+import earrings from "../../assets/images/earrings.svg";
 import gemstone from "../../assets/images/gemstone.svg";
 import giftset from "../../assets/images/gift.svg";
 import necklace from "../../assets/images/necklace.svg";
@@ -47,13 +47,14 @@ const categories = [
   { img: rings, name: "RINGS" },
   { img: bracelete, name: "BRACELET" },
   { img: chain, name: "CHAIN" },
-  { img: choker, name: "CHOKER" },
-  { img: cufflinks, name: "EARRINGS" },
+  { img: choker, name: "CHOCKER" },
+  { img: cufflinks, name: "CUFFLINKS" },
+  { img: earrings, name: "EARRINGS" },
   { img: gemstone, name: "GEMSTONE" },
   { img: giftset, name: "GIFT SET" },
   { img: necklace, name: "NECKLACE" },
   { img: watch, name: "WATCH" },
-  { img: ster, name: "STER" },
+  { img: ster, name: "STERLING" },
 ];
 
 const Home = () => {
@@ -155,7 +156,7 @@ const Home = () => {
                 <div className="btn-container">
                   <button
                     className="cardshopnow"
-                    onClick={() => navigate("/diamond")}
+                    onClick={() => navigate("/diamond?q=filter")}
                   >
                     Shop Now
                   </button>
@@ -202,7 +203,7 @@ const Home = () => {
                 <h3>Discover New Arrivals</h3>
                 <button
                   className="discover-button"
-                  onClick={() => navigate("/diamond")}
+                  onClick={() => navigate("/diamond?q=filter")}
                 >
                   Discover more
                 </button>
@@ -219,7 +220,7 @@ const Home = () => {
                 <h3>Jewelry Tells a Great Story</h3>
                 <button
                   className="discover-button"
-                  onClick={() => navigate("/diamond")}
+                  onClick={() => navigate("/diamond?q=filter")}
                 >
                   Discover more
                 </button>
@@ -259,7 +260,12 @@ const Home = () => {
                 <h6 className="mt-3 diamond-name1">
                   {diamond.Carats} CARAT {diamond.Shape} - {diamond.Lab}
                 </h6>
-                <p className="price1">${diamond.Amount.toFixed(2)}</p>
+                <p className="price">
+                  <span>Amount:</span> ${diamond.Amount.toFixed(2)}
+                </p>
+                <p className="price">
+                  <span>Price/ct:</span> ${diamond.Price.toFixed(2)}
+                </p>
                 <span
                   className="add-to-cart1"
                   onClick={(e) => {
@@ -291,7 +297,7 @@ const Home = () => {
             </p>
             <button
               className="collection-button"
-              onClick={() => navigate("/diamond")}
+              onClick={() => navigate("/diamond?q=filter")}
             >
               Discover more
             </button>
@@ -308,7 +314,7 @@ const Home = () => {
             </p>
             <button
               className="collection-button"
-              onClick={() => navigate("/diamond")}
+              onClick={() => navigate("/diamond?q=filter")}
             >
               Discover more
             </button>
@@ -454,7 +460,10 @@ const Home = () => {
             <p className="shop-description">
               Discover our exquisite collection of elegant earrings.
             </p>
-            <p className="shop-link" onClick={() => navigate("/diamond")}>
+            <p
+              className="shop-link"
+              onClick={() => navigate("/diamond?q=filter")}
+            >
               Discover more
             </p>
           </div>
@@ -469,7 +478,10 @@ const Home = () => {
             <p className="shop-description">
               Celebrate your love with our stunning collection.
             </p>
-            <p className="shop-link" onClick={() => navigate("/diamond")}>
+            <p
+              className="shop-link"
+              onClick={() => navigate("/diamond?q=filter")}
+            >
               Discover more
             </p>
           </div>
@@ -482,7 +494,10 @@ const Home = () => {
             <p className="shop-description">
               Elevate your elegance with our luxurious necklaces.
             </p>
-            <p className="shop-link" onClick={() => navigate("/diamond")}>
+            <p
+              className="shop-link"
+              onClick={() => navigate("/diamond?q=filter")}
+            >
               Discover more
             </p>
           </div>
