@@ -39,6 +39,7 @@ const sendEmail = async (toEmail, subject, body, data) => {
 router.post("/resetpasswordmail", async (req, res) => {
   try {
     const { PrimaryEmail } = req.body;
+    console.log(PrimaryEmail, "PrimaryEmail");
 
     if (!PrimaryEmail) {
       return res.status(400).json({ message: "Email address is required" });
@@ -48,6 +49,7 @@ router.post("/resetpasswordmail", async (req, res) => {
       PrimaryEmail,
       IsDelete: false,
     });
+    console.log(user, "user");
 
     if (!user) {
       return res.status(404).json({
@@ -59,34 +61,44 @@ router.post("/resetpasswordmail", async (req, res) => {
     const url = `http://localhost:3000/reset-password?token=${token}`;
 
     const defaultBody = `
-      <div style="font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #ffffff;">
-        <table align="center" role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="max-width: 600px; margin: 20px auto; border-radius: 12px; background-color: #ffffff; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); border: 1px solid #e88c44;">
-          <tr>
-            <td style="padding: 20px 0; text-align: center; background-color: #063164; border-bottom: 1px solid #e88c44;">
-              <div style="display: inline-block; padding: 20px; background-color: white; border-radius: 12px">
-                <img src="https://app.cloudjobmanager.com/cdn/upload/20241002123818_site-logo1.png" alt="CloudJobManager Logo" style="width: 160px; max-width: 100%; display: block; margin: auto;" />
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td style="padding: 20px; text-align: center; color: #333333; background-color: #ffffff;">
-              <h2 style="font-size: 25px; font-weight: 700; color: #063164; margin-bottom: 20px; letter-spacing: 1px;">Reset Your Password</h2>
-              <p style="font-size: 16px; color: #666666; line-height: 1.6; margin-bottom: 20px;">
-                Dear Sir/Ma'am,<br>
-                We received a request to reset the password for your CloudJobManager account. Please click the button below to proceed. If you did not request this, please disregard this email. The link will expire in 4 hours.
-              </p>
-              <a href="${url}" style="display: inline-block; padding: 10px 20px; background-color: #e88c44; color: #ffffff; font-size: 15px; font-weight: 500; text-decoration: none; border-radius: 50px; text-transform: uppercase; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: all 0.3s ease;">Reset Your Password</a>
-              <p style="font-size: 14px; color: #888888; margin-top: 30px;">If you have any questions or concerns, please contact us at <a href="mailto:support@cloudjobmanager.com" style="color: #063164; text-decoration: none;">support@cloudjobmanager.com</a>.</p>
-            </td>
-          </tr>
-          <tr>
-            <td style="padding: 30px 20px; text-align: center; font-size: 12px; color: #888888; background-color: #f4f4f7; border-bottom-left-radius: 12px; border-bottom-right-radius: 12px;">
-              CloudJobManager, Inc. | All rights reserved.<br>
-              <a href="#" style="color: #e88c44; text-decoration: none;">Unsubscribe</a> if you no longer wish to receive these emails.
-            </td>
-          </tr>
-        </table>
-      </div>`;
+    <div style="font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #ffffff;">
+      <table align="center" role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="max-width: 600px; margin: 20px auto; border-radius: 12px; background-color: #ffffff; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); border: 1px solid rgb(23, 22, 22);">
+        <tr>
+  <td style="
+    padding: 20px 0; 
+    text-align: center; 
+    background-color: rgb(172, 130, 80); 
+    border-bottom: 1px solid #e88c44;
+    border-top-left-radius: 12px; 
+    border-top-right-radius: 12px; 
+    border: none;">
+    <a href="https://jpsjewels.com" style="color: #ffffff; font-size: 20px; font-weight: bold; text-decoration: none;">
+      JPS Jewels
+    </a>
+  </td>
+</tr>
+
+        <tr>
+          <td style="padding: 20px; text-align: center; color: #333333; background-color: #ffffff;">
+            <h2 style="font-size: 25px; font-weight: 700; color: rgb(172, 130, 80); margin-bottom: 20px; letter-spacing: 1px;">Reset Your Password</h2>
+            <p style="font-size: 16px; color: #666666; line-height: 1.6; margin-bottom: 20px;">
+              Dear Sir/Ma'am,<br>
+              We received a request to reset the password for your JPS Jewels account. Please click the button below to proceed. If you did not request this, please disregard this email. The link will expire in 4 hours.
+            </p>
+            <a href="${url}" style="display: inline-block; padding: 12px 25px; background-color: #e88c44; color: #ffffff; font-size: 16px; font-weight: bold; text-decoration: none; border-radius: 50px; text-transform: uppercase; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: all 0.3s ease;">
+              Reset Your Password
+            </a>
+            <p style="font-size: 14px; color: #888888; margin-top: 30px;">If you have any questions or concerns,or Need help? <a href="mailto:mitmangukiya192@gmail.com" style="color: #e88c44; text-decoration: none;">Contact Support</a></p>
+          </td>
+        </tr>
+        <tr>
+  <td style="padding: 15px 20px; text-align: center; font-size: 12px; color: #888888; background-color: #f4f4f7; border-bottom-left-radius: 12px; border-bottom-right-radius: 12px;">
+    <p>Thank you for choosing our services!<br><strong>JPS Jewels</strong>, Inc. | All rights reserved.</p>
+  </td>
+</tr>
+
+      </table>
+    </div>`;
 
     const data = [
       {
@@ -95,12 +107,16 @@ router.post("/resetpasswordmail", async (req, res) => {
       },
     ];
 
+    console.log(data, "data");
+
     const emailsend = await sendEmail(
       PrimaryEmail,
       "Reset Your Password",
       defaultBody,
       data
     );
+
+    console.log(emailsend, "emailsend");
 
     return res.json({
       statusCode: 200,
@@ -139,7 +155,7 @@ router.put("/reset_passwords/:mail", async (req, res) => {
     const encryptmail = req.params.mail;
     const verify = await verifyResetToken(encryptmail);
     const email = verify.data.PrimaryEmail;
-    console.log(email,"email");
+    console.log(email, "email");
     if (!verify.status) {
       return res.status(401).json({
         message: "Token expired. Please request a new password reset email.",
@@ -147,7 +163,7 @@ router.put("/reset_passwords/:mail", async (req, res) => {
     }
 
     const newPassword = req.body.UserPassword;
-    console.log(newPassword,"neoaa");
+    console.log(newPassword, "neoaa");
     if (!newPassword) {
       return res.status(400).json({
         message: "New password is required.",
@@ -159,7 +175,7 @@ router.put("/reset_passwords/:mail", async (req, res) => {
       IsDelete: false,
     });
 
-    console.log(user,"user");
+    console.log(user, "user");
 
     if (!user) {
       return res.status(404).json({
@@ -173,12 +189,12 @@ router.put("/reset_passwords/:mail", async (req, res) => {
       });
     }
 
-    console.log(newPassword,"newPassword");
+    console.log(newPassword, "newPassword");
 
     const hashConvert = encryptData(newPassword);
-    console.log(hashConvert,"hashConvert");
+    console.log(hashConvert, "hashConvert");
     const updateData = { UserPassword: hashConvert };
-    console.log(updateData,"updateData");
+    console.log(updateData, "updateData");
     await user.updateOne({ $set: updateData });
 
     return res.status(200).json({
