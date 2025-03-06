@@ -544,7 +544,6 @@ const Diamonddetail = () => {
             <Grid container spacing={2} className="mt-3">
               {similarDiamonds.slice(0, visibleCount).map((diamond, index) => (
                 <div className="col-md-3 col-sm-6" key={index}>
-                  {console.log(similarDiamonds, "smlrdiamnds")}
                   <div
                     className="diamond-card"
                     onClick={(e) => {

@@ -1,0 +1,31 @@
+.checkout-box-u {
+  background: white;
+  padding: 20px;
+  /* border: 1px solid #000; */
+  border-radius: 8px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  /* max-width: 90%; */
+  text-align: left;
+}
+
+.submit-button-u {
+  background-color: #c8a254 !important;
+  color: white !important;
+  margin-top: 15px;
+  width: 100px !important;
+  margin-right: auto !important;
+  font-weight: bold !important;
+  outline: none !important;
+}
+
+.submit-button-u:hover {
+  background-color: #b09245 !important;
+}
+
+.email-profile {
+  margin-top: 16px !important;
+}
+.address-profile {
+  margin-top: 10px !important;
+}

@@ -388,7 +388,13 @@ const Header = () => {
                           {userName ? userName.charAt(0).toUpperCase() : "?"}
                         </div>
 
-                        <div className="user-welcome-text">
+                        <div
+                          className="user-welcome-text"
+                          onClick={() => {
+                            navigate("/profile");
+                            setOpen(false);
+                          }}
+                        >
                           Welcome, {userName}
                           <div style={{ fontSize: "10px" }}> {Mail} </div>
                         </div>

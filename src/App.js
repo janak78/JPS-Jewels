@@ -21,6 +21,7 @@ import Pagenotfound from "./pages/Pagenotfound/Pagenotfound";
 import Diamonddetail from "./pages/Diamonddetail/Diamonddetail";
 import Forgotpassword from "./pages/Forgotpassword/Forgotpassword";
 import Resetpassword from "./pages/Forgotpassword/Resetpassword";
+import UserProfile from "./pages/Userprofile/UserProfile";
 
 import "./App.css";
 
@@ -104,6 +105,14 @@ function App() {
           element={
             <MainLayout>
               <Diamonddetail />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <MainLayout>
+              <UserProfile />
             </MainLayout>
           }
         />

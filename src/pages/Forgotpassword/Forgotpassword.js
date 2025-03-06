@@ -38,22 +38,28 @@ import gallery2 from "../../assets/gallery images/pexels-the-glorious-studio-358
 import gallery1 from "../../assets/gallery images/pexels-the-glorious-studio-3584518-10983783.jpg";
 import allimage from "../../assets/gallery images/allimage.png";
 import AxiosInstance from "../../Axiosinstance";
-import { sendResetPasswordEmail, resetState } from "../../redux/forgotPasswordSlice";
-
+import {
+  sendResetPasswordEmail,
+  resetState,
+} from "../../redux/forgotPasswordSlice";
 
 const Forgotpassword = () => {
   const baseUrl = process.env.REACT_APP_BASE_API;
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
-  const { loading, success, error } = useSelector((state) => state.forgotPasswordSlice);
+  const { loading, success, error } = useSelector(
+    (state) => state.forgotPasswordSlice
+  );
 
   const formik = useFormik({
     initialValues: {
       PrimaryEmail: "",
     },
     validationSchema: Yup.object({
-      PrimaryEmail: Yup.string().email("Invalid email").required("Email is required"),
+      PrimaryEmail: Yup.string()
+        .email("Invalid email")
+        .required("Email is required"),
     }),
     onSubmit: (values) => {
       dispatch(sendResetPasswordEmail(values.PrimaryEmail));
@@ -67,60 +73,68 @@ const Forgotpassword = () => {
       document.body.classList.remove("login--page");
     };
   }, []);
-//   //   const baseurl =
 
-//   const handleLogout = () => {
-//     dispatch(logout());
-//     dispatch(removeCart());
-//     navigate("/login");
-//   };
+  useEffect(() => {
+    if (success) {
+      formik.resetForm();
+      dispatch(resetState());
+    }
+  }, [success, dispatch]);
 
-//   const handleSubmit = async (values) => {
-//     try {
-//       //   setLoader(true);
-//       const res = await AxiosInstance.post(`${baseUrl}/user/login`, {
-//         ...values,
-//       });
+  //   //   const baseurl =
 
-//       if (res.data.statusCode === 200) {
-//         const { token, user } = res.data;
+  //   const handleLogout = () => {
+  //     dispatch(logout());
+  //     dispatch(removeCart());
+  //     navigate("/login");
+  //   };
 
-//         if (token) {
-//           // Set timeout to log out when the token expires
-//           const decodedToken = JSON.parse(atob(token.split(".")[1]));
-//           const expiryTime = decodedToken.exp * 1000 - Date.now();
-//           const { UserId, exp } = decodedToken;
+  //   const handleSubmit = async (values) => {
+  //     try {
+  //       //   setLoader(true);
+  //       const res = await AxiosInstance.post(`${baseUrl}/user/login`, {
+  //         ...values,
+  //       });
 
-//           setTimeout(() => {
-//             handleLogout();
-//           }, expiryTime);
-//         }
+  //       if (res.data.statusCode === 200) {
+  //         const { token, user } = res.data;
 
-//         dispatch(login({ user, token })); // Store user and token in Redux
-//         dispatch(fetchCartCount(user.UserId)); // Fetch cart count after login
-//         // localStorage.removeItem("visitedDiamonds");
+  //         if (token) {
+  //           // Set timeout to log out when the token expires
+  //           const decodedToken = JSON.parse(atob(token.split(".")[1]));
+  //           const expiryTime = decodedToken.exp * 1000 - Date.now();
+  //           const { UserId, exp } = decodedToken;
 
-//         showToast.success(res.data.message, { autoClose: 3000 });
+  //           setTimeout(() => {
+  //             handleLogout();
+  //           }, expiryTime);
+  //         }
 
-//         formik.resetForm();
-//         navigate("/");
-//       } else if (res.data.statusCode === 201) {
-//         showToast(res.data.message);
-//       } else if (res.data.statusCode === 202) {
-//         showToast(res.data.message);
-//       } else if (res.data.statusCode === 204) {
-//         showToast(res.data.message);
-//       }
-//     } catch (error) {
-//       if (error.response) {
-//         showToast.error(error.response?.data.message || "An error occurred");
-//       } else {
-//         showToast.error("Something went wrong. Please try again later.");
-//       }
-//     } finally {
-//       //   setLoader(false);
-//     }
-//   };
+  //         dispatch(login({ user, token })); // Store user and token in Redux
+  //         dispatch(fetchCartCount(user.UserId)); // Fetch cart count after login
+  //         // localStorage.removeItem("visitedDiamonds");
+
+  //         showToast.success(res.data.message, { autoClose: 3000 });
+
+  //         formik.resetForm();
+  //         navigate("/");
+  //       } else if (res.data.statusCode === 201) {
+  //         showToast(res.data.message);
+  //       } else if (res.data.statusCode === 202) {
+  //         showToast(res.data.message);
+  //       } else if (res.data.statusCode === 204) {
+  //         showToast(res.data.message);
+  //       }
+  //     } catch (error) {
+  //       if (error.response) {
+  //         showToast.error(error.response?.data.message || "An error occurred");
+  //       } else {
+  //         showToast.error("Something went wrong. Please try again later.");
+  //       }
+  //     } finally {
+  //       //   setLoader(false);
+  //     }
+  //   };
 
   return (
     <>
@@ -194,8 +208,13 @@ const Forgotpassword = () => {
                   value={formik.values.PrimaryEmail}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  error={formik.touched.PrimaryEmail && Boolean(formik.errors.PrimaryEmail)}
-                  helperText={formik.touched.PrimaryEmail && formik.errors.PrimaryEmail}
+                  error={
+                    formik.touched.PrimaryEmail &&
+                    Boolean(formik.errors.PrimaryEmail)
+                  }
+                  helperText={
+                    formik.touched.PrimaryEmail && formik.errors.PrimaryEmail
+                  }
                   name="PrimaryEmail"
                   type="text"
                   className="text-blue-color w-100"
@@ -252,8 +271,9 @@ const Forgotpassword = () => {
                 type="submit"
                 variant="contained"
                 className="login-btn mt-3"
+                disabled={loading}
               >
-                Submit
+                {loading ? "Submitting..." : "Submit"}
               </Button>
             </form>
             {/* </div> */}

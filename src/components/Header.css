@@ -224,12 +224,12 @@ body {
 .signup-link-signup {
   font-weight: bold;
   cursor: pointer;
-  color: #C9A236;
+  color: #c9a236;
   text-align: right;
-  align-items:center;
+  align-items: center;
 }
 
-.userlogo_login{
+.userlogo_login {
   display: flex;
   flex-direction: row;
   justify-content: start;
@@ -237,16 +237,16 @@ body {
   align-items: center;
 }
 
-.user-welcome-text{
+.user-welcome-text {
   padding-left: 15px;
-  text-align: left
-  ;
+  text-align: left;
+  cursor: pointer;
 }
 .user-avatar {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background-color: #C9A236; /* Change to dynamic colors if needed */
+  background-color: #c9a236; /* Change to dynamic colors if needed */
   color: white;
   display: flex;
   align-items: center;
@@ -255,7 +255,6 @@ body {
   font-weight: bold;
   cursor: pointer;
 }
-
 
 /* Responsive adjustments */
 @media (max-width: 500px) {
