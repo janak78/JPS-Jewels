@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { login, logout } from "../../redux/authSlice";
 import { fetchCartCount, removeCart } from "../../redux/cartSlice";
 import {
@@ -19,11 +19,16 @@ import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import axios from "axios";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams , useLocation} from "react-router-dom";
 import showToast from "../../components/Toast/Toaster";
 import "../login/login.css";
 import "./Resetpassword.css";
 import logo from "../../assets/images/logo.svg";
+import {
+  checkTokenStatus,
+  resetPassword,
+  resetState,
+} from "../../redux/resetPasswordSlice";
 import gallery13 from "../../assets/gallery images/luxury-shine-diamonds-digital-art_23-2151695052.avif";
 import gallery12 from "../../assets/gallery images/female-jewelry_772702-3140.avif";
 import gallery11 from "../../assets/gallery images/diamond-antique-vintage-earrings_43379-1011.avif";
@@ -44,24 +49,47 @@ const Resetpassword = () => {
   const baseUrl = process.env.REACT_APP_BASE_API;
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
+   // Extract token from the URL query parameters
+   const searchParams = new URLSearchParams(location.search);
+   const token = searchParams.get("token");
+ 
+  const { loading, success, error, tokenExpired } = useSelector(
+    (state) => state.resetPasswordSlice
+  );
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
+  useEffect(() => {
+    dispatch(checkTokenStatus(token)); // Check if token is valid
+  }, [dispatch, token]);
+
+  useEffect(() => {
+    if (success) {
+      setTimeout(() => {
+        navigate("/login"); // Redirect to login after success
+        dispatch(resetState());
+      }, 3000);
+    }
+  }, [success, navigate, dispatch]);
+
   const formik = useFormik({
     initialValues: {
-      Username: "",
       UserPassword: "",
       UserConfirmPassword: "",
     },
     validateOnChange: false,
     validateOnBlur: false,
     validationSchema: Yup.object().shape({
-      Username: Yup.string().required("Email is required"),
-      UserPassword: Yup.string().required("Password is required"),
-      UserConfirmPassword: Yup.string().required("Password is required"),
+      UserPassword: Yup.string()
+        .min(6, "Password must be at least 6 characters")
+        .required("Password is required"),
+      UserConfirmPassword: Yup.string()
+        .oneOf([Yup.ref("UserPassword"), null], "Passwords must match")
+        .required("Confirm Password is required"),
     }),
     onSubmit: (values) => {
-      handleSubmit(values);
+      dispatch(resetPassword({ token, password: values.UserPassword }));
     },
   });
 
@@ -74,63 +102,13 @@ const Resetpassword = () => {
   }, []);
   //   const baseurl =
 
-  const handleLogout = () => {
-    dispatch(logout());
-    dispatch(removeCart());
-    navigate("/login");
-  };
-
-  const handleSubmit = async (values) => {
-    try {
-      //   setLoader(true);
-      const res = await AxiosInstance.post(`${baseUrl}/user/login`, {
-        ...values,
-      });
-
-      if (res.data.statusCode === 200) {
-        const { token, user } = res.data;
-
-        if (token) {
-          // Set timeout to log out when the token expires
-          const decodedToken = JSON.parse(atob(token.split(".")[1]));
-          const expiryTime = decodedToken.exp * 1000 - Date.now();
-          const { UserId, exp } = decodedToken;
-
-          setTimeout(() => {
-            handleLogout();
-          }, expiryTime);
-        }
-
-        dispatch(login({ user, token })); // Store user and token in Redux
-        dispatch(fetchCartCount(user.UserId)); // Fetch cart count after login
-        // localStorage.removeItem("visitedDiamonds");
-
-        showToast.success(res.data.message, { autoClose: 3000 });
-
-        formik.resetForm();
-        navigate("/");
-      } else if (res.data.statusCode === 201) {
-        showToast(res.data.message);
-      } else if (res.data.statusCode === 202) {
-        showToast(res.data.message);
-      } else if (res.data.statusCode === 204) {
-        showToast(res.data.message);
-      }
-    } catch (error) {
-      if (error.response) {
-        showToast.error(error.response?.data.message || "An error occurred");
-      } else {
-        showToast.error("Something went wrong. Please try again later.");
-      }
-    } finally {
-      //   setLoader(false);
-    }
-  };
+//   if (tokenExpired) {
+//     return <h2>Token expired. Please request a new password reset email.</h2>;
+//   }
 
   return (
     <>
       <Grid container className="signup-container" spacing={2}>
-        {/* Left Image Section */}
         <Grid
           item
           xs={12}
@@ -138,9 +116,6 @@ const Resetpassword = () => {
           className="signup-image-container login-image-gallery"
         >
           <div className="image-overlay">
-            {/* <Typography variant="h4" className="signup-heading">
-            To keep connected with the largest shop in the world.
-          </Typography> */}
             <article className="gallery_wrapper gallery-login">
               <img src={gallery1} alt="Balloon with controled fire" />
               <img src={gallery2} alt="Minimalists catchphrase" />
@@ -181,70 +156,8 @@ const Resetpassword = () => {
             >
               Reset Password
             </Typography>
-            {/* <div className="auth-container"> */}
-            {/* Login Section */}
-            {/* <div className="auth-box"> */}
-            {/* <h2 className="auth-title">LOGIN</h2> */}
-            {/* <div className="loginpage-inputs"> */}
 
             <form onSubmit={formik.handleSubmit}>
-              {/* <FormGroup
-                className="text-boxes"
-                style={{ width: "100%", marginTop: "24px" }}
-              >
-                <TextField
-                  value={formik.values.Email}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  error={formik.touched.Email && Boolean(formik.errors.Email)}
-                  helperText={formik.touched.Email && formik.errors.Email}
-                  name="Email"
-                  type="text"
-                  className="text-blue-color w-100"
-                  fullWidth
-                  label="Email"
-                />
-              </FormGroup> */}
-              {/* <div className="password-container">
-                <TextField
-                  value={formik.values.UserPassword}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  name="UserPassword"
-                  label="Password"
-                  type={showPassword ? "text" : "password"}
-                  fullWidth
-                  margin="normal"
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <IconButton
-                          aria-label="toggle password visibility"
-                          onClick={() => setShowPassword(!showPassword)}
-                          edge="end"
-                        >
-                          {showPassword ? (
-                            <VisibilityOffIcon />
-                          ) : (
-                            <VisibilityIcon />
-                          )}
-                        </IconButton>
-                      </InputAdornment>
-                    ),
-                  }}
-                  error={
-                    formik.touched.UserPassword &&
-                    Boolean(formik.errors.UserPassword)
-                  }
-                  helperText={
-                    formik.touched.UserPassword && formik.errors.UserPassword
-                  }
-                />
-              </div> */}
-              {/* <p className="forgot-password">
-                Don't worry, happens to all of us. Enter your email below to
-                recover your password.
-              </p> */}
               <div className="password-container">
                 <TextField
                   value={formik.values.UserPassword}
@@ -286,8 +199,8 @@ const Resetpassword = () => {
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   name="UserConfirmPassword"
-                  label="Password"
-                  type={showPassword ? "text" : "password"}
+                  label="Confirm Password"
+                  type={showConfirmPassword ? "text" : "password"}
                   fullWidth
                   margin="normal"
                   InputProps={{
@@ -295,7 +208,9 @@ const Resetpassword = () => {
                       <InputAdornment position="end">
                         <IconButton
                           aria-label="toggle password visibility"
-                          onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                          onClick={() =>
+                            setShowConfirmPassword(!showConfirmPassword)
+                          }
                           edge="end"
                           className="password-field"
                         >

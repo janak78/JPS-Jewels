@@ -16,8 +16,8 @@ let transporter = nodemailer.createTransport({
   port: 587,
   secure: false,
   auth: {
-    user: "ip32portal@gmail.com",
-    pass: "urfszbvriwpqjnux",
+    user: "janaksolanki989@gmail.com",
+    pass: "qnotrwbbwbkpbcie",
   },
 });
 
@@ -25,7 +25,7 @@ const sendEmail = async (toEmail, subject, body, data) => {
   try {
     const mailOptions = {
       from: "jpsjewels@gmail.com",
-      to: [toEmail, "mitmangukiya192@gmail.com"],
+      to: [toEmail, "janaksolanki989@gmail.com"],
       subject: subject,
       html: body, // Sending HTML content
     };
@@ -58,7 +58,7 @@ router.post("/resetpasswordmail", async (req, res) => {
     }
 
     const token = await createResetToken({ PrimaryEmail });
-    const url = `http://localhost:3000/reset-password?token=${token}`;
+    const url = `http://localhost:3000/resetpassword?token=${token}`;
 
     const defaultBody = `
     <div style="font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #ffffff;">

@@ -75,7 +75,6 @@ const DiamondsGrid = () => {
     if (query !== "filter") {
       const decodedToken = jwtDecode(localStorage.getItem("filterToken"));
       setFilterData(decodedToken);
-      console.log(decodedToken, "decode");
       setShape(decodedToken.Shape);
       setSelectedClarity(decodedToken.Clarity);
       setSelectedColor(decodedToken.Color);

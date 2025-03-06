@@ -116,12 +116,9 @@ const Header = () => {
   const handleSubmit = async (values) => {
     try {
       //   setLoader(true);
-      const res = await AxiosInstance.post(
-        `${baseUrl}/user/login`,
-        {
-          ...values,
-        }
-      );
+      const res = await AxiosInstance.post(`${baseUrl}/user/login`, {
+        ...values,
+      });
 
       if (res.data.statusCode === 200) {
         // localStorage.setItem("Token", res.data.token);
@@ -183,7 +180,12 @@ const Header = () => {
     <header className="header">
       {/* Left Logo */}
       <div className="logo">
-        <img src={logo} alt="JPS Jewels" className="logo-image" />
+        <img
+          src={logo}
+          alt="JPS Jewels"
+          className="logo-image"
+          onClick={() => navigate("/")}
+        />
       </div>
 
       {/* Navigation Links (Hidden on Small Screens) */}
@@ -386,7 +388,13 @@ const Header = () => {
                           {userName ? userName.charAt(0).toUpperCase() : "?"}
                         </div>
 
-                        <div className="user-welcome-text">
+                        <div
+                          className="user-welcome-text"
+                          onClick={() => {
+                            navigate("/profile");
+                            setOpen(false);
+                          }}
+                        >
                           Welcome, {userName}
                           <div style={{ fontSize: "10px" }}> {Mail} </div>
                         </div>
