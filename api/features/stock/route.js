@@ -641,8 +641,12 @@ const fetchcaratsDetails = async () => {
   const Carets = await stockSchema.aggregate([
     {
       $match: {
-        Carats: 1.32,
-        IsDelete: false, // Filter to get only Carats = 1.32
+        IsDelete: false,
+      },
+    },
+    {
+      $sort: {
+        Carats: -1,
       },
     },
     {
@@ -689,6 +693,7 @@ const fetchcaratsDetails = async () => {
   };
 };
 
+
 router.get("/caretdata", async function (req, res) {
   try {
     const result = await fetchcaratsDetails();
@@ -717,6 +722,108 @@ router.get("/caretdata", async function (req, res) {
     res.status(500).json({
       statusCode: 500,
       message: error.message,
+    });
+  }
+});
+
+const getSimilarDiamonds = async (carat, color, clarity, shape) => {
+  try {
+    // Fetch all diamonds
+    const result = await fetchStockDetails();
+    
+    console.log("Fetched Stock Details:", result); // ✅ Check the full API response
+
+    if (result.statusCode !== 200 || !result.data || !Array.isArray(result.data)) {
+      console.log("No valid diamond data found!");
+      return { statusCode: result.statusCode, data: [] };
+    }
+
+    const caratValue = parseFloat(carat);
+    console.log("Searching for Carat:", caratValue, "Color:", color, "Clarity:", clarity, "Shape:", shape);
+
+    // 🔹 **Step 1: Try exact match first**
+    let similarDiamonds = result.data.filter((diamond) => {
+      const diamondCarat = parseFloat(diamond.Carats);
+      console.log("Checking Diamond:", diamondCarat, diamond.Color, diamond.Clarity, diamond.Shape);
+      return (
+        diamond.Color === color &&
+        diamond.Shape === shape ||
+        diamond.Clarity === clarity &&
+        Math.abs(diamondCarat - caratValue) <= 0.2 // ±0.2 carat range for nearby diamonds
+      );
+    });
+
+    // 🔹 **Step 2: If no exact match, allow slight differences**
+    if (similarDiamonds.length === 0) {
+      console.log("No exact matches found. Expanding search...");
+      similarDiamonds = result.data.filter((diamond) => {
+        const diamondCarat = parseFloat(diamond.Carats);
+        return (
+          diamond.Shape === shape &&
+          (diamond.Color === color || diamond.Clarity === clarity) &&
+          Math.abs(diamondCarat - caratValue) <= 0.3 // Looser range for more matches
+        );
+      });
+    }
+
+    // 🔹 **Step 3: If still no results, try even broader match**
+    if (similarDiamonds.length === 0) {
+      console.log("Still no matches. Broadening search further...");
+      similarDiamonds = result.data.filter((diamond) => {
+        const diamondCarat = parseFloat(diamond.Carats);
+        return (
+          diamond.Shape === shape &&
+          Math.abs(diamondCarat - caratValue) <= 0.4 // Even broader range
+        );
+      });
+    }
+
+    console.log("Similar Diamonds Found:", similarDiamonds);
+
+    // 🔹 Limit to 5 results
+    similarDiamonds = similarDiamonds.slice(0, 5);
+
+    return { statusCode: 200, data: similarDiamonds };
+  } catch (error) {
+    console.error("Error in getSimilarDiamonds:", error.message);
+    return { statusCode: 500, data: [], message: error.message };
+  }
+};
+
+
+router.get("/similarproducts", async function (req, res) {
+  try {
+    const { carat, color, clarity, shape } = req.query;
+
+    if (!carat || !color || !clarity || !shape) {
+      return res.status(400).json({
+        statusCode: 400,
+        message:
+          "Missing required query parameters: carat, color, clarity, shape",
+      });
+    }
+
+    let result = await getSimilarDiamonds(carat, color, clarity, shape);
+
+    if (result.statusCode === 200 && result.data.length > 0) {
+      // 🔹 Enhance each diamond with Certificate URL & Default Image
+      result.data = result.data.map((diamond) => {
+        return {
+          ...diamond,
+          certificateUrl: getCertificateUrl(diamond.Lab, diamond.CertificateNo),
+          Image: diamond.Image && diamond.Image.length > 0
+            ? diamond.Image
+            : getDefaultImageUrl(diamond.Shape),
+        };
+      });
+    }
+
+    res.status(result.statusCode).json(result);
+  } catch (error) {
+    console.error("Error in /similarproducts route:", error.message);
+    res.status(500).json({
+      statusCode: 500,
+      message: "Internal Server Error",
     });
   }
 });

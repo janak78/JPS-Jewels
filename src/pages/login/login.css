@@ -111,6 +111,7 @@ body.login--page {
   justify-content: start !important;
   align-items: start !important;
   font-weight: bold !important;
+  outline: none !important;
 }
 
 .loginpage-inputs {
@@ -154,4 +155,9 @@ body.login--page {
   font-size: 14px;
   cursor: pointer;
   font-weight: bold;
+}
+
+.loginpage-texts{
+  display: flex;
+  justify-content: space-between;
 }

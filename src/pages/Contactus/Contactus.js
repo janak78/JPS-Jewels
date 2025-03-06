@@ -10,10 +10,11 @@ import showToast from "../../components/Toast/Toaster";
 import "./Contactus.css";
 import TextInput from "../../components/inputs/TextInput";
 import { Grid } from "@mui/material";
+import AxiosInstance from "../../Axiosinstance";
 
 const Contactus = () => {
   const [isOpen, setIsOpen] = useState(false);
-
+  const baseUrl = process.env.REACT_APP_BASE_API;
   const formik = useFormik({
     initialValues: {
       Name: "",
@@ -32,8 +33,8 @@ const Contactus = () => {
     }),
     onSubmit: async (values, { setSubmitting, resetForm }) => {
       try {
-        const response = await axios.post(
-          "http://localhost:5000/api/contact/addcontact",
+        const response = await AxiosInstance.post(
+          `${baseUrl}/contact/addcontact`,
           values,
           { headers: { "Content-Type": "application/json" } }
         );

@@ -19,6 +19,7 @@ import "./Checkout.css";
 import showToast from "../../components/Toast/Toaster";
 
 const Checkout = () => {
+  const baseUrl = process.env.REACT_APP_BASE_API;
   const dispatch = useDispatch();
 
   const userName = useSelector((state) => state.auth.Username);
@@ -54,7 +55,7 @@ const Checkout = () => {
     try {
       const UserId = "your_user_id"; // Replace with the actual user ID
       const response = await AxiosInstance.post(
-        `http://localhost:5000/api/billing/addbilling?UserId=${localStorage.getItem(
+        `${baseUrl}/billing/addbilling?UserId=${localStorage.getItem(
           "UserId"
         )}`, // Replace with your actual API URL
         values

@@ -8,6 +8,7 @@ const initialState = {
   cartCount: 0,
   cartData: [],
 };
+const baseUrl = process.env.REACT_APP_BASE_API;
 
 const cartSlice = createSlice({
   name: "cart",
@@ -42,7 +43,7 @@ export const fetchCartCount = (userId) => async (dispatch) => {
     const token = localStorage.getItem("Token"); // Get token from localStorage
 
     const res = await AxiosInstance.get(
-      `http://localhost:5000/api/cart/cart?userId=${userId}`
+      `${baseUrl}/cart/cart?userId=${userId}`
     );
 
     if (res.data.statusCode === 200) {
@@ -60,7 +61,7 @@ export const addToCart = (item, userId, shouldShowToast) => async (dispatch) => 
     const token = localStorage.getItem("Token");
 
     const response = await AxiosInstance.post(
-      "http://localhost:5000/api/cart/addtocart",
+      `${baseUrl}/cart/addtocart`,
       { ...item, UserId: userId }
     );
 
@@ -94,7 +95,7 @@ export const removeFromCart = (AddToCartId, userId) => async (dispatch) => {
   if (willDelete) {
     try {
       const response = await AxiosInstance.delete(
-        `http://localhost:5000/api/cart/updatecart/${AddToCartId}`
+        `${baseUrl}/cart/updatecart/${AddToCartId}`
       );
 
       if (response.data.statusCode === 200) {

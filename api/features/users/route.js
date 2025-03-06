@@ -133,6 +133,11 @@ const getUser = async (UserId, req) => {
           FirstName: 1,
           LastName: 1,
           UserPassword: 1,
+          City: 1,
+          State: 1,
+          Country: 1,
+          Pincode: 1,
+          PhoneNo: 1,
         },
       },
     ]);
@@ -397,9 +402,7 @@ const loginUser = async (data) => {
     console.log(user, UserPassword);
 
     // Validate the password
-    const isPasswordValid = await decryptData(
-      user.UserPassword
-    );
+    const isPasswordValid = await decryptData(user.UserPassword);
 
     console.log(isPasswordValid, "isPasswordValid");
 

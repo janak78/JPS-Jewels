@@ -19,8 +19,8 @@ let transporter = nodemailer.createTransport({
   port: 587,
   secure: false,
   auth: {
-    user: "ip32portal@gmail.com",
-    pass: "urfszbvriwpqjnux",
+    user: "mitmangukiya192@gmail.com",
+    pass: "rjlppddetutdvebe",
   },
 });
 
@@ -186,145 +186,165 @@ const addBilling = async (data, UserId) => {
     await sendEmail(
       data.ContactEmail,
       "Your Billing Details Have Been Successfully Added!",
-      `
-          <!DOCTYPE html>
-          <html lang="en">
-          <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Billing Details</title>
-            <style>
-              body {
-                font-family: Arial, sans-serif;
-                margin: 0;
-                padding: 0;
-                background-color: #f4f4f4;
-                color: #333;
-              }
-              .email-container {
-                max-width: 600px;
-                margin: 20px auto;
-                background-color: #ffffff;
-                border-radius: 10px;
-                border: 2px solid rgb(23, 22, 22);
-                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-                overflow: hidden;
-              }
-              .email-header {
-                background-color: rgb(172, 130, 80);
-                color: #ffffff;
-                padding: 20px;
-                text-align: center;
-                font-size: 24px;
-                font-weight: bold;
-              }
-              .email-body {
-                padding: 20px;
-              }
-              .email-body h2 {
-                font-size: 20px;
-                color: rgb(172, 130, 80);
-              }
-              .email-body p {
-                line-height: 1.6;
-                font-size: 16px;
-              }
-              .billing-table {
-                width: 100%;
-                border-collapse: collapse;
-              }
-              .billing-table th, .billing-table td {
-                border: 1px solid #ddd;
-                padding: 10px;
-                text-align: left;
-              }
-              .billing-table th {
-                background-color: #f4f4f4;
-                font-weight: bold;
-              }
-              .product-image {
-                width: 100px;
-                height: 100px;
-                object-fit: cover;
-                border-radius: 5px;
-              }
-              .total-amount {
-                text-align: center;
-                font-size: 18px;
-                font-weight: bold;
-                margin-top: 20px;
-                padding: 15px;
-                background: #f4f4f4;
-                border-radius: 5px;
-              }
-              .email-footer {
-                background-color: #f1f1f1;
-                text-align: center;
-                padding: 15px;
-                font-size: 14px;
-                color: #777;
-                border-top: 1px solid #ddd;
-              }
-              .email-footer a {
-                color: #007BFF;
-                text-decoration: none;
-              }
-            </style>
-          </head>
-          <body>
-            <div class="email-container">
-              <div class="email-header">
-                Your Billing Details
-              </div>
-      
-              <div class="email-body">
-                <h2>Hello ${data.FirstName || "Customer"} ${
-        data.LastName || ""
-      },</h2>
-                <p>Thank you for choosing our services. Here are your billing details:</p>
-      
-                <table class="billing-table">
+      `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Billing Details</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+      color: #333;
+    }
+    .email-container {
+      max-width: 600px;
+      margin: 20px auto;
+      background-color: #ffffff;
+      border-radius: 10px;
+      border: 2px solid rgb(23, 22, 22);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+    .email-header {
+      background-color: rgb(172, 130, 80);
+      color: #ffffff;
+      padding: 20px;
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+    }
+    .email-body {
+      padding: 20px;
+    }
+    .email-body h2 {
+      font-size: 20px;
+      color: rgb(172, 130, 80);
+    }
+    .email-body p {
+      line-height: 1.6;
+      font-size: 16px;
+    }
+    .billing-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .billing-table th, .billing-table td {
+      border: 1px solid #ddd;
+      padding: 10px;
+      text-align: left;
+    }
+    .billing-table th {
+      background-color: #f4f4f4;
+      font-weight: bold;
+    }
+    .product-image {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 5px;
+    }
+    .total-amount {
+      text-align: center;
+      font-size: 18px;
+      font-weight: bold;
+      margin-top: 20px;
+      padding: 15px;
+      background: #f4f4f4;
+      border-radius: 5px;
+    }
+    .email-footer {
+      background-color: #f1f1f1;
+      text-align: center;
+      padding: 15px;
+      font-size: 14px;
+      color: #777;
+      border-top: 1px solid #ddd;
+    }
+    .email-footer a {
+      color: #007BFF;
+      text-decoration: none;
+    }
+
+    /* Mobile Responsive Table */
+@media screen and (max-width: 600px) {
+  .product-image {
+    max-width: 80px;
+    height: 80px;
+  }
+}
+
+  </style>
+</head>
+<body>
+  <div class="email-container">
+    <div class="email-header">
+      Your Billing Details
+    </div>
+
+    <div class="email-body">
+      <h2>Hello ${data?.FirstName ?? "Customer"} ${data?.LastName ?? ""},</h2>
+      <p>Thank you for choosing our services. Here are your billing details:</p>
+
+      <table class="billing-table">
+        <tr>
+          <th>Item</th>
+          <th>Details</th>
+          <th>Image</th>
+        </tr>
+        ${
+          billingEntries?.length
+            ? billingEntries
+                .map(
+                  (item) => `
                   <tr>
-                    <th>Item</th>
-                    <th>Details</th>
-                    <th>Image</th>
-                  </tr>
-                  ${billingEntries
-                    .map(
-                      (item) => `
-                      <tr>
-                        <td>
-                          <strong>${item.Carats} Carat ${item.Shape} Diamond</strong><br>
-                          Color: ${item.Color}, Clarity: ${item.Clarity}, Lab: ${item.Lab}, Cut: ${item.Cut}<br>
-                          Quantity: ${item.Quantity} x $${item.Price}<br>
-                          <strong>Total: $${item.Amount}</strong>
-                        </td>
-                        <td>
-                          Billing ID: <strong>${item.BillingId}</strong>
-                        </td>
-                        <td>
-                          <img src="${item.Image}" class="product-image">
-                        </td>
-                      </tr>`
-                    )
-                    .join("")}
-                </table>
-      
-                <div class="total-amount">
-                  Total Amount: <span>$${billingEntries
-                    .reduce((acc, item) => acc + item.Amount, 0)
-                    .toFixed(2)}</span>
-                </div>
-              </div>
-      
-              <div class="email-footer">
-                <p>Need help? <a href="mailto:mitmangukiya192@gmail.com">Contact Support</a></p>
-                <p>Thank you for choosing our services!<br><strong>JPS Jewelers</strong></p>
-              </div>
-            </div>
-          </body>
-          </html>
-        `
+                    <td>
+                      <strong>${item?.Carats ?? "N/A"} Carat ${
+                    item?.Shape ?? "Unknown"
+                  } Diamond</strong><br>
+                      Color: ${item?.Color ?? "N/A"}, Clarity: ${
+                    item?.Clarity ?? "N/A"
+                  }, Lab: ${item?.Lab ?? "N/A"}, Cut: ${item?.Cut ?? "N/A"}<br>
+                      Quantity: ${item?.Quantity ?? 0} x $${
+                    item?.Price ?? 0.0
+                  }<br>
+                      <strong>Total: $${
+                        item?.Amount?.toFixed(2) ?? "0.00"
+                      }</strong>
+                    </td>
+                    <td>
+                      Billing ID: <strong>${item?.BillingId ?? "N/A"}</strong>
+                    </td>
+                    <td>
+                      <img src="${
+                        item?.Image ?? "https://via.placeholder.com/100"
+                      }" class="product-image">
+                    </td>
+                  </tr>`
+                )
+                .join("")
+            : `<tr><td colspan="3" style="text-align:center;">No billing details available.</td></tr>`
+        }
+      </table>
+
+      <div class="total-amount">
+        Total Amount: <span>$${billingEntries
+          ?.reduce((acc, item) => acc + (item?.Amount || 0), 0)
+          .toFixed(2)}</span>
+      </div>
+    </div>
+
+    <div class="email-footer">
+      <p>Need help? <a href="mailto:mitmangukiya192@gmail.com">Contact Support</a></p>
+      <p>Thank you for choosing our services!<br><strong>JPS Jewelers</strong>, Inc. | All rights reserved.</p>
+    </div>
+  </div>
+</body>
+</html>
+`
     );
 
     const updateCheckoutStatus = await Cart.updateMany(
@@ -339,7 +359,7 @@ const addBilling = async (data, UserId) => {
       },
       { $set: { IsDelete: true } }
     );
-    console.log(updateStock, "updateStock");
+    // console.log(updateStock, "updateStock");
 
     return {
       statusCode: 200,

@@ -19,6 +19,9 @@ import Signup from "./pages/register/register";
 import Shop from "./pages/shop/shop";
 import Pagenotfound from "./pages/Pagenotfound/Pagenotfound";
 import Diamonddetail from "./pages/Diamonddetail/Diamonddetail";
+import Forgotpassword from "./pages/Forgotpassword/Forgotpassword";
+import Resetpassword from "./pages/Forgotpassword/Resetpassword";
+import UserProfile from "./pages/Userprofile/UserProfile";
 
 import "./App.css";
 
@@ -106,6 +109,14 @@ function App() {
           }
         />
         <Route
+          path="/profile"
+          element={
+            <MainLayout>
+              <UserProfile />
+            </MainLayout>
+          }
+        />
+        <Route
           path="*"
           element={
             <MainLayout>
@@ -128,6 +139,22 @@ function App() {
           element={
             <AuthLayout>
               <Signup />
+            </AuthLayout>
+          }
+        />
+        <Route
+          path="/forgotpassword"
+          element={
+            <AuthLayout>
+              <Forgotpassword />
+            </AuthLayout>
+          }
+        />
+        <Route
+          path="/resetpassword"
+          element={
+            <AuthLayout>
+              <Resetpassword />
             </AuthLayout>
           }
         />
