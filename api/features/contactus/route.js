@@ -19,8 +19,8 @@ let transporter = nodemailer.createTransport({
   port: 587,
   secure: false,
   auth: {
-    user: "ip32portal@gmail.com",
-    pass: "urfszbvriwpqjnux",
+    user: "mitmangukiya192@gmail.com",
+    pass: "rjlppddetutdvebe",
   },
 });
 
@@ -72,37 +72,51 @@ const addContact = async (data) => {
     // Prepare email content
     const emailBody = `
         <!DOCTYPE html>
-        <html lang="en">
-        <head>
-          <meta charset="UTF-8">
-          <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <title>Contact Confirmation</title>
-          <style>
-            body { font-family: Arial, sans-serif; background-color: #f4f4f4; color: #333; }
-            .email-container { max-width: 600px; margin: 20px auto; background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); }
-            .email-header { background: rgb(172, 130, 80); color: #fff; padding: 20px; text-align: center; font-size: 24px; border-bottom: 3px solid #0056b3; }
-            .email-body { padding: 20px; }
-            .email-body h2 { color: rgb(172, 130, 80); }
-            .email-body p { font-size: 16px; line-height: 1.6; }
-            .email-footer { background: #f1f1f1; text-align: center; padding: 15px; font-size: 14px; color: #777; border-top: 1px solid #ddd; }
-            .email-footer a { color: #007BFF; text-decoration: none; }
-          </style>
-        </head>
-        <body>
-          <div class="email-container">
-            <div class="email-header">Contact Confirmation</div>
-            <div class="email-body">
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Confirmation</title>
+  <style>
+    body { font-family: Arial, sans-serif; background-color: #f4f4f4; color: #333; margin: 0; padding: 0; }
+    table { width: 100%; border-spacing: 0; }
+    .email-container { max-width: 600px; margin: 20px auto; background: #fff; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); }
+    .email-header { background: rgb(172, 130, 80); color: #fff; font-size: 24px; text-align: center; padding: 20px; border-bottom: 3px solid #0056b3; }
+    .email-body { padding: 20px; }
+    .email-body h2 { color: rgb(172, 130, 80); margin: 0 0 10px; }
+    .email-body p { font-size: 16px; line-height: 1.6; margin: 0 0 10px; }
+    .email-footer { background: #f1f1f1; text-align: center; padding: 15px; font-size: 14px; color: #777; border-top: 1px solid #ddd; }
+    .email-footer a { color: #007BFF; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <table role="presentation" class="email-container">
+    <tr>
+      <td>
+        <table role="presentation" width="100%">
+          <tr>
+            <td class="email-header">Contact Confirmation</td>
+          </tr>
+          <tr>
+            <td class="email-body">
               <h2>Hello ${data.Name}</h2>
               <p>Thank you for reaching out to us! We have received your contact details and will get back to you shortly.</p>
               <p><strong>Email:</strong> ${data.Email}</p>
-            </div>
-            <div class="email-footer">
+            </td>
+          </tr>
+          <tr>
+            <td class="email-footer">
               <p>Need help? <a href="mailto:mitmangukiya192@gmail.com">Contact Support</a></p>
               <p>Thank you for choosing JPS Jewels!</p>
-            </div>
-          </div>
-        </body>
-        </html>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
+    
       `;
 
     // Send email

@@ -641,8 +641,12 @@ const fetchcaratsDetails = async () => {
   const Carets = await stockSchema.aggregate([
     {
       $match: {
-        Carats: 1.32,
-        IsDelete: false, // Filter to get only Carats = 1.32
+        IsDelete: false,
+      },
+    },
+    {
+      $sort: {
+        Carats: -1,
       },
     },
     {
@@ -688,6 +692,7 @@ const fetchcaratsDetails = async () => {
     TotalCount: stockCount,
   };
 };
+
 
 router.get("/caretdata", async function (req, res) {
   try {

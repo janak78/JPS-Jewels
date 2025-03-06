@@ -71,11 +71,16 @@ const Home = () => {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
     }, 3000);
 
-    return () => clearInterval(interval);
+    return () => clearInterval(interval);   
   }, []);
 
+  const hasFetched = useRef(false);
+
   useEffect(() => {
-    dispatch(fetchCaretData());
+    if (!hasFetched.current) {
+      dispatch(fetchCaretData());
+      hasFetched.current = true;
+    }
   }, [dispatch]);
 
   useEffect(() => {

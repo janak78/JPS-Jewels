@@ -19,8 +19,8 @@ let transporter = nodemailer.createTransport({
   port: 587,
   secure: false,
   auth: {
-    user: "ip32portal@gmail.com",
-    pass: "urfszbvriwpqjnux",
+    user: "mitmangukiya192@gmail.com",
+    pass: "rjlppddetutdvebe",
   },
 });
 
@@ -347,18 +347,18 @@ const addBilling = async (data, UserId) => {
 `
     );
 
-    // const updateCheckoutStatus = await Cart.updateMany(
-    //   { UserId, IsCheckout: false, IsDelete: false },
-    //   { $set: { IsCheckout: true, IsDelete: true } }
-    // );
+    const updateCheckoutStatus = await Cart.updateMany(
+      { UserId, IsCheckout: false, IsDelete: false },
+      { $set: { IsCheckout: true, IsDelete: true } }
+    );
 
-    // const updateStock = await stockSchema.updateMany(
-    //   {
-    //     SKU: { $in: cartDetails.map((item) => item.SKU) },
-    //     IsDelete: false,
-    //   },
-    //   { $set: { IsDelete: true } }
-    // );
+    const updateStock = await stockSchema.updateMany(
+      {
+        SKU: { $in: cartDetails.map((item) => item.SKU) },
+        IsDelete: false,
+      },
+      { $set: { IsDelete: true } }
+    );
     // console.log(updateStock, "updateStock");
 
     return {
