@@ -50,6 +50,7 @@ const Header = () => {
 
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
+  const token = useSelector((state) => state.auth.token);
   // const userName = useSelector((state) => state.auth.Username);
   const cartCount = useSelector((state) => state.cart.cartCount);
   const cartData = useSelector((state) => state.cart.cartData);
@@ -89,12 +90,13 @@ const Header = () => {
       dispatch(fetchCartCount(userId));
     }
   }, [dispatch, userId]);
+
   useEffect(() => {
     const userId = localStorage.getItem("UserId");
     if (userId) {
       dispatch(fetchUserData(userId));
     }
-  }, [dispatch, userId]);
+  }, [dispatch, userId, user, token]);
 
   useEffect(() => {
     checkUserToken();
@@ -160,8 +162,7 @@ const Header = () => {
           }, expiryTime);
         }
 
-        dispatch(login({ user, token })); // Store user and token in Redux
-        dispatch(fetchUserData(userId));
+        await dispatch(login({ user, token })); // Store user and token in Redux
 
         dispatch(fetchCartCount(user.UserId)); // Fetch cart count after login
 
