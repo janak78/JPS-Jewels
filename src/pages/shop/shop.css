@@ -108,6 +108,9 @@ a:hover {
   transform: translateX(5px);
 }
 
+.shop-diamonds-list{
+  margin-top: 40px !important;
+}
 /* responsive */
 /* @media (max-width: 992px) {
   .diamond-card {
