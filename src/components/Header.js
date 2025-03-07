@@ -31,7 +31,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes, faTrash } from "@fortawesome/free-solid-svg-icons";
 import "./Header.css";
 import AxiosInstance from "../Axiosinstance";
-import { fetchUserData } from "../redux/userSlice";
+import { fetchUserData, resetUserState } from "../redux/userSlice";
 
 const Header = () => {
   const baseUrl = process.env.REACT_APP_BASE_API;
@@ -60,10 +60,13 @@ const Header = () => {
 
   const Mails = useSelector((state) => state.userSlice.userData?.PrimaryEmail);
   const userNames = useSelector((state) => state.userSlice?.userData?.Username);
-  
+  console.log(userNames, "userNames");
+  console.log(Mails, "Mails");
+
   const handleLogout = () => {
     dispatch(logout());
     dispatch(removeCart());
+    dispatch(resetUserState());
     navigate("/login");
   };
 
@@ -86,13 +89,12 @@ const Header = () => {
       dispatch(fetchCartCount(userId));
     }
   }, [dispatch, userId]);
-  
   useEffect(() => {
     const userId = localStorage.getItem("UserId");
     if (userId) {
       dispatch(fetchUserData(userId));
     }
-  }, []);
+  }, [dispatch, userId]);
 
   useEffect(() => {
     checkUserToken();
