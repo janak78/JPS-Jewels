@@ -31,6 +31,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes, faTrash } from "@fortawesome/free-solid-svg-icons";
 import "./Header.css";
 import AxiosInstance from "../Axiosinstance";
+import { fetchUserData } from "../redux/userSlice";
 
 const Header = () => {
   const baseUrl = process.env.REACT_APP_BASE_API;
@@ -49,10 +50,18 @@ const Header = () => {
 
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
-  const userName = useSelector((state) => state.auth.Username);
+  // const userName = useSelector((state) => state.auth.Username);
   const cartCount = useSelector((state) => state.cart.cartCount);
   const cartData = useSelector((state) => state.cart.cartData);
-  const Mail = useSelector((state) => state.auth.Mail);
+  // const Mail = useSelector((state) => state.auth.Mail);
+  // const cartCount = useSelector((state) => state.cart.cartCount);
+  // const cartData = useSelector((state) => state.cart.cartData);
+  // const Mail = useSelector((state) => state.auth.Mail);
+
+  const Mails = useSelector((state) => state.userSlice.userData?.PrimaryEmail);
+  const userNames = useSelector((state) => state.userSlice?.userData?.Username);
+  console.log(userNames, "userNames");
+  console.log(Mails, "Mails");
 
   const handleLogout = () => {
     dispatch(logout());
@@ -79,6 +88,13 @@ const Header = () => {
       dispatch(fetchCartCount(userId));
     }
   }, [dispatch, userId]);
+  
+  useEffect(() => {
+    const userId = localStorage.getItem("UserId");
+    if (userId) {
+      dispatch(fetchUserData(userId));
+    }
+  }, []);
 
   useEffect(() => {
     checkUserToken();
@@ -145,6 +161,8 @@ const Header = () => {
         }
 
         dispatch(login({ user, token })); // Store user and token in Redux
+        dispatch(fetchUserData(userId));
+
         dispatch(fetchCartCount(user.UserId)); // Fetch cart count after login
 
         showToast.success(res.data.message, { autoClose: 3000 });
@@ -275,7 +293,7 @@ const Header = () => {
                 CART
               </Typography>
               <div style={{ height: "100%", overflowY: "auto" }}>
-                {userName ? (
+                {userNames ? (
                   cartData && cartData.length > 0 ? (
                     cartData.map((item, index) => (
                       <div
@@ -378,14 +396,14 @@ const Header = () => {
               {/* Dropdown Login Form */}
               {open && (
                 <div className="login-dropdown">
-                  {userName ? (
+                  {userNames ? (
                     <div className="user-info-container">
                       <div className="userlogo_login">
                         <div
                           className="user-avatar"
                           onClick={() => setOpen(!open)}
                         >
-                          {userName ? userName.charAt(0).toUpperCase() : "?"}
+                          {userNames ? userNames.charAt(0).toUpperCase() : "?"}
                         </div>
 
                         <div
@@ -395,8 +413,8 @@ const Header = () => {
                             setOpen(false);
                           }}
                         >
-                          Welcome, {userName}
-                          <div style={{ fontSize: "10px" }}> {Mail} </div>
+                          Welcome, {userNames}
+                          <div style={{ fontSize: "10px" }}> {Mails} </div>
                         </div>
                       </div>
                       <div className="forgot-signup">
