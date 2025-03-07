@@ -49,7 +49,7 @@ const fetchCartDetails = async (UserId, SKU) => {
     },
   ]);
 
-  console.log(cartDetails,"cartDetails")
+  // console.log(cartDetails,"cartDetails")
 
   const cartCount = cartDetails.length;
 
