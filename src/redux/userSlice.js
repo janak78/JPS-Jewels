@@ -22,7 +22,7 @@ export const fetchUserData = createAsyncThunk(
     } catch (error) {
       showToast.error("Error fetching user data");
       return rejectWithValue("Error fetching user data");
-    }
+    } 
   }
 );
 
