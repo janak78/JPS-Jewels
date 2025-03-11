@@ -123,7 +123,8 @@ body {
 }
 
 /* Responsive Styles */
-@media (max-width: 768px) {
+/* @media (max-width: 768px) { */
+@media (max-width: 991px) {
   /* Hide Navigation */
   .nav {
     display: none;
@@ -161,6 +162,8 @@ body {
 
   .logo-image {
     height: 30px;
+    width: 100% !important;
+    cursor: pointer;
   }
 
   .nav-link {

@@ -29,6 +29,7 @@ import { addToCart } from "../../redux/cartSlice";
 import { fetchCartCount } from "../../redux/cartSlice";
 import showToast from "../../components/Toast/Toaster";
 import { fetchCaretData, fetchSimilarDiamonds } from "../../redux/shopSlice";
+import DiamondLoader from "../../components/Loader/loader";
 
 const Diamonddetail = () => {
   const location = useLocation();
@@ -50,6 +51,7 @@ const Diamonddetail = () => {
   const [openCertificateModal, setOpenCertificateModal] = useState(false);
   const [openImageModal, setOpenImageModal] = useState(false);
   const userId = useSelector((state) => state.auth?.user?.UserId);
+  const [isloading, setIsLoading] = useState(true);
 
   const dispatch = useDispatch();
   const { diamondDetail, loading, error } = useSelector(
@@ -94,7 +96,8 @@ const Diamonddetail = () => {
   };
 
   const handleCertificateClick = () => {
-    setOpenCertificateModal(true); // Open certificate modal
+    setOpenCertificateModal(true);
+    setIsLoading(true);
   };
 
   // Functions to handle modal closing
@@ -139,21 +142,20 @@ const Diamonddetail = () => {
     if (diamond) {
       let visitedDiamonds =
         JSON.parse(localStorage.getItem("visitedDiamonds")) || [];
-  
+
       // Avoid duplicates
       if (!visitedDiamonds.find((d) => d.SKU === diamond.SKU)) {
         visitedDiamonds.unshift(diamond); // Add new diamond to the beginning
-  
+
         localStorage.setItem(
           "visitedDiamonds",
           JSON.stringify(visitedDiamonds)
         );
-  
+
         setVisitedDiamonds([...visitedDiamonds]); // Update state immediately
       }
     }
   }, [diamond]);
-  
 
   useEffect(() => {
     const storedDiamonds =
@@ -279,14 +281,25 @@ const Diamonddetail = () => {
             >
               <DialogTitle>Diamond Certificate</DialogTitle>
               <DialogContent>
+                {/* Loader - shown when loading */}
+                {isloading && (
+                  <div style={{ textAlign: "center", margin: "20px 0" }}>
+                    <DiamondLoader />
+                  </div>
+                )}
+
+                {/* Iframe - hidden while loading */}
                 <iframe
                   width="100%"
                   height="600"
                   src={diamondData?.certificateUrl}
                   title="Diamond Certificate"
                   frameBorder="0"
+                  onLoad={() => setIsLoading(false)} // Set loading to false when iframe loads
+                  style={{ display: isloading ? "none" : "block" }} // Hide iframe while loading
                 ></iframe>
               </DialogContent>
+
               <DialogActions>
                 <Button
                   onClick={handleCloseCertificateModal}
@@ -539,7 +552,7 @@ const Diamonddetail = () => {
           occasion, this diamond is the epitome of beauty and luxury.
         </p>
 
-        <div className="similar-diamonds-section">
+        {/* <div className="similar-diamonds-section">
           <h3>Similar Diamonds</h3>
           {similarDiamonds.length === 0 ? (
             <p>No similar diamonds found.</p>
@@ -580,54 +593,148 @@ const Diamonddetail = () => {
               ))}
             </Grid>
           )}
+        </div> */}
+        <div className="similar-diamonds-section">
+          <h3>Similar Diamonds</h3>
+          {similarDiamonds.length === 0 ? (
+            <p>No similar diamonds found.</p>
+          ) : (
+            <div className="row">
+              {similarDiamonds.slice(0, visibleCount).map((diamond, index) => (
+                <div
+                  key={index}
+                  className="col-xl-3 col-lg-3 col-md-4 col-sm-6 mb-20"
+                >
+                  <div
+                    className="diamond-card"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      navigate("/diamonddetail", { state: { diamond } });
+                    }}
+                  >
+                    <div className="shopimg">
+                      <img
+                        src={diamond.Image}
+                        alt={diamond.Shape}
+                        className="diamond-img"
+                      />
+                    </div>
+                    <div class="dimond-content">
+                      <h6 className="diamond-name">
+                        {diamond.Carats} CARAT {diamond.Shape} - {diamond.Lab}
+                      </h6>
+                      <p className="price">
+                        <span>Amount:</span> ${diamond.Amount.toFixed(2)}
+                      </p>
+                      <p className="price">
+                        <span>Price per carat:</span> $
+                        {diamond.Price.toFixed(2)}
+                      </p>
+                      <span
+                        className="add-to-cart"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleAddToCart(diamond, true);
+                        }}
+                      >
+                        Add to cart <i class="fa-solid fa-arrow-right"></i>
+                        {/* <span className="">→</span> */}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         <h3 className="mt-3">Recently Visited Diamonds</h3>
-        <Grid container spacing={2} className="mt-3">
-  {visitedDiamonds.slice(0, visibleCount).map((diamond, index) => (
-    <div className="col-md-3 col-sm-6" key={index}>
-      <div
-        className="diamond-card"
-        onClick={(e) => {
-          e.stopPropagation();
-          navigate("/diamonddetail", { state: { diamond } });
-        }}
-      >
-        <div className="shopimg">
-          <img
-            src={diamond.Image}
-            alt={diamond.Shape}
-            className="diamond-img"
-          />
-        </div>
-        <h6 className="mt-3 diamond-name">
-          {diamond.Carats} CARAT {diamond.Shape} - {diamond.Lab}
-        </h6>
-        <p className="price">${diamond.Amount.toFixed(2)}</p>
-        <p className="price">{diamond.Shape}</p>
-        <span
-          className="add-to-cart"
-          onClick={(e) => {
-            e.stopPropagation();
-            handleAddToCart(diamond, true);
-          }}
-        >
-          Add to cart <span className="arrowbtn">→</span>
-        </span>
-      </div>
-    </div>
-  ))}
-</Grid>
+        {/* <Grid container spacing={2} className="mt-3">
+          {visitedDiamonds.slice(0, visibleCount).map((diamond, index) => (
+            <div className="col-md-3 col-sm-6" key={index}>
+              <div
+                className="diamond-card"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigate("/diamonddetail", { state: { diamond } });
+                }}
+              >
+                <div className="shopimg">
+                  <img
+                    src={diamond.Image}
+                    alt={diamond.Shape}
+                    className="diamond-img"
+                  />
+                </div>
+                <h6 className="mt-3 diamond-name">
+                  {diamond.Carats} CARAT {diamond.Shape} - {diamond.Lab}
+                </h6>
+                <p className="price">${diamond.Amount.toFixed(2)}</p>
+                <p className="price">{diamond.Shape}</p>
+                <span
+                  className="add-to-cart"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleAddToCart(diamond, true);
+                  }}
+                >
+                  Add to cart <span className="arrowbtn">→</span>
+                </span>
+              </div>
+            </div>
+          ))}
+        </Grid> */}
 
+        <div className="row">
+          {visitedDiamonds.slice(0, visibleCount).map((diamond, index) => (
+            <div
+              key={index}
+              className="col-xl-3 col-lg-3 col-md-4 col-sm-6 mb-20"
+            >
+              <div
+                className="diamond-card"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigate("/diamonddetail", { state: { diamond } });
+                }}
+              >
+                <div className="shopimg">
+                  <img
+                    src={diamond.Image}
+                    alt={diamond.Shape}
+                    className="diamond-img"
+                  />
+                </div>
+                <div class="dimond-content">
+                  <h6 className="diamond-name">
+                    {diamond.Carats} CARAT {diamond.Shape} - {diamond.Lab}
+                  </h6>
+                  <p className="price">
+                    <span>Amount:</span> ${diamond.Amount.toFixed(2)}
+                  </p>
+                  <p className="price">
+                    <span>Price per carat:</span> ${diamond.Price.toFixed(2)}
+                  </p>
+                  <span
+                    className="add-to-cart"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleAddToCart(diamond, true);
+                    }}
+                  >
+                    Add to cart <i class="fa-solid fa-arrow-right"></i>
+                    {/* <span className="">→</span> */}
+                  </span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
 
         {visibleCount < visitedDiamonds.length && (
-          <div className="text-center mt-3">
-            <button
-              className="btn"
-              style={{ backgroundColor: "#c9a236" }}
-              onClick={handleViewMore}
-            >
-              View More {">"}
+          <div className="view-btnalign mt-3">
+            <button className="view-morebtn btn" onClick={handleViewMore}>
+              View More <i class="fa-solid fa-arrow-right"></i>
             </button>
           </div>
         )}

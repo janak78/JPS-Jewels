@@ -2938,7 +2938,10 @@ const DiamondsGrid = () => {
                           <Button
                             variant="contained"
                             className="ml-2 apply-filter apply-btn"
-                            onClick={applyFilter}
+                            onClick={() => {
+                              applyFilter();
+                              setShowfilter(false);
+                            }}
                           >
                             Apply Filter
                           </Button>
@@ -3893,7 +3896,8 @@ const DiamondsGrid = () => {
                           <span>Amount:</span> ${diamond.Amount.toFixed(2)}
                         </p>
                         <p className="price">
-                          <span>Price per carat:</span> ${diamond.Price.toFixed(2)}
+                          <span>Price per carat:</span> $
+                          {diamond.Price.toFixed(2)}
                         </p>
                         <span
                           className="add-to-cart"

@@ -37,7 +37,7 @@ const Header = () => {
   const baseUrl = process.env.REACT_APP_BASE_API;
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 991);
   const [open, setOpen] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   // const [userName, setUserName] = useState(null);
@@ -104,7 +104,7 @@ const Header = () => {
 
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768);
+      setIsMobile(window.innerWidth <= 991);
     };
 
     window.addEventListener("resize", handleResize);
