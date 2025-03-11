@@ -646,7 +646,7 @@ const fetchcaratsDetails = async () => {
     },
     {
       $sort: {
-        Carats: -1,
+        Amount: -1,
       },
     },
     {
