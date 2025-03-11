@@ -8,7 +8,6 @@ const getTokenData = () => {
     return undefined;
   }
 };
-// console.log(jwtDecode(localStorage.getItem("Token")),"gtd")
 
 const initialState = {
   isAuthenticated: !!localStorage.getItem("Token"),

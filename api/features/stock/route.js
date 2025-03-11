@@ -21,7 +21,7 @@ const upload = multer({ storage: storage });
 
 router.post(
   "/addstocks",
-  verifyLoginToken,
+  
   upload.single("file"),
   async (req, res) => {
     try {
@@ -41,7 +41,6 @@ router.post(
       const worksheet = workbook.Sheets[sheetName];
       const jsonData = XLSX.utils.sheet_to_json(worksheet);
 
-      // ✅ Define Allowed Fields
       const allowedFields = [
         "Image",
         "Video",
@@ -75,7 +74,6 @@ router.post(
       ];
 
       for (const data of jsonData) {
-        // ✅ Check for Extra Fields
         const dataFields = Object.keys(data);
         const extraFields = dataFields.filter(
           (field) => !allowedFields.includes(field)
@@ -90,11 +88,14 @@ router.post(
           });
         }
 
-        // ✅ Proceed with Inserting Data
+        const defaultImageUrl = getDefaultImageUrl(data.Shape);
+        const finalImage =
+          data.Image && data.Image.length > 0 ? data.Image : defaultImageUrl;
+
         await stockSchema.findOneAndUpdate(
           { SKU: data.SKU },
           {
-            Image: data.Image,
+            Image: finalImage,
             Video: data.Video,
             DiamondType: data["Diamond Type"],
             HA: data["H&A"],
@@ -227,14 +228,12 @@ router.get("/data", async function (req, res) {
 
     if (result.statusCode === 200) {
       result.data.forEach((diamond) => {
-        // Add certificate URL
         const certificateUrl = getCertificateUrl(
           diamond.Lab,
           diamond.CertificateNo
         );
         diamond.certificateUrl = certificateUrl;
 
-        // Add default image URL based on the shape
         const defaultImageUrl = getDefaultImageUrl(diamond.Shape);
         diamond.Image =
           diamond.Image && diamond.Image.length > 0
@@ -257,7 +256,7 @@ const fetchDiamondsPageDetails = async (query) => {
   try {
     const pageSize = parseInt(query.pageSize) || 10;
     let pageNumber = parseInt(query.pageNumber) || 1;
-    pageNumber = pageNumber - 1; // Convert to zero-based index
+    pageNumber = pageNumber - 1;
 
     const matchStage = { IsDelete: false };
 
@@ -370,7 +369,6 @@ const fetchDiamondsPageDetails = async (query) => {
       }
     }
 
-    // **Measurements Filtering**
     if (
       query.minLength ||
       query.maxLength ||
@@ -496,7 +494,6 @@ const fetchDiamondsPageDetails = async (query) => {
       { $sort: { createdAt: 1 } },
     ]);
 
-    // const filterToken = createUnsignedJWT(query);
 
     const stockCount = diamondDetailsPage.length;
     const totalPages = Math.ceil(stockCount / pageSize);
@@ -516,7 +513,6 @@ const fetchDiamondsPageDetails = async (query) => {
       totalPages,
       currentPage: pageNumber + 1,
       TotalCount: stockCount,
-      // filterToken,
     };
   } catch (error) {
     console.log(error);
@@ -528,7 +524,6 @@ const fetchDiamondsPageDetails = async (query) => {
   }
 };
 
-// **Route Handler**
 router.post("/data/page", async function (req, res) {
   try {
     const { pageSize, pageNumber } = req.query;
@@ -700,14 +695,12 @@ router.get("/caretdata", async function (req, res) {
 
     if (result.statusCode === 200) {
       result.data.forEach((diamond) => {
-        // Add certificate URL
         const certificateUrl = getCertificateUrl(
           diamond.Lab,
           diamond.CertificateNo
         );
         diamond.certificateUrl = certificateUrl;
 
-        // Add default image URL based on the shape
         const defaultImageUrl = getDefaultImageUrl(diamond.Shape);
         diamond.Image =
           diamond.Image && diamond.Image.length > 0
@@ -729,15 +722,14 @@ router.get("/caretdata", async function (req, res) {
 const fetchShapeDataDetails = async (shape) => {  
   const matchQuery = { IsDelete: false };
 
-  // Agar shape diya ho toh usko match query me add karo
   if (shape) {
     matchQuery.Shape = shape;
   }
 
   const Carets = await stockSchema.aggregate([
     { $match: matchQuery },
-    { $sort: { Amount: -1 } }, // High to low sorting
-    { $limit: 5 }, // Sirf top 5 data fetch karo
+    { $sort: { Amount: -1 } },
+    { $limit: 5 },
     {
       $project: {
         Image: 1,
@@ -770,7 +762,6 @@ const fetchShapeDataDetails = async (shape) => {
       },
     },
   ]);
-  console.log("Carets:", Carets);
 
   return {
     statusCode: Carets.length > 0 ? 200 : 204,
@@ -780,19 +771,16 @@ const fetchShapeDataDetails = async (shape) => {
   };
 };
 
-// **API Route**
 router.get("/shapdata", async function (req, res) {
   try {
-    const shape = req.query.shape || null; // Shape ko query params se lo
+    const shape = req.query.shape || null;
     const result = await fetchShapeDataDetails(shape);
 
     if (result.statusCode === 200) {
       result.data.forEach((diamond) => {
-        // **🔹 Certificate URL add karo**
         const certificateUrl = getCertificateUrl(diamond.Lab, diamond.CertificateNo);
         diamond.certificateUrl = certificateUrl;
 
-        // **🔹 Default image URL based on shape**
         const defaultImageUrl = getDefaultImageUrl(diamond.Shape);
         diamond.Image = diamond.Image && diamond.Image.length > 0 ? diamond.Image : defaultImageUrl;
       });
@@ -810,59 +798,46 @@ router.get("/shapdata", async function (req, res) {
 
 const getSimilarDiamonds = async (carat, color, clarity, shape) => {
   try {
-    // Fetch all diamonds
     const result = await fetchStockDetails();
     
-    console.log("Fetched Stock Details:", result); // ✅ Check the full API response
 
     if (result.statusCode !== 200 || !result.data || !Array.isArray(result.data)) {
-      console.log("No valid diamond data found!");
       return { statusCode: result.statusCode, data: [] };
     }
 
     const caratValue = parseFloat(carat);
-    console.log("Searching for Carat:", caratValue, "Color:", color, "Clarity:", clarity, "Shape:", shape);
 
-    // 🔹 **Step 1: Try exact match first**
     let similarDiamonds = result.data.filter((diamond) => {
       const diamondCarat = parseFloat(diamond.Carats);
-      console.log("Checking Diamond:", diamondCarat, diamond.Color, diamond.Clarity, diamond.Shape);
       return (
         diamond.Color === color &&
         diamond.Shape === shape ||
         diamond.Clarity === clarity &&
-        Math.abs(diamondCarat - caratValue) <= 0.2 // ±0.2 carat range for nearby diamonds
+        Math.abs(diamondCarat - caratValue) <= 0.2
       );
     });
 
-    // 🔹 **Step 2: If no exact match, allow slight differences**
     if (similarDiamonds.length === 0) {
-      console.log("No exact matches found. Expanding search...");
       similarDiamonds = result.data.filter((diamond) => {
         const diamondCarat = parseFloat(diamond.Carats);
         return (
           diamond.Shape === shape &&
           (diamond.Color === color || diamond.Clarity === clarity) &&
-          Math.abs(diamondCarat - caratValue) <= 0.3 // Looser range for more matches
+          Math.abs(diamondCarat - caratValue) <= 0.3
         );
       });
     }
 
-    // 🔹 **Step 3: If still no results, try even broader match**
     if (similarDiamonds.length === 0) {
-      console.log("Still no matches. Broadening search further...");
       similarDiamonds = result.data.filter((diamond) => {
         const diamondCarat = parseFloat(diamond.Carats);
         return (
           diamond.Shape === shape &&
-          Math.abs(diamondCarat - caratValue) <= 0.4 // Even broader range
+          Math.abs(diamondCarat - caratValue) <= 0.4
         );
       });
     }
 
-    console.log("Similar Diamonds Found:", similarDiamonds);
-
-    // 🔹 Limit to 5 results
     similarDiamonds = similarDiamonds.slice(0, 5);
 
     return { statusCode: 200, data: similarDiamonds };
@@ -888,7 +863,6 @@ router.get("/similarproducts", async function (req, res) {
     let result = await getSimilarDiamonds(carat, color, clarity, shape);
 
     if (result.statusCode === 200 && result.data.length > 0) {
-      // 🔹 Enhance each diamond with Certificate URL & Default Image
       result.data = result.data.map((diamond) => {
         return {
           ...diamond,
@@ -974,7 +948,6 @@ const fetchDaimondDetails = async (SkuId) => {
     SKU: SkuId,
     IsDelete: false,
   });
-  // console.log(diamondSearchQuery, "diamondSearchQuery");
 
   if (!diamondSearchQuery) {
     return {
@@ -1035,14 +1008,11 @@ router.get("/data/:SkuId", async function (req, res) {
 
     if (result.statusCode === 200) {
       result.data.forEach((diamond) => {
-        // Add certificate URL
         const certificateUrl = getCertificateUrl(
           diamond.Lab,
           diamond.CertificateNo
         );
         diamond.certificateUrl = certificateUrl;
-
-        // Add default image URL based on the shape
         const defaultImageUrl = getDefaultImageUrl(diamond.Shape);
         diamond.Image =
           diamond.Image && diamond.Image.length > 0
@@ -1070,7 +1040,6 @@ const fetchSearchDaimondDetails = async (CertificateNo) => {
     CertificateNo: CertificateNo,
     IsDelete: false,
   });
-  // console.log(diamondSearchQuery, "diamondSearchQuery");
 
   if (!diamondSearchQuery) {
     return {
@@ -1128,7 +1097,6 @@ router.get("/searchdata/:CertificateNo", async function (req, res) {
   try {
     const { CertificateNo } = req.params;
 
-    // **🛑 Only allow numeric values**
     if (!/^\d+$/.test(CertificateNo)) {
       return res.status(400).json({
         statusCode: 400,
@@ -1140,11 +1108,9 @@ router.get("/searchdata/:CertificateNo", async function (req, res) {
 
     if (result.statusCode === 200) {
       result.data.forEach((diamond) => {
-        // **🔹 Add Certificate URL**
         const certificateUrl = getCertificateUrl(diamond.Lab, diamond.CertificateNo);
         diamond.certificateUrl = certificateUrl;
-
-        // **🔹 Default image URL based on shape**
+        
         const defaultImageUrl = getDefaultImageUrl(diamond.Shape);
         diamond.Image = diamond.Image && diamond.Image.length > 0 ? diamond.Image : defaultImageUrl;
       });
@@ -1171,14 +1137,12 @@ router.get("/stockpopup", verifyLoginToken, async function (req, res) {
 
     if (result.statusCode === 200) {
       result.data.forEach((diamond) => {
-        // Add certificate URL
         const certificateUrl = getCertificateUrl(
           diamond.Lab,
           diamond.CertificateNo
         );
         diamond.certificateUrl = certificateUrl;
 
-        // Add default image URL based on the shape
         const defaultImageUrl = getDefaultImageUrl(diamond.Shape);
         diamond.Image =
           diamond.Image && diamond.Image.length > 0

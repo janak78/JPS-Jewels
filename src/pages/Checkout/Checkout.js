@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCartCount } from "../../redux/cartSlice";
-import { diamondsApi } from "../../redux/shopSlice"; 
+import { diamondsApi } from "../../redux/shopSlice";
 import {
   Container,
   TextField,
@@ -51,8 +51,11 @@ const Checkout = () => {
       .notRequired(),
   });
 
-  const handleSubmit = async (values, { setSubmitting }) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (values) => {
     try {
+      setIsSubmitting(true);
       const UserId = "your_user_id"; // Replace with the actual user ID
       const response = await AxiosInstance.post(
         `${baseUrl}/billing/addbilling?UserId=${localStorage.getItem(
@@ -73,7 +76,7 @@ const Checkout = () => {
       console.error("Error placing order:", error);
       // showToast.warning(response.data.messag);
     } finally {
-      setSubmitting(false);
+      setIsSubmitting(false);
     }
   };
   const grandTotal = cartData.reduce((total, item) => {
@@ -246,8 +249,9 @@ const Checkout = () => {
                     variant="contained"
                     fullWidth
                     className="submit-button mt-3"
+                    disabled={isSubmitting} // Jab submit ho raha ho to disable
                   >
-                    Place Your Order
+                    {isSubmitting ? "Placing Order..." : "Place Your Order"}
                   </Button>
                 </Form>
               )}
@@ -256,7 +260,7 @@ const Checkout = () => {
         </Grid>
         <Grid item xs={12} md={4}>
           <Box className="cart-boxs">
-              <div className="Itemtitle">Cart Items</div>
+            <div className="Itemtitle">Cart Items</div>
             <div className="cardstyle-checkout">
               {userName ? (
                 cartData && cartData.length > 0 ? (

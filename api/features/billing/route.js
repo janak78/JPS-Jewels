@@ -126,7 +126,6 @@ const addBilling = async (data, UserId) => {
         message: "No cart details found for the user.",
       };
     }
-    // console.log(cartDetails, "cartDetails");
 
     // Fetch diamond details
     const diamDetails = await Promise.all(
@@ -142,7 +141,6 @@ const addBilling = async (data, UserId) => {
       })
     );
 
-    // console.log(diamDetails, "ddd");
 
     // Add billing details for each item
     const billingEntries = diamDetails.map((item) => ({
@@ -165,7 +163,6 @@ const addBilling = async (data, UserId) => {
       updatedAt: timestamp,
     }));
 
-    console.log(billingEntries, "be");
 
     // Save all billing entries
     const newBillings = await Billing.insertMany(billingEntries);
@@ -359,7 +356,6 @@ const addBilling = async (data, UserId) => {
       },
       { $set: { IsDelete: true } }
     );
-    // console.log(updateStock, "updateStock");
 
     return {
       statusCode: 200,

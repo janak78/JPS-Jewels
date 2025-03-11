@@ -61,8 +61,6 @@ const Header = () => {
 
   const Mails = useSelector((state) => state.userSlice.userData?.PrimaryEmail);
   const userNames = useSelector((state) => state.userSlice?.userData?.Username);
-  console.log(userNames, "userNames");
-  console.log(Mails, "Mails");
 
   const handleLogout = () => {
     dispatch(logout());
