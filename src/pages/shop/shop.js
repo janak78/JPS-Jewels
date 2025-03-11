@@ -3,8 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "../../redux/cartSlice";
 import { fetchCartCount } from "../../redux/cartSlice";
 import { useFetchDiamondsQuery } from "../../redux/shopSlice";
-import DiamondLoader from "../../components/Loader/loader"; // Import Loader
-import "./shop.css"; // External CSS
+import DiamondLoader from "../../components/Loader/loader";
+import "./shop.css";
 import {
   Button,
   Menu,

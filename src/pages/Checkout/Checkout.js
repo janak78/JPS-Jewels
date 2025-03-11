@@ -80,7 +80,7 @@ const Checkout = () => {
     return total + (item?.diamondDetails?.Amount || 0);
   }, 0);
   return (
-    <Container maxWidth="xl" className="mt-3 mb-3">
+    <Container maxWidth="xl" className="mt-5 mb-4">
       <Grid container spacing={2}>
         <Grid item xs={12} md={8}>
           <Box className="checkout-box">

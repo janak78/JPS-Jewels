@@ -148,15 +148,15 @@
 .caretdata {
   display: flex;
   /* flex-direction: row; */
-  align-items: center;
+  /* align-items: center; */
   justify-content: center;
-  padding: 10px !important;
+  /* padding: 10px !important; */
 }
 
 .diamond-card1 {
   border: 1px solid #ddd;
   border-radius: 15px;
-  height: 400px;
+  height: 100%;
   text-align: center;
   box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.12);
   transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
@@ -165,7 +165,6 @@
   flex-direction: column;
   justify-content: space-between;
   position: relative;
-  margin-bottom: 15px;
   cursor: pointer;
 }
 
@@ -1030,4 +1029,18 @@ button.next {
   .category-name {
     font-size: 10px;
   }
+}
+
+.top-product-diamonds {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.icon-grid {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  max-width: 900px; /* Adjust max-width as needed */
 }

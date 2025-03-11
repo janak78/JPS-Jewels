@@ -163,7 +163,7 @@ const Diamonddetail = () => {
     setVisitedDiamonds(storedDiamonds);
   }, []);
 
-  if (loading) return <p>Loading diamond details...</p>;
+  if (loading) return <DiamondLoader />;
   if (error) return <p>Error: {error}</p>;
   if (!diamondDetail) return <p>No diamond data found.</p>;
 
