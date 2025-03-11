@@ -67,8 +67,8 @@ router.post("/resetpasswordmail", async (req, res) => {
   <td style="
     padding: 20px 0; 
     text-align: center; 
-    background-color: rgb(172, 130, 80); 
-    border-bottom: 1px solid #e88c44;
+    background-color: #c9a236; 
+    border-bottom: 1px solid #c9a236;
     border-top-left-radius: 12px; 
     border-top-right-radius: 12px; 
     border: none;">
@@ -80,15 +80,15 @@ router.post("/resetpasswordmail", async (req, res) => {
 
         <tr>
           <td style="padding: 20px; text-align: center; color: #333333; background-color: #ffffff;">
-            <h2 style="font-size: 25px; font-weight: 700; color: rgb(172, 130, 80); margin-bottom: 20px; letter-spacing: 1px;">Reset Your Password</h2>
+            <h2 style="font-size: 25px; font-weight: 700; color: #c9a236; margin-bottom: 20px; letter-spacing: 1px;">Reset Your Password</h2>
             <p style="font-size: 16px; color: #666666; line-height: 1.6; margin-bottom: 20px;">
               Dear Sir/Ma'am,<br>
               We received a request to reset the password for your JPS Jewels account. Please click the button below to proceed. If you did not request this, please disregard this email. The link will expire in 4 hours.
             </p>
-            <a href="${url}" style="display: inline-block; padding: 12px 25px; background-color: #e88c44; color: #ffffff; font-size: 16px; font-weight: bold; text-decoration: none; border-radius: 50px; text-transform: uppercase; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: all 0.3s ease;">
+            <a href="${url}" style="display: inline-block; padding: 12px 25px; background-color: #c9a236; color: #ffffff; font-size: 16px; font-weight: bold; text-decoration: none; border-radius: 50px; text-transform: uppercase; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: all 0.3s ease;">
               Reset Your Password
             </a>
-            <p style="font-size: 14px; color: #888888; margin-top: 30px;">If you have any questions or concerns,or Need help? <a href="mailto:mitmangukiya192@gmail.com" style="color: #e88c44; text-decoration: none;">Contact Support</a></p>
+            <p style="font-size: 14px; color: #888888; margin-top: 30px;">If you have any questions or concerns,or Need help? <a href="mailto:mitmangukiya192@gmail.com" style="color: #c9a236; text-decoration: none;">Contact Support</a></p>
           </td>
         </tr>
         <tr>

@@ -196,338 +196,358 @@ const Header = () => {
   const location = useLocation();
 
   return (
-    <header className="header">
+    <header className="header-top">
       {/* Left Logo */}
-      <div className="logo">
-        <img
-          src={logo}
-          alt="JPS Jewels"
-          className="logo-image"
-          onClick={() => navigate("/")}
-        />
-      </div>
-
-      {/* Navigation Links (Hidden on Small Screens) */}
-      <nav className={`nav ${menuOpen ? "nav-open" : ""}`}>
-        <Link
-          to="/"
-          className={`nav-link ${location.pathname === "/" ? "active" : ""}`}
-          onClick={() => setMenuOpen(false)}
-        >
-          HOME
-        </Link>
-        <Link
-          to="/diamond?q=filter"
-          className={`nav-link ${
-            location.pathname === "/diamond" ? "active" : ""
-          }`}
-          onClick={() => setMenuOpen(false)}
-        >
-          DIAMOND
-        </Link>
-        <Link
-          to="/aboutus"
-          className={`nav-link ${
-            location.pathname === "/aboutus" ? "active" : ""
-          }`}
-          onClick={() => setMenuOpen(false)}
-        >
-          ABOUT US
-        </Link>
-        <Link
-          to="/contactus"
-          className={`nav-link ${
-            location.pathname === "/contactus" ? "active" : ""
-          }`}
-          onClick={() => setMenuOpen(false)}
-        >
-          CONTACT US
-        </Link>
-      </nav>
-
-      {/* Right Section: Icons + Mobile Menu */}
-      <div className="right-section">
-        {/* Icons */}
-        <div className="icons">
-          {/* <i className="fa-solid fa-magnifying-glass icon"></i> */}
-
-          {/* Cart Icon with Badge */}
-          <div className="cart-icon-container">
-            <IconButton
-              color="inherit"
-              onClick={() => setCartOpen(true)}
-              className="cart-button"
-            >
-              <Badge badgeContent={cartCount} color="error">
-                <ShoppingCartIcon fontSize="small" />
-              </Badge>
-            </IconButton>
+      <div className="container">
+        <div className="header">
+          <div className="logo">
+            <img
+              src={logo}
+              alt="JPS Jewels"
+              className="logo-image"
+              onClick={() => navigate("/")}
+            />
           </div>
-          <Drawer
-            anchor="right"
-            open={cartopen}
-            onClose={() => setCartOpen(false)}
-          >
-            <Box
-              className="cart-drawer"
-              sx={{
-                width: 400,
-                height: "100vh",
-                display: "flex",
-                flexDirection: "column",
-                padding: 2,
-                position: "relative",
-              }}
-            >
-              <IconButton
-                className="closeicon"
-                onClick={() => setCartOpen(false)}
-                sx={{ position: "absolute", top: 10, right: 10 }}
-              >
-                <CloseIcon />
-              </IconButton>
 
-              <Typography
-                variant="h6"
-                sx={{ marginBottom: 2, textAlign: "left" }}
+          {/* Navigation Links (Hidden on Small Screens) */}
+          <nav className={`nav ${menuOpen ? "nav-open" : ""}`}>
+            <Link
+              to="/"
+              className={`nav-link ${
+                location.pathname === "/" ? "active" : ""
+              }`}
+              onClick={() => setMenuOpen(false)}
+            >
+              HOME
+            </Link>
+            <Link
+              to="/diamond?q=filter"
+              className={`nav-link ${
+                location.pathname === "/diamond" ? "active" : ""
+              }`}
+              onClick={() => setMenuOpen(false)}
+            >
+              DIAMOND
+            </Link>
+            <Link
+              to="/aboutus"
+              className={`nav-link ${
+                location.pathname === "/aboutus" ? "active" : ""
+              }`}
+              onClick={() => setMenuOpen(false)}
+            >
+              ABOUT US
+            </Link>
+            <Link
+              to="/contactus"
+              className={`nav-link ${
+                location.pathname === "/contactus" ? "active" : ""
+              }`}
+              onClick={() => setMenuOpen(false)}
+            >
+              CONTACT US
+            </Link>
+          </nav>
+
+          {/* Right Section: Icons + Mobile Menu */}
+          <div className="right-section">
+            {/* Icons */}
+            <div className="icons">
+              {/* <i className="fa-solid fa-magnifying-glass icon"></i> */}
+
+              {/* Cart Icon with Badge */}
+              <div className="cart-icon-container">
+                <IconButton
+                  color="inherit"
+                  onClick={() => setCartOpen(true)}
+                  className="cart-button"
+                >
+                  <Badge badgeContent={cartCount} color="error">
+                    <ShoppingCartIcon fontSize="small" />
+                  </Badge>
+                </IconButton>
+              </div>
+              <Drawer
+                anchor="right"
+                open={cartopen}
+                onClose={() => setCartOpen(false)}
               >
-                CART
-              </Typography>
-              <div style={{ height: "100%", overflowY: "auto" }}>
-                {userNames ? (
-                  cartData && cartData.length > 0 ? (
-                    cartData.map((item, index) => (
-                      <div
-                        key={item.AddToCartId}
-                        style={{
-                          marginBottom: "20px",
-                          border: "1px solid #ddd",
-                          borderRadius: "10px",
-                          padding: "10px",
-                          display: "flex",
-                          justifyContent: "space-between",
-                        }}
-                      >
-                        <div
-                          className="widget_shopping_cart_content"
-                          style={{
-                            display: "flex",
-                            flexDirection: "row",
-                            alignItems: "center",
-                            textAlign: "left",
-                          }}
-                        >
-                          <div>
-                            <img
-                              className="ImagessElement"
-                              src={item?.diamondDetails?.Image}
-                              // alt={diamondType}
+                <Box
+                  className="cart-drawer"
+                  sx={{
+                    width: 400,
+                    height: "100vh",
+                    display: "flex",
+                    flexDirection: "column",
+                    padding: 2,
+                    position: "relative",
+                  }}
+                >
+                  <IconButton
+                    className="closeicon"
+                    onClick={() => setCartOpen(false)}
+                    sx={{ position: "absolute", top: 10, right: 10 }}
+                  >
+                    <CloseIcon />
+                  </IconButton>
+
+                  <Typography
+                    variant="h6"
+                    sx={{ marginBottom: 2, textAlign: "left" }}
+                  >
+                    CART
+                  </Typography>
+                  <div style={{ height: "100%", overflowY: "auto" }}>
+                    {userNames ? (
+                      cartData && cartData.length > 0 ? (
+                        cartData.map((item, index) => (
+                          <div
+                            key={item.AddToCartId}
+                            style={{
+                              marginBottom: "20px",
+                              border: "1px solid #ddd",
+                              borderRadius: "10px",
+                              padding: "10px",
+                              display: "flex",
+                              justifyContent: "space-between",
+                            }}
+                          >
+                            <div
+                              className="widget_shopping_cart_content"
                               style={{
-                                width: "70px",
-                                height: "70px",
-                                borderRadius: "10px",
+                                display: "flex",
+                                flexDirection: "row",
+                                alignItems: "center",
+                                textAlign: "left",
                               }}
+                            >
+                              <div>
+                                <img
+                                  className="ImagessElement"
+                                  src={item?.diamondDetails?.Image}
+                                  // alt={diamondType}
+                                  style={{
+                                    width: "70px",
+                                    height: "70px",
+                                    borderRadius: "10px",
+                                  }}
+                                />
+                              </div>
+                              <div style={{ marginLeft: "15px" }}>
+                                <span>
+                                  <span>
+                                    {item?.diamondDetails?.Carats || ""}
+                                  </span>{" "}
+                                  Carat{" "}
+                                  <span>{item?.diamondDetails?.Shape}</span>
+                                  <span>{item?.diamondDetails?.Color}</span> /
+                                  <span>{item?.diamondDetails?.Clarity}</span> -{" "}
+                                  <span>{item?.diamondDetails?.Lab}</span>{" "}
+                                  <span>{item?.diamondDetails?.Cut}</span>
+                                </span>
+                                <div
+                                  style={{ display: "flex", marginTop: "0" }}
+                                >
+                                  <span>
+                                    Quantity: <span>{item?.Quantity}</span> x{" "}
+                                    {item?.diamondDetails?.Amount}
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                            <FontAwesomeIcon
+                              icon={faTrash}
+                              style={{
+                                color: "#C9A236",
+                                cursor: "pointer",
+                                fontSize: "18px",
+                              }}
+                              onClick={() =>
+                                dispatch(
+                                  removeFromCart(item.AddToCartId, userId)
+                                )
+                              }
                             />
                           </div>
-                          <div style={{ marginLeft: "15px" }}>
-                            <span>
-                              <span>{item?.diamondDetails?.Carats || ""}</span>{" "}
-                              Carat <span>{item?.diamondDetails?.Shape}</span>
-                              <span>{item?.diamondDetails?.Color}</span> /
-                              <span>{item?.diamondDetails?.Clarity}</span> -{" "}
-                              <span>{item?.diamondDetails?.Lab}</span>{" "}
-                              <span>{item?.diamondDetails?.Cut}</span>
-                            </span>
-                            <div style={{ display: "flex", marginTop: "0" }}>
-                              <span>
-                                Quantity: <span>{item?.Quantity}</span> x{" "}
-                                {item?.diamondDetails?.Amount}
-                              </span>
+                        ))
+                      ) : (
+                        <p>No items in the cart</p>
+                      )
+                    ) : (
+                      <p>Please Log In To See Cart Details</p>
+                    )}
+                  </div>
+
+                  <Button
+                    className="checkoutbutton"
+                    variant="contained"
+                    sx={{
+                      marginTop: "auto",
+                      backgroundColor: "#C9A236",
+                    }}
+                    onClick={() => {
+                      navigate("/checkout");
+                      setCartOpen(false);
+                    }}
+                  >
+                    Checkout
+                  </Button>
+                </Box>
+              </Drawer>
+
+              {/* <i className="fa-regular fa-user icon"></i>
+               */}
+              <ClickAwayListener onClickAway={() => setOpen(false)}>
+                <div className="user-login-container">
+                  {/* User Icon */}
+                  <PersonOutlineIcon
+                    className="user-icon"
+                    onClick={() => setOpen(!open)}
+                  />
+
+                  {/* Dropdown Login Form */}
+                  {open && (
+                    <div className="login-dropdown">
+                      {userNames ? (
+                        <div className="user-info-container">
+                          <div className="userlogo_login">
+                            <div
+                              className="user-avatar"
+                              onClick={() => setOpen(!open)}
+                            >
+                              {userNames
+                                ? userNames.charAt(0).toUpperCase()
+                                : "?"}
+                            </div>
+
+                            <div
+                              className="user-welcome-text"
+                              onClick={() => {
+                                navigate("/profile");
+                                setOpen(false);
+                              }}
+                            >
+                              Welcome, {userNames}
+                              <div style={{ fontSize: "10px" }}> {Mails} </div>
                             </div>
                           </div>
+                          <div className="forgot-signup">
+                            <span
+                              onClick={() => {
+                                localStorage.clear();
+                                formik.resetForm();
+                                // setUserName(null);
+                                setOpen(false);
+                                setCountData(null);
+                                handleLogout();
+                              }}
+                              style={{ cursor: "pointer" }}
+                              className="signup-link-signup"
+                            >
+                              <i className="fas fa-sign-out-alt"></i> Log out
+                            </span>
+                          </div>
                         </div>
-                        <FontAwesomeIcon
-                          icon={faTrash}
-                          style={{
-                            color: "#C9A236",
-                            cursor: "pointer",
-                            fontSize: "18px",
-                          }}
-                          onClick={() =>
-                            dispatch(removeFromCart(item.AddToCartId, userId))
-                          }
-                        />
-                      </div>
-                    ))
-                  ) : (
-                    <p>No items in the cart</p>
-                  )
-                ) : (
-                  <p>Please Log In To See Cart Details</p>
-                )}
-              </div>
+                      ) : (
+                        <form onSubmit={formik.handleSubmit}>
+                          <FormGroup
+                            className="text-boxes"
+                            style={{ width: "100%", marginTop: "24px" }}
+                          >
+                            <TextField
+                              value={formik.values.Username}
+                              onChange={formik.handleChange}
+                              onBlur={formik.handleBlur}
+                              error={
+                                formik.touched.Username &&
+                                Boolean(formik.errors.Username)
+                              }
+                              helperText={
+                                formik.touched.Username &&
+                                formik.errors.Username
+                              }
+                              name="Username"
+                              label="Username"
+                              type="text"
+                              className="text-blue-color w-100"
+                              fullWidth
+                            />
+                          </FormGroup>
 
-              <Button
-                className="checkoutbutton"
-                variant="contained"
-                sx={{
-                  marginTop: "auto",
-                  backgroundColor: "#C9A236",
-                }}
-                onClick={() => {
-                  navigate("/checkout");
-                  setCartOpen(false);
-                }}
-              >
-                Checkout
-              </Button>
-            </Box>
-          </Drawer>
+                          <div className="password-container">
+                            <TextField
+                              value={formik.values.UserPassword}
+                              onChange={formik.handleChange}
+                              onBlur={formik.handleBlur}
+                              name="UserPassword"
+                              label="Password"
+                              type={showPassword ? "text" : "password"}
+                              fullWidth
+                              margin="normal"
+                              InputProps={{
+                                endAdornment: (
+                                  <InputAdornment position="end">
+                                    <IconButton
+                                      aria-label="toggle password visibility"
+                                      onClick={() =>
+                                        setShowPassword(!showPassword)
+                                      }
+                                      edge="end"
+                                    >
+                                      {showPassword ? (
+                                        <VisibilityOffIcon />
+                                      ) : (
+                                        <VisibilityIcon />
+                                      )}
+                                    </IconButton>
+                                  </InputAdornment>
+                                ),
+                              }}
+                              error={
+                                formik.touched.UserPassword &&
+                                Boolean(formik.errors.UserPassword)
+                              }
+                              helperText={
+                                formik.touched.UserPassword &&
+                                formik.errors.UserPassword
+                              }
+                            />
+                          </div>
+                          <Button
+                            type="submit"
+                            variant="contained"
+                            className="login-btn-login"
+                          >
+                            Login
+                          </Button>
 
-          {/* <i className="fa-regular fa-user icon"></i>
-           */}
-          <ClickAwayListener onClickAway={() => setOpen(false)}>
-            <div className="user-login-container">
-              {/* User Icon */}
-              <PersonOutlineIcon
-                className="user-icon"
-                onClick={() => setOpen(!open)}
-              />
-
-              {/* Dropdown Login Form */}
-              {open && (
-                <div className="login-dropdown">
-                  {userNames ? (
-                    <div className="user-info-container">
-                      <div className="userlogo_login">
-                        <div
-                          className="user-avatar"
-                          onClick={() => setOpen(!open)}
-                        >
-                          {userNames ? userNames.charAt(0).toUpperCase() : "?"}
-                        </div>
-
-                        <div
-                          className="user-welcome-text"
-                          onClick={() => {
-                            navigate("/profile");
-                            setOpen(false);
-                          }}
-                        >
-                          Welcome, {userNames}
-                          <div style={{ fontSize: "10px" }}> {Mails} </div>
-                        </div>
-                      </div>
-                      <div className="forgot-signup">
-                        <span
-                          onClick={() => {
-                            localStorage.clear();
-                            formik.resetForm();
-                            // setUserName(null);
-                            setOpen(false);
-                            setCountData(null);
-                            handleLogout();
-                          }}
-                          style={{ cursor: "pointer" }}
-                          className="signup-link-signup"
-                        >
-                          <i className="fas fa-sign-out-alt"></i> Log out
-                        </span>
-                      </div>
+                          <p className="forgot-signup">
+                            <span
+                              className="signup-link-signup"
+                              onClick={() => {
+                                navigate("/signup");
+                                setOpen(false);
+                              }}
+                              style={{ cursor: "pointer" }}
+                            >
+                              Sign up
+                            </span>
+                          </p>
+                        </form>
+                      )}
                     </div>
-                  ) : (
-                    <form onSubmit={formik.handleSubmit}>
-                      <FormGroup
-                        className="text-boxes"
-                        style={{ width: "100%", marginTop: "24px" }}
-                      >
-                        <TextField
-                          value={formik.values.Username}
-                          onChange={formik.handleChange}
-                          onBlur={formik.handleBlur}
-                          error={
-                            formik.touched.Username &&
-                            Boolean(formik.errors.Username)
-                          }
-                          helperText={
-                            formik.touched.Username && formik.errors.Username
-                          }
-                          name="Username"
-                          label="Username"
-                          type="text"
-                          className="text-blue-color w-100"
-                          fullWidth
-                        />
-                      </FormGroup>
-
-                      <div className="password-container">
-                        <TextField
-                          value={formik.values.UserPassword}
-                          onChange={formik.handleChange}
-                          onBlur={formik.handleBlur}
-                          name="UserPassword"
-                          label="Password"
-                          type={showPassword ? "text" : "password"}
-                          fullWidth
-                          margin="normal"
-                          InputProps={{
-                            endAdornment: (
-                              <InputAdornment position="end">
-                                <IconButton
-                                  aria-label="toggle password visibility"
-                                  onClick={() => setShowPassword(!showPassword)}
-                                  edge="end"
-                                >
-                                  {showPassword ? (
-                                    <VisibilityOffIcon />
-                                  ) : (
-                                    <VisibilityIcon />
-                                  )}
-                                </IconButton>
-                              </InputAdornment>
-                            ),
-                          }}
-                          error={
-                            formik.touched.UserPassword &&
-                            Boolean(formik.errors.UserPassword)
-                          }
-                          helperText={
-                            formik.touched.UserPassword &&
-                            formik.errors.UserPassword
-                          }
-                        />
-                      </div>
-                      <Button
-                        type="submit"
-                        variant="contained"
-                        className="login-btn-login"
-                      >
-                        Login
-                      </Button>
-
-                      <p className="forgot-signup">
-                        <span
-                          className="signup-link-signup"
-                          onClick={() => {
-                            navigate("/signup");
-                            setOpen(false);
-                          }}
-                          style={{ cursor: "pointer" }}
-                        >
-                          Sign up
-                        </span>
-                      </p>
-                    </form>
                   )}
                 </div>
-              )}
+              </ClickAwayListener>
             </div>
-          </ClickAwayListener>
-        </div>
 
-        {/* Mobile Menu Toggle (Only Visible Below 768px) */}
-        <div className="mobile-menu" onClick={toggleMenu}>
-          <i className={`fa-solid ${menuOpen ? "fa-times" : "fa-bars"}`}></i>
+            {/* Mobile Menu Toggle (Only Visible Below 768px) */}
+            <div className="mobile-menu" onClick={toggleMenu}>
+              <i
+                className={`fa-solid ${menuOpen ? "fa-times" : "fa-bars"}`}
+              ></i>
+            </div>
+          </div>
         </div>
       </div>
     </header>

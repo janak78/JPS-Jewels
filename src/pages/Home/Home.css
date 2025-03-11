@@ -194,12 +194,12 @@
   object-fit: cover;
 }
 
-h5 {
+/* h5 {
   font-size: 1rem;
   font-weight: 600;
   color: #333;
   margin: 8px 0;
-}
+} */
 
 .diamond-name1 {
   font-weight: 600;
