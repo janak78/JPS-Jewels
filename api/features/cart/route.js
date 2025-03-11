@@ -49,7 +49,6 @@ const fetchCartDetails = async (UserId, SKU) => {
     },
   ]);
 
-  // console.log(cartDetails,"cartDetails")
 
   const cartCount = cartDetails.length;
 
@@ -293,7 +292,6 @@ router.get("/cartpopup", verifyLoginToken, async function (req, res) {
 
 const addToCart = async (data) => {
   try {
-    console.log(data);
     data["createdAt"] = moment().utcOffset(330).format("YYYY-MM-DD HH:mm:ss");
     data["updatedAt"] = moment().utcOffset(330).format("YYYY-MM-DD HH:mm:ss");
 

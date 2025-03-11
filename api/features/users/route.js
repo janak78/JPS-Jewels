@@ -17,7 +17,7 @@ const createUser = async (data) => {
   try {
     // Define required fields
     const requiredFields = [
-      "Salulation",
+      "Salutation",
       "FirstName",
       "LastName",
       "CompanyName",
@@ -33,7 +33,6 @@ const createUser = async (data) => {
       "Username",
       "UserPassword",
       "ConfirmPassword",
-      "PreferredContactMethod",
       "PreferredContactDetails",
     ];
 
@@ -399,12 +398,8 @@ const loginUser = async (data) => {
       };
     }
 
-    console.log(user, UserPassword);
-
     // Validate the password
     const isPasswordValid = await decryptData(user.UserPassword);
-
-    console.log(isPasswordValid, "isPasswordValid");
 
     if (UserPassword !== isPasswordValid) {
       return {

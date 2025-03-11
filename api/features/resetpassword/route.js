@@ -39,7 +39,7 @@ const sendEmail = async (toEmail, subject, body, data) => {
 router.post("/resetpasswordmail", async (req, res) => {
   try {
     const { PrimaryEmail } = req.body;
-    console.log(PrimaryEmail, "PrimaryEmail");
+    
 
     if (!PrimaryEmail) {
       return res.status(400).json({ message: "Email address is required" });
@@ -49,7 +49,7 @@ router.post("/resetpasswordmail", async (req, res) => {
       PrimaryEmail,
       IsDelete: false,
     });
-    console.log(user, "user");
+    
 
     if (!user) {
       return res.status(404).json({
@@ -107,7 +107,7 @@ router.post("/resetpasswordmail", async (req, res) => {
       },
     ];
 
-    console.log(data, "data");
+    
 
     const emailsend = await sendEmail(
       PrimaryEmail,
@@ -116,7 +116,7 @@ router.post("/resetpasswordmail", async (req, res) => {
       data
     );
 
-    console.log(emailsend, "emailsend");
+    
 
     return res.json({
       statusCode: 200,
@@ -155,7 +155,7 @@ router.put("/reset_passwords/:mail", async (req, res) => {
     const encryptmail = req.params.mail;
     const verify = await verifyResetToken(encryptmail);
     const email = verify.data.PrimaryEmail;
-    console.log(email, "email");
+    
     if (!verify.status) {
       return res.status(401).json({
         message: "Token expired. Please request a new password reset email.",
@@ -163,7 +163,7 @@ router.put("/reset_passwords/:mail", async (req, res) => {
     }
 
     const newPassword = req.body.UserPassword;
-    console.log(newPassword, "neoaa");
+    
     if (!newPassword) {
       return res.status(400).json({
         message: "New password is required.",
@@ -175,7 +175,7 @@ router.put("/reset_passwords/:mail", async (req, res) => {
       IsDelete: false,
     });
 
-    console.log(user, "user");
+    
 
     if (!user) {
       return res.status(404).json({
@@ -189,12 +189,12 @@ router.put("/reset_passwords/:mail", async (req, res) => {
       });
     }
 
-    console.log(newPassword, "newPassword");
+    
 
     const hashConvert = encryptData(newPassword);
-    console.log(hashConvert, "hashConvert");
+    
     const updateData = { UserPassword: hashConvert };
-    console.log(updateData, "updateData");
+    
     await user.updateOne({ $set: updateData });
 
     return res.status(200).json({
