@@ -726,6 +726,88 @@ router.get("/caretdata", async function (req, res) {
   }
 });
 
+const fetchShapeDataDetails = async (shape) => {  
+  const matchQuery = { IsDelete: false };
+
+  // Agar shape diya ho toh usko match query me add karo
+  if (shape) {
+    matchQuery.Shape = shape;
+  }
+
+  const Carets = await stockSchema.aggregate([
+    { $match: matchQuery },
+    { $sort: { Amount: -1 } }, // High to low sorting
+    { $limit: 5 }, // Sirf top 5 data fetch karo
+    {
+      $project: {
+        Image: 1,
+        Video: 1,
+        DiamondType: 1,
+        HA: 1,
+        Ratio: 1,
+        Tinge: 1,
+        Milky: 1,
+        EyeC: 1,
+        Table: 1,
+        Depth: 1,
+        measurements: 1,
+        Amount: 1,
+        Price: 1,
+        Disc: 1,
+        Rap: 1,
+        FluoInt: 1,
+        Symm: 1,
+        Polish: 1,
+        Cut: 1,
+        Clarity: 1,
+        Color: 1,
+        Carats: 1,
+        Shape: 1,
+        CertificateNo: 1,
+        Lab: 1,
+        SKU: 1,
+        SrNo: 1,
+      },
+    },
+  ]);
+  console.log("Carets:", Carets);
+
+  return {
+    statusCode: Carets.length > 0 ? 200 : 204,
+    message:
+      Carets.length > 0 ? "Carets retrieved successfully" : "No Carets found",
+    data: Carets,
+  };
+};
+
+// **API Route**
+router.get("/shapdata", async function (req, res) {
+  try {
+    const shape = req.query.shape || null; // Shape ko query params se lo
+    const result = await fetchShapeDataDetails(shape);
+
+    if (result.statusCode === 200) {
+      result.data.forEach((diamond) => {
+        // **🔹 Certificate URL add karo**
+        const certificateUrl = getCertificateUrl(diamond.Lab, diamond.CertificateNo);
+        diamond.certificateUrl = certificateUrl;
+
+        // **🔹 Default image URL based on shape**
+        const defaultImageUrl = getDefaultImageUrl(diamond.Shape);
+        diamond.Image = diamond.Image && diamond.Image.length > 0 ? diamond.Image : defaultImageUrl;
+      });
+    }
+
+    res.status(result.statusCode).json({ result });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({
+      statusCode: 500,
+      message: error.message,
+    });
+  }
+});
+
 const getSimilarDiamonds = async (carat, color, clarity, shape) => {
   try {
     // Fetch all diamonds
@@ -966,6 +1048,105 @@ router.get("/data/:SkuId", async function (req, res) {
           diamond.Image && diamond.Image.length > 0
             ? diamond.Image
             : defaultImageUrl;
+      });
+    }
+
+    res.status(result.statusCode).json({
+      statusCode: result.statusCode,
+      message: result.message,
+      data: result.data,
+    });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({
+      statusCode: 500,
+      message: error.message,
+    });
+  }
+});
+
+const fetchSearchDaimondDetails = async (CertificateNo) => {
+  const diamondSearchQuery = await stockSchema.findOne({
+    CertificateNo: CertificateNo,
+    IsDelete: false,
+  });
+  // console.log(diamondSearchQuery, "diamondSearchQuery");
+
+  if (!diamondSearchQuery) {
+    return {
+      statusCode: 400,
+      message: "stock item not found",
+    };
+  }
+
+  const diamonds = await stockSchema.aggregate([
+    { $match: diamondSearchQuery },
+    {
+      $project: {
+        Image: 1,
+        Video: 1,
+        DiamondType: 1,
+        HA: 1,
+        Ratio: 1,
+        Tinge: 1,
+        Milky: 1,
+        EyeC: 1,
+        Table: 1,
+        Depth: 1,
+        measurements: 1,
+        Amount: 1,
+        Price: 1,
+        Disc: 1,
+        Rap: 1,
+        FluoInt: 1,
+        Symm: 1,
+        Polish: 1,
+        Cut: 1,
+        Clarity: 1,
+        Color: 1,
+        Carats: 1,
+        Shape: 1,
+        CertificateNo: 1,
+        Lab: 1,
+        SKU: 1,
+        SrNo: 1,
+      },
+    },
+  ]);
+
+  return {
+    statusCode: diamonds.length > 0 ? 200 : 204,
+    message:
+      diamonds.length > 0
+        ? "diamonds retrieved successfully"
+        : "No diamonds found",
+    data: diamonds,
+  };
+};
+
+router.get("/searchdata/:CertificateNo", async function (req, res) {
+  try {
+    const { CertificateNo } = req.params;
+
+    // **🛑 Only allow numeric values**
+    if (!/^\d+$/.test(CertificateNo)) {
+      return res.status(400).json({
+        statusCode: 400,
+        message: "Invalid Certificate Number. Only numeric values are allowed.",
+      });
+    }
+
+    const result = await fetchSearchDaimondDetails(CertificateNo);
+
+    if (result.statusCode === 200) {
+      result.data.forEach((diamond) => {
+        // **🔹 Add Certificate URL**
+        const certificateUrl = getCertificateUrl(diamond.Lab, diamond.CertificateNo);
+        diamond.certificateUrl = certificateUrl;
+
+        // **🔹 Default image URL based on shape**
+        const defaultImageUrl = getDefaultImageUrl(diamond.Shape);
+        diamond.Image = diamond.Image && diamond.Image.length > 0 ? diamond.Image : defaultImageUrl;
       });
     }
 

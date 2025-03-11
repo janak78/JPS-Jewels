@@ -40,6 +40,19 @@ import { fetchCaretData } from "../../redux/shopSlice";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { useNavigate } from "react-router-dom";
+import {
+  Button,
+  Menu,
+  MenuItem,
+  IconButton,
+  Typography,
+  Grid,
+  FormControlLabel,
+  Checkbox,
+  Container,
+  Tabs,
+  Tab,
+} from "@mui/material";
 
 const images = [image1, image2, image3];
 
@@ -72,8 +85,51 @@ const Home = () => {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
     }, 3000);
 
-    return () => clearInterval(interval);   
+    return () => clearInterval(interval);
   }, []);
+
+  const [shape, setShape] = useState([]);
+
+  const icon = [
+    { icon: "", name: "Round", value: "RBC" },
+    { icon: "", name: "Oval", value: "Oval" },
+    { icon: "", name: "Pear", value: "Pear" },
+    // { icon: "", name: "Cush Mod", value: "" },
+    // { icon: "", name: "Cush Brill", value: "" },
+    { icon: "", name: "Emerald", value: "Emerald" },
+    { icon: "", name: "Radiant", value: "Radiant" },
+    { icon: "", name: "Princess", value: "Princess" },
+    // { icon: "", name: "Asscher", value: "" },
+    // { icon: "", name: "Square", value: "" },
+    { icon: "", name: "Marquise", value: "Marquise" },
+    { icon: "", name: "Heart", value: "Heart" },
+    // { icon: "", name: "Trilliant", value: "" },
+    // { icon: "", name: "Euro Cut", value: "" },
+    // { icon: "", name: "Old Miner", value: "" },
+    // { icon: "", name: "Briolette", value: "" },
+    // { icon: "", name: "Rose Cut", value: "" },
+    // { icon: "", name: "Lozenge", value: "" },
+    { icon: "", name: "Baguette", value: "BUG" },
+    // { icon: "", name: "Tap Bag", value: "" },
+    // { icon: "", name: "Half Moon", value: "" },
+    // { icon: "", name: "Flanders", value: "" },
+    // { icon: "", name: "Trapezoid", value: "" },
+    // { icon: "", name: "Bullets", value: "" },
+    { icon: "", name: "Kite", value: "KITE" },
+    // { icon: "", name: "Shield", value: "" },
+    // { icon: "", name: "Star", value: "" },
+    // { icon: "", name: "Pentagonal", value: "" },
+    // { icon: "", name: "Hexagonal", value: "" },
+    // { icon: "", name: "Octagonal", value: "" },
+  ];
+
+  const toggleShape = (name) => {
+    setShape((prevShapes) =>
+      prevShapes.includes(name)
+        ? prevShapes.filter((s) => s !== name)
+        : [...prevShapes, name]
+    );
+  };
 
   const hasFetched = useRef(false);
 
@@ -245,6 +301,68 @@ const Home = () => {
 
       <div>
         <h2 className="shop-by-brands-title">TOP PRODUCTS</h2>
+        <div className="bg-box mb-3 pb-0">
+          <div className="jps-measurements row">
+            <div className="col-md-12 col-12 mb-3">
+              <div item>
+                <Typography
+                  variant="body1"
+                  fontWeight="bold"
+                  sx={{ textAlign: "left" }}
+                >
+                  Shape
+                </Typography>
+              </div>
+
+              <Grid item xs={12}>
+                <Grid
+                  container
+                  spacing={1}
+                  sx={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(auto-fill, minmax(80px, 1fr))",
+                    gap: "8px",
+                    mt: 1,
+                  }}
+                  className="jps-icons"
+                >
+                  {icon.map((value) => (
+                    <Grid
+                      key={value.name}
+                      item
+                      onClick={() => toggleShape(value.value)}
+                      sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        textAlign: "center",
+                        border: shape.includes(value.value)
+                          ? "1px solid #1976D2"
+                          : "1px solid #ccc",
+                        borderRadius: "5px",
+                        height: "115px",
+                        width: "100%",
+                        fontSize: "12px",
+                        fontWeight: "500",
+                        padding: 0,
+                        cursor: "pointer",
+                        backgroundColor: shape.includes(value.value)
+                          ? "#1976D250"
+                          : "#fff",
+                        color: "#000",
+                        transition: "background-color 0.3s",
+                      }}
+                    >
+                      <div className="jps-icon">{value.icon}</div>
+                      {value.name}
+                    </Grid>
+                  ))}
+                </Grid>
+              </Grid>
+            </div>
+          </div>
+        </div>
         <div className="caretdata row w-100">
           {diamonds.map((diamond, index) => (
             <div key={index} className="col-lg-2 col-md-4 col-sm-6">
