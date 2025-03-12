@@ -360,7 +360,7 @@ li {
   width: 140px;
   height: auto;
   object-fit: contain;
-  transition: transform 0.3s ease-in-out;
+  transition: transform 0.3s ease-in;
 }
 
 .large-img:hover {

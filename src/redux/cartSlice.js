@@ -78,13 +78,13 @@ export const addToCart = (item, userId, shouldShowToast) => async (dispatch) => 
       showToast.warning(response.data.message);
     }
     } else if (response.data.statusCode === 401) {
-      showToast.error("Your Session Expired.");
+      showToast.error("Your Session Expired. Please Login Again");
     } else {
       console.error("Failed to add item:", response.data.message);
-      showToast.warning("Your Session Expired.");
+      showToast.warning("Your Session Expired. Please Login Again");
     }
   } catch (error) {
-    showToast.error("Your Session Expired.");
+    showToast.error("Your Session Expired. Please Login Again");
   } 
 };
 

@@ -15,6 +15,10 @@
   max-width: 1200px;
   margin: auto;
 }
+.note1{
+  text-decoration: none;
+  color: black;
+}
 
 /* Responsive Layout */
 @media (max-width: 768px) {

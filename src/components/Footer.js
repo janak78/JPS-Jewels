@@ -67,25 +67,25 @@ const Footer = () => {
                 <div>
                   <span>Call us 8 AM - 11 PM</span>
                   <span>
-                    <p href="tel:+919825971176" className="note">
+                    <a href="tel:+919825971176" className="note1">
                       +91 9825971176
-                    </p>
+                    </a>
                   </span>
                 </div>
               </div>
               <div className="addresssec">
                 <img src={pin} alt="pin" width="27px" fill="#c9a236" />
                 <span>
-                  <p
+                  <a
                     href="https://www.google.com/maps/search/?q=315+Shashvat+Apartment,+Pipla+Sheri,+Mahidharpura,+Surat+-+395003"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="note"
+                    className="note1"
                   >
                     315, Shashvat Apartment, <br />
                     Pipla Sheri, Mahidharpura, <br />
                     Surat - 395003
-                  </p>
+                  </a>
                 </span>
               </div>
             </div>
