@@ -146,6 +146,7 @@
 @media (max-width: 5120px) and (min-width: 992px) {
   .card-img-overlay {
     display: flex !important;
+    z-index: 6;
   }
 }
 @media (max-width: 991px) {
@@ -722,6 +723,7 @@ li {
   text-decoration: none;
   font-weight: bold;
   transition: background 0.3s, color 0.3s;
+  cursor: pointer;
 }
 
 .collection-button:hover {
@@ -889,6 +891,7 @@ body {
   font-size: 12px;
   font-weight: bold;
   border-radius: 3px;
+  cursor: pointer;
 }
 
 .discover-button:hover {

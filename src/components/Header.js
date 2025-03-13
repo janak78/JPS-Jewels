@@ -334,7 +334,7 @@ const Header = () => {
                             value={searchFormik.values.CertificateNo}
                             onBlur={searchFormik.handleBlur}
                             onChange={handleInput}
-                            onKeyDown={handleKeyPress} // 🔥 Calls API on "Enter"
+                            onKeyDown={handleKeyPress}
                             error={
                               searchFormik.touched.CertificateNo &&
                               Boolean(searchFormik.errors.CertificateNo)

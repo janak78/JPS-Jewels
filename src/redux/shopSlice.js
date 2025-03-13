@@ -23,8 +23,6 @@ export const diamondsApi = createApi({
     }),
   }),
 });
-console.log(diamondsApi.fetchDiamonds,"fetchDiamonds")
-console.log(diamondsApi, "diamondsApi");  
 
 export const fetchSimilarDiamonds = (carat, color, clarity, shape) => async (dispatch) => {
   try {

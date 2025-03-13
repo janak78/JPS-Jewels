@@ -53,7 +53,7 @@ const Checkout = () => {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = async (values) => {
+  const handleSubmit = async (values, { resetForm }) => {
     try {
       setIsSubmitting(true);
       const UserId = "your_user_id"; // Replace with the actual user ID
@@ -67,6 +67,7 @@ const Checkout = () => {
       if (response.data.statusCode === 200) {
         showToast.success("Order placed successfully!"); // Redirect to confirmation page
         // window.location.reload(); // Refresh the page
+        resetForm();
         dispatch(fetchCartCount(localStorage.getItem("UserId")));
         dispatch(diamondsApi.util.invalidateTags(["Diamonds"]));
       } else {

@@ -17,6 +17,7 @@ import "./Footer.css";
 
 const Footer = () => {
   const navigate = useNavigate();
+  const currentYear = new Date().getFullYear(); 
 
   return (
     <div className="f-border">
@@ -95,7 +96,7 @@ const Footer = () => {
           <div className="fm">
             <div className="footermain">
               <div className="footer-bottom">
-                Copyright © 2025 JPS Jewels. All Rights Reserved
+                Copyright © {currentYear} JPS Jewels. All Rights Reserved
               </div>
               <div className="social-icons">
                 <p>

@@ -35,7 +35,6 @@ export const updateUserProfile = createAsyncThunk(
           `${baseUrl}/user/updateuserprofile?UserId=${UserId}`,
           userData
         );
-        console.log(response,"response")
   
         if (response.data.statusCode === 200) {
           return response.data.data;

@@ -336,7 +336,7 @@ const addBilling = async (data, UserId) => {
 
     <div class="email-footer">
       <p>Need help? <a href="mailto:mitmangukiya192@gmail.com">Contact Support</a></p>
-      <p>Thank you for choosing our services!<br><strong>JPS Jewelers</strong>, Inc. | All rights reserved.</p>
+      <p>Thank you for choosing our services!<br><strong>JPS Jewels</strong>, Inc. | All rights reserved.</p>
     </div>
   </div>
 </body>

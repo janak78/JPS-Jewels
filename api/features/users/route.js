@@ -174,13 +174,10 @@ router.get("/userdata", async (req, res) => {
 });
 
 const updateUserProfile = async (UserId, data, req) => {
-  console.log(UserId);
-  console.log(data, "data");
 
   try {
     // Check if the user exists
     const userExists = await Signup.findOne({ UserId, IsDelete: false });
-    console.log(userExists, "userExists");
 
     if (!userExists) {
       return {
@@ -202,7 +199,6 @@ const updateUserProfile = async (UserId, data, req) => {
         UserId: { $ne: UserId }, // Exclude the current user from the search
       });
 
-      console.log(findUser, "findUser");
 
       if (findUser) {
         return {
@@ -237,9 +233,7 @@ const updateUserProfile = async (UserId, data, req) => {
 router.put("/updateuserprofile", async (req, res) => {
   try {
     const { UserId } = req.query;
-    console.log(UserId);
     const data = req.body;
-    console.log(data, "data");
 
     if (!UserId || !data || Object.keys(data).length === 0) {
       return res.status(400).json({
