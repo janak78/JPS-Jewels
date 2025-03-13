@@ -23,6 +23,7 @@ import { InputAdornment, IconButton } from "@mui/material";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import weblogo from "../../assets/img/theme/logo.svg";
+import AxiosInstance from "AxiosInstance";
 
 const Login = () => {
   const baseUrl = process.env.REACT_APP_BASE_API;
@@ -52,17 +53,12 @@ const Login = () => {
   const [data, setData] = useState([]);
   const handleSubmit = async (values) => {
     try {
-      const res = await axios.post(
+      const res = await AxiosInstance.post(
         `${baseUrl}/superadmin/superadminlogin`,
         {
           EmailAddress: values.primaryEmailAddress,
           Password: values.Password,
         },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
       );
 
       if (res.status === 200) {

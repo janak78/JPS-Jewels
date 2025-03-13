@@ -15,6 +15,7 @@ import {
 import img from "../../assets/img/theme/img.jpg";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import AxiosInstance from "AxiosInstance";
 
 const AdminNavbar = (props) => {
   const baseUrl = process.env.REACT_APP_BASE_API;
@@ -33,14 +34,13 @@ const AdminNavbar = (props) => {
     }, 1200);
   };
 
-
-
   const [data, setData] = useState([]);
   const getData = async () => {
     try {
-      const res = await axios.get(
+      const res = await AxiosInstance.get(
         `${baseUrl}/superadmin/superadmindetails`
       );
+
       if (res.status === 200) {
         setData(res.data.data);
       } else {

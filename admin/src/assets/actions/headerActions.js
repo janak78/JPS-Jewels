@@ -1,4 +1,5 @@
 import axios from "axios";
+import AxiosInstance from "AxiosInstance";
 
 // Action Types
 export const SET_HEADER_DATA = "SET_HEADER_DATA";
@@ -30,7 +31,7 @@ export const fetchHeaderData = () => async (dispatch) => {
     if (storedData) {
       dispatch(setHeaderData(JSON.parse(storedData)));
     } else {
-      const res = await axios.get(`${baseUrl}/user/countdata`);
+      const res = await AxiosInstance.get(`${baseUrl}/user/countdata`);
       if (res.status === 200) {
         dispatch(setHeaderData(res.data.data));
         sessionStorage.setItem("headerData", JSON.stringify(res.data.data));

@@ -1,4 +1,5 @@
 import axios from "axios";
+import AxiosInstance from "AxiosInstance";
 const baseUrl = process.env.REACT_APP_BASE_API;
 
 const API_URL = `${baseUrl}/superadmin/token_data`; // Your API endpoint
@@ -22,7 +23,7 @@ export const handleAuth = async (navigate) => {
   }
 
   try {
-    const res = await axios.post(
+    const res = await AxiosInstance.post(
       `${baseUrl}/superadmin/token_data`,
       { token }, // Empty body
       {

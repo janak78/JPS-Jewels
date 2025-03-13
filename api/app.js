@@ -15,7 +15,6 @@ var usersRouter = require("./routes/users");
 
 var app = express();
 
-
 // New
 // Signup Step
 var superadminroutes = require("./features/Superadmin/route");
@@ -31,9 +30,7 @@ app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "jade");
 
 // app.use(cors());
-app.use(
-  cors()
-);
+app.use(cors({ origin: "*" }));
 
 app.use(logger("dev"));
 app.use(express.json());
@@ -42,8 +39,6 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use(nocache());
-
-
 
 app.use("/api", indexRouter);
 app.use("/users", usersRouter);
