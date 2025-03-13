@@ -1,11 +1,11 @@
-.container {
+/* .container {
   margin-top: 20px;
-}
+} */
 
 .diamond-card {
   border: 1px solid #ddd;
   border-radius: 15px;
-  height: 400px;
+  height: 100%;
   text-align: center;
   box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.12);
   transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
@@ -14,8 +14,10 @@
   flex-direction: column;
   justify-content: space-between;
   position: relative;
-  margin-bottom: 15px;
   cursor: pointer;
+}
+.mb-20{
+  margin-bottom: 30px;
 }
 
 .diamond-card:hover {
@@ -25,10 +27,13 @@
   transform: scale(1.02);
   transition: transform 0.6s cubic-bezier(0.19, 1, 0.22, 1) !important;
 }
+.dimond-content{
+  padding: 15px;
+  text-align: center;
+}
 
 .shopimg {
   width: 100%;
-  height: 250px;
   display: flex;
   justify-content: center;
   align-items: start;
@@ -43,12 +48,12 @@
   object-fit: cover;
 }
 
-h5 {
+/* h5 {
   font-size: 1rem;
   font-weight: 600;
   color: #333;
   margin: 8px 0;
-}
+} */
 
 .diamond-name {
   font-weight: 600;
@@ -62,9 +67,8 @@ h5 {
 .price {
   font-weight: bold;
   font-size: 14px;
-  margin: auto;
-  width: fit-content;
   transition: color 0.3s ease-in-out;
+  margin-bottom: 10px;
 }
 
 .price:hover {
@@ -72,7 +76,7 @@ h5 {
   cursor: pointer;
 }
 
-.arrowbtn {
+/* .arrowbtn {
   opacity: 0;
   width: 0;
   overflow: hidden;
@@ -85,7 +89,7 @@ h5 {
   opacity: 1;
   width: auto;
   transform: translateX(0);
-}
+} */
 
 a:hover {
   text-decoration: underline;
@@ -95,19 +99,26 @@ a:hover {
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
-  width: fit-content;
   margin: auto;
   display: flex;
+  justify-content: center;
   align-items: center;
   gap: 5px;
-  transition: color 0.5s ease-in-out, color 0.5s ease-in-out;
+  background-color: #c9a236;
+  color: white;
+  border-radius: 6px;
+  padding: 10px 10px;
+  margin-top: 5px;
 }
 
-.add-to-cart:hover {
+/* .add-to-cart:hover {
   color: #c9a236;
   transform: translateX(5px);
-}
+} */
 
+.shop-diamonds-list {
+  margin-top: 40px !important;
+}
 /* responsive */
 /* @media (max-width: 992px) {
   .diamond-card {
@@ -167,10 +178,10 @@ a:hover {
     max-width: 100%;
   }
 } */
-.jps-measurements {
-  /* display: flex; */
-  /* gap: 20px; */
-}
+/* .jps-measurements { */
+/* display: flex; */
+/* gap: 20px; */
+/* } */
 .jps-measur-box {
   display: flex;
   gap: 10px;
@@ -217,7 +228,7 @@ a:hover {
 }
 
 /* shop filter buttons */
-.reset-btn{
+.reset-btn {
   background-color: #c9a236 !important;
   color: #fff !important;
   font-weight: bold !important;
@@ -225,7 +236,7 @@ a:hover {
   outline: none !important;
 }
 
-.apply-btn{
+.apply-btn {
   background-color: #c9a236 !important;
   color: #fff !important;
   font-weight: bold !important;
@@ -233,7 +244,7 @@ a:hover {
   outline: none !important;
 }
 
-.pagination-dropdown{
+.pagination-dropdown {
   outline: none !important;
   padding: 6px 10px !important;
 }

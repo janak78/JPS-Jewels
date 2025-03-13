@@ -1,0 +1,158 @@
+.CardDetailCard.MuiPaper-root.MuiPaper-elevation.MuiPaper-rounded.MuiPaper-elevation24.MuiDialog-paper.MuiDialog-paperScrollPaper.MuiDialog-paperWidthSm.css-10d30g3-MuiPaper-root-MuiDialog-paper {
+    width: 100% !important;
+  }
+  .MuiPaper-root.MuiPaper-elevation.MuiPaper-rounded.MuiPaper-elevation24.MuiDialog-paper.MuiDialog-paperScrollPaper.MuiDialog-paperWidthSm.css-10d30g3-MuiPaper-root-MuiDialog-paper {
+    width: 100% !important;
+  }
+  .Heading {
+    font-weight: 700;
+    color: rgb(201, 162, 52);
+  }
+  
+  .UploadFIleBTNSTOCK {
+    background-color: rgb(201, 162, 52) !important;
+    border: none;
+    border-radius: 5px !important;
+    color: white !important;
+    font-size: 18px !important;
+    /* font-weight: 600 !important; */
+    width: 40% !important;
+  }
+  
+  .FileuploadName {
+    cursor: pointer;
+    color: #063164;
+    border: 0.5px solid #063164;
+    padding: 4px 10px 4px 10px !important;
+    font-weight: 600;
+    border-radius: 5px;
+    width: 40%;
+    justify-content: center;
+    display: flex;
+    /* margin-left: auto;
+    margin-right: auto; */
+  }
+  .uploadBTNtoUpload {
+    border: none;
+    border-radius: 10px;
+    font-size: 18px;
+    font-weight: 500;
+    width: 30%;
+    padding: 4px 10px 4px 10px !important;
+    height: 35px !important;
+  }
+  .selectFileName {
+    color: #243a73 !important;
+    font-size: 16px !important;
+    font-weight: bold !important;
+    margin-top: 10px !important;
+  }
+  .specifiCFiel {
+    text-decoration: none;
+    color: rgb(232, 140, 68);
+    cursor: pointer;
+  }
+  /* Style for the dropdown container */
+  .dropdown-item {
+    color: #1e3a8a; /* Blue text color */
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+  }
+  
+  /* On hover, change the background color */
+  .dropdown-item:hover {
+    background-color: #f3f4f6; /* Light gray background on hover */
+    color: #1d4ed8; /* Slightly lighter blue text color */
+  }
+  
+  /* Optional: Style the dropdown container */
+  .MuiMenu-paper {
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 8px;
+  }
+  .PaginationBorder {
+    border-top: 1px solid;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+  }
+  .tableHeaderRoe {
+    background-color: rgb(201, 162, 52) !important;
+    color: white;
+  }
+  .tableHeadColor {
+    background-color: #063164 !important;
+    margin-bottom: 10px !important;
+    border-top-left-radius: 15px !important;
+    border-top-right-radius: 15px !important;
+    padding: 1rem 1.5rem !important;
+  }
+  .borderRadiusCard {
+    border-top-left-radius: 15px !important;
+    border-top-right-radius: 15px !important;
+  }
+  .cardHeader {
+    color: white !important;
+    font-size: 20px !important;
+  }
+  
+  /* In your Style.css */
+  body {
+    font-family: "Poppins", sans-serif;
+  }
+  
+  @media (max-width: 575px) {
+    .heading-searchflex {
+      flex-direction: column !important;
+    }
+    .heading-right {
+      margin-right: auto !important;
+    }
+    .search-left {
+      margin-left: auto !important;
+    }
+    .uploadFile-Seacrh {
+      flex-direction: column !important;
+      gap: 10px !important;
+    }
+  }
+  
+  @media (max-width: 420px) {
+    .paginationResponsiev {
+      flex-direction: column-reverse !important;
+      gap: 10px !important;
+    }
+    .paginationFont {
+      font-size: 18px !important;
+    }
+    .pageofTotal {
+      margin-left: auto !important;
+    }
+    .UploadFIleBTNSTOCK {
+      width: 75% !important;
+    }
+    .upload-file-model {
+      flex-direction: column !important;
+      gap: 0px !important;
+      align-items: center !important;
+    }
+    .FileuploadName {
+      width: 100% !important;
+    }
+    .uploadBTNtoUpload {
+      width: 100% !important;
+    }
+    .detailsModel{
+      flex-direction: column !important;
+    }
+    .cardHead-detail{
+      font-size: 1.3rem !important;
+    }
+  }
+  @media (max-width: 375px) {
+    .serachReponsive {
+      width: 214px !important;
+    }
+  }
+  

@@ -117,9 +117,9 @@ const Aboutus = () => {
           the art of jewelry making.
         </p>
         <p>
-          Our founder, Joice, has always been inspired by the elegance and
+          Our founder, JPS, has always been inspired by the elegance and
           allure of fine jewelry. With a background in design and a keen eye for
-          detail, Joice set out to create a brand that would stand apart in an
+          detail, JPS set out to create a brand that would stand apart in an
           industry filled with mass-produced pieces. By collaborating with
           skilled artisans and sourcing the finest materials, we ensure that
           every item in our collection tells a story of dedication, artistry,

@@ -40,6 +40,21 @@ import { fetchCaretData } from "../../redux/shopSlice";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { useNavigate } from "react-router-dom";
+import {
+  Button,
+  Menu,
+  MenuItem,
+  IconButton,
+  Typography,
+  Grid,
+  FormControlLabel,
+  Checkbox,
+  Container,
+  Tabs,
+  Tab,
+} from "@mui/material";
+import { setCaretData } from "../../redux/shopSlice";
+import AxiosInstance from "../../Axiosinstance";
 
 const images = [image1, image2, image3];
 
@@ -58,6 +73,8 @@ const categories = [
 ];
 
 const Home = () => {
+  const baseUrl = process.env.REACT_APP_BASE_API;
+
   const [currentIndex, setCurrentIndex] = useState(0);
   const carouselRef = useRef(null);
   const navigate = useNavigate();
@@ -72,8 +89,71 @@ const Home = () => {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
     }, 3000);
 
-    return () => clearInterval(interval);   
+    return () => clearInterval(interval);
   }, []);
+
+  const [shape, setShape] = useState([]);
+
+  const icon = [
+    { icon: "", name: "Round", value: "RBC" },
+    { icon: "", name: "Oval", value: "Oval" },
+    { icon: "", name: "Pear", value: "Pear" },
+    // { icon: "", name: "Cush Mod", value: "" },
+    // { icon: "", name: "Cush Brill", value: "" },
+    { icon: "", name: "Emerald", value: "Emerald" },
+    { icon: "", name: "Radiant", value: "Radiant" },
+    { icon: "", name: "Princess", value: "Princess" },
+    // { icon: "", name: "Asscher", value: "" },
+    // { icon: "", name: "Square", value: "" },
+    { icon: "", name: "Marquise", value: "Marquise" },
+    { icon: "", name: "Heart", value: "Heart" },
+    // { icon: "", name: "Trilliant", value: "" },
+    // { icon: "", name: "Euro Cut", value: "" },
+    // { icon: "", name: "Old Miner", value: "" },
+    // { icon: "", name: "Briolette", value: "" },
+    // { icon: "", name: "Rose Cut", value: "" },
+    // { icon: "", name: "Lozenge", value: "" },
+    { icon: "", name: "Baguette", value: "BUG" },
+    // { icon: "", name: "Tap Bag", value: "" },
+    // { icon: "", name: "Half Moon", value: "" },
+    // { icon: "", name: "Flanders", value: "" },
+    // { icon: "", name: "Trapezoid", value: "" },
+    // { icon: "", name: "Bullets", value: "" },
+    { icon: "", name: "Kite", value: "KITE" },
+    // { icon: "", name: "Shield", value: "" },
+    // { icon: "", name: "Star", value: "" },
+    // { icon: "", name: "Pentagonal", value: "" },
+    // { icon: "", name: "Hexagonal", value: "" },
+    // { icon: "", name: "Octagonal", value: "" },
+  ];
+
+  // const toggleShape = (name) => {
+  //   setShape((prevShapes) =>
+  //     prevShapes.includes(name)
+  //       ? prevShapes.filter((s) => s !== name)
+  //       : [...prevShapes, name]
+  //   );
+  // };
+
+  const toggleShape = async (shapeValue) => {
+    setShape([shapeValue]); // ✅ Set only the selected shape
+
+    try {
+      const response = await AxiosInstance.get(
+        `${baseUrl}/stock/shapedata?shape=${shapeValue}`
+      );
+
+      if (response.data.result.statusCode === 200) {
+        dispatch(setCaretData(response.data.result.data)); // ✅ Store in caretData
+      } else {
+        dispatch(setCaretData([])); // ✅ Clear if no data
+        showToast.error("No data found for selected shape.");
+      }
+    } catch (error) {
+      showToast.error("Error fetching data. Try again.");
+      console.error("API Error:", error);
+    }
+  };
 
   const hasFetched = useRef(false);
 
@@ -133,9 +213,103 @@ const Home = () => {
     dispatch(addToCart(cartItem, userId));
   };
 
+  const [bubbles, setBubbles] = useState([]);
+
+  useEffect(() => {
+    const newBubbles = Array.from({ length: 10 }).map(() => ({
+      id: Math.random(),
+      left: `${Math.random() * 100}%`,
+      top: `${Math.random() * 100}%`,
+      size: `${Math.random() * 0.6 + 0.3}em`,
+      animationDuration: `${Math.random() * 5 + 3}s`,
+    }));
+
+    setBubbles(newBubbles);
+  }, []);
+
   return (
     <>
-      <div className="hero border-1 pb-3">
+      <div className="hero">
+        <div className="wavy-lines">
+          {/* First Wavy Line (Lowest) */}
+          <svg
+            className="wavy-line-1"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 10000 300"
+          >
+            <defs>
+              <linearGradient id="strokeGradient1">
+                <stop offset="0%" stopColor="#D4AF37" stopOpacity="0.2" />
+                <stop offset="50%" stopColor="#D4AF37" stopOpacity="0.8" />
+                <stop offset="100%" stopColor="#D4AF37" stopOpacity="1" />
+              </linearGradient>
+            </defs>
+            <path
+              d="M0,510 
+          C2000,1450 3000,200 4000,100 
+          C5000,10 6000,1250 7000,90 
+          C8000,30 9000,170 10000,120"
+              fill="transparent"
+              stroke="url(#strokeGradient1)"
+              strokeWidth="45"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="wave-path wave-1"
+            />
+          </svg>
+
+          {/* Second Wavy Line (Middle) */}
+          {/* <svg className="wavy-line-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10000 300">
+        <defs>
+          <linearGradient id="strokeGradient2">
+            <stop offset="0%" stopColor="#D4AF37" stopOpacity="0.2" />
+            <stop offset="50%" stopColor="#D4AF37" stopOpacity="0.8" />
+            <stop offset="100%" stopColor="#D4AF37" stopOpacity="1" />
+          </linearGradient>
+        </defs>
+        <path
+           d="M0,250 
+           C2000,890 3000,250 4000,100 
+           C5000,10 6000,850 7000,90 
+           C8000,50 9000,250 10000,199"
+    
+          fill="transparent"
+          stroke="url(#strokeGradient2)"
+          strokeWidth="20"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="wave-path wave-2"
+        />
+      </svg> */}
+
+          {/* Third Wavy Line (Highest) */}
+          <svg
+            className="wavy-line-3"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 10000 300"
+          >
+            <defs>
+              <linearGradient id="strokeGradient3">
+                <stop offset="0%" stopColor="#D4AF37" stopOpacity="0.2" />
+                <stop offset="50%" stopColor="#D4AF37" stopOpacity="0.8" />
+                <stop offset="100%" stopColor="#D4AF37" stopOpacity="1" />
+              </linearGradient>
+            </defs>
+            <path
+              d="M0,290 
+           C2000,1270 3500,250 5000,100 
+           C6500,20 8000,450 9500,40 
+           C10000,60 10500,270 11000,70"
+              fill="transparent"
+              stroke="url(#strokeGradient3)"
+              strokeWidth="25"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="wave-path wave-3"
+            />
+          </svg>
+        </div>
+
         <div className="card cardbackground text-white border-0">
           {/* Image Slider */}
           <img
@@ -191,6 +365,45 @@ const Home = () => {
       </div>
 
       <section className="collection-section">
+      <div className="bubbles-container">
+      {bubbles.map((bubble) => (
+        <div
+          key={bubble.id}
+          className="bubble"
+          style={{
+            left: bubble.left,
+            top: bubble.top,
+            width: bubble.size,
+            height: bubble.size,
+            animationDuration: bubble.animationDuration,
+          }}
+        />
+      ))}
+    </div>
+        <div className="wavy-lines-2">
+          <svg
+            className="wavy-line-2"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 10000 300"
+          >
+            <defs>
+              <linearGradient id="strokeGradient2">
+                <stop offset="0%" stopColor="#D4AF37" stopOpacity="0.2" strokeWidth="65"/>
+                <stop offset="50%" stopColor="#D4AF37" stopOpacity="0.8" strokeWidth="20"/>
+                <stop offset="100%" stopColor="#D4AF37" stopOpacity="1" strokeWidth="45"/>
+              </linearGradient>
+            </defs>
+            <path
+              d="M0,550 C2000,890 3000,250 4000,100 C5000,10 6000,450 7000,190 C8000,250 9000,1550 10000,219"
+              fill="transparent"
+              stroke="url(#strokeGradient2)"
+              strokeWidth="45"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="wave-path wave-2"
+            />
+          </svg>
+        </div>
         <h2 className="shop-by-brands-title">New Collection</h2>
         <div className="collection-grid">
           <div className="collection-item large">
@@ -245,9 +458,77 @@ const Home = () => {
 
       <div>
         <h2 className="shop-by-brands-title">TOP PRODUCTS</h2>
-        <div className="caretdata row w-100">
+        <div className="bg-box mb-3 pb-0">
+          <div className="jps-measurements row">
+            <div className="col-md-12 col-12 mb-3 ">
+              <div item>
+                <Typography
+                  variant="body1"
+                  fontWeight="bold"
+                  sx={{ textAlign: "center" }}
+                >
+                  Select Shape
+                </Typography>
+              </div>
+
+              <div className="top-product-diamonds">
+                <div className="icon-grid">
+                  <Grid
+                    container
+                    spacing={1}
+                    sx={{
+                      display: "grid",
+                      gridTemplateColumns:
+                        "repeat(auto-fit, minmax(80px, auto))",
+                      gap: "8px",
+                      justifyContent: "center", // Center the grid items
+                      alignItems: "center",
+                      mt: 1,
+                    }}
+                  >
+                    {icon.map((value) => (
+                      <Grid
+                        key={value.name}
+                        item
+                        onClick={() => toggleShape(value.value)}
+                        sx={{
+                          display: "flex",
+                          flexDirection: "column",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          textAlign: "center",
+                          border: shape.includes(value.value)
+                            ? "1px solid #1976D2"
+                            : "1px solid #ccc",
+                          borderRadius: "5px",
+                          height: "115px",
+                          fontSize: "12px",
+                          fontWeight: "500",
+                          padding: "8px",
+                          cursor: "pointer",
+                          backgroundColor: shape.includes(value.value)
+                            ? "#1976D250"
+                            : "#fff",
+                          color: "#000",
+                          transition: "background-color 0.3s",
+                        }}
+                      >
+                        <div className="jps-icon">{value.icon}</div>
+                        {value.name}
+                      </Grid>
+                    ))}
+                  </Grid>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="caretdata row w-100 p-0 m-0">
           {diamonds.map((diamond, index) => (
-            <div key={index} className="col-lg-2 col-md-4 col-sm-6">
+            <div
+              key={index}
+              className="col-xl-2 col-lg-3 col-md-4 col-sm-6 mb-20"
+            >
               <div
                 className="diamond-card1"
                 onClick={(e) => {
@@ -255,31 +536,34 @@ const Home = () => {
                   navigate("/diamonddetail", { state: { diamond } });
                 }}
               >
-                <div className="shopimg1">
+                <div className="shopimg">
                   <img
                     src={diamond.Image}
                     alt={diamond.Shape}
-                    className="diamond-img1"
+                    className="diamond-img"
                   />
                 </div>
-                <h6 className="mt-3 diamond-name1">
-                  {diamond.Carats} CARAT {diamond.Shape} - {diamond.Lab}
-                </h6>
-                <p className="price">
-                  <span>Amount:</span> ${diamond.Amount.toFixed(2)}
-                </p>
-                <p className="price">
-                  <span>Price/ct:</span> ${diamond.Price.toFixed(2)}
-                </p>
-                <span
-                  className="add-to-cart1"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleAddToCart(diamond);
-                  }}
-                >
-                  Add to cart <span className="arrowbtn1">→</span>
-                </span>
+                <div class="dimond-content">
+                  <h6 className="diamond-name">
+                    {diamond.Carats} CARAT {diamond.Shape} - {diamond.Lab}
+                  </h6>
+                  <p className="price">
+                    <span>Amount:</span> ${diamond.Amount.toFixed(2)}
+                  </p>
+                  <p className="price">
+                    <span>Price per carat:</span> ${diamond.Price.toFixed(2)}
+                  </p>
+                  <span
+                    className="add-to-cart"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleAddToCart(diamond, true);
+                    }}
+                  >
+                    Add to cart <i class="fa-solid fa-arrow-right"></i>
+                    {/* <span className="">→</span> */}
+                  </span>
+                </div>
               </div>
             </div>
           ))}

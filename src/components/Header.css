@@ -1,22 +1,27 @@
 /* General Styling */
 body {
   margin: 0;
-  font-family: "Poppins";
-  padding-top: clamp(50px, 10vh, 70px) !important;
+  font-family: "Poppins", sans-serif;
+  /* padding-top: clamp(50px, 10vh, 68px) !important; */ /* old style working*/
+  padding-top: clamp(50px, 12vh, 95px) !important;
 }
 
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 30px;
+  padding: 12px 0;
+  width: 100%;
+}
+.header-top {
   background-color: white;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  z-index: 1000;
+  right: 0;
+  z-index: 9;
+  padding: 15px; /*Adding for the testing*/
 }
 
 /* Left Logo */
@@ -26,7 +31,8 @@ body {
 }
 
 .logo-image {
-  height: 40px;
+  height: 52px;
+  width: 164px;
   cursor: pointer;
 }
 
@@ -117,13 +123,14 @@ body {
 }
 
 /* Responsive Styles */
-@media (max-width: 768px) {
+/* @media (max-width: 768px) { */
+@media (max-width: 991px) {
   /* Hide Navigation */
   .nav {
     display: none;
     flex-direction: column;
     position: absolute;
-    top: 60px;
+    top: 100px;
     right: 0;
     background-color: white;
     width: 100%;
@@ -144,17 +151,23 @@ body {
   }
 
   .header {
-    padding: 10px 20px;
+    padding: 10px 0;
   }
+  .icons {
+    gap: 0px !important;
+  }
+  
 }
 
 @media (max-width: 480px) {
   .header {
-    padding: 15px 20px;
+    padding: 15px 0px;
   }
 
   .logo-image {
     height: 30px;
+    width: 100% !important;
+    cursor: pointer;
   }
 
   .nav-link {
@@ -263,11 +276,11 @@ body {
   }
 }
 
-@media (max-width: 320px) {
+/* @media (max-width: 320px) {
   .login-dropdown {
     width: 200px;
   }
-}
+} */
 
 /* cart */
 
@@ -305,3 +318,24 @@ body {
     text-align: left;
   }
 }
+
+
+/* search */
+.search-container {
+  position: relative;
+  display: inline-block;
+}
+
+.search-dropdown {
+  position: absolute;
+  top: 40px;
+  left: 0;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px;
+  width: 200px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+

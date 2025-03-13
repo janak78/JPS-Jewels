@@ -15,12 +15,12 @@ const router = express.Router();
 const { verifyLoginToken } = require("../authentication/authentication");
 
 let transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 587,
+  host: "smtp.hostinger.com",
+  port: 465,
   secure: false,
   auth: {
-    user: "mitmangukiya192@gmail.com",
-    pass: "rjlppddetutdvebe",
+    user: "mail@jpsjewels.com",
+    pass: "AApp@00.com@mail",
   },
 });
 
@@ -74,8 +74,8 @@ router.delete(
 const sendEmail = async (toEmail, subject, body) => {
   try {
     const mailOptions = {
-      from: "jpsjewels@gmail.com", // Sender's email
-      to: [toEmail, "mitmangukiya192@gmail.com"], // Recipient's email
+      from: "mail@jpsjewels.com", // Sender's email
+      to: [toEmail, "mail@jpsjewels.com"], // Recipient's email
       subject: subject,
       text: body, // Plain text body
       html: `<p>${body}</p>`, // HTML body
@@ -126,7 +126,6 @@ const addBilling = async (data, UserId) => {
         message: "No cart details found for the user.",
       };
     }
-    // console.log(cartDetails, "cartDetails");
 
     // Fetch diamond details
     const diamDetails = await Promise.all(
@@ -142,7 +141,6 @@ const addBilling = async (data, UserId) => {
       })
     );
 
-    // console.log(diamDetails, "ddd");
 
     // Add billing details for each item
     const billingEntries = diamDetails.map((item) => ({
@@ -165,7 +163,6 @@ const addBilling = async (data, UserId) => {
       updatedAt: timestamp,
     }));
 
-    console.log(billingEntries, "be");
 
     // Save all billing entries
     const newBillings = await Billing.insertMany(billingEntries);
@@ -339,7 +336,7 @@ const addBilling = async (data, UserId) => {
 
     <div class="email-footer">
       <p>Need help? <a href="mailto:mitmangukiya192@gmail.com">Contact Support</a></p>
-      <p>Thank you for choosing our services!<br><strong>JPS Jewelers</strong>, Inc. | All rights reserved.</p>
+      <p>Thank you for choosing our services!<br><strong>JPS Jewels</strong>, Inc. | All rights reserved.</p>
     </div>
   </div>
 </body>
@@ -359,7 +356,6 @@ const addBilling = async (data, UserId) => {
       },
       { $set: { IsDelete: true } }
     );
-    // console.log(updateStock, "updateStock");
 
     return {
       statusCode: 200,

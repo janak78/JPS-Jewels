@@ -54,7 +54,7 @@
   padding: 15px !important;
   border-radius: 0px !important;
   font-size: 16px !important;
-  font-family: "Poppins" !important;
+  font-family: "Poppins", sans-serif;
 }
 
 .diamond-product-price {
@@ -101,7 +101,7 @@
   border-radius: 0 !important;
   padding: 15px !important;
   font-size: 16px !important;
-  font-family: "Poppins" !important;
+  font-family: "Poppins", sans-serif;
 }
 
 .diamond-product-buy-btn {
@@ -111,7 +111,7 @@
   border-radius: 0 !important;
   padding: 15px !important;
   font-size: 16px !important;
-  font-family: "Poppins" !important;
+  font-family: "Poppins", sans-serif;
 }
 
 .diamond-product-info-card {
@@ -169,4 +169,20 @@
   color: white !important;
   background-color: #c9a236 !important;
   outline: none !important;
+}
+
+.view-morebtn {
+  background-color: #c9a236;
+  color: white;
+   display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px; 
+  font-weight: 600;
+}
+
+.view-btnalign {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

@@ -38,6 +38,16 @@
   height: 100%;
   object-fit: cover;
 }
+/* .about1-img  img:hover {
+  transform: scale(1.05) rotate(1deg) !important;
+  transition: transform 2s cubic-bezier(0.19, 1, 0.22, 1);
+  cursor: pointer;
+}
+.about2-img  img:hover {
+  transform: scale(1.05) rotate(1deg) !important;
+  transition: transform 2s cubic-bezier(0.19, 1, 0.22, 1);
+  cursor: pointer;
+} */
 
 /* Small Images (Right - 2x2 Grid) */
 .about2-img {
@@ -251,7 +261,7 @@
 
 /* / Container / */
 .jewelry-container {
-  max-width: 900px;
+  max-width: 1000px;
   margin: auto;
   padding: 40px 20px;
 }

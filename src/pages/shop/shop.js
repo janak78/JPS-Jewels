@@ -3,8 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "../../redux/cartSlice";
 import { fetchCartCount } from "../../redux/cartSlice";
 import { useFetchDiamondsQuery } from "../../redux/shopSlice";
-import DiamondLoader from "../../components/Loader/loader"; // Import Loader
-import "./shop.css"; // External CSS
+import DiamondLoader from "../../components/Loader/loader";
+import "./shop.css";
 import {
   Button,
   Menu,
@@ -30,6 +30,7 @@ import showToast from "../../components/Toast/Toaster";
 import TextInput from "../../components/inputs/TextInput";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import { jwtDecode } from "jwt-decode";
+import noitem from "../../assets/images/not found.png";
 
 const createUnsignedJWT = (payload) => {
   const header = { alg: "none", typ: "JWT" };
@@ -1185,7 +1186,7 @@ const DiamondsGrid = () => {
           </div>
 
           <div className="row">
-            <div className="col-md-6 col-12 mb-3">
+            <div className="col-md-6 col-12">
               <div className="bg-box mb-3 pb-0">
                 <div className="jps-measurements row">
                   <div className="col-md-12 col-12 ">
@@ -1446,16 +1447,16 @@ const DiamondsGrid = () => {
                   </div>
                 </div>
               </div>
-              <div className="bg-box mb-2">
+              <div className="bg-box">
                 <div className="row">
-                  <div className="col-lg-6 col-md-12 col-12 mb-3">
+                  <div className="col-lg-6 col-md-12 col-12 mb-2">
                     <div item>
                       <Typography
                         variant="body1"
                         fontWeight="bold"
                         sx={{ textAlign: "left" }}
                       >
-                        Caret
+                        Carat
                       </Typography>
                     </div>
 
@@ -1490,7 +1491,7 @@ const DiamondsGrid = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="col-lg-6 col-md-12 col-12 mb-3">
+                  <div className="col-lg-6 col-md-12 col-12 mb-2">
                     <div item>
                       <Tabs
                         value={tabValue}
@@ -1521,7 +1522,7 @@ const DiamondsGrid = () => {
                         <Tab
                           label={
                             <Typography variant="body1" fontWeight="bold">
-                              P/ct
+                              Price per carat
                             </Typography>
                           }
                           sx={{
@@ -1859,7 +1860,1011 @@ const DiamondsGrid = () => {
           </div>
           <div className="row">
             {showfilter && (
-              <div className="col-md-4 col-12">
+              // <div className="col-md-12 col-12">
+              //   <div className="bg-box mb-3">
+              //     <div className="jps-measurements row">
+              //       <div className="col-md-6 col-12">
+              //         <div item>
+              //           <Tabs
+              //             value={diamondType}
+              //             onChange={handleTypeChange}
+              //             aria-label="price tabs"
+              //             sx={{
+              //               minHeight: "40px",
+              //               "& .MuiTab-root": {
+              //                 minWidth: "auto",
+              //                 textTransform: "none",
+              //               },
+              //             }}
+              //           >
+              //             <Tab
+              //               label={
+              //                 <Typography
+              //                   variant="body1"
+              //                   fontWeight="bold"
+              //                   className="natural-diamond"
+              //                 >
+              //                   Natural Diamonds
+              //                 </Typography>
+              //               }
+              //               value={"0"}
+              //               sx={{
+              //                 px: 2,
+              //                 outline: "none !important",
+              //                 "&:focus": { outline: "none" },
+              //                 "&.Mui-selected:focus": { outline: "none" },
+              //                 "&.Mui-focusVisible": { outline: "none" },
+              //               }}
+              //             />
+              //             <Tab
+              //               label={
+              //                 <Typography
+              //                   variant="body1"
+              //                   fontWeight="bold"
+              //                   className="lab-grown-diamond"
+              //                 >
+              //                   Lab-Grown Diamonds
+              //                 </Typography>
+              //               }
+              //               value={"1"}
+              //               sx={{
+              //                 px: 2,
+              //                 outline: "none !important",
+              //                 "&:focus": { outline: "none" },
+              //                 "&.Mui-selected:focus": { outline: "none" },
+              //                 "&.Mui-focusVisible": { outline: "none" },
+              //               }}
+              //             />
+              //           </Tabs>
+              //         </div>
+              //       </div>
+              //       <div className="col-md-6 col-12">
+              //         <div className="jps-measur-box">
+              //           <div
+              //             item
+              //             className="reset-buttons"
+              //             style={{ marginLeft: "auto" }}
+              //           >
+              //             <Button
+              //               variant="contained"
+              //               onClick={() => resetAll(false)}
+              //               className="reset-btn"
+              //             >
+              //               Reset All
+              //             </Button>
+              //             <Button
+              //               variant="contained"
+              //               className="ml-2 apply-filter apply-btn"
+              //               onClick={applyFilter}
+              //             >
+              //               Apply Filter
+              //             </Button>
+              //           </div>
+              //         </div>
+              //       </div>
+              //     </div>
+              //   </div>
+
+              //   <div className="bg-box mb-3 pb-0">
+              //     <div className="jps-measurements row">
+              //       <div className="col-md-12 col-12 mb-3">
+              //         <div item>
+              //           <Typography
+              //             variant="body1"
+              //             fontWeight="bold"
+              //             sx={{ textAlign: "left" }}
+              //           >
+              //             Shape
+              //           </Typography>
+              //         </div>
+
+              //         <Grid item xs={12}>
+              //           <Grid
+              //             container
+              //             spacing={1}
+              //             sx={{
+              //               display: "grid",
+              //               gridTemplateColumns:
+              //                 "repeat(auto-fill, minmax(80px, 1fr))",
+              //               gap: "8px",
+              //               mt: 1,
+              //             }}
+              //             className="jps-icons"
+              //           >
+              //             {icon.map((value) => (
+              //               <Grid
+              //                 key={value.name}
+              //                 item
+              //                 onClick={() => toggleShape(value.value)}
+              //                 sx={{
+              //                   display: "flex",
+              //                   flexDirection: "column",
+              //                   alignItems: "center",
+              //                   justifyContent: "center",
+              //                   textAlign: "center",
+              //                   border: shape.includes(value.value)
+              //                     ? "1px solid #1976D2"
+              //                     : "1px solid #ccc",
+              //                   borderRadius: "5px",
+              //                   height: "115px",
+              //                   width: "100%",
+              //                   fontSize: "12px",
+              //                   fontWeight: "500",
+              //                   padding: 0,
+              //                   cursor: "pointer",
+              //                   backgroundColor: shape.includes(value.value)
+              //                     ? "#1976D250"
+              //                     : "#fff",
+              //                   color: "#000",
+              //                   transition: "background-color 0.3s",
+              //                 }}
+              //               >
+              //                 <div className="jps-icon">{value.icon}</div>
+              //                 {value.name}
+              //               </Grid>
+              //             ))}
+              //           </Grid>
+              //         </Grid>
+              //       </div>
+              //     </div>
+              //   </div>
+
+              //   <div className="bg-box mb-3 pb-0">
+              //     <div className="jps-measurements row">
+              //       <div className="col-md-6 col-12 mb-3">
+              //         <div item>
+              //           <Typography
+              //             variant="body1"
+              //             fontWeight="bold"
+              //             sx={{ textAlign: "left" }}
+              //           >
+              //             Clarity
+              //           </Typography>
+              //         </div>
+
+              //         <div item>
+              //           <div className="jps-lab-box">
+              //             {clarity.map((value) => (
+              //               <Grid
+              //                 key={value.name}
+              //                 item
+              //                 onClick={() => toggleClarity(value.name)}
+              //                 sx={{
+              //                   display: "flex",
+              //                   flexDirection: "column",
+              //                   alignItems: "center",
+              //                   justifyContent: "center",
+              //                   textAlign: "center",
+              //                   border: selectedClarity.includes(value.name)
+              //                     ? "1px solid #1976D2"
+              //                     : "1px solid #ccc",
+              //                   borderRadius: "4px",
+              //                   // height: "50px",
+              //                   // width: "100%",
+              //                   fontSize: "12px",
+              //                   fontWeight: "500",
+              //                   padding: 0,
+              //                   cursor: "pointer",
+              //                   backgroundColor: selectedClarity.includes(
+              //                     value.name
+              //                   )
+              //                     ? "#1976D250"
+              //                     : "#fff",
+              //                   color: "#000",
+              //                   transition: "background-color 0.3s",
+              //                 }}
+              //               >
+              //                 {value.name}
+              //               </Grid>
+              //             ))}
+              //           </div>
+              //         </div>
+              //       </div>
+              //       <div className="col-md-6 col-12 mb-3">
+              //         <div item>
+              //           <Typography
+              //             variant="body1"
+              //             fontWeight="bold"
+              //             sx={{ textAlign: "left" }}
+              //           >
+              //             Colors
+              //           </Typography>
+              //         </div>
+
+              //         <div item>
+              //           <div className="jps-lab-box">
+              //             {color.map((value) => (
+              //               <Grid
+              //                 key={value.name}
+              //                 item
+              //                 onClick={() => toggleColor(value.name)}
+              //                 sx={{
+              //                   display: "flex",
+              //                   flexDirection: "column",
+              //                   alignItems: "center",
+              //                   justifyContent: "center",
+              //                   textAlign: "center",
+              //                   border: selectedColor.includes(value.name)
+              //                     ? "1px solid #1976D2"
+              //                     : "1px solid #ccc",
+              //                   borderRadius: "4px",
+              //                   // height: "50px",
+              //                   // width: "100%",
+              //                   fontSize: "12px",
+              //                   fontWeight: "500",
+              //                   padding: 0,
+              //                   cursor: "pointer",
+              //                   backgroundColor: selectedColor.includes(
+              //                     value.name
+              //                   )
+              //                     ? "#1976D250"
+              //                     : "#fff",
+              //                   color: "#000",
+              //                   transition: "background-color 0.3s",
+              //                 }}
+              //               >
+              //                 {value.name}
+              //               </Grid>
+              //             ))}
+              //           </div>
+              //         </div>
+              //       </div>
+              //     </div>
+              //   </div>
+
+              //   <div className="bg-box mb-3 pb-0">
+              //     <div className="jps-measurements row">
+              //       <div className="col-md-6 col-12 mb-3">
+              //         <div item>
+              //           <Typography
+              //             variant="body1"
+              //             fontWeight="bold"
+              //             sx={{ textAlign: "left" }}
+              //           >
+              //             Milky
+              //           </Typography>
+              //         </div>
+
+              //         <div item>
+              //           <div className="jps-lab-box">
+              //             {milky.map((value) => (
+              //               <Grid
+              //                 key={value.name}
+              //                 item
+              //                 onClick={() => toggleMilky(value.name)}
+              //                 sx={{
+              //                   display: "flex",
+              //                   flexDirection: "column",
+              //                   alignItems: "center",
+              //                   justifyContent: "center",
+              //                   textAlign: "center",
+              //                   border: selectedMilky.includes(value.name)
+              //                     ? "1px solid #1976D2"
+              //                     : "1px solid #ccc",
+              //                   borderRadius: "4px",
+              //                   // height: "50px",
+              //                   // width: "100%",
+              //                   fontSize: "12px",
+              //                   fontWeight: "500",
+              //                   padding: 0,
+              //                   cursor: "pointer",
+              //                   backgroundColor: selectedMilky.includes(
+              //                     value.name
+              //                   )
+              //                     ? "#1976D250"
+              //                     : "#fff",
+              //                   color: "#000",
+              //                   transition: "background-color 0.3s",
+              //                 }}
+              //               >
+              //                 {value.name}
+              //               </Grid>
+              //             ))}
+              //           </div>
+              //         </div>
+              //       </div>
+              //       <div className="col-md-6 col-12 mb-3">
+              //         <div item>
+              //           <Typography
+              //             variant="body1"
+              //             fontWeight="bold"
+              //             sx={{ textAlign: "left" }}
+              //           >
+              //             Tinge
+              //           </Typography>
+              //         </div>
+
+              //         <div item>
+              //           <div className="jps-lab-box">
+              //             {tinge.map((value) => (
+              //               <Grid
+              //                 key={value.name}
+              //                 item
+              //                 onClick={() => toggleTinge(value.name)}
+              //                 sx={{
+              //                   display: "flex",
+              //                   flexDirection: "column",
+              //                   alignItems: "center",
+              //                   justifyContent: "center",
+              //                   textAlign: "center",
+              //                   border: selectedTinge.includes(value.name)
+              //                     ? "1px solid #1976D2"
+              //                     : "1px solid #ccc",
+              //                   borderRadius: "4px",
+              //                   // height: "50px",
+              //                   // width: "100%",
+              //                   fontSize: "12px",
+              //                   fontWeight: "500",
+              //                   padding: 0,
+              //                   cursor: "pointer",
+              //                   backgroundColor: selectedTinge.includes(
+              //                     value.name
+              //                   )
+              //                     ? "#1976D250"
+              //                     : "#fff",
+              //                   color: "#000",
+              //                   transition: "background-color 0.3s",
+              //                 }}
+              //               >
+              //                 {value.name}
+              //               </Grid>
+              //             ))}
+              //           </div>
+              //         </div>
+              //       </div>
+              //     </div>
+              //   </div>
+
+              //   <div className="row">
+              //     <div className="col-md-6 col-12 mb-3">
+              //       <div className="bg-box mb-3 pb-0">
+              //         <div className="jps-measurements row">
+              //           <div className="col-md-12 col-12 ">
+              //             <div item>
+              //               <Typography
+              //                 variant="body1"
+              //                 fontWeight="bold"
+              //                 sx={{ textAlign: "left" }}
+              //               >
+              //                 Cut, Polish, Symmetry
+              //               </Typography>
+              //             </div>
+              //           </div>
+              //           <div className="col-md-12 col-12 mb-3">
+              //             <div item>
+              //               <Typography
+              //                 variant="body1"
+              //                 fontWeight="bold"
+              //                 sx={{ textAlign: "left" }}
+              //               >
+              //                 Cut
+              //               </Typography>
+              //             </div>
+              //             <div item>
+              //               <div className="jps-lab-box">
+              //                 {(diamondType === "0" ? cut : labcut).map(
+              //                   (value) => (
+              //                     <Grid
+              //                       key={value.name}
+              //                       item
+              //                       onClick={() => toggleCut(value.value)}
+              //                       sx={{
+              //                         display: "flex",
+              //                         alignItems: "center",
+              //                         justifyContent: "center",
+              //                         textAlign: "center",
+              //                         border: selectedCut.includes(value.value)
+              //                           ? "1px solid #1976D2"
+              //                           : "1px solid #ccc",
+              //                         borderRadius: "4px",
+              //                         // height: "50px",
+              //                         // width: "100%",
+              //                         fontSize: "12px",
+              //                         fontWeight: "500",
+              //                         cursor: "pointer",
+              //                         backgroundColor: selectedCut.includes(
+              //                           value.value
+              //                         )
+              //                           ? "#1976D250"
+              //                           : "#fff",
+              //                         color: "#000",
+              //                         transition: "background-color 0.3s",
+              //                       }}
+              //                     >
+              //                       {value?.name || ""}
+              //                     </Grid>
+              //                   )
+              //                 )}
+              //               </div>
+              //             </div>
+              //           </div>
+              //           <div className="col-md-12 col-12 mb-3">
+              //             <div item>
+              //               <Typography
+              //                 variant="body1"
+              //                 fontWeight="bold"
+              //                 sx={{ textAlign: "left" }}
+              //               >
+              //                 Polish
+              //               </Typography>
+              //             </div>
+              //             <div item>
+              //               <div className="jps-lab-box">
+              //                 {(diamondType === "0" ? polish : labpolish).map(
+              //                   (value) => (
+              //                     <Grid
+              //                       key={value.name}
+              //                       item
+              //                       onClick={() => togglePolish(value.value)}
+              //                       sx={{
+              //                         display: "flex",
+              //                         flexDirection: "column",
+              //                         alignItems: "center",
+              //                         justifyContent: "center",
+              //                         textAlign: "center",
+              //                         border: selectedPolish.includes(
+              //                           value.value
+              //                         )
+              //                           ? "1px solid #1976D2"
+              //                           : "1px solid #ccc",
+              //                         borderRadius: "4px",
+              //                         // height: "50px",
+              //                         // width: "100%",
+              //                         fontSize: "12px",
+              //                         fontWeight: "500",
+              //                         padding: 0,
+              //                         cursor: "pointer",
+              //                         backgroundColor: selectedPolish.includes(
+              //                           value.value
+              //                         )
+              //                           ? "#1976D250"
+              //                           : "#fff",
+              //                         color: "#000",
+              //                         transition: "background-color 0.3s",
+              //                       }}
+              //                     >
+              //                       {value?.name || ""}
+              //                     </Grid>
+              //                   )
+              //                 )}
+              //               </div>
+              //             </div>
+              //           </div>
+              //           <div className="col-md-12 col-12 mb-3">
+              //             <div item>
+              //               <Typography
+              //                 variant="body1"
+              //                 fontWeight="bold"
+              //                 sx={{ textAlign: "left" }}
+              //               >
+              //                 Symmetry
+              //               </Typography>
+              //             </div>
+              //             <div item>
+              //               <div className="jps-lab-box">
+              //                 {(diamondType === "0"
+              //                   ? symmetry
+              //                   : labsymmetry
+              //                 ).map((value) => (
+              //                   <Grid
+              //                     key={value.name}
+              //                     item
+              //                     onClick={() => toggleSymmetry(value.value)}
+              //                     sx={{
+              //                       display: "flex",
+              //                       flexDirection: "column",
+              //                       alignItems: "center",
+              //                       justifyContent: "center",
+              //                       textAlign: "center",
+              //                       border: selectedSymmetry.includes(
+              //                         value.value
+              //                       )
+              //                         ? "1px solid #1976D2"
+              //                         : "1px solid #ccc",
+              //                       borderRadius: "4px",
+              //                       // height: "50px",
+              //                       // width: "100%",
+              //                       fontSize: "12px",
+              //                       fontWeight: "500",
+              //                       padding: 0,
+              //                       cursor: "pointer",
+              //                       backgroundColor: selectedSymmetry.includes(
+              //                         value.value
+              //                       )
+              //                         ? "#1976D250"
+              //                         : "#fff",
+              //                       color: "#000",
+              //                       transition: "background-color 0.3s",
+              //                     }}
+              //                   >
+              //                     {value?.name || ""}
+              //                   </Grid>
+              //                 ))}
+              //               </div>
+              //             </div>
+              //           </div>
+              //         </div>
+              //       </div>
+              //     </div>
+              //     <div className="col-md-6 col-12 mb-3">
+              //       <div className="bg-box mb-2 pb-0">
+              //         <div className="jps-measurements row">
+              //           <div className="col-md-6 col-12 mb-3">
+              //             <div item>
+              //               <Typography
+              //                 variant="body1"
+              //                 fontWeight="bold"
+              //                 sx={{ textAlign: "left" }}
+              //               >
+              //                 Fluorescence
+              //               </Typography>
+              //             </div>
+              //             <div item>
+              //               <div className="jps-lab-box">
+              //                 {fluorescence.map((value) => (
+              //                   <Grid
+              //                     key={value.name}
+              //                     item
+              //                     onClick={() => toggleFluroescene(value.value)}
+              //                     sx={{
+              //                       display: "flex",
+              //                       flexDirection: "column",
+              //                       alignItems: "center",
+              //                       justifyContent: "center",
+              //                       textAlign: "center",
+              //                       border: selectedFluroescene.includes(
+              //                         value.value
+              //                       )
+              //                         ? "1px solid #1976D2"
+              //                         : "1px solid #ccc",
+              //                       borderRadius: "4px",
+              //                       fontSize: "12px",
+              //                       fontWeight: "500",
+              //                       padding: 0,
+              //                       cursor: "pointer",
+              //                       backgroundColor:
+              //                         selectedFluroescene.includes(value.value)
+              //                           ? "#1976D250"
+              //                           : "#fff",
+              //                       color: "#000",
+              //                       transition: "background-color 0.3s",
+              //                     }}
+              //                   >
+              //                     {value?.name || ""}
+              //                   </Grid>
+              //                 ))}
+              //               </div>
+              //             </div>
+              //           </div>
+
+              //           <div className="col-md-6 col-12 mb-3">
+              //             <div item>
+              //               <Typography
+              //                 variant="body1"
+              //                 fontWeight="bold"
+              //                 sx={{ textAlign: "left" }}
+              //               >
+              //                 Lab
+              //               </Typography>
+              //             </div>
+              //             <div item>
+              //               <div className="jps-lab-box">
+              //                 {(diamondType === "0" ? lab : labgrownlab).map(
+              //                   (value) => (
+              //                     <Grid
+              //                       key={value.name}
+              //                       item
+              //                       onClick={() => toggleLab(value.name)}
+              //                       sx={{
+              //                         display: "flex",
+              //                         flexDirection: "column",
+              //                         alignItems: "center",
+              //                         justifyContent: "center",
+              //                         textAlign: "center",
+              //                         border: selectedLab.includes(value.name)
+              //                           ? "1px solid #1976D2"
+              //                           : "1px solid #ccc",
+              //                         borderRadius: "4px",
+              //                         fontSize: "12px",
+              //                         fontWeight: "500",
+              //                         padding: 0,
+              //                         cursor: "pointer",
+              //                         backgroundColor: selectedLab.includes(
+              //                           value.name
+              //                         )
+              //                           ? "#1976D250"
+              //                           : "#fff",
+              //                         color: "#000",
+              //                         transition: "background-color 0.3s",
+              //                       }}
+              //                     >
+              //                       {value?.name || ""}
+              //                     </Grid>
+              //                   )
+              //                 )}
+              //               </div>
+              //             </div>
+              //           </div>
+              //         </div>
+              //       </div>
+              //       <div className="bg-box mb-2">
+              //         <div className="row">
+              //           <div className=" col-md-12 col-12">
+              //             <div item>
+              //               <Typography
+              //                 variant="body1"
+              //                 fontWeight="bold"
+              //                 sx={{ textAlign: "left" }}
+              //               >
+              //                 Caret
+              //               </Typography>
+              //             </div>
+
+              //             <div
+              //               className="jps-measur-box"
+              //               // style={{ marginTop: "39px" }}
+              //             >
+              //               <div item>
+              //                 <TextInput
+              //                   label={"Min, ct"}
+              //                   name="min"
+              //                   type="number"
+              //                   value={caratRange?.min}
+              //                   onChange={handleCaratChange}
+              //                   customBg={true}
+              //                 />
+              //               </div>
+
+              //               <div item>
+              //                 <i class="fa-solid fa-chevron-right"></i>
+              //               </div>
+
+              //               <div item>
+              //                 <TextInput
+              //                   label={"Max, ct"}
+              //                   name="max"
+              //                   type="number"
+              //                   value={caratRange?.max}
+              //                   onChange={handleCaratChange}
+              //                   customBg={true}
+              //                 />
+              //               </div>
+              //             </div>
+              //           </div>
+              //         </div>
+              //       </div>
+              //       <div className="bg-box mb-2">
+              //         <div className="row">
+              //           <div className="col-md-12 col-12">
+              //             <div item>
+              //               <Tabs
+              //                 value={tabValue}
+              //                 onChange={handleChange}
+              //                 aria-label="price tabs"
+              //                 sx={{
+              //                   minHeight: "40px",
+              //                   "& .MuiTab-root": {
+              //                     minWidth: "auto",
+              //                     textTransform: "none",
+              //                   },
+              //                 }}
+              //               >
+              //                 <Tab
+              //                   label={
+              //                     <Typography variant="body1" fontWeight="bold">
+              //                       Total Price
+              //                     </Typography>
+              //                   }
+              //                   sx={{
+              //                     px: 2,
+              //                     outline: "none !important",
+              //                     "&:focus": { outline: "none" },
+              //                     "&.Mui-selected:focus": { outline: "none" },
+              //                     "&.Mui-focusVisible": { outline: "none" },
+              //                   }}
+              //                 />
+              //                 <Tab
+              //                   label={
+              //                     <Typography variant="body1" fontWeight="bold">
+              //                       P/ct
+              //                     </Typography>
+              //                   }
+              //                   sx={{
+              //                     px: 2,
+              //                     outline: "none !important",
+              //                     "&:focus": { outline: "none" },
+              //                     "&.Mui-selected:focus": { outline: "none" },
+              //                     "&.Mui-focusVisible": { outline: "none" },
+              //                   }}
+              //                 />
+              //               </Tabs>
+              //             </div>
+
+              //             <div className="jps-measurements row">
+              //               <div className=" col-md-12 col-12">
+              //                 <div className="jps-measur-box">
+              //                   <div item>
+              //                     <TextInput
+              //                       label={"Min, $"}
+              //                       name="min"
+              //                       type="text"
+              //                       value={
+              //                         totalPriceRange?.min !== ""
+              //                           ? `$${totalPriceRange?.min}`
+              //                           : ""
+              //                       }
+              //                       onChange={handlePriceChange}
+              //                       onBlur={handlePriceBlur}
+              //                       customBg={true}
+              //                     />
+              //                   </div>
+
+              //                   <div item>
+              //                     <i class="fa-solid fa-chevron-right"></i>
+              //                   </div>
+
+              //                   <div item>
+              //                     <TextInput
+              //                       label={"Max, $"}
+              //                       name="max"
+              //                       type="text"
+              //                       value={
+              //                         totalPriceRange.max
+              //                           ? `$${totalPriceRange.max}`
+              //                           : ""
+              //                       }
+              //                       onChange={handlePriceChange}
+              //                       onBlur={handlePriceBlur}
+              //                       customBg={true}
+              //                     />
+              //                   </div>
+              //                 </div>
+              //               </div>
+              //             </div>
+              //           </div>
+              //         </div>
+              //       </div>
+              //     </div>
+              //   </div>
+
+              //   {diamondType !== "0" && (
+              //     <div className="bg-box mb-3 pb-0">
+              //       <div className="jps-measurements row">
+              //         <div className="col-md-6 col-12 mb-3">
+              //           <div item>
+              //             <Typography
+              //               variant="body1"
+              //               fontWeight="bold"
+              //               sx={{ textAlign: "left" }}
+              //             >
+              //               Growth Type
+              //             </Typography>
+              //           </div>
+              //           <div className="row ml-2">
+              //             <div item style={{ textAlign: "left" }}>
+              //               <FormControlLabel
+              //                 control={
+              //                   <Checkbox
+              //                     checked={growthtypeCheckbox.cvd}
+              //                     onChange={handleGrowthTypeCheckbox}
+              //                     name="cvd"
+              //                   />
+              //                 }
+              //                 label="CVD"
+              //               />
+              //             </div>
+              //             <div item style={{ textAlign: "left" }}>
+              //               <FormControlLabel
+              //                 control={
+              //                   <Checkbox
+              //                     checked={growthtypeCheckbox.hpht}
+              //                     onChange={handleGrowthTypeCheckbox}
+              //                     name="hpht"
+              //                   />
+              //                 }
+              //                 label="HPHT"
+              //               />
+              //             </div>
+              //             <div item style={{ textAlign: "left" }}>
+              //               <FormControlLabel
+              //                 control={
+              //                   <Checkbox
+              //                     checked={growthtypeCheckbox.others}
+              //                     onChange={handleGrowthTypeCheckbox}
+              //                     name="others"
+              //                   />
+              //                 }
+              //                 label="Others"
+              //               />
+              //             </div>
+              //           </div>
+              //         </div>
+              //       </div>
+              //     </div>
+              //   )}
+              //   <div className="bg-box">
+              //     <div item xs={12}>
+              //       <Typography
+              //         variant="body1"
+              //         fontWeight="bold"
+              //         sx={{ textAlign: "left" }}
+              //       >
+              //         Measurements
+              //       </Typography>
+              //     </div>
+              //     <div className="jps-measurements row">
+              //       <div className="col-md-6 col-12">
+              //         <div className="jps-measur-box">
+              //           <div item>
+              //             <TextInput
+              //               label={"Depth, Min, %"}
+              //               name="min"
+              //               type="number"
+              //               value={depthRange?.min}
+              //               onChange={handleDepthChange}
+              //               customBg={true}
+              //             />
+              //           </div>
+
+              //           <div item>
+              //             <i class="fa-solid fa-chevron-right"></i>
+              //           </div>
+
+              //           <div item>
+              //             <TextInput
+              //               label={"Depth, Max, %"}
+              //               name="max"
+              //               type="number"
+              //               value={depthRange?.max}
+              //               onChange={handleDepthChange}
+              //               customBg={true}
+              //             />
+              //           </div>
+              //         </div>
+              //         <div className="jps-measur-box">
+              //           <div item>
+              //             <TextInput
+              //               label={"Length, Min, mm"}
+              //               name="min"
+              //               type="number"
+              //               value={lengthrange?.min}
+              //               onChange={handleLengthChange}
+              //               customBg={true}
+              //             />
+              //           </div>
+
+              //           <div item>
+              //             <i class="fa-solid fa-chevron-right"></i>
+              //           </div>
+
+              //           <div item>
+              //             <TextInput
+              //               label={"Length, Max, mm"}
+              //               name="max"
+              //               type="number"
+              //               value={lengthrange?.max}
+              //               onChange={handleLengthChange}
+              //               customBg={true}
+              //             />
+              //           </div>
+              //         </div>
+              //         <div className="jps-measur-box">
+              //           <div item>
+              //             <TextInput
+              //               label={"Table, Min, %"}
+              //               name="min"
+              //               type="number"
+              //               value={tableRange?.min}
+              //               onChange={handleTableChange}
+              //               customBg={true}
+              //             />
+              //           </div>
+
+              //           <div item>
+              //             <i class="fa-solid fa-chevron-right"></i>
+              //           </div>
+
+              //           <div item>
+              //             <TextInput
+              //               label={"Table, Max, %"}
+              //               name="max"
+              //               type="number"
+              //               value={tableRange?.max}
+              //               onChange={handleTableChange}
+              //               customBg={true}
+              //             />
+              //           </div>
+              //         </div>
+              //       </div>
+
+              //       <div className="col-md-6 col-12">
+              //         <div className="jps-measur-box">
+              //           <div item>
+              //             <TextInput
+              //               label={"Width, Min, mm"}
+              //               name="min"
+              //               type="number"
+              //               value={widthrange?.min}
+              //               onChange={handleWidthChange}
+              //               customBg={true}
+              //             />
+              //           </div>
+
+              //           <div item>
+              //             <i class="fa-solid fa-chevron-right"></i>
+              //           </div>
+
+              //           <div item>
+              //             <TextInput
+              //               label={"Width, Max, mm"}
+              //               name="max"
+              //               type="number"
+              //               value={widthrange?.max}
+              //               onChange={handleWidthChange}
+              //               customBg={true}
+              //             />
+              //           </div>
+              //         </div>
+              //         <div className="jps-measur-box">
+              //           <div item>
+              //             <TextInput
+              //               label={"Radio, Min"}
+              //               name="min"
+              //               type="number"
+              //               value={radioRange?.min}
+              //               onChange={handleRadioChange}
+              //               customBg={true}
+              //             />
+              //           </div>
+
+              //           <div item>
+              //             <i class="fa-solid fa-chevron-right"></i>
+              //           </div>
+
+              //           <div item>
+              //             <TextInput
+              //               label={"Radio, Max"}
+              //               name="max"
+              //               type="number"
+              //               value={radioRange?.max}
+              //               onChange={handleRadioChange}
+              //               customBg={true}
+              //             />
+              //           </div>
+              //         </div>
+
+              //         <div className="jps-measur-box">
+              //           <div item>
+              //             <TextInput
+              //               label={"Depth, Min, mm"}
+              //               name="min"
+              //               type="number"
+              //               value={depthmmrange?.min}
+              //               onChange={handleDepthMMChange}
+              //               customBg={true}
+              //             />
+              //           </div>
+
+              //           <div item>
+              //             <i class="fa-solid fa-chevron-right"></i>
+              //           </div>
+
+              //           <div item>
+              //             <TextInput
+              //               label={"Depth, Max, mm"}
+              //               name="max"
+              //               type="number"
+              //               value={depthmmrange?.max}
+              //               onChange={handleDepthMMChange}
+              //               customBg={true}
+              //             />
+              //           </div>
+              //         </div>
+              //       </div>
+              //     </div>
+              //   </div>
+              // </div>
+              <div className="col-md-12 col-12">
                 <div className="bg-box mb-3">
                   <div className="jps-measurements row">
                     <div className="col-md-6 col-12">
@@ -1934,7 +2939,10 @@ const DiamondsGrid = () => {
                           <Button
                             variant="contained"
                             className="ml-2 apply-filter apply-btn"
-                            onClick={applyFilter}
+                            onClick={() => {
+                              applyFilter();
+                              setShowfilter(false);
+                            }}
                           >
                             Apply Filter
                           </Button>
@@ -2020,7 +3028,6 @@ const DiamondsGrid = () => {
                           Clarity
                         </Typography>
                       </div>
-
                       <div item>
                         <div className="jps-lab-box">
                           {clarity.map((value) => (
@@ -2038,8 +3045,6 @@ const DiamondsGrid = () => {
                                   ? "1px solid #1976D2"
                                   : "1px solid #ccc",
                                 borderRadius: "4px",
-                                // height: "50px",
-                                // width: "100%",
                                 fontSize: "12px",
                                 fontWeight: "500",
                                 padding: 0,
@@ -2488,20 +3493,20 @@ const DiamondsGrid = () => {
                     </div>
                     <div className="bg-box mb-2">
                       <div className="row">
-                        <div className=" col-md-12 col-12">
+                        <div className="col-lg-6 col-md-12 col-12 mb-3">
                           <div item>
                             <Typography
                               variant="body1"
                               fontWeight="bold"
                               sx={{ textAlign: "left" }}
                             >
-                              Caret
+                              Carat
                             </Typography>
                           </div>
 
                           <div
                             className="jps-measur-box"
-                            // style={{ marginTop: "39px" }}
+                            style={{ marginTop: "39px" }}
                           >
                             <div item>
                               <TextInput
@@ -2530,11 +3535,7 @@ const DiamondsGrid = () => {
                             </div>
                           </div>
                         </div>
-                      </div>
-                    </div>
-                    <div className="bg-box mb-2">
-                      <div className="row">
-                        <div className="col-md-12 col-12">
+                        <div className="col-lg-6 col-md-12 col-12 mb-3">
                           <div item>
                             <Tabs
                               value={tabValue}
@@ -2692,7 +3693,7 @@ const DiamondsGrid = () => {
                     </Typography>
                   </div>
                   <div className="jps-measurements row">
-                    <div className="col-md-6 col-12">
+                    <div className="col-md-4 col-12">
                       <div className="jps-measur-box">
                         <div item>
                           <TextInput
@@ -2714,7 +3715,7 @@ const DiamondsGrid = () => {
                             label={"Depth, Max, %"}
                             name="max"
                             type="number"
-                            value={depthRange?.max}
+                            value={depthRange.max}
                             onChange={handleDepthChange}
                             customBg={true}
                           />
@@ -2747,6 +3748,9 @@ const DiamondsGrid = () => {
                           />
                         </div>
                       </div>
+                    </div>
+
+                    <div className="col-md-4 col-12">
                       <div className="jps-measur-box">
                         <div item>
                           <TextInput
@@ -2774,9 +3778,7 @@ const DiamondsGrid = () => {
                           />
                         </div>
                       </div>
-                    </div>
 
-                    <div className="col-md-6 col-12">
                       <div className="jps-measur-box">
                         <div item>
                           <TextInput
@@ -2804,6 +3806,8 @@ const DiamondsGrid = () => {
                           />
                         </div>
                       </div>
+                    </div>
+                    <div className="col-md-4 col-12">
                       <div className="jps-measur-box">
                         <div item>
                           <TextInput
@@ -2864,14 +3868,13 @@ const DiamondsGrid = () => {
                 </div>
               </div>
             )}
-            <div
-              className={
-                showfilter ? "col-md-8 col-12" : "col-md-8 col-12 m-auto"
-              }
-            >
+            <div className={showfilter ? "col shop-diamonds-list" : "col"}>
               <div className="row">
                 {diamonds.map((diamond, index) => (
-                  <div key={index} className="col-md-3 col-sm-6">
+                  <div
+                    key={index}
+                    className="col-xl-2 col-lg-3 col-md-4 col-sm-6 mb-20"
+                  >
                     <div
                       className="diamond-card"
                       onClick={(e) => {
@@ -2886,91 +3889,129 @@ const DiamondsGrid = () => {
                           className="diamond-img"
                         />
                       </div>
-                      <h6 className="mt-3 diamond-name">
-                        {diamond.Carats} CARAT {diamond.Shape} - {diamond.Lab}
-                      </h6>
-                      <p className="price">
-                        <span>Amount:</span> ${diamond.Amount.toFixed(2)}
-                      </p>
-                      <p className="price">
-                        <span>Price/ct:</span> ${diamond.Price.toFixed(2)}
-                      </p>
-                      <span
-                        className="add-to-cart"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleAddToCart(diamond, true);
-                        }}
-                      >
-                        Add to cart <span className="arrowbtn">→</span>
-                      </span>
+                      <div class="dimond-content">
+                        <h6 className="diamond-name">
+                          {diamond.Carats} CARAT {diamond.Shape} - {diamond.Lab}
+                        </h6>
+                        <p className="price">
+                          <span>Amount:</span> ${diamond.Amount.toFixed(2)}
+                        </p>
+                        <p className="price">
+                          <span>Price per carat:</span> $
+                          {diamond.Price.toFixed(2)}
+                        </p>
+                        <span
+                          className="add-to-cart"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleAddToCart(diamond, true);
+                          }}
+                        >
+                          Add to cart <i class="fa-solid fa-arrow-right"></i>
+                          {/* <span className="">→</span> */}
+                        </span>
+                      </div>
                     </div>
                   </div>
                 ))}
               </div>
-              <div
-                className="mb-3"
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "10px",
-                  justifyContent: "end",
-                }}
-              >
-                <Button
-                  variant="contained"
-                  onClick={handleClick}
-                  style={{
-                    textTransform: "none",
-                    backgroundColor: "#C9A236",
-                    color: "#fff",
-                  }}
-                  className="pagination-dropdown"
-                >
-                  {itemsPerPage}
-                  <ArrowDropDownIcon />
-                </Button>
-                <Menu
-                  anchorEl={anchorEl}
-                  open={Boolean(anchorEl)}
-                  onClose={handleClose}
-                >
-                  {[12, 28, 52, 100].map((perPage) => (
-                    <MenuItem
-                      key={perPage}
-                      onClick={() => handleClose(perPage)}
-                    >
-                      {perPage}
-                    </MenuItem>
-                  ))}
-                </Menu>
 
-                <IconButton
-                  onClick={handlePrevPage}
-                  disabled={currentPage === 1}
+              {diamonds?.length > 0 ? (
+                <div
+                  className="mb-3"
                   style={{
-                    backgroundColor: "#C9A236",
-                    color: "#fff",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "10px",
+                    justifyContent: "end",
                   }}
                 >
-                  <ArrowLeftIcon />
-                </IconButton>
+                  <Button
+                    variant="contained"
+                    onClick={handleClick}
+                    style={{
+                      textTransform: "none",
+                      backgroundColor: "#C9A236",
+                      color: "#fff",
+                    }}
+                    className="pagination-dropdown"
+                  >
+                    {itemsPerPage}
+                    <ArrowDropDownIcon />
+                  </Button>
+                  <Menu
+                    anchorEl={anchorEl}
+                    open={Boolean(anchorEl)}
+                    onClose={handleClose}
+                  >
+                    {[12, 28, 52, 100].map((perPage) => (
+                      <MenuItem
+                        key={perPage}
+                        onClick={() => handleClose(perPage)}
+                      >
+                        {perPage}
+                      </MenuItem>
+                    ))}
+                  </Menu>
 
-                <Typography variant="body1">
-                  Page {currentPage} of {totalPages}
-                </Typography>
+                  <IconButton
+                    onClick={handlePrevPage}
+                    disabled={currentPage === 1}
+                    style={{
+                      backgroundColor: "#C9A236",
+                      color: "#fff",
+                    }}
+                  >
+                    <ArrowLeftIcon />
+                  </IconButton>
 
-                <IconButton
-                  onClick={handleNextPage}
-                  disabled={currentPage === totalPages}
-                  style={{
-                    backgroundColor: "#C9A236",
-                    color: "#fff",
-                  }}
-                >
-                  <ArrowRightIcon />
-                </IconButton>
-              </div>
+                  <Typography variant="body1">
+                    Page {currentPage} of {totalPages}
+                  </Typography>
+
+                  <IconButton
+                    onClick={handleNextPage}
+                    disabled={currentPage === totalPages}
+                    style={{
+                      backgroundColor: "#C9A236",
+                      color: "#fff",
+                    }}
+                  >
+                    <ArrowRightIcon />
+                  </IconButton>
+                </div>
+              ) : (
+                <>
+                  <div
+                    style={{
+                      height: "50vh",
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      textAlign: "center",
+                      fontSize: "20px",
+                      fontWeight: "600",
+                      color: "#444",
+                      backgroundColor: "#f8f9fa",
+                      borderRadius: "10px",
+                      padding: "20px",
+                      boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
+                    }}
+                  >
+                    <img
+                      src={noitem}
+                      alt="No Data"
+                      style={{
+                        width: "80px",
+                        marginBottom: "15px",
+                        opacity: "0.7",
+                      }}
+                    />
+                    <p>No diamonds found. Please try adjusting the filters.</p>
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </div>

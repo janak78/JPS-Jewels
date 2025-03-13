@@ -12,20 +12,20 @@ const nodemailer = require("nodemailer");
 //-------------------------------POST DATA----------------------------------------
 
 let transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 587,
+  host: "smtp.hostinger.com",
+  port: 465,
   secure: false,
   auth: {
-    user: "janaksolanki989@gmail.com",
-    pass: "qnotrwbbwbkpbcie",
+    user: "mail@jpsjewels.com",
+    pass: "AApp@00.com@mail",
   },
 });
 
 const sendEmail = async (toEmail, subject, body, data) => {
   try {
     const mailOptions = {
-      from: "jpsjewels@gmail.com",
-      to: [toEmail, "janaksolanki989@gmail.com"],
+      from: "mail@jpsjewels.com",
+      to: [toEmail, "mail@jpsjewels.com"],
       subject: subject,
       html: body, // Sending HTML content
     };
@@ -39,7 +39,6 @@ const sendEmail = async (toEmail, subject, body, data) => {
 router.post("/resetpasswordmail", async (req, res) => {
   try {
     const { PrimaryEmail } = req.body;
-    console.log(PrimaryEmail, "PrimaryEmail");
 
     if (!PrimaryEmail) {
       return res.status(400).json({ message: "Email address is required" });
@@ -49,7 +48,6 @@ router.post("/resetpasswordmail", async (req, res) => {
       PrimaryEmail,
       IsDelete: false,
     });
-    console.log(user, "user");
 
     if (!user) {
       return res.status(404).json({
@@ -58,7 +56,7 @@ router.post("/resetpasswordmail", async (req, res) => {
     }
 
     const token = await createResetToken({ PrimaryEmail });
-    const url = `http://localhost:3000/resetpassword?token=${token}`;
+    const url = `https://jpsjewels.com/resetpassword?token=${token}`;
 
     const defaultBody = `
     <div style="font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #ffffff;">
@@ -67,8 +65,8 @@ router.post("/resetpasswordmail", async (req, res) => {
   <td style="
     padding: 20px 0; 
     text-align: center; 
-    background-color: rgb(172, 130, 80); 
-    border-bottom: 1px solid #e88c44;
+    background-color: #c9a236; 
+    border-bottom: 1px solid #c9a236;
     border-top-left-radius: 12px; 
     border-top-right-radius: 12px; 
     border: none;">
@@ -80,15 +78,15 @@ router.post("/resetpasswordmail", async (req, res) => {
 
         <tr>
           <td style="padding: 20px; text-align: center; color: #333333; background-color: #ffffff;">
-            <h2 style="font-size: 25px; font-weight: 700; color: rgb(172, 130, 80); margin-bottom: 20px; letter-spacing: 1px;">Reset Your Password</h2>
+            <h2 style="font-size: 25px; font-weight: 700; color: #c9a236; margin-bottom: 20px; letter-spacing: 1px;">Reset Your Password</h2>
             <p style="font-size: 16px; color: #666666; line-height: 1.6; margin-bottom: 20px;">
               Dear Sir/Ma'am,<br>
               We received a request to reset the password for your JPS Jewels account. Please click the button below to proceed. If you did not request this, please disregard this email. The link will expire in 4 hours.
             </p>
-            <a href="${url}" style="display: inline-block; padding: 12px 25px; background-color: #e88c44; color: #ffffff; font-size: 16px; font-weight: bold; text-decoration: none; border-radius: 50px; text-transform: uppercase; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: all 0.3s ease;">
+            <a href="${url}" style="display: inline-block; padding: 12px 25px; background-color: #c9a236; color: #ffffff; font-size: 16px; font-weight: bold; text-decoration: none; border-radius: 50px; text-transform: uppercase; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: all 0.3s ease;">
               Reset Your Password
             </a>
-            <p style="font-size: 14px; color: #888888; margin-top: 30px;">If you have any questions or concerns,or Need help? <a href="mailto:mitmangukiya192@gmail.com" style="color: #e88c44; text-decoration: none;">Contact Support</a></p>
+            <p style="font-size: 14px; color: #888888; margin-top: 30px;">If you have any questions or concerns,or Need help? <a href="mailto:mitmangukiya192@gmail.com" style="color: #c9a236; text-decoration: none;">Contact Support</a></p>
           </td>
         </tr>
         <tr>
@@ -107,16 +105,12 @@ router.post("/resetpasswordmail", async (req, res) => {
       },
     ];
 
-    console.log(data, "data");
-
     const emailsend = await sendEmail(
       PrimaryEmail,
       "Reset Your Password",
       defaultBody,
       data
     );
-
-    console.log(emailsend, "emailsend");
 
     return res.json({
       statusCode: 200,
@@ -155,7 +149,7 @@ router.put("/reset_passwords/:mail", async (req, res) => {
     const encryptmail = req.params.mail;
     const verify = await verifyResetToken(encryptmail);
     const email = verify.data.PrimaryEmail;
-    console.log(email, "email");
+
     if (!verify.status) {
       return res.status(401).json({
         message: "Token expired. Please request a new password reset email.",
@@ -163,7 +157,7 @@ router.put("/reset_passwords/:mail", async (req, res) => {
     }
 
     const newPassword = req.body.UserPassword;
-    console.log(newPassword, "neoaa");
+
     if (!newPassword) {
       return res.status(400).json({
         message: "New password is required.",
@@ -174,8 +168,6 @@ router.put("/reset_passwords/:mail", async (req, res) => {
       PrimaryEmail: email,
       IsDelete: false,
     });
-
-    console.log(user, "user");
 
     if (!user) {
       return res.status(404).json({
@@ -189,12 +181,10 @@ router.put("/reset_passwords/:mail", async (req, res) => {
       });
     }
 
-    console.log(newPassword, "newPassword");
-
     const hashConvert = encryptData(newPassword);
-    console.log(hashConvert, "hashConvert");
+
     const updateData = { UserPassword: hashConvert };
-    console.log(updateData, "updateData");
+
     await user.updateOne({ $set: updateData });
 
     return res.status(200).json({

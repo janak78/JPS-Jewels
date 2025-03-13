@@ -186,7 +186,7 @@ const Forgotpassword = () => {
               variant="h4"
               className="form-title align-left"
               gutterBottom
-              sx={{ fontFamily: "Poppins" }}
+              sx={{ fontFamily: "Poppins, sans-serif" }}
             >
               Forgot Password
             </Typography>

@@ -22,7 +22,7 @@ export const fetchUserData = createAsyncThunk(
     } catch (error) {
       showToast.error("Error fetching user data");
       return rejectWithValue("Error fetching user data");
-    }
+    } 
   }
 );
 
@@ -38,11 +38,13 @@ export const updateUserProfile = createAsyncThunk(
   
         if (response.data.statusCode === 200) {
           return response.data.data;
+        } else if (response.data.statusCode === 400) {
+          showToast.error(response.data.message);
         } else {
-          return rejectWithValue("Failed to update user data");
+          return rejectWithValue(response.data.message);
         }
       } catch (error) {
-        return rejectWithValue("Error updating user data");
+        return rejectWithValue(error.response.data.message);
       }
     }
   );

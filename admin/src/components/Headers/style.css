@@ -1,0 +1,19 @@
+.cardGap {
+  gap: 10px;
+  flex-direction: column !important;
+  display: flex;
+}
+.cardTitle {
+  font-size: 16px !important;
+  color: black;
+  font-weight: 700;
+  color: black;
+}
+.totalColor {
+  color: #c9a234;
+}
+.iconMui{
+    font-size: 50px !important;
+    color: black;
+    margin-top: 10px  !important;
+}

@@ -115,8 +115,8 @@ const Contactus = () => {
                 <img src={email} alt="pin" width="27px" />{" "}
                 <strong>Email:</strong>
               </span>
-              <a href="mailto:info@uat.jpsjewels.com" className="note">
-                info@uat.jpsjewels.com
+              <a href="mailto:mail@jpsjewels.com" className="note">
+                mail@jpsjewels.com
               </a>
             </div>
           </div>

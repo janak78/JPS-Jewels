@@ -1,6 +1,88 @@
 /* General Styling */
 .hero {
+  position: relative;
+  overflow: hidden;
+  background-color: #f4f1ec; /* Light beige background */
+}
+
+/* Wavy Line Container */
+.wavy-lines {
+  position: absolute;
+  /* bottom: 10%; */
+  left: 0;
+  width: 200%;
+  height: 650px;
+  transform: translateX(-50%);
+  z-index: 2;
+}
+
+/* Ensure all waves are full width */
+.wavy-lines svg {
+  position: absolute;
   width: 100%;
+  height: 100%;
+}
+
+/* Individual Wave Animations with Gaps & Intersections */
+.wavy-line-1 {
+  bottom: 50px; /* Lowest */
+  animation: moveWave 13s linear infinite;
+  opacity: 0.3;
+}
+
+.wavy-line-2 {
+  top: 0; /* Stick to the top */
+  left: 0;
+  width: 200%;
+  height: 600px;
+  animation: moveWave 10s linear infinite reverse;
+  opacity: 0.3;
+  z-index: -1;
+  position: absolute;
+}
+
+.wavy-line-3 {
+  bottom: 90px; /* Highest with More Gap */
+  animation: moveWave 20s linear infinite;
+  opacity: 0.3;
+}
+
+/* Animation */
+@keyframes moveWave {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-500px);
+  }
+}
+
+.bubbles-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.bubble {
+  position: absolute;
+  background-color: rgba(245, 213, 190, 0.8);
+  border-radius: 50%;
+  z-index: 1;
+  opacity: 0.7;
+  animation: moveBubble infinite alternate ease-in-out;
+}
+
+@keyframes moveBubble {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(20px, -20px) scale(1.2);
+  }
+  100% {
+    transform: translate(-20px, 20px) scale(1);
+  }
 }
 
 .cardbackground {
@@ -64,10 +146,33 @@
 @media (max-width: 5120px) and (min-width: 992px) {
   .card-img-overlay {
     display: flex !important;
+    z-index: 6;
   }
 }
 @media (max-width: 991px) {
   .card-img-overlay {
+    display: none !important;
+  }
+}
+
+@media (max-width: 5120px) and (min-width: 992px) {
+  .wavy-lines {
+    display: inline !important;
+  }
+}
+@media (max-width: 991px) {
+  .wavy-lines {
+    display: none !important;
+  }
+}
+
+@media (max-width: 5120px) and (min-width: 992px) {
+  .wavy-lines-2 {
+    display: inline !important;
+  }
+}
+@media (max-width: 991px) {
+  .wavy-lines-2 {
     display: none !important;
   }
 }
@@ -143,20 +248,25 @@
   }
 }
 
+@media (max-width: 360px) {
+  .card-img {
+    height: 255px !important;
+  }
+}
 /* new collection caretData */
 
 .caretdata {
   display: flex;
   /* flex-direction: row; */
-  align-items: center;
+  /* align-items: center; */
   justify-content: center;
-  padding: 10px !important;
+  /* padding: 10px !important; */
 }
 
 .diamond-card1 {
   border: 1px solid #ddd;
   border-radius: 15px;
-  height: 400px;
+  height: 100%;
   text-align: center;
   box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.12);
   transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
@@ -165,7 +275,6 @@
   flex-direction: column;
   justify-content: space-between;
   position: relative;
-  margin-bottom: 15px;
   cursor: pointer;
 }
 
@@ -194,12 +303,12 @@
   object-fit: cover;
 }
 
-h5 {
+/* h5 {
   font-size: 1rem;
   font-weight: 600;
   color: #333;
   margin: 8px 0;
-}
+} */
 
 .diamond-name1 {
   font-weight: 600;
@@ -614,6 +723,7 @@ li {
   text-decoration: none;
   font-weight: bold;
   transition: background 0.3s, color 0.3s;
+  cursor: pointer;
 }
 
 .collection-button:hover {
@@ -690,6 +800,8 @@ body {
 
 /* Section Styling */
 .collection-section {
+  position: relative;
+  overflow: hidden;
   padding: 40px 20px;
 }
 
@@ -715,7 +827,7 @@ body {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 10px;
-  max-width: 1000px;
+  max-width: 1100px;
   margin: auto;
   align-items: center;
 }
@@ -779,6 +891,7 @@ body {
   font-size: 12px;
   font-weight: bold;
   border-radius: 3px;
+  cursor: pointer;
 }
 
 .discover-button:hover {
@@ -843,6 +956,26 @@ body {
     padding: 5px 10px;
   }
 }
+
+@media (max-width: 1024px) {
+  .collection-item img {
+    width: 90%;
+    margin: auto; 
+  }
+}
+
+@media (max-width: 768px) {
+  .collection-item img {
+    width: 85%; 
+  }
+}
+
+@media (max-width: 480px) {
+  .collection-item img {
+    width: 80%; 
+  }
+}
+
 
 /* carousel */
 
@@ -1030,4 +1163,18 @@ button.next {
   .category-name {
     font-size: 10px;
   }
+}
+
+.top-product-diamonds {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.icon-grid {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  max-width: 900px; /* Adjust max-width as needed */
 }

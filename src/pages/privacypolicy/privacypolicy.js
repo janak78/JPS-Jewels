@@ -1,7 +1,10 @@
 import React from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import "./privacypolicy.css";
 
-const privacypolicy = () => {
+const Privacypolicy = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
   return (
     <>
       <div className="policy-container">
@@ -112,9 +115,9 @@ const privacypolicy = () => {
           date of birth, email address, and phone number. By providing this
           information, you consent to its use as described in this policy. You
           may withdraw your consent at any time by emailing us at
-          <a href="mailto:info@jpsjewels.com" className="privacy-link">
+          <a href="mailto:mail@jpsjewels.com" className="privacy-link">
             {" "}
-            info@jpsjewels.com
+            mail@jpsjewels.com
           </a>
           . Upon receiving your request, we will return or delete your personal
           information within five days.
@@ -165,13 +168,41 @@ const privacypolicy = () => {
           Copyright 2022 JPS Jewels. All Rights Reserved.
         </p>
         <p className="footer-links">
-          <p className="privacy-link-policy mr-2">Privacy Policy</p> |
-          <p className="privacy-link-policy mx-2"> Terms of Use</p> |
-          <p className="privacy-link-policy mx-2"> Contact Us</p>
+          <p
+            className="privacy-link-policy mr-2"
+            onClick={(e) => {
+              e.stopPropagation();
+              navigate("/privacypolicy");
+            }}
+          >
+            Privacy Policy
+          </p>{" "}
+          |
+          <p
+            className="privacy-link-policy mx-2"
+            onClick={(e) => {
+              e.stopPropagation();
+              navigate("/termsofuse");
+            }}
+          >
+            {" "}
+            Terms of Use
+          </p>{" "}
+          |
+          <p
+            className="privacy-link-policy mx-2"
+            onClick={(e) => {
+              e.stopPropagation();
+              navigate("/contactus");
+            }}
+          >
+            {" "}
+            Contact Us
+          </p>
         </p>
       </div>
-    </> 
+    </>
   );
 };
 
-export default privacypolicy;
+export default Privacypolicy;

@@ -1,3 +1,7 @@
+.maindiv {
+  margin-top: 20px !important;
+}
+
 .map-div iframe {
   border: 0;
   padding: 10px;
@@ -31,8 +35,8 @@
   flex-direction: row;
   justify-content: space-between;
   align-items: flex-start;
-  max-width: 1100px;
-  margin: 40px auto;
+  max-width: 1240px;
+  margin: 20px auto;
   padding: 20px;
   gap: 30px;
 }
@@ -127,11 +131,17 @@ form button:hover {
   background: #a07d2c;
 }
 .contact-form {
-  width: 90% !important;
-  height: 56vh !important;
+  width: 1240px !important;
+  height: 40vh !important;
 }
 
 /* Responsive Design */
+@media (max-width: 991px) {
+  .contact-form {
+    width: 100% !important;
+    height: 40vh !important;
+  }
+}
 @media (max-width: 768px) {
   .contactuscon {
     flex-direction: column;

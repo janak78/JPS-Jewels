@@ -17,7 +17,7 @@ const createUser = async (data) => {
   try {
     // Define required fields
     const requiredFields = [
-      "Salulation",
+      "Salutation",
       "FirstName",
       "LastName",
       "CompanyName",
@@ -33,7 +33,6 @@ const createUser = async (data) => {
       "Username",
       "UserPassword",
       "ConfirmPassword",
-      "PreferredContactMethod",
       "PreferredContactDetails",
     ];
 
@@ -174,8 +173,10 @@ router.get("/userdata", async (req, res) => {
   }
 });
 
-const updateUserProfile = async (UserId, data) => {
+const updateUserProfile = async (UserId, data, req) => {
+
   try {
+    // Check if the user exists
     const userExists = await Signup.findOne({ UserId, IsDelete: false });
 
     if (!userExists) {
@@ -184,12 +185,31 @@ const updateUserProfile = async (UserId, data) => {
         message: "User does not exist.",
       };
     }
-    // Decrypt the password before sending response
-    if (data?.UserPassword) {
+
+    // Encrypt password only if it's changed
+    if (data?.UserPassword && data.UserPassword !== userExists.UserPassword) {
       data.UserPassword = encryptData(data.UserPassword);
     }
 
-    const updatedUserdata = await Signup.findOneAndUpdate(
+    // Check if the new email already exists but exclude the current user's email
+    if (data?.PrimaryEmail) {
+      const findUser = await Signup.findOne({
+        PrimaryEmail: { $regex: new RegExp(`^${data.PrimaryEmail}$`, "i") },
+        IsDelete: false,
+        UserId: { $ne: UserId }, // Exclude the current user from the search
+      });
+
+
+      if (findUser) {
+        return {
+          statusCode: 400,
+          message: "Email already exists.",
+        };
+      }
+    }
+
+    // Update user profile
+    const updatedUserData = await Signup.findOneAndUpdate(
       { UserId },
       { $set: data },
       { new: true }
@@ -198,9 +218,10 @@ const updateUserProfile = async (UserId, data) => {
     return {
       statusCode: 200,
       message: "User Profile Updated Successfully",
-      data: updatedUserdata,
+      data: updatedUserData,
     };
   } catch (error) {
+    console.log(error);
     return {
       statusCode: 400,
       message: "Failed to update the user.",
@@ -221,7 +242,7 @@ router.put("/updateuserprofile", async (req, res) => {
       });
     }
 
-    const response = await updateUserProfile(UserId, data);
+    const response = await updateUserProfile(UserId, data, req);
     res.status(response.statusCode).json(response);
   } catch (error) {
     console.error(error.message);
@@ -399,12 +420,8 @@ const loginUser = async (data) => {
       };
     }
 
-    console.log(user, UserPassword);
-
     // Validate the password
     const isPasswordValid = await decryptData(user.UserPassword);
-
-    console.log(isPasswordValid, "isPasswordValid");
 
     if (UserPassword !== isPasswordValid) {
       return {
