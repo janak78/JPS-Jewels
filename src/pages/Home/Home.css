@@ -789,7 +789,7 @@ li {
 
 /* General Styling */
 body {
-  font-family: "Poppins", sans-serif;
+  font-family: "Poppins";
   background-color: white;
   margin: 0;
   padding: 0;
@@ -978,7 +978,7 @@ body {
 
 /* General Styles */
 body {
-  font-family: "Poppins", sans-serif;
+  font-family: "Poppins";
   background-color: white;
   text-align: center;
   margin: 0;

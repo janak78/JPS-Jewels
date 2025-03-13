@@ -98,9 +98,19 @@ const fetchCartWithoutCheckout = async () => {
     {
       $lookup: {
         from: "stocks",
-        pipeline: [{ $match: { IsDelete: false } }],
-        localField: "SKU",
-        foreignField: "SKU",
+        let: { sku: "$SKU" },
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $and: [
+                  { $eq: ["$SKU", "$$sku"] },
+                  { $eq: ["$IsDelete", false] },
+                ],
+              },
+            },
+          },
+        ],
         as: "diamondDetails",
       },
     },
