@@ -4,7 +4,7 @@ const multer = require("multer");
 const XLSX = require("xlsx");
 const stockSchema = require("./model");
 const { verifyLoginToken } = require("../authentication/authentication");
-const jwt = require("jsonwebtoken");
+const fs = require("fs");
 
 const router = express.Router();
 
@@ -128,7 +128,7 @@ router.post(
           { upsert: true, new: true }
         );
       }
-
+      fs.unlinkSync(fileName);
       res
         .status(200)
         .json({ success: true, message: "Excel file processed successfully" });

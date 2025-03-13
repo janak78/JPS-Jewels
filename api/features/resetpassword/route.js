@@ -12,20 +12,20 @@ const nodemailer = require("nodemailer");
 //-------------------------------POST DATA----------------------------------------
 
 let transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 587,
+  host: "smtp.hostinger.com",
+  port: 465,
   secure: false,
   auth: {
-    user: "janaksolanki989@gmail.com",
-    pass: "qnotrwbbwbkpbcie",
+    user: "mail@jpsjewels.com",
+    pass: "AApp@00.com@mail",
   },
 });
 
 const sendEmail = async (toEmail, subject, body, data) => {
   try {
     const mailOptions = {
-      from: "jpsjewels@gmail.com",
-      to: [toEmail, "janaksolanki989@gmail.com"],
+      from: "mail@jpsjewels.com",
+      to: [toEmail, "mail@jpsjewels.com"],
       subject: subject,
       html: body, // Sending HTML content
     };
@@ -39,7 +39,6 @@ const sendEmail = async (toEmail, subject, body, data) => {
 router.post("/resetpasswordmail", async (req, res) => {
   try {
     const { PrimaryEmail } = req.body;
-    
 
     if (!PrimaryEmail) {
       return res.status(400).json({ message: "Email address is required" });
@@ -49,7 +48,6 @@ router.post("/resetpasswordmail", async (req, res) => {
       PrimaryEmail,
       IsDelete: false,
     });
-    
 
     if (!user) {
       return res.status(404).json({
@@ -58,7 +56,7 @@ router.post("/resetpasswordmail", async (req, res) => {
     }
 
     const token = await createResetToken({ PrimaryEmail });
-    const url = `http://localhost:3000/resetpassword?token=${token}`;
+    const url = `https://jpsjewels.com/resetpassword?token=${token}`;
 
     const defaultBody = `
     <div style="font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #ffffff;">
@@ -107,16 +105,12 @@ router.post("/resetpasswordmail", async (req, res) => {
       },
     ];
 
-    
-
     const emailsend = await sendEmail(
       PrimaryEmail,
       "Reset Your Password",
       defaultBody,
       data
     );
-
-    
 
     return res.json({
       statusCode: 200,
@@ -155,7 +149,7 @@ router.put("/reset_passwords/:mail", async (req, res) => {
     const encryptmail = req.params.mail;
     const verify = await verifyResetToken(encryptmail);
     const email = verify.data.PrimaryEmail;
-    
+
     if (!verify.status) {
       return res.status(401).json({
         message: "Token expired. Please request a new password reset email.",
@@ -163,7 +157,7 @@ router.put("/reset_passwords/:mail", async (req, res) => {
     }
 
     const newPassword = req.body.UserPassword;
-    
+
     if (!newPassword) {
       return res.status(400).json({
         message: "New password is required.",
@@ -174,8 +168,6 @@ router.put("/reset_passwords/:mail", async (req, res) => {
       PrimaryEmail: email,
       IsDelete: false,
     });
-
-    
 
     if (!user) {
       return res.status(404).json({
@@ -189,12 +181,10 @@ router.put("/reset_passwords/:mail", async (req, res) => {
       });
     }
 
-    
-
     const hashConvert = encryptData(newPassword);
-    
+
     const updateData = { UserPassword: hashConvert };
-    
+
     await user.updateOne({ $set: updateData });
 
     return res.status(200).json({

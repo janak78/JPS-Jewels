@@ -15,20 +15,20 @@ const { verifyLoginToken } = require("../authentication/authentication");
 const router = express.Router();
 
 let transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 587,
+  host: "smtp.hostinger.com",
+  port: 465,
   secure: false,
   auth: {
-    user: "mitmangukiya192@gmail.com",
-    pass: "rjlppddetutdvebe",
+    user: "mail@jpsjewels.com",
+    pass: "AApp@00.com@mail",
   },
 });
 
 const sendEmail = async (toEmail, subject, body) => {
   try {
     const mailOptions = {
-      from: "jpsjewels@gmail.com",
-      to: [toEmail, "mitmangukiya192@gmail.com"],
+      from: "mail@jpsjewels.com",
+      to: [toEmail, "mail@jpsjewels.com"],
       subject: subject,
       html: body, // Sending HTML content
     };
@@ -45,12 +45,7 @@ const addContact = async (data) => {
     data.createdAt = timestamp;
     data.updatedAt = timestamp;
 
-    const requiredFields = [
-      "Name",
-      "Email",
-      "Subject",
-      "Message",
-    ];
+    const requiredFields = ["Name", "Email", "Subject", "Message"];
 
     // Check for missing fields
     const missingFields = requiredFields.filter((field) => !data[field]);
@@ -172,7 +167,9 @@ const contactDetails = async () => {
   return {
     statusCode: contactCount > 0 ? 200 : 204,
     message:
-      contactCount > 0 ? "Contact details retrieved successfully" : "No Contact found",
+      contactCount > 0
+        ? "Contact details retrieved successfully"
+        : "No Contact found",
     data: contact,
     TotalCount: contactCount,
   };
@@ -229,7 +226,9 @@ const contactDetailsPopup = async (ContactId) => {
   return {
     statusCode: stockCount > 0 ? 200 : 204,
     message:
-      stockCount > 0 ? "contactdetail retrieved successfully" : "No Contact found",
+      stockCount > 0
+        ? "contactdetail retrieved successfully"
+        : "No Contact found",
     data: contact,
     TotalCount: stockCount,
   };

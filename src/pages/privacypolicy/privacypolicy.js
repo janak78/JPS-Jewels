@@ -115,9 +115,9 @@ const Privacypolicy = () => {
           date of birth, email address, and phone number. By providing this
           information, you consent to its use as described in this policy. You
           may withdraw your consent at any time by emailing us at
-          <a href="mailto:info@jpsjewels.com" className="privacy-link">
+          <a href="mailto:mail@jpsjewels.com" className="privacy-link">
             {" "}
-            info@jpsjewels.com
+            mail@jpsjewels.com
           </a>
           . Upon receiving your request, we will return or delete your personal
           information within five days.
