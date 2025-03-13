@@ -113,7 +113,7 @@ const superadminLogin = async (data) => {
     const token = jwt.sign(
       { SuperadminId: user.SuperadminId }, // Payload with SuperadminId
       SECRET_KEY, // Secret key
-      { expiresIn: "1h" } // Token expiration (1 hour)
+      { expiresIn: "4h" } // Token expiration (1 hour)
     );
 
     // Return a successful response with the token and user details

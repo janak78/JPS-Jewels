@@ -21,7 +21,7 @@ const upload = multer({ storage: storage });
 
 router.post(
   "/addstocks",
-  
+
   upload.single("file"),
   async (req, res) => {
     try {
@@ -494,7 +494,6 @@ const fetchDiamondsPageDetails = async (query) => {
       { $sort: { createdAt: 1 } },
     ]);
 
-
     const stockCount = diamondDetailsPage.length;
     const totalPages = Math.ceil(stockCount / pageSize);
     const paginatedDiamonds = diamondDetailsPage.slice(
@@ -688,7 +687,6 @@ const fetchcaratsDetails = async () => {
   };
 };
 
-
 router.get("/caretdata", async function (req, res) {
   try {
     const result = await fetchcaratsDetails();
@@ -719,7 +717,7 @@ router.get("/caretdata", async function (req, res) {
   }
 });
 
-const fetchShapeDataDetails = async (shape) => {  
+const fetchShapeDataDetails = async (shape) => {
   const matchQuery = { IsDelete: false };
 
   if (shape) {
@@ -779,11 +777,17 @@ router.get("/shapedata", async function (req, res) {
 
     if (result.statusCode === 200) {
       result.data.forEach((diamond) => {
-        const certificateUrl = getCertificateUrl(diamond.Lab, diamond.CertificateNo);
+        const certificateUrl = getCertificateUrl(
+          diamond.Lab,
+          diamond.CertificateNo
+        );
         diamond.certificateUrl = certificateUrl;
 
         const defaultImageUrl = getDefaultImageUrl(diamond.Shape);
-        diamond.Image = diamond.Image && diamond.Image.length > 0 ? diamond.Image : defaultImageUrl;
+        diamond.Image =
+          diamond.Image && diamond.Image.length > 0
+            ? diamond.Image
+            : defaultImageUrl;
       });
     }
 
@@ -800,9 +804,12 @@ router.get("/shapedata", async function (req, res) {
 const getSimilarDiamonds = async (carat, color, clarity, shape) => {
   try {
     const result = await fetchStockDetails();
-    
 
-    if (result.statusCode !== 200 || !result.data || !Array.isArray(result.data)) {
+    if (
+      result.statusCode !== 200 ||
+      !result.data ||
+      !Array.isArray(result.data)
+    ) {
       return { statusCode: result.statusCode, data: [] };
     }
 
@@ -811,10 +818,9 @@ const getSimilarDiamonds = async (carat, color, clarity, shape) => {
     let similarDiamonds = result.data.filter((diamond) => {
       const diamondCarat = parseFloat(diamond.Carats);
       return (
-        diamond.Color === color &&
-        diamond.Shape === shape ||
-        diamond.Clarity === clarity &&
-        Math.abs(diamondCarat - caratValue) <= 0.2
+        (diamond.Color === color && diamond.Shape === shape) ||
+        (diamond.Clarity === clarity &&
+          Math.abs(diamondCarat - caratValue) <= 0.2)
       );
     });
 
@@ -833,8 +839,7 @@ const getSimilarDiamonds = async (carat, color, clarity, shape) => {
       similarDiamonds = result.data.filter((diamond) => {
         const diamondCarat = parseFloat(diamond.Carats);
         return (
-          diamond.Shape === shape &&
-          Math.abs(diamondCarat - caratValue) <= 0.4
+          diamond.Shape === shape && Math.abs(diamondCarat - caratValue) <= 0.4
         );
       });
     }
@@ -847,7 +852,6 @@ const getSimilarDiamonds = async (carat, color, clarity, shape) => {
     return { statusCode: 500, data: [], message: error.message };
   }
 };
-
 
 router.get("/similarproducts", async function (req, res) {
   try {
@@ -868,9 +872,10 @@ router.get("/similarproducts", async function (req, res) {
         return {
           ...diamond,
           certificateUrl: getCertificateUrl(diamond.Lab, diamond.CertificateNo),
-          Image: diamond.Image && diamond.Image.length > 0
-            ? diamond.Image
-            : getDefaultImageUrl(diamond.Shape),
+          Image:
+            diamond.Image && diamond.Image.length > 0
+              ? diamond.Image
+              : getDefaultImageUrl(diamond.Shape),
         };
       });
     }
@@ -1109,11 +1114,17 @@ router.get("/searchdata/:CertificateNo", async function (req, res) {
 
     if (result.statusCode === 200) {
       result.data.forEach((diamond) => {
-        const certificateUrl = getCertificateUrl(diamond.Lab, diamond.CertificateNo);
+        const certificateUrl = getCertificateUrl(
+          diamond.Lab,
+          diamond.CertificateNo
+        );
         diamond.certificateUrl = certificateUrl;
-        
+
         const defaultImageUrl = getDefaultImageUrl(diamond.Shape);
-        diamond.Image = diamond.Image && diamond.Image.length > 0 ? diamond.Image : defaultImageUrl;
+        diamond.Image =
+          diamond.Image && diamond.Image.length > 0
+            ? diamond.Image
+            : defaultImageUrl;
       });
     }
 
@@ -1168,6 +1179,18 @@ router.get("/stockpopup", verifyLoginToken, async function (req, res) {
 
 const deletestock = async (SKU) => {
   try {
+    const findCart = await Cart.findOne({
+      SKU: SKU,
+      IsDelete: false,
+      IsCheckout: false,
+    });
+    if (findCart) {
+      return {
+        statusCode: 205,
+        message: `can't delete It's Already is in Cart!!!`,
+      };
+    }
+
     const updatestock = await stockSchema.findOneAndUpdate(
       { SKU, IsDelete: false },
       { $set: { IsDelete: true } },
@@ -1177,7 +1200,7 @@ const deletestock = async (SKU) => {
     if (!updatestock) {
       return {
         statusCode: 404,
-        message: `No stock item found`,
+        message: `Stock not found or already deleted!`,
       };
     }
     return {
