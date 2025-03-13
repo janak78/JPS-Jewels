@@ -3,8 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "../../redux/cartSlice";
 import { fetchCartCount } from "../../redux/cartSlice";
 import { useFetchDiamondsQuery } from "../../redux/shopSlice";
-import DiamondLoader from "../../components/Loader/loader"; // Import Loader
-import "./shop.css"; // External CSS
+import DiamondLoader from "../../components/Loader/loader";
+import "./shop.css";
 import {
   Button,
   Menu,
@@ -30,6 +30,7 @@ import showToast from "../../components/Toast/Toaster";
 import TextInput from "../../components/inputs/TextInput";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import { jwtDecode } from "jwt-decode";
+import noitem from "../../assets/images/not found.png";
 
 const createUnsignedJWT = (payload) => {
   const header = { alg: "none", typ: "JWT" };
@@ -2938,7 +2939,10 @@ const DiamondsGrid = () => {
                           <Button
                             variant="contained"
                             className="ml-2 apply-filter apply-btn"
-                            onClick={applyFilter}
+                            onClick={() => {
+                              applyFilter();
+                              setShowfilter(false);
+                            }}
                           >
                             Apply Filter
                           </Button>
@@ -3893,7 +3897,8 @@ const DiamondsGrid = () => {
                           <span>Amount:</span> ${diamond.Amount.toFixed(2)}
                         </p>
                         <p className="price">
-                          <span>Price per carat:</span> ${diamond.Price.toFixed(2)}
+                          <span>Price per carat:</span> $
+                          {diamond.Price.toFixed(2)}
                         </p>
                         <span
                           className="add-to-cart"
@@ -3975,7 +3980,38 @@ const DiamondsGrid = () => {
                     <ArrowRightIcon />
                   </IconButton>
                 </div>
-              ) : null}
+              ) : (
+                <>
+                  <div
+                    style={{
+                      height: "50vh",
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      textAlign: "center",
+                      fontSize: "20px",
+                      fontWeight: "600",
+                      color: "#444",
+                      backgroundColor: "#f8f9fa",
+                      borderRadius: "10px",
+                      padding: "20px",
+                      boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
+                    }}
+                  >
+                    <img
+                      src={noitem}
+                      alt="No Data"
+                      style={{
+                        width: "80px",
+                        marginBottom: "15px",
+                        opacity: "0.7",
+                      }}
+                    />
+                    <p>No diamonds found. Please try adjusting the filters.</p>
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </div>

@@ -503,7 +503,7 @@ const fetchDiamondsPageDetails = async (query) => {
     );
 
     return {
-      statusCode: 200,
+      statusCode: diamondDetailsPage.length === 0 ? 204 : 200,
       message:
         diamondDetailsPage.length > 0
           ? "diamondDetailsPage retrieved successfully"
@@ -771,7 +771,8 @@ const fetchShapeDataDetails = async (shape) => {
   };
 };
 
-router.get("/shapdata", async function (req, res) {
+// **API Route**
+router.get("/shapedata", async function (req, res) {
   try {
     const shape = req.query.shape || null;
     const result = await fetchShapeDataDetails(shape);

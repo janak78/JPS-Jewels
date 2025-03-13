@@ -170,3 +170,19 @@
   background-color: #c9a236 !important;
   outline: none !important;
 }
+
+.view-morebtn {
+  background-color: #c9a236;
+  color: white;
+   display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px; 
+  font-weight: 600;
+}
+
+.view-btnalign {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

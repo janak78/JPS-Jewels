@@ -32,12 +32,13 @@ import { faTimes, faTrash } from "@fortawesome/free-solid-svg-icons";
 import "./Header.css";
 import AxiosInstance from "../Axiosinstance";
 import { fetchUserData, resetUserState } from "../redux/userSlice";
+import SearchIcon from "@mui/icons-material/Search";
 
 const Header = () => {
   const baseUrl = process.env.REACT_APP_BASE_API;
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 991);
   const [open, setOpen] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   // const [userName, setUserName] = useState(null);
@@ -54,6 +55,9 @@ const Header = () => {
   // const userName = useSelector((state) => state.auth.Username);
   const cartCount = useSelector((state) => state.cart.cartCount);
   const cartData = useSelector((state) => state.cart.cartData);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
+
   // const Mail = useSelector((state) => state.auth.Mail);
   // const cartCount = useSelector((state) => state.cart.cartCount);
   // const cartData = useSelector((state) => state.cart.cartData);
@@ -102,7 +106,7 @@ const Header = () => {
 
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768);
+      setIsMobile(window.innerWidth <= 991);
     };
 
     window.addEventListener("resize", handleResize);
@@ -192,7 +196,54 @@ const Header = () => {
   };
 
   const location = useLocation();
+  const [searchResult, setSearchResult] = useState(null);
 
+  const searchFormik = useFormik({
+    initialValues: {
+      CertificateNo: "",
+    },
+    validationSchema: Yup.object({
+      CertificateNo: Yup.string()
+        .matches(/^\d+$/, "Only numeric values are allowed.")
+        .required("Certificate Number is required"),
+    }),
+    onSubmit: (values, { resetForm }) => {
+      handleSearchSubmit(values.CertificateNo, resetForm);
+    },
+  });
+  const handleInput = (event) => {
+    event.target.value = event.target.value.replace(/\D/g, ""); // Remove non-digits
+    searchFormik.setFieldValue("CertificateNo", event.target.value);
+  };
+
+  const handleSearchSubmit = async (certificateNo, resetForm) => {
+    try {
+      const response = await AxiosInstance.get(
+        `${baseUrl}/stock/searchdata/${certificateNo}`
+      );
+
+      if (response.data.statusCode === 200 && response.data.data.length > 0) {
+        const diamond = response.data.data[0]; // Get first diamond
+        showToast.success("Diamond found successfully");
+        navigate("/diamonddetail", { state: { diamond } });
+      } else {
+        showToast.error("No diamond found with this certificate number.");
+      }
+    } catch (err) {
+      showToast.error("Something went wrong! Please try again.");
+      console.error("Search Error:", err);
+    } finally {
+      resetForm();
+      setSearchOpen(false);
+    }
+  };
+
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      searchFormik.handleSubmit();
+    }
+  };
   return (
     <header className="header-top">
       {/* Left Logo */}
@@ -252,7 +303,72 @@ const Header = () => {
             {/* Icons */}
             <div className="icons">
               {/* <i className="fa-solid fa-magnifying-glass icon"></i> */}
+              <ClickAwayListener onClickAway={() => setSearchOpen(false)}>
+                <div className="user-login-container">
+                  {/* User Icon */}
+                  <IconButton
+                    className="cart-button"
+                    color="inherit"
+                    onClick={() => setSearchOpen(!searchOpen)}
+                  >
+                    <SearchIcon fontSize="small" />
+                  </IconButton>
 
+                  {/* Dropdown Login Form */}
+                  {searchOpen && (
+                    <div className="login-dropdown">
+                      <IconButton
+                        className="cart-button"
+                        color="inherit"
+                        onClick={() => setSearchOpen(false)}
+                        style={{ position: "absolute", top: 5, right: 5 }}
+                      >
+                        <CloseIcon fontSize="small" />
+                      </IconButton>
+                      <form onSubmit={searchFormik.handleSubmit}>
+                        <FormGroup
+                          className="text-boxes"
+                          style={{ width: "100%", marginTop: "24px" }}
+                        >
+                          <TextField
+                            value={searchFormik.values.CertificateNo}
+                            onBlur={searchFormik.handleBlur}
+                            onChange={handleInput}
+                            onKeyDown={handleKeyPress} // 🔥 Calls API on "Enter"
+                            error={
+                              searchFormik.touched.CertificateNo &&
+                              Boolean(searchFormik.errors.CertificateNo)
+                            }
+                            helperText={
+                              searchFormik.touched.CertificateNo &&
+                              searchFormik.errors.CertificateNo
+                            }
+                            name="CertificateNo"
+                            label="Search"
+                            placeholder="Search by SKU number"
+                            type="text"
+                            className="custom-textfield w-100"
+                            fullWidth
+                            InputLabelProps={{
+                              shrink: true, // Keeps label always visible
+                              style: { color: "#666" },
+                            }}
+                            sx={{
+                              "& .MuiOutlinedInput-root": {
+                                "& fieldset": { borderColor: "#ccc" }, // Default border
+                                "&:hover fieldset": { borderColor: "#999" }, // Hover effect
+                                "&.Mui-focused fieldset": {
+                                  borderColor: "#ccc",
+                                }, // No blue focus
+                              },
+                            }}
+                          />
+                        </FormGroup>
+                      </form>
+                    </div>
+                  )}
+                </div>
+              </ClickAwayListener>
               {/* Cart Icon with Badge */}
               <div className="cart-icon-container">
                 <IconButton
@@ -398,10 +514,17 @@ const Header = () => {
               <ClickAwayListener onClickAway={() => setOpen(false)}>
                 <div className="user-login-container">
                   {/* User Icon */}
-                  <PersonOutlineIcon
+                  {/* <PersonOutlineIcon
                     className="user-icon"
                     onClick={() => setOpen(!open)}
-                  />
+                  /> */}
+                  <IconButton
+                    className="cart-button"
+                    color="inherit"
+                    onClick={() => setOpen(!open)}
+                  >
+                    <PersonOutlineIcon />
+                  </IconButton>
 
                   {/* Dropdown Login Form */}
                   {open && (

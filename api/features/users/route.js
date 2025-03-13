@@ -173,9 +173,14 @@ router.get("/userdata", async (req, res) => {
   }
 });
 
-const updateUserProfile = async (UserId, data) => {
+const updateUserProfile = async (UserId, data, req) => {
+  console.log(UserId);
+  console.log(data, "data");
+
   try {
+    // Check if the user exists
     const userExists = await Signup.findOne({ UserId, IsDelete: false });
+    console.log(userExists, "userExists");
 
     if (!userExists) {
       return {
@@ -183,12 +188,32 @@ const updateUserProfile = async (UserId, data) => {
         message: "User does not exist.",
       };
     }
-    // Decrypt the password before sending response
-    if (data?.UserPassword) {
+
+    // Encrypt password only if it's changed
+    if (data?.UserPassword && data.UserPassword !== userExists.UserPassword) {
       data.UserPassword = encryptData(data.UserPassword);
     }
 
-    const updatedUserdata = await Signup.findOneAndUpdate(
+    // Check if the new email already exists but exclude the current user's email
+    if (data?.PrimaryEmail) {
+      const findUser = await Signup.findOne({
+        PrimaryEmail: { $regex: new RegExp(`^${data.PrimaryEmail}$`, "i") },
+        IsDelete: false,
+        UserId: { $ne: UserId }, // Exclude the current user from the search
+      });
+
+      console.log(findUser, "findUser");
+
+      if (findUser) {
+        return {
+          statusCode: 400,
+          message: "Email already exists.",
+        };
+      }
+    }
+
+    // Update user profile
+    const updatedUserData = await Signup.findOneAndUpdate(
       { UserId },
       { $set: data },
       { new: true }
@@ -197,9 +222,10 @@ const updateUserProfile = async (UserId, data) => {
     return {
       statusCode: 200,
       message: "User Profile Updated Successfully",
-      data: updatedUserdata,
+      data: updatedUserData,
     };
   } catch (error) {
+    console.log(error);
     return {
       statusCode: 400,
       message: "Failed to update the user.",
@@ -211,7 +237,9 @@ const updateUserProfile = async (UserId, data) => {
 router.put("/updateuserprofile", async (req, res) => {
   try {
     const { UserId } = req.query;
+    console.log(UserId);
     const data = req.body;
+    console.log(data, "data");
 
     if (!UserId || !data || Object.keys(data).length === 0) {
       return res.status(400).json({
@@ -220,7 +248,7 @@ router.put("/updateuserprofile", async (req, res) => {
       });
     }
 
-    const response = await updateUserProfile(UserId, data);
+    const response = await updateUserProfile(UserId, data, req);
     res.status(response.statusCode).json(response);
   } catch (error) {
     console.error(error.message);
