@@ -3,7 +3,7 @@ body {
   margin: 0;
   font-family: "Poppins", sans-serif;
   /* padding-top: clamp(50px, 10vh, 68px) !important; */ /* old style working*/
-  padding-top: clamp(50px, 10vh, 95px) !important;
+  padding-top: clamp(50px, 12vh, 95px) !important;
 }
 
 .header {
@@ -153,6 +153,10 @@ body {
   .header {
     padding: 10px 0;
   }
+  .icons {
+    gap: 0px !important;
+  }
+  
 }
 
 @media (max-width: 480px) {

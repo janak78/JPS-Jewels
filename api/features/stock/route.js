@@ -503,7 +503,7 @@ const fetchDiamondsPageDetails = async (query) => {
     );
 
     return {
-      statusCode: 200,
+      statusCode: diamondDetailsPage.length === 0 ? 204 : 200,
       message:
         diamondDetailsPage.length > 0
           ? "diamondDetailsPage retrieved successfully"

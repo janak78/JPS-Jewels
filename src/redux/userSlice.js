@@ -35,14 +35,17 @@ export const updateUserProfile = createAsyncThunk(
           `${baseUrl}/user/updateuserprofile?UserId=${UserId}`,
           userData
         );
+        console.log(response,"response")
   
         if (response.data.statusCode === 200) {
           return response.data.data;
+        } else if (response.data.statusCode === 400) {
+          showToast.error(response.data.message);
         } else {
-          return rejectWithValue("Failed to update user data");
+          return rejectWithValue(response.data.message);
         }
       } catch (error) {
-        return rejectWithValue("Error updating user data");
+        return rejectWithValue(error.response.data.message);
       }
     }
   );

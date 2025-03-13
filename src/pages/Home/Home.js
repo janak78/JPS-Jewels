@@ -213,9 +213,103 @@ const Home = () => {
     dispatch(addToCart(cartItem, userId));
   };
 
+  const [bubbles, setBubbles] = useState([]);
+
+  useEffect(() => {
+    const newBubbles = Array.from({ length: 10 }).map(() => ({
+      id: Math.random(),
+      left: `${Math.random() * 100}%`,
+      top: `${Math.random() * 100}%`,
+      size: `${Math.random() * 0.6 + 0.3}em`,
+      animationDuration: `${Math.random() * 5 + 3}s`,
+    }));
+
+    setBubbles(newBubbles);
+  }, []);
+
   return (
     <>
-      <div className="hero border-1 pb-3">
+      <div className="hero">
+        <div className="wavy-lines">
+          {/* First Wavy Line (Lowest) */}
+          <svg
+            className="wavy-line-1"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 10000 300"
+          >
+            <defs>
+              <linearGradient id="strokeGradient1">
+                <stop offset="0%" stopColor="#D4AF37" stopOpacity="0.2" />
+                <stop offset="50%" stopColor="#D4AF37" stopOpacity="0.8" />
+                <stop offset="100%" stopColor="#D4AF37" stopOpacity="1" />
+              </linearGradient>
+            </defs>
+            <path
+              d="M0,510 
+          C2000,1450 3000,200 4000,100 
+          C5000,10 6000,1250 7000,90 
+          C8000,30 9000,170 10000,120"
+              fill="transparent"
+              stroke="url(#strokeGradient1)"
+              strokeWidth="45"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="wave-path wave-1"
+            />
+          </svg>
+
+          {/* Second Wavy Line (Middle) */}
+          {/* <svg className="wavy-line-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10000 300">
+        <defs>
+          <linearGradient id="strokeGradient2">
+            <stop offset="0%" stopColor="#D4AF37" stopOpacity="0.2" />
+            <stop offset="50%" stopColor="#D4AF37" stopOpacity="0.8" />
+            <stop offset="100%" stopColor="#D4AF37" stopOpacity="1" />
+          </linearGradient>
+        </defs>
+        <path
+           d="M0,250 
+           C2000,890 3000,250 4000,100 
+           C5000,10 6000,850 7000,90 
+           C8000,50 9000,250 10000,199"
+    
+          fill="transparent"
+          stroke="url(#strokeGradient2)"
+          strokeWidth="20"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="wave-path wave-2"
+        />
+      </svg> */}
+
+          {/* Third Wavy Line (Highest) */}
+          <svg
+            className="wavy-line-3"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 10000 300"
+          >
+            <defs>
+              <linearGradient id="strokeGradient3">
+                <stop offset="0%" stopColor="#D4AF37" stopOpacity="0.2" />
+                <stop offset="50%" stopColor="#D4AF37" stopOpacity="0.8" />
+                <stop offset="100%" stopColor="#D4AF37" stopOpacity="1" />
+              </linearGradient>
+            </defs>
+            <path
+              d="M0,290 
+           C2000,1270 3500,250 5000,100 
+           C6500,20 8000,450 9500,40 
+           C10000,60 10500,270 11000,70"
+              fill="transparent"
+              stroke="url(#strokeGradient3)"
+              strokeWidth="25"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="wave-path wave-3"
+            />
+          </svg>
+        </div>
+
         <div className="card cardbackground text-white border-0">
           {/* Image Slider */}
           <img
@@ -271,6 +365,45 @@ const Home = () => {
       </div>
 
       <section className="collection-section">
+      <div className="bubbles-container">
+      {bubbles.map((bubble) => (
+        <div
+          key={bubble.id}
+          className="bubble"
+          style={{
+            left: bubble.left,
+            top: bubble.top,
+            width: bubble.size,
+            height: bubble.size,
+            animationDuration: bubble.animationDuration,
+          }}
+        />
+      ))}
+    </div>
+        <div className="wavy-lines-2">
+          <svg
+            className="wavy-line-2"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 10000 300"
+          >
+            <defs>
+              <linearGradient id="strokeGradient2">
+                <stop offset="0%" stopColor="#D4AF37" stopOpacity="0.2" strokeWidth="65"/>
+                <stop offset="50%" stopColor="#D4AF37" stopOpacity="0.8" strokeWidth="20"/>
+                <stop offset="100%" stopColor="#D4AF37" stopOpacity="1" strokeWidth="45"/>
+              </linearGradient>
+            </defs>
+            <path
+              d="M0,550 C2000,890 3000,250 4000,100 C5000,10 6000,450 7000,190 C8000,250 9000,1550 10000,219"
+              fill="transparent"
+              stroke="url(#strokeGradient2)"
+              strokeWidth="45"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="wave-path wave-2"
+            />
+          </svg>
+        </div>
         <h2 className="shop-by-brands-title">New Collection</h2>
         <div className="collection-grid">
           <div className="collection-item large">
@@ -390,7 +523,7 @@ const Home = () => {
             </div>
           </div>
         </div>
-        <div className="caretdata row">
+        <div className="caretdata row w-100 p-0 m-0">
           {diamonds.map((diamond, index) => (
             <div
               key={index}

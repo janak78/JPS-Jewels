@@ -22,6 +22,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import showToast from "../../components/Toast/Toaster";
 import { useNavigate } from "react-router-dom";
+import DiamondLoader from "../../components/Loader/loader";
 
 const UserProfile = () => {
   const baseUrl = process.env.REACT_APP_BASE_API;
@@ -94,7 +95,8 @@ const UserProfile = () => {
         updateUserProfile({ UserId: userId, userData: values })
       ).unwrap();
       showToast.success("Profile updated successfully!");
-      navigate(-1);
+      dispatch(fetchUserData(userId));
+      // navigate(-1);
     } catch (err) {
       showToast.error(err || "Failed to update profile");
     } finally {
@@ -102,8 +104,8 @@ const UserProfile = () => {
     }
   };
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>{error}</p>;
+  if (loading) return <DiamondLoader />;
+  // if (error) return <p>{error}</p>;
   return (
     // <Container maxWidth="xl" className="mt-3 mb-3">
     <div className="container-fluid" style={{ padding: "50px" }}>
@@ -403,7 +405,7 @@ const UserProfile = () => {
                       fontSize: "14px",
                     }}
                   >
-                    7894561230
+                  {`${userData?.PhoneNo}`}
                   </p>
                 </div>
               </div>
