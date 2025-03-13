@@ -52,6 +52,8 @@ const Diamonddetail = () => {
   const [openImageModal, setOpenImageModal] = useState(false);
   const userId = useSelector((state) => state.auth?.user?.UserId);
   const [isloading, setIsLoading] = useState(true);
+  const [itsLoading, setItsLoading] = useState(true);
+
 
   const dispatch = useDispatch();
   const { diamondDetail, loading, error } = useSelector(
@@ -59,7 +61,8 @@ const Diamonddetail = () => {
   );
   useEffect(() => {
     if (SKU) {
-      dispatch(fetchDiamondDetail(SKU));
+      setIsLoading(true); // Start loading
+      dispatch(fetchDiamondDetail(SKU)).finally(() => setIsLoading(false));
     }
   }, [dispatch, SKU]);
 
@@ -72,9 +75,9 @@ const Diamonddetail = () => {
   }, [userId]);
 
   const similarDiamonds = useSelector((state) => state.shop.similarDiamonds);
-
   useEffect(() => {
     if (diamond) {
+      setItsLoading(true);
       dispatch(
         fetchSimilarDiamonds(
           diamond.Carats,
@@ -82,7 +85,7 @@ const Diamonddetail = () => {
           diamond.Clarity,
           diamond.Shape
         )
-      );
+      ).finally(() => setItsLoading(false));
     }
   }, [dispatch, diamond]);
 
@@ -162,7 +165,13 @@ const Diamonddetail = () => {
       JSON.parse(localStorage.getItem("visitedDiamonds")) || [];
     setVisitedDiamonds(storedDiamonds);
   }, []);
-
+  
+  useEffect(() => {
+    if (!loading && similarDiamonds && diamondDetail?.length > 0) {
+      setItsLoading(false); // Stop loading when everything is ready
+    }
+  }, [loading, similarDiamonds, diamondDetail]);
+  
   if (loading) return <DiamondLoader />;
   if (error) return <p>Error: {error}</p>;
   if (!diamondDetail) return <p>No diamond data found.</p>;
