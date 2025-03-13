@@ -143,12 +143,12 @@ body.register-page {
 }
 
 .back-to-login {
-  font-family: "Poppins" !important;
+  font-family: "Poppins", sans-serif !important;
   /* font-size: 16px;
   font-weight: 600; */
 }
 .have-an-account-login {
-  font-family: "Poppins" !important;
+  font-family: "Poppins", sans-serif !important;
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;

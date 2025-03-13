@@ -95,7 +95,7 @@
   text-align: left !important;
   align-items: start !important;
   display: flex;
-  font-family: "Poppins";
+  font-family: "Poppins", sans-serif;
   font-weight: bold;
   padding: 20px;
 }

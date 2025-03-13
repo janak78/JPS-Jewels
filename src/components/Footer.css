@@ -3,7 +3,7 @@
   color: #000;
   padding: 40px 0;
   text-align: left;
-  font-family: "Poppins";
+  font-family:"Poppins", sans-serif;
 }
 .f-border {
   border-top: 1px solid #ddd;

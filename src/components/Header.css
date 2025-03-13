@@ -1,7 +1,7 @@
 /* General Styling */
 body {
   margin: 0;
-  font-family: "Poppins";
+  font-family: "Poppins", sans-serif;
   /* padding-top: clamp(50px, 10vh, 68px) !important; */ /* old style working*/
   padding-top: clamp(50px, 10vh, 95px) !important;
 }

@@ -54,7 +54,7 @@
   padding: 15px !important;
   border-radius: 0px !important;
   font-size: 16px !important;
-  font-family: "Poppins" !important;
+  font-family: "Poppins", sans-serif;
 }
 
 .diamond-product-price {
@@ -101,7 +101,7 @@
   border-radius: 0 !important;
   padding: 15px !important;
   font-size: 16px !important;
-  font-family: "Poppins" !important;
+  font-family: "Poppins", sans-serif;
 }
 
 .diamond-product-buy-btn {
@@ -111,7 +111,7 @@
   border-radius: 0 !important;
   padding: 15px !important;
   font-size: 16px !important;
-  font-family: "Poppins" !important;
+  font-family: "Poppins", sans-serif;
 }
 
 .diamond-product-info-card {
