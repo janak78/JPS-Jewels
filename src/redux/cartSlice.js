@@ -77,6 +77,10 @@ export const addToCart = (item, userId, shouldShowToast) => async (dispatch) => 
       if(shouldShowToast){
       showToast.warning(response.data.message);
     }
+    } else if (response.data.statusCode === 203) {
+      if(shouldShowToast){
+      showToast.warning(response.data.message);
+    }
     } else if (response.data.statusCode === 401) {
       showToast.error("Your Session Expired. Please Login Again");
     } else {

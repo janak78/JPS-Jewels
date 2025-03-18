@@ -30,7 +30,7 @@ app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "jade");
 
 // app.use(cors());
-app.use(cors({ origin: "*" }));
+app.use(cors({ origin: "http://localhost:4000" }));
 
 app.use(logger("dev"));
 app.use(express.json());
@@ -41,7 +41,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(nocache());
 
 app.use("/api", indexRouter);
-app.use("/users", usersRouter);
+app.use("/api/users", usersRouter);
 
 // Signup Step
 app.use("/api/superadmin", superadminroutes);

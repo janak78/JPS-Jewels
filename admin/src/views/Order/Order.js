@@ -544,7 +544,7 @@ const Tableuser = () => {
         <DialogContent>
           <img
             src={imageUrl}
-            alt="User"
+            alt="Image"
             style={{ width: "100%", height: "auto" }} // Adjust to fit the modal
           />
         </DialogContent>

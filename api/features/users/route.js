@@ -1,5 +1,5 @@
 var express = require("express");
-const userSchema = require("../stock/model");
+const stockSchema = require("../stock/model");
 const Signup = require("./model");
 const moment = require("moment");
 const bcrypt = require("bcrypt");
@@ -264,28 +264,28 @@ const getAllUsers = async () => {
       {
         $project: {
           UserId: 1,
-          Image: 1,
-          Salutation: 1,
+          // Image: 1,
+          // Salutation: 1,
           FirstName: 1,
           LastName: 1,
           CompanyName: 1,
           Designation: 1,
-          RegisterType: 1,
+          // RegisterType: 1,
           City: 1,
-          State: 1,
-          Country: 1,
-          Pincode: 1,
-          CityPhoneCode: 1,
-          PhoneNo: 1,
+          // // State: 1,
+          // Country: 1,
+          // Pincode: 1,
+          // CityPhoneCode: 1,
+          // PhoneNo: 1,
           PrimaryEmail: 1,
-          SecondaryEmail: 1,
-          Website: 1,
-          Username: 1,
-          UserPassword: 1,
-          ConfirmPassword: 1,
-          LineofBusiness: 1,
-          PreferredContactMethod: 1,
-          PreferredContactDetails: 1,
+          // SecondaryEmail: 1,
+          // Website: 1,
+          // Username: 1,
+          // UserPassword: 1,
+          // ConfirmPassword: 1,
+          // LineofBusiness: 1,
+          // PreferredContactMethod: 1,
+          // PreferredContactDetails: 1,
           IsDelete: 1,
           createdAt: 1,
         },
@@ -329,12 +329,12 @@ router.get("/all-users", verifyLoginToken, async (req, res) => {
 });
 
 const fetchUserPopup = async (UserId) => {
-  const matchBillingId = {
+  const matchUserId = {
     UserId: UserId,
   };
 
-  const billingdetail = await signup.aggregate([
-    { $match: matchBillingId },
+  const userdetail = await signup.aggregate([
+    { $match: matchUserId },
     {
       $project: {
         UserId: 1,
@@ -366,17 +366,17 @@ const fetchUserPopup = async (UserId) => {
       },
     },
     {
-      $sort: { createdAt: -1 }, // Sort by `createdAt` in descending order
+      $sort: { createdAt: -1 },
     },
   ]);
 
   return {
-    statusCode: billingdetail.length > 0 ? 200 : 204,
+    statusCode: userdetail.length > 0 ? 200 : 204,
     message:
-      billingdetail.length > 0
-        ? "Billing details retrieved successfully"
-        : "No billing details found",
-    data: billingdetail,
+      userdetail.length > 0
+        ? "User details retrieved successfully"
+        : "No User details found",
+    data: userdetail,
   };
 };
 
@@ -478,7 +478,7 @@ const countDetails = async () => {
 
     const billingCount = await Billing.countDocuments({ IsDelete: false });
 
-    const usersCount = await userSchema.countDocuments({ IsDelete: false });
+    const stockCount = await stockSchema.countDocuments({ IsDelete: false });
 
     const addtoCarts = await addtocart.countDocuments({
       IsDelete: false,
@@ -491,7 +491,7 @@ const countDetails = async () => {
       data: {
         signupCount,
         billingCount,
-        usersCount,
+        stockCount,
         addtoCarts,
       },
     };

@@ -199,7 +199,7 @@ const Home = () => {
     return () => clearInterval(scrollInterval);
   }, []);
 
-  const handleAddToCart = (diamond) => {
+  const handleAddToCart = (diamond, shouldShowToast) => {
     if (!userId) {
       showToast.warning("Please log in to add items to the cart.");
       return;
@@ -210,7 +210,7 @@ const Home = () => {
       Quantity: 1,
     };
 
-    dispatch(addToCart(cartItem, userId));
+    dispatch(addToCart(cartItem, userId, shouldShowToast));
   };
 
   const [bubbles, setBubbles] = useState([]);
