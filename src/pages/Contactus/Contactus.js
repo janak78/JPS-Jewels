@@ -1,11 +1,9 @@
 import React, { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import axios from "axios";
 import pin from "../../assets/images/pin (1).svg";
 import telephonecall from "../../assets/images/telephone-call (1).svg";
 import email from "../../assets/images/email.svg";
-import { FaStar } from "react-icons/fa";
 import showToast from "../../components/Toast/Toaster";
 import "./Contactus.css";
 import TextInput from "../../components/inputs/TextInput";

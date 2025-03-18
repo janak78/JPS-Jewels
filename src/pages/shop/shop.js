@@ -14,7 +14,6 @@ import {
   Grid,
   FormControlLabel,
   Checkbox,
-  Container,
   Tabs,
   Tab,
 } from "@mui/material";
@@ -62,6 +61,21 @@ const DiamondsGrid = () => {
   );
 
   const [filterData, setFilterData] = useState(undefined);
+  const [showfilterData, setShowFilterData] = useState(undefined);
+
+  const filteredData = Object.entries(showfilterData || {}).filter(
+    ([key, value]) => {
+      if (Array.isArray(value)) return value.length > 0;
+      if (typeof value === "boolean") return false; 
+      return value !== "" && value !== null; 
+    }
+  );
+
+  // Split data into two columns
+  const midIndex = Math.ceil(filteredData.length / 2);
+  const leftColumn = Array.from({ length: midIndex }).map((_, index) =>
+    filteredData.slice(index * 2, index * 2 + 2)
+  );
 
   const { data, error, isLoading } = useFetchDiamondsQuery({
     pageNumber: currentPage,
@@ -75,6 +89,7 @@ const DiamondsGrid = () => {
   useEffect(() => {
     if (query !== "filter") {
       const decodedToken = jwtDecode(localStorage.getItem("filterToken"));
+      setShowFilterData(decodedToken);
       setFilterData(decodedToken);
       setShape(decodedToken.Shape);
       setSelectedClarity(decodedToken.Clarity);
@@ -829,7 +844,6 @@ const DiamondsGrid = () => {
     setFilterData(payload);
 
     const filterToken = createUnsignedJWT(payload);
-
     localStorage.setItem("filterToken", JSON.stringify(filterToken));
     setSearchParams({ q: filterToken });
   };
@@ -1827,12 +1841,19 @@ const DiamondsGrid = () => {
         <div className="" style={{ padding: "50px" }}>
           <div className="bg-box mb-3">
             <div className="jps-measurements row">
-              <div className="col-md-6 col-12">
-                <div item style={{ textAlign: "left" }}>
+              <div className="col-md-12 col-12">
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    flexWrap: "wrap",
+                  }}
+                >
+                  {/* Modify Filter Button */}
                   {!showfilter ? (
                     <Button
                       variant="contained"
-                      onClick={() => setShowfilter(true)} // Show filter content
+                      onClick={() => setShowfilter(true)}
                       className="reset-btn"
                     >
                       <i
@@ -1844,7 +1865,7 @@ const DiamondsGrid = () => {
                   ) : (
                     <Button
                       variant="contained"
-                      onClick={() => setShowfilter(false)} // Hide filter content
+                      onClick={() => setShowfilter(false)}
                       className="reset-btn"
                     >
                       <i
@@ -1853,6 +1874,53 @@ const DiamondsGrid = () => {
                       ></i>{" "}
                       Hide filter
                     </Button>
+                  )}
+
+                  {/* Show Filter Data Beside Button */}
+                  {filteredData.length > 0 && (
+                    <div
+                      style={{
+                        display: "flex",
+                        flexWrap: "wrap",
+                        padding: "10px",
+                        textAlign: "left",
+                        gap: "20px", // Space between columns
+                        marginLeft: "10px", // Space from button
+                      }}
+                    >
+                      {/* Left Column */}
+                      {leftColumn.map((item) => (
+                        <div
+                          style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: "5px",
+                          }}
+                        >
+                          {item.map(([key, value]) => (
+                            <div
+                              key={key}
+                              style={{ display: "flex", alignItems: "center" }}
+                            >
+                              <strong
+                                style={{
+                                  //   minWidth: "80px",
+                                  //   textAlign: "right",
+                                  marginRight: "10px",
+                                }}
+                              >
+                                {key}:
+                              </strong>
+                              <span>
+                                {Array.isArray(value)
+                                  ? value.join(", ")
+                                  : value.toString()}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      ))}
+                    </div>
                   )}
                 </div>
               </div>
@@ -3944,7 +4012,7 @@ const DiamondsGrid = () => {
                     open={Boolean(anchorEl)}
                     onClose={handleClose}
                   >
-                    {[12, 28, 52, 100].map((perPage) => (
+                    {[12, 24, 54, 108].map((perPage) => (
                       <MenuItem
                         key={perPage}
                         onClick={() => handleClose(perPage)}
