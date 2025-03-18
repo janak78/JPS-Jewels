@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import AxiosInstance from "../Axiosinstance";
 
@@ -11,7 +11,7 @@ export const diamondsApi = createApi({
   tagTypes: ["Diamonds"], // Add tag
   endpoints: (builder) => ({
     fetchDiamonds: builder.query({
-      query: ({pageNumber, pageSize, filterData}) => ({
+      query: ({ pageNumber, pageSize, filterData }) => ({
         url: `/stock/data/page?pageNumber=${pageNumber}&pageSize=${pageSize}`,
         method: "POST",
         body: filterData,
@@ -24,29 +24,26 @@ export const diamondsApi = createApi({
   }),
 });
 
-export const fetchSimilarDiamonds = (carat, color, clarity, shape) => async (dispatch) => {
-  try {
-    const res = await AxiosInstance.get(
-      `${baseUrl}/stock/similarproducts?carat=${carat}&color=${color}&clarity=${clarity}&shape=${shape}`
-    );
+export const fetchSimilarDiamonds =
+  (carat, color, clarity, shape) => async (dispatch) => {
+    try {
+      const res = await AxiosInstance.get(
+        `${baseUrl}/stock/similarproducts?carat=${carat}&color=${color}&clarity=${clarity}&shape=${shape}`
+      );
 
-    if (res.data.statusCode === 200) {
-      dispatch(setSimilarDiamonds(res.data.data.slice(0, 4)));
-    } else {
-      dispatch(setSimilarDiamonds([]));
+      if (res.data.statusCode === 200) {
+        dispatch(setSimilarDiamonds(res.data.data.slice(0, 4)));
+      } else {
+        dispatch(setSimilarDiamonds([]));
+      }
+    } catch (error) {
+      console.error("Error fetching similar diamonds:", error);
     }
-  } catch (error) {
-    console.error("Error fetching similar diamonds:", error);
-  }
-};
-
-
+  };
 
 export const fetchCaretData = () => async (dispatch) => {
   try {
-    const res = await AxiosInstance.get(
-      `${baseUrl}/stock/caretdata`
-    );
+    const res = await AxiosInstance.get(`${baseUrl}/stock/caretdata`);
 
     if (res.data.result.statusCode === 200) {
       dispatch(setCaretData(res.data.result.data.slice(0, 5)));
@@ -58,6 +55,31 @@ export const fetchCaretData = () => async (dispatch) => {
   }
 };
 
+export const fetchShapeData = createAsyncThunk(
+  "shop/fetchShapeData",
+  async (shapeValue = null, { rejectWithValue }) => {
+    try {
+      const response = await AxiosInstance.get(
+        `${baseUrl}/stock/shapedata`,
+        { params: shapeValue ? { shape: shapeValue } : {} }
+      );
+
+      if (response.data.result.statusCode === 200) {
+        return response.data.result.data; // Returning full data without slicing
+      } else {
+        return rejectWithValue("No data found.");
+      }
+    } catch (error) {
+      console.error("API Error:", error);
+      return rejectWithValue("Error fetching data. Try again.");
+    }
+  }
+);
+
+
+
+
+
 export const { useFetchDiamondsQuery } = diamondsApi;
 
 const shopSlice = createSlice({
@@ -68,6 +90,8 @@ const shopSlice = createSlice({
     itemsPerPage: 12,
     caretData: [],
     similarDiamonds: [],
+    shape: [""],
+    shapeError: null,
   },
   reducers: {
     setItemsPerPage: (state, action) => {
@@ -80,14 +104,34 @@ const shopSlice = createSlice({
       state.totalPages = action.payload;
     },
     setCaretData: (state, action) => {
-      state.caretData = action.payload; // Directly set the array
+      state.caretData = action.payload;
     },
     setSimilarDiamonds: (state, action) => {
-      state.similarDiamonds = action.payload;  // Store Similar Diamonds
+      state.similarDiamonds = action.payload;
     },
+    setShape: (state, action) => {
+      state.shape = [action.payload];
+    },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchShapeData.fulfilled, (state, action) => {
+        state.caretData = action.payload;
+        state.shapeError = null;
+      })
+      .addCase(fetchShapeData.rejected, (state, action) => {
+        state.caretData = [];
+        state.shapeError = action.payload;
+      });
   },
 });
 
-export const { setItemsPerPage, setCurrentPage, setTotalPages, setCaretData, setSimilarDiamonds } =
-  shopSlice.actions;
+export const {
+  setItemsPerPage,
+  setCurrentPage,
+  setTotalPages,
+  setCaretData,
+  setSimilarDiamonds,
+  setShape,
+} = shopSlice.actions;
 export default shopSlice.reducer;

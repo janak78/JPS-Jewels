@@ -463,29 +463,29 @@ const fetchDiamondsPageDetails = async (query) => {
       {
         $project: {
           Image: 1,
-          Video: 1,
-          DiamondType: 1,
-          HA: 1,
-          Ratio: 1,
-          Tinge: 1,
-          Milky: 1,
-          EyeC: 1,
-          Table: 1,
-          Depth: 1,
-          measurements: 1,
+          // Video: 1,
+          // DiamondType: 1,
+          // HA: 1,
+          // Ratio: 1,
+          // Tinge: 1,
+          // Milky: 1,
+          // EyeC: 1,
+          // Table: 1,
+          // Depth: 1,
+          // measurements: 1,
           Amount: 1,
           Price: 1,
-          Disc: 1,
-          Rap: 1,
-          FluoInt: 1,
-          Symm: 1,
-          Polish: 1,
+          // Disc: 1,
+          // Rap: 1,
+          // FluoInt: 1,
+          // Symm: 1,
+          // Polish: 1,
           Cut: 1,
           Clarity: 1,
           Color: 1,
           Carats: 1,
           Shape: 1,
-          CertificateNo: 1,
+          // CertificateNo: 1,
           Lab: 1,
           SKU: 1,
           SrNo: 1,
@@ -718,55 +718,100 @@ router.get("/caretdata", async function (req, res) {
 });
 
 const fetchShapeDataDetails = async (shape) => {
-  const matchQuery = { IsDelete: false };
+  try {
+    const matchQuery = { IsDelete: false };
 
-  if (shape) {
-    matchQuery.Shape = shape;
+    if (shape) {
+      matchQuery.Shape = shape;
+    }
+
+    let Carets;
+
+    if (shape) {
+      // Fetch 5 records for the selected shape
+      Carets = await stockSchema.aggregate([
+        { $match: matchQuery },
+        { $sort: { Amount: -1 } },
+        { $limit: 5 },
+        {
+          $project: {
+            Image: 1,
+            // Video: 1,
+            // DiamondType: 1,
+            // HA: 1,
+            // Ratio: 1,
+            // Tinge: 1,
+            // Milky: 1,
+            // EyeC: 1,
+            // Table: 1,
+            // Depth: 1,
+            // measurements: 1,
+            Amount: 1,
+            Price: 1,
+            // Disc: 1,
+            // Rap: 1,
+            // FluoInt: 1,
+            // Symm: 1,
+            // Polish: 1,
+            Cut: 1,
+            Clarity: 1,
+            Color: 1,
+            Carats: 1,
+            Shape: 1,
+            // CertificateNo: 1,
+            Lab: 1,
+            SKU: 1,
+            // SrNo: 1,
+          },
+        },
+      ]);
+    } else {
+      // Fetch 5 records per unique shape WITHOUT grouping
+      Carets = await stockSchema.aggregate([
+        { $match: matchQuery },
+        { $sort: { Shape: 1, Amount: -1 } }, // Sort by Shape and Amount descending
+        {
+          $group: {
+            _id: "$Shape",
+            diamonds: { $push: "$$ROOT" },
+          },
+        },
+        { $unwind: "$diamonds" }, // Flatten grouped diamonds array
+        { $sort: { "diamonds.Amount": -1 } }, // Sort by Amount descending within each shape
+        { $group: { _id: "$_id", diamonds: { $push: "$diamonds" } } }, // Re-group for slicing
+        { $project: { diamonds: { $slice: ["$diamonds", 5] } } }, // Take only top 5 per shape
+        { $unwind: "$diamonds" }, // Flatten the final result
+        {
+          $project: {
+            Image: "$diamonds.Image",
+            Amount: "$diamonds.Amount",
+            Price: "$diamonds.Price",
+            Cut: "$diamonds.Cut",
+            Clarity: "$diamonds.Clarity",
+            Color: "$diamonds.Color",
+            Carats: "$diamonds.Carats",
+            Shape: "$diamonds.Shape",
+            Lab: "$diamonds.Lab",
+            SKU: "$diamonds.SKU",
+          },
+        },
+      ]);
+    }
+
+    return {
+      statusCode: Carets.length > 0 ? 200 : 204,
+      message:
+        Carets.length > 0 ? "Carets retrieved successfully" : "No Carets found",
+      data: Carets,
+    };
+  } catch (error) {
+    console.error("Error fetching shape data details:", error);
+    return {
+      statusCode: 500,
+      message: "Internal server error",
+      error: error.message,
+    };
   }
-
-  const Carets = await stockSchema.aggregate([
-    { $match: matchQuery },
-    { $sort: { Amount: -1 } },
-    { $limit: 5 },
-    {
-      $project: {
-        Image: 1,
-        Video: 1,
-        DiamondType: 1,
-        HA: 1,
-        Ratio: 1,
-        Tinge: 1,
-        Milky: 1,
-        EyeC: 1,
-        Table: 1,
-        Depth: 1,
-        measurements: 1,
-        Amount: 1,
-        Price: 1,
-        Disc: 1,
-        Rap: 1,
-        FluoInt: 1,
-        Symm: 1,
-        Polish: 1,
-        Cut: 1,
-        Clarity: 1,
-        Color: 1,
-        Carats: 1,
-        Shape: 1,
-        CertificateNo: 1,
-        Lab: 1,
-        SKU: 1,
-        SrNo: 1,
-      },
-    },
-  ]);
-
-  return {
-    statusCode: Carets.length > 0 ? 200 : 204,
-    message:
-      Carets.length > 0 ? "Carets retrieved successfully" : "No Carets found",
-    data: Carets,
-  };
 };
 
 // **API Route**
@@ -818,9 +863,10 @@ const getSimilarDiamonds = async (carat, color, clarity, shape) => {
     let similarDiamonds = result.data.filter((diamond) => {
       const diamondCarat = parseFloat(diamond.Carats);
       return (
-        (diamond.Color === color && diamond.Shape === shape) ||
-        (diamond.Clarity === clarity &&
-          Math.abs(diamondCarat - caratValue) <= 0.2)
+        diamond.Shape === shape &&
+        (diamond.Color === color ||
+          (diamond.Clarity === clarity &&
+            Math.abs(diamondCarat - caratValue) <= 0.2))
       );
     });
 
@@ -829,8 +875,8 @@ const getSimilarDiamonds = async (carat, color, clarity, shape) => {
         const diamondCarat = parseFloat(diamond.Carats);
         return (
           diamond.Shape === shape &&
-          (diamond.Color === color || diamond.Clarity === clarity) &&
-          Math.abs(diamondCarat - caratValue) <= 0.3
+          ((diamond.Color === color || diamond.Clarity === clarity) &&
+            Math.abs(diamondCarat - caratValue)) <= 0.3
         );
       });
     }
@@ -846,7 +892,20 @@ const getSimilarDiamonds = async (carat, color, clarity, shape) => {
 
     similarDiamonds = similarDiamonds.slice(0, 5);
 
-    return { statusCode: 200, data: similarDiamonds };
+    const projectedDiamonds = similarDiamonds.map((diamond) => ({
+      Image: diamond.Image,
+      Amount: diamond.Amount,
+      Price: diamond.Price,
+      Cut: diamond.Cut,
+      Clarity: diamond.Clarity,
+      Color: diamond.Color,
+      Carats: diamond.Carats,
+      Shape: diamond.Shape,
+      Lab: diamond.Lab,
+      SKU: diamond.SKU,
+    }));
+
+    return { statusCode: 200, data: projectedDiamonds };
   } catch (error) {
     console.error("Error in getSimilarDiamonds:", error.message);
     return { statusCode: 500, data: [], message: error.message };

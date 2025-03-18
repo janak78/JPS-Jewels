@@ -5,18 +5,15 @@ import { fetchCartCount, removeCart } from "../../redux/cartSlice";
 import {
   TextField,
   Button,
-  Checkbox,
   IconButton,
   FormGroup,
   InputAdornment,
-  FormControlLabel,
   Grid,
   Typography,
 } from "@mui/material";
 // import InputText from "../InputFields/InputText";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import axios from "axios";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";

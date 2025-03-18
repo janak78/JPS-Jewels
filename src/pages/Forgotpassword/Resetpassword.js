@@ -1,26 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { login, logout } from "../../redux/authSlice";
-import { fetchCartCount, removeCart } from "../../redux/cartSlice";
 import {
   TextField,
   Button,
-  Checkbox,
   IconButton,
-  FormGroup,
   InputAdornment,
-  FormControlLabel,
   Grid,
   Typography,
 } from "@mui/material";
 // import InputText from "../InputFields/InputText";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import axios from "axios";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useNavigate, useParams , useLocation} from "react-router-dom";
-import showToast from "../../components/Toast/Toaster";
 import "../login/login.css";
 import "./Resetpassword.css";
 import logo from "../../assets/images/logo.svg";
@@ -43,7 +36,6 @@ import gallery3 from "../../assets/gallery images/still-life-object_1122-1942.av
 import gallery2 from "../../assets/gallery images/pexels-the-glorious-studio-3584518-10475789.jpg";
 import gallery1 from "../../assets/gallery images/pexels-the-glorious-studio-3584518-10983783.jpg";
 import allimage from "../../assets/gallery images/allimage.png";
-import AxiosInstance from "../../Axiosinstance";
 
 const Resetpassword = () => {
   const baseUrl = process.env.REACT_APP_BASE_API;
@@ -54,7 +46,7 @@ const Resetpassword = () => {
    const searchParams = new URLSearchParams(location.search);
    const token = searchParams.get("token");
  
-  const { loading, success, error, tokenExpired } = useSelector(
+  const {  success, error } = useSelector(
     (state) => state.resetPasswordSlice
   );
   const [showPassword, setShowPassword] = useState(false);

@@ -28,8 +28,9 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { addToCart } from "../../redux/cartSlice";
 import { fetchCartCount } from "../../redux/cartSlice";
 import showToast from "../../components/Toast/Toaster";
-import { fetchCaretData, fetchSimilarDiamonds } from "../../redux/shopSlice";
+import { fetchSimilarDiamonds } from "../../redux/shopSlice";
 import DiamondLoader from "../../components/Loader/loader";
+import noitem from "../../assets/images/not found.png";
 
 const Diamonddetail = () => {
   const location = useLocation();
@@ -53,7 +54,6 @@ const Diamonddetail = () => {
   const userId = useSelector((state) => state.auth?.user?.UserId);
   const [isloading, setIsLoading] = useState(true);
   const [itsLoading, setItsLoading] = useState(true);
-
 
   const dispatch = useDispatch();
   const { diamondDetail, loading, error } = useSelector(
@@ -165,15 +165,45 @@ const Diamonddetail = () => {
       JSON.parse(localStorage.getItem("visitedDiamonds")) || [];
     setVisitedDiamonds(storedDiamonds);
   }, []);
-  
+
   useEffect(() => {
     if (!loading && similarDiamonds && diamondDetail?.length > 0) {
       setItsLoading(false); // Stop loading when everything is ready
     }
   }, [loading, similarDiamonds, diamondDetail]);
-  
+
   if (loading) return <DiamondLoader />;
-  if (error) return <p>Error: {error}</p>;
+  if (error)
+    return (
+      <div
+        style={{
+          height: "50vh",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          textAlign: "center",
+          fontSize: "20px",
+          fontWeight: "600",
+          color: "#444",
+          backgroundColor: "#f8f9fa",
+          borderRadius: "10px",
+          padding: "20px",
+          // boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
+        }}
+      >
+        <img
+          src={noitem}
+          alt="No Data"
+          style={{
+            width: "80px",
+            marginBottom: "15px",
+            opacity: "0.7",
+          }}
+        />
+        <p>No diamond found. it has ben already ordered or deleted.</p>
+      </div>
+    );
   if (!diamondDetail) return <p>No diamond data found.</p>;
 
   return (

@@ -42,11 +42,13 @@ export const fetchDiamondDetail = (skuId) => async (dispatch) => {
 
     if (response.data.statusCode === 200) {
       dispatch(setDiamondDetail(response.data.data));
+    } else if (response.data.statusCode === 400){
+      dispatch(setError("Diamond not found"));
     } else {
       dispatch(setError("Diamond details not found"));
     }
   } catch (error) {
-    dispatch(setError("Error fetching diamond details"));
+    dispatch(setError("Diamond not found"));
     console.error("Fetch Diamond Detail Error:", error);
   }
 };
