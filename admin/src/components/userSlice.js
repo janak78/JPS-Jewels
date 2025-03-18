@@ -22,7 +22,7 @@ export const fetchUsers = createAsyncThunk("user/fetchUsers", async (_, { dispat
 const initialState = {
   signupCount: 0,
   billingCount: 0,
-  usersCount: 0,
+  stockCount: 0,
   addtoCarts: 0,
   loading: false,
 };
@@ -34,7 +34,7 @@ const userSlice = createSlice({
     setUserData: (state, action) => {
       state.signupCount = action.payload.signupCount ?? 0;
       state.billingCount = action.payload.billingCount ?? 0;
-      state.usersCount = action.payload.usersCount ?? 0;
+      state.stockCount = action.payload.stockCount ?? 0;
       state.addtoCarts = action.payload.addtoCarts ?? 0;
     },
     setLoading: (state, action) => {

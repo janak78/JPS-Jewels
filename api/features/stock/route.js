@@ -463,29 +463,29 @@ const fetchDiamondsPageDetails = async (query) => {
       {
         $project: {
           Image: 1,
-          Video: 1,
-          DiamondType: 1,
-          HA: 1,
-          Ratio: 1,
-          Tinge: 1,
-          Milky: 1,
-          EyeC: 1,
-          Table: 1,
-          Depth: 1,
-          measurements: 1,
+          // Video: 1,
+          // DiamondType: 1,
+          // HA: 1,
+          // Ratio: 1,
+          // Tinge: 1,
+          // Milky: 1,
+          // EyeC: 1,
+          // Table: 1,
+          // Depth: 1,
+          // measurements: 1,
           Amount: 1,
           Price: 1,
-          Disc: 1,
-          Rap: 1,
-          FluoInt: 1,
-          Symm: 1,
-          Polish: 1,
+          // Disc: 1,
+          // Rap: 1,
+          // FluoInt: 1,
+          // Symm: 1,
+          // Polish: 1,
           Cut: 1,
           Clarity: 1,
           Color: 1,
           Carats: 1,
           Shape: 1,
-          CertificateNo: 1,
+          // CertificateNo: 1,
           Lab: 1,
           SKU: 1,
           SrNo: 1,
@@ -863,9 +863,10 @@ const getSimilarDiamonds = async (carat, color, clarity, shape) => {
     let similarDiamonds = result.data.filter((diamond) => {
       const diamondCarat = parseFloat(diamond.Carats);
       return (
-        (diamond.Color === color && diamond.Shape === shape) ||
-        (diamond.Clarity === clarity &&
-          Math.abs(diamondCarat - caratValue) <= 0.2)
+        diamond.Shape === shape &&
+        (diamond.Color === color ||
+          (diamond.Clarity === clarity &&
+            Math.abs(diamondCarat - caratValue) <= 0.2))
       );
     });
 
@@ -874,8 +875,8 @@ const getSimilarDiamonds = async (carat, color, clarity, shape) => {
         const diamondCarat = parseFloat(diamond.Carats);
         return (
           diamond.Shape === shape &&
-          (diamond.Color === color || diamond.Clarity === clarity) &&
-          Math.abs(diamondCarat - caratValue) <= 0.3
+          ((diamond.Color === color || diamond.Clarity === clarity) &&
+            Math.abs(diamondCarat - caratValue)) <= 0.3
         );
       });
     }
@@ -891,7 +892,20 @@ const getSimilarDiamonds = async (carat, color, clarity, shape) => {
 
     similarDiamonds = similarDiamonds.slice(0, 5);
 
-    return { statusCode: 200, data: similarDiamonds };
+    const projectedDiamonds = similarDiamonds.map((diamond) => ({
+      Image: diamond.Image,
+      Amount: diamond.Amount,
+      Price: diamond.Price,
+      Cut: diamond.Cut,
+      Clarity: diamond.Clarity,
+      Color: diamond.Color,
+      Carats: diamond.Carats,
+      Shape: diamond.Shape,
+      Lab: diamond.Lab,
+      SKU: diamond.SKU,
+    }));
+
+    return { statusCode: 200, data: projectedDiamonds };
   } catch (error) {
     console.error("Error in getSimilarDiamonds:", error.message);
     return { statusCode: 500, data: [], message: error.message };

@@ -49,7 +49,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(nocache());
 
 app.use("/api", indexRouter);
-app.use("/users", usersRouter);
+app.use("/api/users", usersRouter);
 
 // Signup Step
 app.use("/api/superadmin", superadminroutes);

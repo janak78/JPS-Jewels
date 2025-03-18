@@ -322,7 +322,7 @@ const Contact = () => {
                       {/* {dialogData?.[0]?.LastName || "N/A"} */}
                     </p>
                     <p>
-                      <strong className="Heading">:</strong>{" "}
+                      <strong className="Heading">Email:</strong>{" "}
                       {dialogData?.[0]?.Email || "N/A"}
                     </p>
                     <p>

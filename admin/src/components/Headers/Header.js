@@ -17,7 +17,7 @@ const Header = () => {
 
   // const Header = () => {
     // const dispatch = useDispatch();
-    const { signupCount, billingCount, usersCount, addtoCarts, loading } =
+    const { signupCount, billingCount, stockCount, addtoCarts, loading } =
       useSelector((state) => state.user);
   
     useEffect(() => {
@@ -112,7 +112,7 @@ const Header = () => {
                         Stock
                       </CardTitle>
                       <span className="h2 font-weight-bold mb-0 totalColor">
-                        {usersCount || 0}
+                        {stockCount || 0}
                       </span>
                     </div>
                     <ShowChartIcon className="iconMui" />

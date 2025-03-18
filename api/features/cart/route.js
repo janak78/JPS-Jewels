@@ -2,6 +2,7 @@ var express = require("express");
 const mongoose = require("mongoose");
 const moment = require("moment");
 const Cart = require("./model");
+const Stock = require("../stock/model");
 
 const router = express.Router();
 const { verifyLoginToken } = require("../authentication/authentication");
@@ -43,19 +44,29 @@ const fetchCartDetails = async (UserId, SKU) => {
         SKU: 1,
         AddToCartId: 1,
         UserId: 1,
-        diamondDetails: 1,
+        // diamondDetails: 1,
+        "diamondDetails.Image": 1,
+        "diamondDetails.Amount": 1,
+        "diamondDetails.Price": 1,
+        "diamondDetails.Cut": 1,
+        "diamondDetails.Clarity": 1,
+        "diamondDetails.Color": 1,
+        "diamondDetails.Carats": 1,
+        "diamondDetails.Shape": 1,
+        "diamondDetails.Lab": 1,
         Quantity: 1,
       },
     },
   ]);
-
 
   const cartCount = cartDetails.length;
 
   return {
     statusCode: cartDetails.length > 0 ? 200 : 204,
     message:
-      cartDetails.length > 0 ? "CcartDetails retrieved successfully" : "No cartDetails found",
+      cartDetails.length > 0
+        ? "CartDetails retrieved successfully"
+        : "No cartDetails found",
     data: cartDetails,
     TotalCount: cartCount,
   };
@@ -152,7 +163,7 @@ const fetchCartWithoutCheckout = async () => {
     },
   ]);
 
-  const usersCount = await Cart.countDocuments({
+  const cartCount = await Cart.countDocuments({
     IsDelete: false,
     IsCheckout: false,
   });
@@ -160,9 +171,11 @@ const fetchCartWithoutCheckout = async () => {
   return {
     statusCode: cartItems.length > 0 ? 200 : 204,
     message:
-      cartItems.length > 0 ? "Cart items retrieved successfully" : "No cartItems found",
+      cartItems.length > 0
+        ? "Cart items retrieved successfully"
+        : "No cartItems found",
     data: cartItems,
-    TotalConut: usersCount,
+    TotalConut: cartCount,
   };
 };
 
@@ -309,24 +322,34 @@ const addToCart = async (data) => {
       data.AddToCartId = Date.now().toString(); // You can also prepend a prefix or make this more complex if needed
     }
 
-    if(!data.SKU){
+    if (!data.SKU) {
       return {
         statusCode: 400,
         message: "SKU is required",
-      }
+      };
     }
-    
+
     const existingItem = await Cart.findOne({
       UserId: data.UserId,
       SKU: data.SKU, // Match SKU along with UserId
       IsCheckout: false,
       IsDelete: false,
     });
-    
+
+    const checkStock = await Stock.findOne({
+      SKU: data.SKU,
+      IsDelete: true,
+    })
+
     if (existingItem) {
       return {
         statusCode: 202,
         message: "Item already in the cart",
+      };
+    } else if (checkStock) {
+      return {
+        statusCode: 203,
+        message: "Diamond Is Deleted or already ordered.",
       };
     } else {
       // If the item does not exist, create a new cart entry
