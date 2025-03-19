@@ -1,7 +1,7 @@
 
 import React from "react";
 import { useLocation, Route, Routes, Navigate } from "react-router-dom";
-import { Container, Row, Col } from "reactstrap";
+import { Container, Row } from "reactstrap";
 
 import routes from "routes.js";
 

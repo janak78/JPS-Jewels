@@ -634,7 +634,7 @@ const Diamonddetail = () => {
           )}
         </div> */}
         <div className="similar-diamonds-section">
-          <h3>Similar Diamonds</h3>
+          <h3 className="shop-by-brands-title">Similar Diamonds</h3>
           {similarDiamonds.length === 0 ? (
             <p>No similar diamonds found.</p>
           ) : (
@@ -687,7 +687,7 @@ const Diamonddetail = () => {
           )}
         </div>
 
-        <h3 className="mt-3">Recently Visited Diamonds</h3>
+        <h3 className="mt-3 shop-by-brands-title">Recently Visited Diamonds</h3>
         {/* <Grid container spacing={2} className="mt-3">
           {visitedDiamonds.slice(0, visibleCount).map((diamond, index) => (
             <div className="col-md-3 col-sm-6" key={index}>

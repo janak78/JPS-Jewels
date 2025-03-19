@@ -7,7 +7,7 @@ import {
 } from "reactstrap";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import { Grid, TableFooter, Typography } from "@mui/material";
+import { Grid, Typography } from "@mui/material";
 
 const JobberPagination = ({
   totalData,
