@@ -766,28 +766,37 @@ const fetchShapeDataDetails = async (shape) => {
         },
       ]);
     } else {
-      // Fetch top 5 diamonds PER SHAPE based on Amount
+      // Fetch 5 records per unique shape WITHOUT grouping
       Carets = await stockSchema.aggregate([
-          { $match: matchQuery }, // Filter out deleted records
-          { $sort: { Shape: 1, Amount: -1 } }, // 1️⃣ First, sort by Shape & then by Amount descending
-          {
-              $group: {
-                  _id: "$Shape",
-                  diamonds: { $push: "$$ROOT" }, // Push all diamonds for this shape
-              },
+        { $match: matchQuery },
+        { $sort: { Shape: 1, Amount: -1 } }, // Sort by Shape and Amount descending
+        {
+          $group: {
+            _id: "$Shape",
+            diamonds: { $push: "$$ROOT" },
           },
-          {
-              $project: {
-                  Shape: "$_id",
-                  diamonds: { $slice: ["$diamonds", 5] }, // Take only top 5 per shape
-              },
+        },
+        { $unwind: "$diamonds" }, // Flatten grouped diamonds array
+        { $sort: { "diamonds.Amount": -1 } }, // Sort by Amount descending within each shape
+        { $group: { _id: "$_id", diamonds: { $push: "$diamonds" } } }, // Re-group for slicing
+        { $project: { diamonds: { $slice: ["$diamonds", 5] } } }, // Take only top 5 per shape
+        { $unwind: "$diamonds" }, // Flatten the final result
+        {
+          $project: {
+            Image: "$diamonds.Image",
+            Amount: "$diamonds.Amount",
+            Price: "$diamonds.Price",
+            Cut: "$diamonds.Cut",
+            Clarity: "$diamonds.Clarity",
+            Color: "$diamonds.Color",
+            Carats: "$diamonds.Carats",
+            Shape: "$diamonds.Shape",
+            Lab: "$diamonds.Lab",
+            SKU: "$diamonds.SKU",
           },
-          { $sort: { Amount: -1, } }, // 2️⃣ Ensure Shapes remain in fixed order (A-Z)
-          { $unwind: "$diamonds" }, // Flatten array
-          { $replaceRoot: { newRoot: "$diamonds" } }, // Convert into flat list
+        },
       ]);
-  }
-  
+    }
 
     return {
       statusCode: Carets.length > 0 ? 200 : 204,

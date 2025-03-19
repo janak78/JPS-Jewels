@@ -17,7 +17,7 @@ const router = express.Router();
 let transporter = nodemailer.createTransport({
   host: "smtp.hostinger.com",
   port: 465,
-  secure: false,
+  secure: true,
   auth: {
     user: "mail@jpsjewels.com",
     pass: "AApp@00.com@mail",

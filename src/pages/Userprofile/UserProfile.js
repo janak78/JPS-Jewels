@@ -2,20 +2,15 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUserData, updateUserProfile } from "../../redux/userSlice";
 import {
-  Container,
   TextField,
   Button,
-  MenuItem,
   Typography,
   Box,
   Grid,
-  Paper,
   IconButton,
-  FormGroup,
   InputAdornment,
 } from "@mui/material";
 import { Formik, Form, Field } from "formik";
-import AxiosInstance from "../../Axiosinstance";
 import * as Yup from "yup";
 import "./Userprofile.css";
 import VisibilityIcon from "@mui/icons-material/Visibility";

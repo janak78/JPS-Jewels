@@ -36,25 +36,14 @@ import shop3 from "../../assets/images/tripple-banner-img-1.webp";
 import "./Home.css";
 import showToast from "../../components/Toast/Toaster";
 import { addToCart } from "../../redux/cartSlice";
-import { fetchCaretData } from "../../redux/shopSlice";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { useNavigate } from "react-router-dom";
 import {
-  Button,
-  Menu,
-  MenuItem,
-  IconButton,
   Typography,
   Grid,
-  FormControlLabel,
-  Checkbox,
-  Container,
-  Tabs,
-  Tab,
 } from "@mui/material";
-import { setCaretData } from "../../redux/shopSlice";
-import AxiosInstance from "../../Axiosinstance";
+import { fetchShapeData, setShape } from "../../redux/shopSlice";
 
 const images = [image1, image2, image3];
 
@@ -81,7 +70,7 @@ const Home = () => {
 
   const dispatch = useDispatch();
 
-  const diamonds = useSelector((state) => state.shop.caretData);
+  // const diamonds = useSelector((state) => state.shop.caretData);
   const userId = useSelector((state) => state.auth?.user?.UserId);
 
   useEffect(() => {
@@ -92,9 +81,10 @@ const Home = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const [shape, setShape] = useState([]);
+  // const [shape, setShape] = useState([]);
 
   const icon = [
+    { name: "All", value: "" },
     { icon: "", name: "Round", value: "RBC" },
     { icon: "", name: "Oval", value: "Oval" },
     { icon: "", name: "Pear", value: "Pear" },
@@ -135,34 +125,34 @@ const Home = () => {
   //   );
   // };
 
-  const toggleShape = async (shapeValue) => {
-    setShape([shapeValue]); // ✅ Set only the selected shape
+  // const toggleShape = async (shapeValue) => {
+  //   setShape([shapeValue]); // ✅ Set only the selected shape
 
-    try {
-      const response = await AxiosInstance.get(
-        `${baseUrl}/stock/shapedata?shape=${shapeValue}`
-      );
+  //   try {
+  //     const response = await AxiosInstance.get(
+  //       `${baseUrl}/stock/shapedata?shape=${shapeValue}`
+  //     );
 
-      if (response.data.result.statusCode === 200) {
-        dispatch(setCaretData(response.data.result.data)); // ✅ Store in caretData
-      } else {
-        dispatch(setCaretData([])); // ✅ Clear if no data
-        showToast.error("No data found for selected shape.");
-      }
-    } catch (error) {
-      showToast.error("Error fetching data. Try again.");
-      console.error("API Error:", error);
-    }
-  };
+  //     if (response.data.result.statusCode === 200) {
+  //       dispatch(setCaretData(response.data.result.data)); // ✅ Store in caretData
+  //     } else {
+  //       dispatch(setCaretData([])); // ✅ Clear if no data
+  //       showToast.error("No data found for selected shape.");
+  //     }
+  //   } catch (error) {
+  //     showToast.error("Error fetching data. Try again.");
+  //     console.error("API Error:", error);
+  //   }
+  // };
 
-  const hasFetched = useRef(false);
+  // const hasFetched = useRef(false);
 
-  useEffect(() => {
-    if (!hasFetched.current) {
-      dispatch(fetchCaretData());
-      hasFetched.current = true;
-    }
-  }, [dispatch]);
+  // useEffect(() => {
+  //   if (!hasFetched.current) {
+  //     dispatch(fetchCaretData());
+  //     hasFetched.current = true;
+  //   }
+  // }, [dispatch]);
 
   useEffect(() => {
     AOS.init({
@@ -226,6 +216,49 @@ const Home = () => {
 
     setBubbles(newBubbles);
   }, []);
+
+  const { shape, caretData, shapeError } = useSelector((state) => state.shop);
+
+  useEffect(() => {
+    dispatch(fetchShapeData());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (shape.length > 0) {
+      dispatch(fetchShapeData(shape[0]));
+    }
+  }, [shape, dispatch]);
+
+  const handleShapeClick = (shapeValue) => {
+    if (shape.length > 0 && shape[0] === shapeValue) {
+      console.log("Shape is already selected, skipping API call.");
+      return;
+    }
+    dispatch(setShape(shapeValue));
+    setCurrentPage(0);
+  };
+  const ITEMS_PER_PAGE = 5;
+
+  const [currentPage, setCurrentPage] = useState(0);
+
+  // Calculate start and end indexes for slicing caretData
+  const startIndex = currentPage * ITEMS_PER_PAGE;
+  const endIndex = startIndex + ITEMS_PER_PAGE;
+  const visibleDiamonds = caretData.slice(startIndex, endIndex);
+
+  // Handle Next Page
+  const handleNext = () => {
+    if (endIndex < caretData.length) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  // Handle Previous Page
+  const handlePrevious = () => {
+    if (currentPage > 0) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
 
   return (
     <>
@@ -365,21 +398,21 @@ const Home = () => {
       </div>
 
       <section className="collection-section">
-      <div className="bubbles-container">
-      {bubbles.map((bubble) => (
-        <div
-          key={bubble.id}
-          className="bubble"
-          style={{
-            left: bubble.left,
-            top: bubble.top,
-            width: bubble.size,
-            height: bubble.size,
-            animationDuration: bubble.animationDuration,
-          }}
-        />
-      ))}
-    </div>
+        <div className="bubbles-container">
+          {bubbles.map((bubble) => (
+            <div
+              key={bubble.id}
+              className="bubble"
+              style={{
+                left: bubble.left,
+                top: bubble.top,
+                width: bubble.size,
+                height: bubble.size,
+                animationDuration: bubble.animationDuration,
+              }}
+            />
+          ))}
+        </div>
         <div className="wavy-lines-2">
           <svg
             className="wavy-line-2"
@@ -388,9 +421,24 @@ const Home = () => {
           >
             <defs>
               <linearGradient id="strokeGradient2">
-                <stop offset="0%" stopColor="#D4AF37" stopOpacity="0.2" strokeWidth="65"/>
-                <stop offset="50%" stopColor="#D4AF37" stopOpacity="0.8" strokeWidth="20"/>
-                <stop offset="100%" stopColor="#D4AF37" stopOpacity="1" strokeWidth="45"/>
+                <stop
+                  offset="0%"
+                  stopColor="#D4AF37"
+                  stopOpacity="0.2"
+                  strokeWidth="65"
+                />
+                <stop
+                  offset="50%"
+                  stopColor="#D4AF37"
+                  stopOpacity="0.8"
+                  strokeWidth="20"
+                />
+                <stop
+                  offset="100%"
+                  stopColor="#D4AF37"
+                  stopOpacity="1"
+                  strokeWidth="45"
+                />
               </linearGradient>
             </defs>
             <path
@@ -481,7 +529,7 @@ const Home = () => {
                       gridTemplateColumns:
                         "repeat(auto-fit, minmax(80px, auto))",
                       gap: "8px",
-                      justifyContent: "center", // Center the grid items
+                      justifyContent: "center",
                       alignItems: "center",
                       mt: 1,
                     }}
@@ -490,7 +538,7 @@ const Home = () => {
                       <Grid
                         key={value.name}
                         item
-                        onClick={() => toggleShape(value.value)}
+                        onClick={() => handleShapeClick(value.value)}
                         sx={{
                           display: "flex",
                           flexDirection: "column",
@@ -518,55 +566,86 @@ const Home = () => {
                       </Grid>
                     ))}
                   </Grid>
+                  {shapeError && <p style={{ color: "red" }}>{shapeError}</p>}
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div className="caretdata row w-100 p-0 m-0">
-          {diamonds.map((diamond, index) => (
-            <div
-              key={index}
-              className="col-xl-2 col-lg-3 col-md-4 col-sm-6 mb-20"
-            >
-              <div
-                className="diamond-card1"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  navigate("/diamonddetail", { state: { diamond } });
-                }}
-              >
-                <div className="shopimg">
-                  <img
-                    src={diamond.Image}
-                    alt={diamond.Shape}
-                    className="diamond-img"
-                  />
-                </div>
-                <div class="dimond-content">
-                  <h6 className="diamond-name">
-                    {diamond.Carats} CARAT {diamond.Shape} - {diamond.Lab}
-                  </h6>
-                  <p className="price">
-                    <span>Amount:</span> ${diamond.Amount.toFixed(2)}
-                  </p>
-                  <p className="price">
-                    <span>Price per carat:</span> ${diamond.Price.toFixed(2)}
-                  </p>
-                  <span
-                    className="add-to-cart"
+        <div className="diamond-container">
+          {/* Diamond Display */}
+          <div className="caretdata row w-100 p-0 m-0">
+            <div className="prev-buttons">
+              {shape.includes("") && (
+                <button
+                  className="pagination-button prev-button"
+                  onClick={handlePrevious}
+                  disabled={currentPage === 0}
+                >
+                  <i className="fa-solid fa-arrow-left"></i>
+                </button>
+              )}
+            </div>
+            {visibleDiamonds.length > 0 ? (
+              visibleDiamonds.map((diamond, index) => (
+                <div
+                  key={index}
+                  className="col-xl-2 col-lg-3 col-md-4 col-sm-6 mb-20"
+                >
+                  <div
+                    className="diamond-card1"
                     onClick={(e) => {
                       e.stopPropagation();
-                      handleAddToCart(diamond, true);
+                      navigate("/diamonddetail", { state: { diamond } });
                     }}
                   >
-                    Add to cart <i class="fa-solid fa-arrow-right"></i>
-                    {/* <span className="">→</span> */}
-                  </span>
+                    <div className="shopimg">
+                      <img
+                        src={diamond.Image}
+                        alt={diamond.Shape}
+                        className="diamond-img"
+                      />
+                    </div>
+                    <div className="dimond-content">
+                      <h6 className="diamond-name">
+                        {diamond.Carats} CARAT {diamond.Shape} - {diamond.Lab}
+                      </h6>
+                      <p className="price">
+                        <span>Amount:</span> $
+                        {diamond?.Amount ? diamond.Amount.toFixed(2) : "N/A"}
+                      </p>
+                      <p className="price">
+                        <span>Price per carat:</span> $
+                        {diamond?.Price ? diamond.Price.toFixed(2) : "N/A"}
+                      </p>
+                      <span
+                        className="add-to-cart"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleAddToCart(diamond, true);
+                        }}
+                      >
+                        Add to cart <i className="fa-solid fa-arrow-right"></i>
+                      </span>
+                    </div>
+                  </div>
                 </div>
-              </div>
+              ))
+            ) : (
+              <p>No diamonds available.</p>
+            )}
+            <div className="next-buttons">
+              {shape.includes("") && (
+                <button
+                  className="pagination-button next-button"
+                  onClick={handleNext}
+                  disabled={endIndex >= caretData.length}
+                >
+                  <i className="fa-solid fa-arrow-right"></i>
+                </button>
+              )}
             </div>
-          ))}
+          </div>
         </div>
       </div>
 

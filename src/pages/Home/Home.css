@@ -1176,5 +1176,63 @@ button.next {
   display: flex;
   justify-content: center;
   width: 100%;
-  max-width: 900px; /* Adjust max-width as needed */
+  max-width: 1000px; /* Adjust max-width as needed */
 }
+
+
+
+/* all button code  */
+/* 
+.diamond-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+} */
+
+.pagination-button {
+  background-color: #c9a236;
+  color: white;
+  border: none;
+  /* padding: 10px 15px; */
+  font-size: 16px;
+  font-weight: bold;
+  /* border-radius: 5px; */
+  cursor: pointer;
+  transition: background-color 0.3s;
+  width: 35px; /* Small width */
+  height: 35px; /* Small height */
+  font-size: 14px;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  outline: none !important;
+}
+
+.pagination-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+.prev-buttons{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 10px;
+}
+.next-buttons{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 10px; 
+}
+/* .prev-button {
+  position: absolute;
+  left: -50px;
+}
+
+.next-button {
+  position: absolute;
+  right: -50px;
+} */

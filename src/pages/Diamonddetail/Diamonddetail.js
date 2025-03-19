@@ -28,7 +28,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { addToCart } from "../../redux/cartSlice";
 import { fetchCartCount } from "../../redux/cartSlice";
 import showToast from "../../components/Toast/Toaster";
-import { fetchCaretData, fetchSimilarDiamonds } from "../../redux/shopSlice";
+import { fetchSimilarDiamonds } from "../../redux/shopSlice";
 import DiamondLoader from "../../components/Loader/loader";
 import noitem from "../../assets/images/not found.png";
 
