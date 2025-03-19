@@ -155,8 +155,6 @@ const addBilling = async (data, UserId) => {
       };
     }
 
-    console.log(diamDetails,"diamDetails");
-
 
     // Add billing details for each item
     const billingEntries = diamDetails.map((item) => ({

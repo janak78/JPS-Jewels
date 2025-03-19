@@ -63,7 +63,6 @@ const Checkout = () => {
         )}`, // Replace with your actual API URL
         values
       );
-      console.log(response, "response");
 
       if (response.data.statusCode === 200) {
         showToast.success("Order placed successfully!"); // Redirect to confirmation page
