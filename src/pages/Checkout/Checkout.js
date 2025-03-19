@@ -63,6 +63,7 @@ const Checkout = () => {
         )}`, // Replace with your actual API URL
         values
       );
+      console.log(response, "response");
 
       if (response.data.statusCode === 200) {
         showToast.success("Order placed successfully!"); // Redirect to confirmation page
@@ -70,6 +71,13 @@ const Checkout = () => {
         resetForm();
         dispatch(fetchCartCount(localStorage.getItem("UserId")));
         dispatch(diamondsApi.util.invalidateTags(["Diamonds"]));
+      } else if (response.status === 204) {
+        showToast.error("Diamond no longer available. Please choose another.");
+        // Redirect to confirmation page
+        // window.location.reload(); // Refresh the page
+        // resetForm();
+        // dispatch(fetchCartCount(localStorage.getItem("UserId")));
+        // dispatch(diamondsApi.util.invalidateTags(["Diamonds"]));
       } else {
         showToast.error(response.data.message);
       }
@@ -298,15 +306,23 @@ const Checkout = () => {
                             />
                           </div>
                           <div style={{ marginLeft: "15px" }}>
-                            <span style={{ marginBottom: "0" }}>
-                              <span>{item?.diamondDetails?.Carats}</span> Carat{" "}
-                              <span>{item?.diamondDetails?.Shape}</span>
-                              <span>{item?.diamondDetails?.Colo}</span> /
-                              <span>{item?.diamondDetails?.Clarity}</span> -{" "}
-                              <span>{item?.diamondDetails?.Lab}</span>{" "}
-                              <span>{item?.diamondDetails?.Cut}</span>
-                            </span>
-                            <div style={{ display: "flex", marginTop: "0" }}>
+                            <div style={{ textAlign: "left" }}>
+                              <span style={{ marginBottom: "0" }}>
+                                <span>{item?.diamondDetails?.Carats}</span>{" "}
+                                Carat <span>{item?.diamondDetails?.Shape}</span>
+                                <span>{item?.diamondDetails?.Colo}</span> /
+                                <span>{item?.diamondDetails?.Clarity}</span> -{" "}
+                                <span>{item?.diamondDetails?.Lab}</span>{" "}
+                                <span>{item?.diamondDetails?.Cut}</span>
+                              </span>
+                            </div>
+                            <div
+                              style={{
+                                display: "flex",
+                                marginTop: "0",
+                                textAlign: "left",
+                              }}
+                            >
                               <span>
                                 Quantity: <span>{item?.Quantity}</span> x{" "}
                                 {item?.diamondDetails?.Amount}
