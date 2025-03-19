@@ -157,7 +157,18 @@ body.login--page {
   font-weight: bold;
 }
 
-.loginpage-texts{
+.loginpage-texts {
   display: flex;
   justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+
+@media (max-width: 480px) {
+  .loginpage-texts {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
 }

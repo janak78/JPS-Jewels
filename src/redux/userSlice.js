@@ -20,7 +20,7 @@ export const fetchUserData = createAsyncThunk(
         return rejectWithValue("User data not found");
       }
     } catch (error) {
-      showToast.error("Error fetching user data");
+      // showToast.error("Error fetching user data");
       return rejectWithValue("Error fetching user data");
     } 
   }

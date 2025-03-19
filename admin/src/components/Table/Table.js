@@ -7,7 +7,6 @@ import {
   TableCell,
   TableBody,
   Collapse,
-  TableFooter,
 } from "@mui/material";
 import nodata from "../../assets/img/theme/no-data.png";
 
