@@ -102,7 +102,6 @@ const addBilling = async (data, UserId) => {
       "City",
       "State",
       "PinCode",
-      "Phone",
     ];
 
     // Check for missing fields

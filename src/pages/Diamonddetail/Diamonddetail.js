@@ -204,7 +204,37 @@ const Diamonddetail = () => {
         <p>No diamond found. it has ben already ordered or deleted.</p>
       </div>
     );
-  if (!diamondDetail) return <p>No diamond data found.</p>;
+  if (!diamondDetail)
+    return (
+      <div
+        style={{
+          height: "50vh",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          textAlign: "center",
+          fontSize: "20px",
+          fontWeight: "600",
+          color: "#444",
+          backgroundColor: "#f8f9fa",
+          borderRadius: "10px",
+          padding: "20px",
+          // boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
+        }}
+      >
+        <img
+          src={noitem}
+          alt="No Data"
+          style={{
+            width: "80px",
+            marginBottom: "15px",
+            opacity: "0.7",
+          }}
+        />
+        <p>No diamond found.</p>
+      </div>
+    );
 
   return (
     <div className="diamond-product-container">
