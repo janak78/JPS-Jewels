@@ -133,6 +133,10 @@ const addBilling = async (data, UserId) => {
         const diamond = await stockSchema
           .findOne({ SKU: cartItem.SKU, IsDelete: false })
           .lean();
+
+          if(!diamond){
+            return null;
+          }
         return {
           ...cartItem,
           ...diamond,
@@ -140,6 +144,18 @@ const addBilling = async (data, UserId) => {
         };
       })
     );
+
+    const validDiamDetails = diamDetails.filter((item) => item !== null);
+
+    // If no valid diamonds found, return early
+    if (validDiamDetails.length === 0) {
+      return {
+        statusCode: 204,
+        message: "No valid diamonds found for the cart items.",
+      };
+    }
+
+    console.log(diamDetails,"diamDetails");
 
 
     // Add billing details for each item
