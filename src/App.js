@@ -101,7 +101,7 @@ function App() {
           }
         />
         <Route
-          path="/diamonddetail"
+          path="/diamonddetail/:SKU"
           element={
             <MainLayout>
               <Diamonddetail />

@@ -147,16 +147,15 @@ const addBilling = async (data, UserId) => {
     const validDiamDetails = diamDetails.filter((item) => item !== null);
 
     // If no valid diamonds found, return early
-    if (validDiamDetails.length === 0) {
+    if (validDiamDetails.length !== cartDetails.length) {
       return {
         statusCode: 204,
         message: "No valid diamonds found for the cart items.",
       };
     }
 
-
     // Add billing details for each item
-    const billingEntries = diamDetails.map((item) => ({
+    const billingEntries = validDiamDetails.map((item) => ({
       ...data,
       BillingId: uuidv4(),
       UserId,

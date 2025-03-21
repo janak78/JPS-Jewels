@@ -23,12 +23,11 @@ import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import { jwtDecode } from "jwt-decode";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import axios from "axios";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import showToast from "../components/Toast/Toaster";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTimes, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import "./Header.css";
 import AxiosInstance from "../Axiosinstance";
 import { fetchUserData, resetUserState } from "../redux/userSlice";
@@ -225,7 +224,7 @@ const Header = () => {
       if (response.data.statusCode === 200 && response.data.data.length > 0) {
         const diamond = response.data.data[0]; // Get first diamond
         showToast.success("Diamond found successfully");
-        navigate("/diamonddetail", { state: { diamond } });
+        navigate(`/diamonddetail/${diamond.SKU}`);
       } else {
         showToast.error("No diamond found with this certificate number.");
       }

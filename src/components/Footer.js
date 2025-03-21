@@ -6,12 +6,10 @@ import {
   FaTwitter,
   FaYoutube,
 } from "react-icons/fa";
-import { FaPhoneAlt, FaMapMarkerAlt } from "react-icons/fa";
 import logo from "../assets/images/png.png";
 
 import pin from "../assets/images/pin.svg";
 import telephonecall from "../assets/images/telephone-call.svg";
-import email from "../assets/images/email.svg";
 import { useNavigate } from "react-router-dom";
 import "./Footer.css";
 

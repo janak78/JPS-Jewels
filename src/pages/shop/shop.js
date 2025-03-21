@@ -1909,7 +1909,7 @@ const DiamondsGrid = () => {
                                   marginRight: "10px",
                                 }}
                               >
-                                {key}:
+                                {key} :
                               </strong>
                               <span>
                                 {Array.isArray(value)
@@ -3947,7 +3947,7 @@ const DiamondsGrid = () => {
                       className="diamond-card"
                       onClick={(e) => {
                         e.stopPropagation();
-                        navigate("/diamonddetail", { state: { diamond } });
+                        navigate(`/diamonddetail/${diamond.SKU}`);
                       }}
                     >
                       <div className="shopimg">

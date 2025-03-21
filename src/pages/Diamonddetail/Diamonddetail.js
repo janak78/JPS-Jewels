@@ -21,7 +21,7 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
 import DescriptionIcon from "@mui/icons-material/Description";
 import "./Diamonddetail.css";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { fetchDiamondDetail } from "../../redux/diamondDetailSlice";
 import { useDispatch, useSelector } from "react-redux";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
@@ -35,8 +35,8 @@ import noitem from "../../assets/images/not found.png";
 const Diamonddetail = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const diamond = location.state?.diamond;
-  const { SKU } = diamond || {};
+  // const diamond = location.state?.diamond;
+  const { SKU } = useParams();
 
   const diamonds = useSelector((state) => state.shop.caretData);
   const [visitedDiamonds, setVisitedDiamonds] = useState([]);
@@ -76,26 +76,28 @@ const Diamonddetail = () => {
 
   const similarDiamonds = useSelector((state) => state.shop.similarDiamonds);
   useEffect(() => {
-    if (diamond) {
-      setItsLoading(true);
-      dispatch(
-        fetchSimilarDiamonds(
-          diamond.Carats,
-          diamond.Color,
-          diamond.Clarity,
-          diamond.Shape
-        )
-      ).finally(() => setItsLoading(false));
-    }
-  }, [dispatch, diamond]);
+  if (diamondData?.Carats && diamondData?.Color && diamondData?.Clarity && diamondData?.Shape) {
+    setItsLoading(true);
+    dispatch(
+      fetchSimilarDiamonds(
+        diamondData.Carats,
+        diamondData.Color,
+        diamondData.Clarity,
+        diamondData.Shape
+      )
+    ).finally(() => setItsLoading(false));
+  } else {
+    console.warn("diamondData is missing required properties:", diamondData);
+  }
+}, [dispatch, diamondData]);
+
 
   // useEffect(() => {
   //   dispatch(fetchCaretData());
   // }, [dispatch]);
 
-  // Functions to handle modal opening
   const handleVideoClick = () => {
-    setOpenVideoModal(true); // Open video modal
+    setOpenVideoModal(true);
   };
 
   const handleCertificateClick = () => {
@@ -128,27 +130,27 @@ const Diamonddetail = () => {
   };
 
   // add cart
-  const handleAddToCart = (diamond, shouldShowToast) => {
+  const handleAddToCart = (diamondData, shouldShowToast) => {
     if (!userId) {
       showToast.warning("Please log in to add items to the cart.");
       return;
     }
 
     const cartItem = {
-      SKU: diamond.SKU,
+      SKU: diamondData.SKU,
       Quantity: 1,
     };
 
     dispatch(addToCart(cartItem, userId, shouldShowToast));
   };
   useEffect(() => {
-    if (diamond) {
+    if (diamondData && diamondData.SKU && diamondData.Carats && diamondData.Amount) {
       let visitedDiamonds =
         JSON.parse(localStorage.getItem("visitedDiamonds")) || [];
 
       // Avoid duplicates
-      if (!visitedDiamonds.find((d) => d.SKU === diamond.SKU)) {
-        visitedDiamonds.unshift(diamond); // Add new diamond to the beginning
+      if (!visitedDiamonds.find((d) => d.SKU === diamondData.SKU)) {
+        visitedDiamonds.unshift(diamondData); // Add new diamondData to the beginning
 
         localStorage.setItem(
           "visitedDiamonds",
@@ -158,7 +160,7 @@ const Diamonddetail = () => {
         setVisitedDiamonds([...visitedDiamonds]); // Update state immediately
       }
     }
-  }, [diamond]);
+  }, [diamondData]);
 
   useEffect(() => {
     const storedDiamonds =
@@ -167,7 +169,7 @@ const Diamonddetail = () => {
   }, []);
 
   useEffect(() => {
-    if (!loading && similarDiamonds && diamondDetail?.length > 0) {
+    if (!loading && similarDiamonds && diamondData?.length > 0) {
       setItsLoading(false); // Stop loading when everything is ready
     }
   }, [loading, similarDiamonds, diamondDetail]);
@@ -404,7 +406,7 @@ const Diamonddetail = () => {
                 fullWidth
                 onClick={(e) => {
                   e.stopPropagation();
-                  handleAddToCart(diamond, true);
+                  handleAddToCart(diamondData, true);
                 }}
               >
                 Add to cart
@@ -417,7 +419,7 @@ const Diamonddetail = () => {
                 fullWidth
                 onClick={(e) => {
                   e.stopPropagation();
-                  handleAddToCart(diamond, false);
+                  handleAddToCart(diamondData, false);
                   navigate("/checkout");
                 }}
               >
@@ -678,7 +680,8 @@ const Diamonddetail = () => {
                     className="diamond-card"
                     onClick={(e) => {
                       e.stopPropagation();
-                      navigate("/diamonddetail", { state: { diamond } });
+                      // navigate("/diamonddetail", { state: { diamond } });
+                      navigate(`/diamonddetail/${diamond.SKU}`);
                     }}
                   >
                     <div className="shopimg">
@@ -764,7 +767,8 @@ const Diamonddetail = () => {
                 className="diamond-card"
                 onClick={(e) => {
                   e.stopPropagation();
-                  navigate("/diamonddetail", { state: { diamond } });
+                  // navigate("/diamonddetail", { state: { diamond } });
+                  navigate(`/diamonddetail/${diamond.SKU}`);
                 }}
               >
                 <div className="shopimg">
@@ -779,10 +783,10 @@ const Diamonddetail = () => {
                     {diamond.Carats} CARAT {diamond.Shape} - {diamond.Lab}
                   </h6>
                   <p className="price">
-                    <span>Amount:</span> ${diamond.Amount.toFixed(2)}
+                    <span>Amount:</span> ${diamond.Amount}
                   </p>
                   <p className="price">
-                    <span>Price per carat:</span> ${diamond.Price.toFixed(2)}
+                    <span>Price per carat:</span> ${diamond.Price}
                   </p>
                   <span
                     className="add-to-cart"
