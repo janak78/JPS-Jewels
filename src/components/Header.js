@@ -225,7 +225,7 @@ const Header = () => {
       if (response.data.statusCode === 200 && response.data.data.length > 0) {
         const diamond = response.data.data[0]; // Get first diamond
         showToast.success("Diamond found successfully");
-        navigate("/diamonddetail", { state: { diamond } });
+        navigate(`/diamonddetail/${diamond.SKU}`);
       } else {
         showToast.error("No diamond found with this certificate number.");
       }

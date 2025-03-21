@@ -19,6 +19,57 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
+function getDefaultImageUrl(Shape) {
+  const lowerCaseShape = Shape?.toLowerCase() || "";
+  switch (lowerCaseShape) {
+    case "asscher":
+    case "sq eme":
+      return "https://jpsjewels.com/api/EMARALD.jpg";
+    case "baguette":
+    case "bug":
+      return "https://jpsjewels.com/api/Bug.jpg";
+    case "cushion":
+    case "cu":
+    case "square cushion":
+    case "sq cu":
+    case "cushion modified":
+      return "https://jpsjewels.com/api/Cushion.jpg";
+    case "emerald":
+    case "eme":
+    case "square emerald":
+      return "https://jpsjewels.com/api/EMARALD.jpg";
+    case "heart":
+    case "he":
+    case "heart modified":
+      return "https://jpsjewels.com/api/images/Heart.jpg";
+    case "long radiant":
+    case "long rad":
+    case "radiant":
+    case "rad":
+    case "radiant modified":
+      return "https://jpsjewels.com/api/RADIENT.png";
+    case "marquise":
+    case "mq":
+    case "marquise modified":
+      return "https://jpsjewels.com/api/Marquise.png";
+    case "oval":
+    case "ovl":
+      return "https://jpsjewels.com/api/OVAL.png";
+    case "pear":
+    case "pe":
+      return "https://jpsjewels.com/api/PEAR.png";
+    case "princess":
+    case "pri":
+    case "princess modified":
+      return "https://jpsjewels.com/api/PRINCESS.png";
+    case "round":
+    case "rbc":
+      return "https://jpsjewels.com/api/images/RBC.jpg";
+    default:
+      return "https://jpsjewels.com/api/images/RBC.jpg"; // Default fallback image
+  }
+}
+
 router.post(
   "/addstocks",
 
@@ -949,64 +1000,64 @@ router.get("/similarproducts", async function (req, res) {
   }
 });
 
-function getDefaultImageUrl(Shape) {
-  const lowerCaseShape = Shape.toLowerCase();
-  switch (lowerCaseShape) {
-    case "asscher":
-    case "sq eme":
-      return "https://jpsjewels.com/wp-content/uploads/Emerald-Square.png";
-    case "baguette":
-    case "bug":
-      return "https://jpsjewels.com/wp-content/uploads/Tapered-baguette.png";
-    case "cushion":
-    case "cu":
-      return "https://jpsjewels.com/wp-content/uploads/Cushion.png";
-    case "square cushion":
-    case "sq cu":
-      return "https://jpsjewels.com/wp-content/uploads/Cushion.png";
-    case "cushion modified":
-      return "https://jpsjewels.com/wp-content/uploads/Cushion-Square.png";
-    case "emerald":
-    case "eme":
-      return "https://jpsjewels.com/wp-content/uploads/Emerald-Square.png";
-    case "square emerald":
-      return "https://jpsjewels.com/wp-content/uploads/Emerald-Square.png";
-    case "heart":
-    case "he":
-      return "https://jpsjewels.com/wp-content/uploads/Heart.png";
-    case "heart modified":
-      return "https://jpsjewels.com/wp-content/uploads/Heart.png";
-    case "long radiant":
-    case "long rad":
-      return "https://jpsjewels.com/wp-content/uploads/Radiant.png";
-    case "marquise":
-    case "mq":
-      return "https://jpsjewels.com/wp-content/uploads/Marquise.png";
-    case "marquise modified":
-      return "https://jpsjewels.com/wp-content/uploads/Marquise.png";
-    case "oval":
-    case "ovl":
-      return "https://jpsjewels.com/wp-content/uploads/Oval.png";
-    case "pear":
-    case "pe":
-      return "https://jpsjewels.com/wp-content/uploads/Pear.png";
-    case "princess":
-    case "pri":
-      return "https://jpsjewels.com/wp-content/uploads/Princess.png";
-    case "princess modified":
-      return "https://jpsjewels.com/wp-content/uploads/Princess.png";
-    case "radiant":
-    case "rad":
-      return "https://jpsjewels.com/wp-content/uploads/Radiant-Square.png";
-    case "radiant modified":
-      return "https://jpsjewels.com/wp-content/uploads/Radiant.png";
-    case "round":
-    case "rbc":
-      return "https://jpsjewels.com/wp-content/uploads/Round.png";
-    default:
-      return "https://jpsjewels.com/wp-content/uploads/Round.png";
-  }
-}
+// function getDefaultImage(Shape) {
+//   const lowerCaseShape = Shape.toLowerCase();
+//   switch (lowerCaseShape) {
+//     case "asscher":
+//     case "sq eme":
+//       return "https://jpsjewels.com/wp-content/uploads/Emerald-Square.png";
+//     case "baguette":
+//     case "bug":
+//       return "https://jpsjewels.com/wp-content/uploads/Tapered-baguette.png";
+//     case "cushion":
+//     case "cu":
+//       return "https://jpsjewels.com/wp-content/uploads/Cushion.png";
+//     case "square cushion":
+//     case "sq cu":
+//       return "https://jpsjewels.com/wp-content/uploads/Cushion.png";
+//     case "cushion modified":
+//       return "https://jpsjewels.com/wp-content/uploads/Cushion-Square.png";
+//     case "emerald":
+//     case "eme":
+//       return "https://jpsjewels.com/wp-content/uploads/Emerald-Square.png";
+//     case "square emerald":
+//       return "https://jpsjewels.com/wp-content/uploads/Emerald-Square.png";
+//     case "heart":
+//     case "he":
+//       return "https://jpsjewels.com/wp-content/uploads/Heart.png";
+//     case "heart modified":
+//       return "https://jpsjewels.com/wp-content/uploads/Heart.png";
+//     case "long radiant":
+//     case "long rad":
+//       return "https://jpsjewels.com/wp-content/uploads/Radiant.png";
+//     case "marquise":
+//     case "mq":
+//       return "https://jpsjewels.com/wp-content/uploads/Marquise.png";
+//     case "marquise modified":
+//       return "https://jpsjewels.com/wp-content/uploads/Marquise.png";
+//     case "oval":
+//     case "ovl":
+//       return "https://jpsjewels.com/wp-content/uploads/Oval.png";
+//     case "pear":
+//     case "pe":
+//       return "https://jpsjewels.com/wp-content/uploads/Pear.png";
+//     case "princess":
+//     case "pri":
+//       return "https://jpsjewels.com/wp-content/uploads/Princess.png";
+//     case "princess modified":
+//       return "https://jpsjewels.com/wp-content/uploads/Princess.png";
+//     case "radiant":
+//     case "rad":
+//       return "https://jpsjewels.com/wp-content/uploads/Radiant-Square.png";
+//     case "radiant modified":
+//       return "https://jpsjewels.com/wp-content/uploads/Radiant.png";
+//     case "round":
+//     case "rbc":
+//       return "https://jpsjewels.com/wp-content/uploads/Round.png";
+//     default:
+//       return "https://jpsjewels.com/wp-content/uploads/Round.png";
+//   }
+// }
 
 const fetchDaimondDetails = async (SkuId) => {
   const diamondSearchQuery = await stockSchema.findOne({

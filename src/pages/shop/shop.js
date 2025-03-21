@@ -3947,7 +3947,7 @@ const DiamondsGrid = () => {
                       className="diamond-card"
                       onClick={(e) => {
                         e.stopPropagation();
-                        navigate("/diamonddetail", { state: { diamond } });
+                        navigate(`/diamonddetail/${diamond.SKU}`);
                       }}
                     >
                       <div className="shopimg">
