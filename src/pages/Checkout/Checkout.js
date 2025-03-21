@@ -69,11 +69,11 @@ const Checkout = () => {
         dispatch(fetchCartCount(localStorage.getItem("UserId")));
         dispatch(diamondsApi.util.invalidateTags(["Diamonds"]));
       } else if (response.status === 204) {
-        showToast.error("Diamond no longer available. Please choose another.");
+        showToast.error("one diamond is already sold out from your cart moment ago"); 
         // Redirect to confirmation page
         // window.location.reload(); // Refresh the page
         // resetForm();
-        // dispatch(fetchCartCount(localStorage.getItem("UserId")));
+        dispatch(fetchCartCount(localStorage.getItem("UserId")));
         // dispatch(diamondsApi.util.invalidateTags(["Diamonds"]));
       } else {
         showToast.error(response.data.message);

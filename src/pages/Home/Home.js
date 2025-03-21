@@ -231,7 +231,6 @@ const Home = () => {
 
   const handleShapeClick = (shapeValue) => {
     if (shape.length > 0 && shape[0] === shapeValue) {
-      console.log("Shape is already selected, skipping API call.");
       return;
     }
     dispatch(setShape(shapeValue));
@@ -596,7 +595,9 @@ const Home = () => {
                     className="diamond-card1"
                     onClick={(e) => {
                       e.stopPropagation();
-                      navigate("/diamonddetail", { state: { diamond } });
+                      // navigate("/diamonddetail", { state: { diamond } });
+                      navigate(`/diamonddetail/${diamond.SKU}`);
+
                     }}
                   >
                     <div className="shopimg">
