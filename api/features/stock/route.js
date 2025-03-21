@@ -24,20 +24,20 @@ function getDefaultImageUrl(Shape) {
   switch (lowerCaseShape) {
     case "asscher":
     case "sq eme":
-      return "https://jpsjewels.com/api/EMARALD.jpg";
+      return "https://jpsjewels.com/api/images/EMARALD.jpg";
     case "baguette":
     case "bug":
-      return "https://jpsjewels.com/api/Bug.jpg";
+      return "https://jpsjewels.com/api/images/Bug.jpg";
     case "cushion":
     case "cu":
     case "square cushion":
     case "sq cu":
     case "cushion modified":
-      return "https://jpsjewels.com/api/Cushion.jpg";
+      return "https://jpsjewels.com/api/images/Cushion.jpg";
     case "emerald":
     case "eme":
     case "square emerald":
-      return "https://jpsjewels.com/api/EMARALD.jpg";
+      return "https://jpsjewels.com/api/images/EMARALD.jpg";
     case "heart":
     case "he":
     case "heart modified":
@@ -47,21 +47,21 @@ function getDefaultImageUrl(Shape) {
     case "radiant":
     case "rad":
     case "radiant modified":
-      return "https://jpsjewels.com/api/RADIENT.png";
+      return "https://jpsjewels.com/api/images/RADIENT.png";
     case "marquise":
     case "mq":
     case "marquise modified":
-      return "https://jpsjewels.com/api/Marquise.png";
+      return "https://jpsjewels.com/api/images/Marquise.png";
     case "oval":
     case "ovl":
-      return "https://jpsjewels.com/api/OVAL.png";
+      return "https://jpsjewels.com/api/images/OVAL.png";
     case "pear":
     case "pe":
-      return "https://jpsjewels.com/api/PEAR.png";
+      return "https://jpsjewels.com/api/images/PEAR.png";
     case "princess":
     case "pri":
     case "princess modified":
-      return "https://jpsjewels.com/api/PRINCESS.png";
+      return "https://jpsjewels.com/api/images/PRINCESS.png";
     case "round":
     case "rbc":
       return "https://jpsjewels.com/api/images/RBC.jpg";
