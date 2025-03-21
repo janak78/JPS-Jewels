@@ -1909,7 +1909,7 @@ const DiamondsGrid = () => {
                                   marginRight: "10px",
                                 }}
                               >
-                                {key}:
+                                {key} :
                               </strong>
                               <span>
                                 {Array.isArray(value)
