@@ -70,6 +70,11 @@ app.use(function (err, req, res, next) {
   res.render("error");
 });
 
+app.use((req, res, next) => {
+  req.setTimeout(0); // No timeout
+  next();
+});
+
 // Init MongoDB
 initMongo();
 
