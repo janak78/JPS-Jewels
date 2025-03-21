@@ -84,6 +84,7 @@ router.post(
 
       const isNatural = req.body.IsNatural;
       const isLabgrown = req.body.IsLabgrown;
+      console.log(isLabgrown,"ilb")
 
       const fileName = req.file.filename;
       const fileData = `./${fileName}`;
@@ -142,6 +143,8 @@ router.post(
         const defaultImageUrl = getDefaultImageUrl(data.Shape);
         const finalImage =
           data.Image && data.Image.length > 0 ? data.Image : defaultImageUrl;
+console.log(finalImage,"fi")
+console.log("  .   ")
 
         await stockSchema.findOneAndUpdate(
           { SKU: data.SKU },
