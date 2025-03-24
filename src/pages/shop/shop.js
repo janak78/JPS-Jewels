@@ -30,6 +30,19 @@ import TextInput from "../../components/inputs/TextInput";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import { jwtDecode } from "jwt-decode";
 import noitem from "../../assets/images/not found.png";
+import black from "../../assets/colorimages/black.png";
+import blue from "../../assets/colorimages/blue.png";
+import brown from "../../assets/colorimages/brown.png";
+import gray from "../../assets/colorimages/gray.png";
+import green from "../../assets/colorimages/green.png";
+import olive from "../../assets/colorimages/olive.png";
+import orange from "../../assets/colorimages/orange.png";
+import pink from "../../assets/colorimages/pink.png";
+import purple from "../../assets/colorimages/purple.png";
+import red from "../../assets/colorimages/red.png";
+import violet from "../../assets/colorimages/violet.png";
+import white from "../../assets/colorimages/white.png";
+import yellow from "../../assets/colorimages/yellow.png";
 
 const createUnsignedJWT = (payload) => {
   const header = { alg: "none", typ: "JWT" };
@@ -66,8 +79,8 @@ const DiamondsGrid = () => {
   const filteredData = Object.entries(showfilterData || {}).filter(
     ([key, value]) => {
       if (Array.isArray(value)) return value.length > 0;
-      if (typeof value === "boolean") return false; 
-      return value !== "" && value !== null; 
+      if (typeof value === "boolean") return false;
+      return value !== "" && value !== null;
     }
   );
 
@@ -178,6 +191,7 @@ const DiamondsGrid = () => {
 
   // Total price and p/ct section
   const [tabValue, setTabValue] = useState(0);
+  const [colortabValue, setColorTabValue] = useState(0);
   const [isAmount, setIsAmount] = useState(true);
   const [isPrice, setIsPrice] = useState(false);
   const [isNatural, setIsNatural] = useState(false);
@@ -195,6 +209,19 @@ const DiamondsGrid = () => {
       setIsPrice(true);
     }
   };
+
+  const handleColorChange = (event, newValue) => {
+    setColorTabValue(newValue);
+
+    if (newValue === 0) {
+      setSelectedColor([]);
+      setColorImages([]);
+      setSelectedIntensity([]);
+    } else {
+      setSelectedColor([]);
+    }
+  };
+
   const [diamondType, setDiamondType] = useState("0");
 
   const handleTypeChange = (event, newValue) => {
@@ -243,6 +270,22 @@ const DiamondsGrid = () => {
     // { icon: "", name: "Octagonal", value: "" },
   ];
 
+  const colorimage = [
+    { icon: yellow, name: "Yellow", value: "yellow" },
+    { icon: orange, name: "Orange", value: "orange" },
+    { icon: pink, name: "Pink", value: "pink" },
+    { icon: blue, name: "Blue", value: "blue" },
+    { icon: green, name: "Green", value: "green" },
+    { icon: brown, name: "Brown", value: "brown" },
+    { icon: red, name: "Red", value: "red" },
+    { icon: white, name: "White", value: "white" },
+    { icon: violet, name: "Violet", value: "violet" },
+    { icon: purple, name: "Purple", value: "purple" },
+    { icon: gray, name: "Gray", value: "gray" },
+    { icon: olive, name: "Olive", value: "olive" },
+    { icon: black, name: "Black", value: "black" },
+  ];
+
   const clarity = [
     { name: "FL" },
     { name: "IF" },
@@ -259,36 +302,41 @@ const DiamondsGrid = () => {
   ];
 
   const color = [
-    { name: "D" },
-    { name: "E" },
-    { name: "E+" },
-    { name: "F" },
-    { name: "F+" },
-    { name: "G" },
-    { name: "G+" },
-    { name: "H" },
-    { name: "H+" },
-    { name: "I" },
-    { name: "I+" },
-    { name: "J" },
-    { name: "J+" },
-    { name: "K" },
-    { name: "K+" },
-    { name: "L" },
-    { name: "M" },
-    { name: "N" },
-    { name: "O" },
-    { name: "P" },
-    { name: "Q" },
-    { name: "R" },
-    { name: "S" },
-    { name: "T" },
-    { name: "U" },
-    { name: "V" },
-    { name: "W" },
-    { name: "X" },
-    { name: "Y" },
-    { name: "Z" },
+    { name: "D", value: ["D"] },
+    { name: "E", value: ["E", "E+"] },
+    { name: "F", value: ["F", "F+"] },
+    { name: "G", value: ["G", "G+"] },
+    { name: "H", value: ["H", "H+"] },
+    { name: "I", value: ["I", "I+"] },
+    { name: "J", value: ["J", "J+"] },
+    { name: "K", value: ["K", "K+"] },
+    { name: "L", value: ["L"] },
+    { name: "M", value: ["M"] },
+    { name: "N", value: ["N"] },
+    { name: "O", value: ["O"] },
+    { name: "P", value: ["P"] },
+    { name: "Q", value: ["Q"] },
+    { name: "R", value: ["R"] },
+    { name: "S", value: ["S"] },
+    { name: "T", value: ["T"] },
+    { name: "U", value: ["U"] },
+    { name: "V", value: ["V"] },
+    { name: "W", value: ["W"] },
+    { name: "X", value: ["X"] },
+    { name: "Y", value: ["Y"] },
+    { name: "Z", value: ["Z"] },
+  ];
+
+  const Intensity = [
+    { name: "Fancy Deep" },
+    { name: "Fancy Dark" },
+    { name: "Fancy Vivid" },
+    { name: "Fancy Intense" },
+    { name: "Fancy" },
+    { name: "Fancy Light" },
+    { name: "Light" },
+    { name: "Very Light" },
+    { name: "Faint" },
   ];
 
   const milky = [
@@ -408,6 +456,17 @@ const DiamondsGrid = () => {
     );
   };
 
+  // Color image selection array
+  const [colorimages, setColorImages] = useState([]);
+
+  const toggleColorimages = (name) => {
+    setColorImages((prevShapes) =>
+      prevShapes.includes(name)
+        ? prevShapes.filter((s) => s !== name)
+        : [...prevShapes, name]
+    );
+  };
+
   // clarity selection array
   const [selectedClarity, setSelectedClarity] = useState([]);
 
@@ -421,11 +480,28 @@ const DiamondsGrid = () => {
   // Color selection array
   const [selectedColor, setSelectedColor] = useState([]);
 
-  const toggleColor = (name) => {
-    setSelectedColor((prevColor) =>
-      prevColor.includes(name)
-        ? prevColor.filter((c) => c !== name)
-        : [...prevColor, name]
+  const toggleColor = (colorValues) => {
+    let newSelected = [...selectedColor];
+
+    if (colorValues.some((val) => newSelected.includes(val))) {
+      // If any value is already selected, remove all
+      newSelected = newSelected.filter((val) => !colorValues.includes(val));
+    } else {
+      // Otherwise, add all values
+      newSelected = [...newSelected, ...colorValues];
+    }
+
+    setSelectedColor(newSelected);
+  };
+
+  // Intensity selection array
+  const [selectedIntensity, setSelectedIntensity] = useState([]);
+
+  const toggleIntensity = (name) => {
+    setSelectedIntensity((prevIntensity) =>
+      prevIntensity.includes(name)
+        ? prevIntensity.filter((c) => c !== name)
+        : [...prevIntensity, name]
     );
   };
 
@@ -742,6 +818,8 @@ const DiamondsGrid = () => {
     setSelectedLab([]);
     setSelectedMilky([]);
     setSelectedTinge([]);
+    setColorImages([]);
+    setSelectedIntensity([]);
     setFilters({
       media: false,
       available: false,
@@ -1004,464 +1082,9 @@ const DiamondsGrid = () => {
             </div>
           </div>
 
-          <div className="bg-box mb-3 pb-0">
-            <div className="jps-measurements row">
-              <div className="col-md-6 col-12 mb-3">
-                <div item>
-                  <Typography
-                    variant="body1"
-                    fontWeight="bold"
-                    sx={{ textAlign: "left" }}
-                  >
-                    Clarity
-                  </Typography>
-                </div>
-                <div item>
-                  <div className="jps-lab-box">
-                    {clarity.map((value) => (
-                      <Grid
-                        key={value.name}
-                        item
-                        onClick={() => toggleClarity(value.name)}
-                        sx={{
-                          display: "flex",
-                          flexDirection: "column",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          textAlign: "center",
-                          border: selectedClarity.includes(value.name)
-                            ? "1px solid #1976D2"
-                            : "1px solid #ccc",
-                          borderRadius: "4px",
-                          fontSize: "12px",
-                          fontWeight: "500",
-                          padding: 0,
-                          cursor: "pointer",
-                          backgroundColor: selectedClarity.includes(value.name)
-                            ? "#1976D250"
-                            : "#fff",
-                          color: "#000",
-                          transition: "background-color 0.3s",
-                        }}
-                      >
-                        {value.name}
-                      </Grid>
-                    ))}
-                  </div>
-                </div>
-              </div>
-              <div className="col-md-6 col-12 mb-3">
-                <div item>
-                  <Typography
-                    variant="body1"
-                    fontWeight="bold"
-                    sx={{ textAlign: "left" }}
-                  >
-                    Colors
-                  </Typography>
-                </div>
-
-                <div item>
-                  <div className="jps-lab-box">
-                    {color.map((value) => (
-                      <Grid
-                        key={value.name}
-                        item
-                        onClick={() => toggleColor(value.name)}
-                        sx={{
-                          display: "flex",
-                          flexDirection: "column",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          textAlign: "center",
-                          border: selectedColor.includes(value.name)
-                            ? "1px solid #1976D2"
-                            : "1px solid #ccc",
-                          borderRadius: "4px",
-                          // height: "50px",
-                          // width: "100%",
-                          fontSize: "12px",
-                          fontWeight: "500",
-                          padding: 0,
-                          cursor: "pointer",
-                          backgroundColor: selectedColor.includes(value.name)
-                            ? "#1976D250"
-                            : "#fff",
-                          color: "#000",
-                          transition: "background-color 0.3s",
-                        }}
-                      >
-                        {value.name}
-                      </Grid>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-box mb-3 pb-0">
-            <div className="jps-measurements row">
-              <div className="col-md-6 col-12 mb-3">
-                <div item>
-                  <Typography
-                    variant="body1"
-                    fontWeight="bold"
-                    sx={{ textAlign: "left" }}
-                  >
-                    Milky
-                  </Typography>
-                </div>
-
-                <div item>
-                  <div className="jps-lab-box">
-                    {milky.map((value) => (
-                      <Grid
-                        key={value.name}
-                        item
-                        onClick={() => toggleMilky(value.name)}
-                        sx={{
-                          display: "flex",
-                          flexDirection: "column",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          textAlign: "center",
-                          border: selectedMilky.includes(value.name)
-                            ? "1px solid #1976D2"
-                            : "1px solid #ccc",
-                          borderRadius: "4px",
-                          // height: "50px",
-                          // width: "100%",
-                          fontSize: "12px",
-                          fontWeight: "500",
-                          padding: 0,
-                          cursor: "pointer",
-                          backgroundColor: selectedMilky.includes(value.name)
-                            ? "#1976D250"
-                            : "#fff",
-                          color: "#000",
-                          transition: "background-color 0.3s",
-                        }}
-                      >
-                        {value.name}
-                      </Grid>
-                    ))}
-                  </div>
-                </div>
-              </div>
-              <div className="col-md-6 col-12 mb-3">
-                <div item>
-                  <Typography
-                    variant="body1"
-                    fontWeight="bold"
-                    sx={{ textAlign: "left" }}
-                  >
-                    Tinge
-                  </Typography>
-                </div>
-
-                <div item>
-                  <div className="jps-lab-box">
-                    {tinge.map((value) => (
-                      <Grid
-                        key={value.name}
-                        item
-                        onClick={() => toggleTinge(value.name)}
-                        sx={{
-                          display: "flex",
-                          flexDirection: "column",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          textAlign: "center",
-                          border: selectedTinge.includes(value.name)
-                            ? "1px solid #1976D2"
-                            : "1px solid #ccc",
-                          borderRadius: "4px",
-                          // height: "50px",
-                          // width: "100%",
-                          fontSize: "12px",
-                          fontWeight: "500",
-                          padding: 0,
-                          cursor: "pointer",
-                          backgroundColor: selectedTinge.includes(value.name)
-                            ? "#1976D250"
-                            : "#fff",
-                          color: "#000",
-                          transition: "background-color 0.3s",
-                        }}
-                      >
-                        {value.name}
-                      </Grid>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
           <div className="row">
-            <div className="col-md-6 col-12">
-              <div className="bg-box mb-3 pb-0">
-                <div className="jps-measurements row">
-                  <div className="col-md-12 col-12 ">
-                    <div item>
-                      <Typography
-                        variant="body1"
-                        fontWeight="bold"
-                        sx={{ textAlign: "left" }}
-                      >
-                        Cut, Polish, Symmetry
-                      </Typography>
-                    </div>
-                  </div>
-                  <div className="col-md-12 col-12 mb-3">
-                    <div item>
-                      <Typography
-                        variant="body1"
-                        fontWeight="bold"
-                        sx={{ textAlign: "left" }}
-                      >
-                        Cut
-                      </Typography>
-                    </div>
-                    <div item>
-                      <div className="jps-lab-box">
-                        {(diamondType === "0" ? cut : labcut).map((value) => (
-                          <Grid
-                            key={value.name}
-                            item
-                            onClick={() => toggleCut(value.value)}
-                            sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "center",
-                              textAlign: "center",
-                              border: selectedCut.includes(value.value)
-                                ? "1px solid #1976D2"
-                                : "1px solid #ccc",
-                              borderRadius: "4px",
-                              // height: "50px",
-                              // width: "100%",
-                              fontSize: "12px",
-                              fontWeight: "500",
-                              cursor: "pointer",
-                              backgroundColor: selectedCut.includes(value.value)
-                                ? "#1976D250"
-                                : "#fff",
-                              color: "#000",
-                              transition: "background-color 0.3s",
-                            }}
-                          >
-                            {value?.name || ""}
-                          </Grid>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col-md-12 col-12 mb-3">
-                    <div item>
-                      <Typography
-                        variant="body1"
-                        fontWeight="bold"
-                        sx={{ textAlign: "left" }}
-                      >
-                        Polish
-                      </Typography>
-                    </div>
-                    <div item>
-                      <div className="jps-lab-box">
-                        {(diamondType === "0" ? polish : labpolish).map(
-                          (value) => (
-                            <Grid
-                              key={value.name}
-                              item
-                              onClick={() => togglePolish(value.value)}
-                              sx={{
-                                display: "flex",
-                                flexDirection: "column",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                textAlign: "center",
-                                border: selectedPolish.includes(value.value)
-                                  ? "1px solid #1976D2"
-                                  : "1px solid #ccc",
-                                borderRadius: "4px",
-                                // height: "50px",
-                                // width: "100%",
-                                fontSize: "12px",
-                                fontWeight: "500",
-                                padding: 0,
-                                cursor: "pointer",
-                                backgroundColor: selectedPolish.includes(
-                                  value.value
-                                )
-                                  ? "#1976D250"
-                                  : "#fff",
-                                color: "#000",
-                                transition: "background-color 0.3s",
-                              }}
-                            >
-                              {value?.name || ""}
-                            </Grid>
-                          )
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col-md-12 col-12 mb-3">
-                    <div item>
-                      <Typography
-                        variant="body1"
-                        fontWeight="bold"
-                        sx={{ textAlign: "left" }}
-                      >
-                        Symmetry
-                      </Typography>
-                    </div>
-                    <div item>
-                      <div className="jps-lab-box">
-                        {(diamondType === "0" ? symmetry : labsymmetry).map(
-                          (value) => (
-                            <Grid
-                              key={value.name}
-                              item
-                              onClick={() => toggleSymmetry(value.value)}
-                              sx={{
-                                display: "flex",
-                                flexDirection: "column",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                textAlign: "center",
-                                border: selectedSymmetry.includes(value.value)
-                                  ? "1px solid #1976D2"
-                                  : "1px solid #ccc",
-                                borderRadius: "4px",
-                                // height: "50px",
-                                // width: "100%",
-                                fontSize: "12px",
-                                fontWeight: "500",
-                                padding: 0,
-                                cursor: "pointer",
-                                backgroundColor: selectedSymmetry.includes(
-                                  value.value
-                                )
-                                  ? "#1976D250"
-                                  : "#fff",
-                                color: "#000",
-                                transition: "background-color 0.3s",
-                              }}
-                            >
-                              {value?.name || ""}
-                            </Grid>
-                          )
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
             <div className="col-md-6 col-12 mb-3">
-              <div className="bg-box mb-2 pb-0">
-                <div className="jps-measurements row">
-                  <div className="col-md-6 col-12 mb-3">
-                    <div item>
-                      <Typography
-                        variant="body1"
-                        fontWeight="bold"
-                        sx={{ textAlign: "left" }}
-                      >
-                        Fluorescence
-                      </Typography>
-                    </div>
-                    <div item>
-                      <div className="jps-lab-box">
-                        {fluorescence.map((value) => (
-                          <Grid
-                            key={value.name}
-                            item
-                            onClick={() => toggleFluroescene(value.value)}
-                            sx={{
-                              display: "flex",
-                              flexDirection: "column",
-                              alignItems: "center",
-                              justifyContent: "center",
-                              textAlign: "center",
-                              border: selectedFluroescene.includes(value.value)
-                                ? "1px solid #1976D2"
-                                : "1px solid #ccc",
-                              borderRadius: "4px",
-                              fontSize: "12px",
-                              fontWeight: "500",
-                              padding: 0,
-                              cursor: "pointer",
-                              backgroundColor: selectedFluroescene.includes(
-                                value.value
-                              )
-                                ? "#1976D250"
-                                : "#fff",
-                              color: "#000",
-                              transition: "background-color 0.3s",
-                            }}
-                          >
-                            {value?.name || ""}
-                          </Grid>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="col-md-6 col-12 mb-3">
-                    <div item>
-                      <Typography
-                        variant="body1"
-                        fontWeight="bold"
-                        sx={{ textAlign: "left" }}
-                      >
-                        Lab
-                      </Typography>
-                    </div>
-                    <div item>
-                      <div className="jps-lab-box">
-                        {(diamondType === "0" ? lab : labgrownlab).map(
-                          (value) => (
-                            <Grid
-                              key={value.name}
-                              item
-                              onClick={() => toggleLab(value.name)}
-                              sx={{
-                                display: "flex",
-                                flexDirection: "column",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                textAlign: "center",
-                                border: selectedLab.includes(value.name)
-                                  ? "1px solid #1976D2"
-                                  : "1px solid #ccc",
-                                borderRadius: "4px",
-                                fontSize: "12px",
-                                fontWeight: "500",
-                                padding: 0,
-                                cursor: "pointer",
-                                backgroundColor: selectedLab.includes(
-                                  value.name
-                                )
-                                  ? "#1976D250"
-                                  : "#fff",
-                                color: "#000",
-                                transition: "background-color 0.3s",
-                              }}
-                            >
-                              {value?.name || ""}
-                            </Grid>
-                          )
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="bg-box">
+              <div className="bg-box mb-2">
                 <div className="row">
                   <div className="col-lg-6 col-md-12 col-12 mb-2">
                     <div item>
@@ -1591,6 +1214,613 @@ const DiamondsGrid = () => {
                         </div>
                       </div>
                     </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-box  pb-0">
+                <div className="jps-measurements row">
+                  <div className="col-md-10 col-12 mb-3">
+                    <div item>
+                      <Typography
+                        variant="body1"
+                        fontWeight="bold"
+                        sx={{ textAlign: "left" }}
+                      >
+                        Clarity
+                      </Typography>
+                    </div>
+                    <div item>
+                      <div className="jps-lab-box">
+                        {clarity.map((value) => (
+                          <Grid
+                            key={value.name}
+                            item
+                            onClick={() => toggleClarity(value.name)}
+                            sx={{
+                              display: "flex",
+                              flexDirection: "column",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              textAlign: "center",
+                              border: selectedClarity.includes(value.name)
+                                ? "1px solid #1976D2"
+                                : "1px solid #ccc",
+                              borderRadius: "4px",
+                              fontSize: "12px",
+                              fontWeight: "500",
+                              padding: 0,
+                              cursor: "pointer",
+                              backgroundColor: selectedClarity.includes(
+                                value.name
+                              )
+                                ? "#1976D250"
+                                : "#fff",
+                              color: "#000",
+                              transition: "background-color 0.3s",
+                            }}
+                          >
+                            {value.name}
+                          </Grid>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="col-md-6 col-12">
+              <div className="bg-box mb-3 pb-0">
+                <div className="jps-measurements row">
+                  <div className="col-md-12 col-12 ">
+                    <div item>
+                      <Typography
+                        variant="body1"
+                        fontWeight="bold"
+                        sx={{ textAlign: "left" }}
+                      >
+                        Cut, Polish, Symmetry
+                      </Typography>
+                    </div>
+                  </div>
+                  <div className="col-md-12 col-12 mb-3">
+                    <div item>
+                      <Typography
+                        variant="body1"
+                        fontWeight="bold"
+                        sx={{ textAlign: "left" }}
+                      >
+                        Cut
+                      </Typography>
+                    </div>
+                    <div item>
+                      <div className="jps-lab-box">
+                        {/* {(diamondType === "0" ? cut : labcut).map((value) => ( */}
+                        {cut.map((value) => (
+                          <Grid
+                            key={value.name}
+                            item
+                            onClick={() => toggleCut(value.value)}
+                            sx={{
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              textAlign: "center",
+                              border: selectedCut.includes(value.value)
+                                ? "1px solid #1976D2"
+                                : "1px solid #ccc",
+                              borderRadius: "4px",
+                              // height: "50px",
+                              // width: "100%",
+                              fontSize: "12px",
+                              fontWeight: "500",
+                              cursor: "pointer",
+                              backgroundColor: selectedCut.includes(value.value)
+                                ? "#1976D250"
+                                : "#fff",
+                              color: "#000",
+                              transition: "background-color 0.3s",
+                            }}
+                          >
+                            {value?.name || ""}
+                          </Grid>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="col-md-12 col-12 mb-3">
+                    <div item>
+                      <Typography
+                        variant="body1"
+                        fontWeight="bold"
+                        sx={{ textAlign: "left" }}
+                      >
+                        Polish
+                      </Typography>
+                    </div>
+                    <div item>
+                      <div className="jps-lab-box">
+                        {/* {(diamondType === "0" ? polish : labpolish).map( */}
+                        {polish.map((value) => (
+                          <Grid
+                            key={value.name}
+                            item
+                            onClick={() => togglePolish(value.value)}
+                            sx={{
+                              display: "flex",
+                              flexDirection: "column",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              textAlign: "center",
+                              border: selectedPolish.includes(value.value)
+                                ? "1px solid #1976D2"
+                                : "1px solid #ccc",
+                              borderRadius: "4px",
+                              // height: "50px",
+                              // width: "100%",
+                              fontSize: "12px",
+                              fontWeight: "500",
+                              padding: 0,
+                              cursor: "pointer",
+                              backgroundColor: selectedPolish.includes(
+                                value.value
+                              )
+                                ? "#1976D250"
+                                : "#fff",
+                              color: "#000",
+                              transition: "background-color 0.3s",
+                            }}
+                          >
+                            {value?.name || ""}
+                          </Grid>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="col-md-12 col-12 mb-3">
+                    <div item>
+                      <Typography
+                        variant="body1"
+                        fontWeight="bold"
+                        sx={{ textAlign: "left" }}
+                      >
+                        Symmetry
+                      </Typography>
+                    </div>
+                    <div item>
+                      <div className="jps-lab-box">
+                        {/* {(diamondType === "0" ? symmetry : labsymmetry).map( */}
+                        {symmetry.map((value) => (
+                          <Grid
+                            key={value.name}
+                            item
+                            onClick={() => toggleSymmetry(value.value)}
+                            sx={{
+                              display: "flex",
+                              flexDirection: "column",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              textAlign: "center",
+                              border: selectedSymmetry.includes(value.value)
+                                ? "1px solid #1976D2"
+                                : "1px solid #ccc",
+                              borderRadius: "4px",
+                              // height: "50px",
+                              // width: "100%",
+                              fontSize: "12px",
+                              fontWeight: "500",
+                              padding: 0,
+                              cursor: "pointer",
+                              backgroundColor: selectedSymmetry.includes(
+                                value.value
+                              )
+                                ? "#1976D250"
+                                : "#fff",
+                              color: "#000",
+                              transition: "background-color 0.3s",
+                            }}
+                          >
+                            {value?.name || ""}
+                          </Grid>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-box mb-3 pb-0">
+            <div className="jps-measurements row">
+              <div className="col-md-12 col-12 mb-3">
+                <div item>
+                  <Tabs
+                    value={colortabValue}
+                    onChange={handleColorChange}
+                    aria-label="price tabs"
+                    sx={{
+                      minHeight: "40px",
+                      "& .MuiTab-root": {
+                        minWidth: "auto",
+                        textTransform: "none",
+                      },
+                    }}
+                  >
+                    <Tab
+                      label={
+                        <Typography variant="body1" fontWeight="bold">
+                          White
+                        </Typography>
+                      }
+                      sx={{
+                        px: 2,
+                        outline: "none !important",
+                        "&:focus": { outline: "none" },
+                        "&.Mui-selected:focus": { outline: "none" },
+                        "&.Mui-focusVisible": { outline: "none" },
+                      }}
+                    />
+                    <Tab
+                      label={
+                        <Typography variant="body1" fontWeight="bold">
+                          Fancy
+                        </Typography>
+                      }
+                      sx={{
+                        px: 2,
+                        outline: "none !important",
+                        "&:focus": { outline: "none" },
+                        "&.Mui-selected:focus": { outline: "none" },
+                        "&.Mui-focusVisible": { outline: "none" },
+                      }}
+                    />
+                  </Tabs>
+                </div>
+                {colortabValue === 0 && (
+                  <div item>
+                    <div className="jps-lab-box">
+                      {color.map((colorItem) => (
+                        <Grid
+                          key={colorItem.name}
+                          item
+                          onClick={() => toggleColor(colorItem.value)}
+                          sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            textAlign: "center",
+                            border: colorItem.value.some((val) =>
+                              selectedColor.includes(val)
+                            )
+                              ? "1px solid #1976D2"
+                              : "1px solid #ccc",
+                            borderRadius: "4px",
+                            fontSize: "12px",
+                            fontWeight: "500",
+                            padding: 0,
+                            cursor: "pointer",
+                            backgroundColor: colorItem.value.some((val) =>
+                              selectedColor.includes(val)
+                            )
+                              ? "#1976D250"
+                              : "#fff",
+                            color: "#000",
+                            transition: "background-color 0.3s",
+                          }}
+                        >
+                          {colorItem.name}
+                        </Grid>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {colortabValue === 1 && (
+                  <>
+                    <div className="col-md-12 col-12 mb-3 mt-3">
+                      <div item>
+                        <Typography
+                          variant="body1"
+                          fontWeight="bold"
+                          sx={{ textAlign: "left" }}
+                        >
+                          Color
+                        </Typography>
+                      </div>
+                      <Grid item xs={12}>
+                        <Grid
+                          container
+                          spacing={1}
+                          sx={{
+                            display: "grid",
+                            gridTemplateColumns:
+                              "repeat(auto-fill, minmax(80px, 1fr))",
+                            gap: "8px",
+                            mt: 1,
+                          }}
+                          className="jps-icons"
+                        >
+                          {colorimage.map((value) => (
+                            <Grid
+                              key={value.name}
+                              item
+                              onClick={() => toggleColorimages(value.value)}
+                              sx={{
+                                display: "flex",
+                                flexDirection: "column",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                textAlign: "center",
+                                border: colorimages.includes(value.value)
+                                  ? "1px solid #1976D2"
+                                  : "1px solid #ccc",
+                                borderRadius: "5px",
+                                height: "115px",
+                                width: "100%",
+                                fontSize: "12px",
+                                fontWeight: "500",
+                                padding: 0,
+                                cursor: "pointer",
+                                backgroundColor: colorimages.includes(
+                                  value.value
+                                )
+                                  ? "#1976D250"
+                                  : "#fff",
+                                color: "#000",
+                                transition: "background-color 0.3s",
+                              }}
+                            >
+                              <img
+                                src={value.icon}
+                                alt={value.name}
+                                style={{
+                                  width: "50px",
+                                  height: "55px",
+                                  objectFit: "cover",
+                                }}
+                              />
+                              <span className="color-imagename">
+                                {" "}
+                                {value.name}
+                              </span>
+                            </Grid>
+                          ))}
+                        </Grid>
+                      </Grid>
+                    </div>
+                    <div className="col-md-12 col-12 ">
+                      <div item>
+                        <Typography
+                          variant="body1"
+                          fontWeight="bold"
+                          sx={{ textAlign: "left" }}
+                        >
+                          Intensity
+                        </Typography>
+                      </div>
+                      <div item>
+                        <div className="jps-lab-box">
+                          {Intensity.map((value) => (
+                            <Grid
+                              key={value.name}
+                              item
+                              onClick={() => toggleIntensity(value.name)}
+                              sx={{
+                                display: "flex",
+                                flexDirection: "column",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                textAlign: "center",
+                                border: selectedIntensity.includes(value.name)
+                                  ? "1px solid #1976D2"
+                                  : "1px solid #ccc",
+                                borderRadius: "4px",
+                                // height: "50px",
+                                // width: "100%",
+                                fontSize: "12px",
+                                fontWeight: "500",
+                                padding: 0,
+                                cursor: "pointer",
+                                backgroundColor: selectedIntensity.includes(
+                                  value.name
+                                )
+                                  ? "#1976D250"
+                                  : "#fff",
+                                color: "#000",
+                                transition: "background-color 0.3s",
+                              }}
+                            >
+                              {value.name}
+                            </Grid>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
+          <div className="bg-box mb-3 pb-0">
+            <div className="jps-measurements row">
+              <div className="col-md-6 col-12 mb-3">
+                <div item>
+                  <Typography
+                    variant="body1"
+                    fontWeight="bold"
+                    sx={{ textAlign: "left" }}
+                  >
+                    Lab
+                  </Typography>
+                </div>
+                <div item>
+                  <div className="jps-lab-box">
+                    {(diamondType === "0" ? lab : labgrownlab).map((value) => (
+                      <Grid
+                        key={value.name}
+                        item
+                        onClick={() => toggleLab(value.name)}
+                        sx={{
+                          display: "flex",
+                          flexDirection: "column",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          textAlign: "center",
+                          border: selectedLab.includes(value.name)
+                            ? "1px solid #1976D2"
+                            : "1px solid #ccc",
+                          borderRadius: "4px",
+                          fontSize: "12px",
+                          fontWeight: "500",
+                          padding: 0,
+                          cursor: "pointer",
+                          backgroundColor: selectedLab.includes(value.name)
+                            ? "#1976D250"
+                            : "#fff",
+                          color: "#000",
+                          transition: "background-color 0.3s",
+                        }}
+                      >
+                        {value?.name || ""}
+                      </Grid>
+                    ))}
+                  </div>
+                </div>
+                <div item className="mt-3">
+                  <Typography
+                    variant="body1"
+                    fontWeight="bold"
+                    sx={{ textAlign: "left" }}
+                  >
+                    Fluorescence
+                  </Typography>
+                </div>
+                <div item>
+                  <div className="jps-lab-box">
+                    {fluorescence.map((value) => (
+                      <Grid
+                        key={value.name}
+                        item
+                        onClick={() => toggleFluroescene(value.value)}
+                        sx={{
+                          display: "flex",
+                          flexDirection: "column",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          textAlign: "center",
+                          border: selectedFluroescene.includes(value.value)
+                            ? "1px solid #1976D2"
+                            : "1px solid #ccc",
+                          borderRadius: "4px",
+                          fontSize: "12px",
+                          fontWeight: "500",
+                          padding: 0,
+                          cursor: "pointer",
+                          backgroundColor: selectedFluroescene.includes(
+                            value.value
+                          )
+                            ? "#1976D250"
+                            : "#fff",
+                          color: "#000",
+                          transition: "background-color 0.3s",
+                        }}
+                      >
+                        {value?.name || ""}
+                      </Grid>
+                    ))}
+                  </div>
+                </div>
+              </div>
+              <div className="col-md-6 col-12 mb-3">
+                <div item>
+                  <Typography
+                    variant="body1"
+                    fontWeight="bold"
+                    sx={{ textAlign: "left" }}
+                  >
+                    Milky
+                  </Typography>
+                </div>
+
+                <div item>
+                  <div className="jps-lab-box">
+                    {milky.map((value) => (
+                      <Grid
+                        key={value.name}
+                        item
+                        onClick={() => toggleMilky(value.name)}
+                        sx={{
+                          display: "flex",
+                          flexDirection: "column",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          textAlign: "center",
+                          border: selectedMilky.includes(value.name)
+                            ? "1px solid #1976D2"
+                            : "1px solid #ccc",
+                          borderRadius: "4px",
+                          // height: "50px",
+                          // width: "100%",
+                          fontSize: "12px",
+                          fontWeight: "500",
+                          padding: 0,
+                          cursor: "pointer",
+                          backgroundColor: selectedMilky.includes(value.name)
+                            ? "#1976D250"
+                            : "#fff",
+                          color: "#000",
+                          transition: "background-color 0.3s",
+                        }}
+                      >
+                        {value.name}
+                      </Grid>
+                    ))}
+                  </div>
+                </div>
+                <div item className="mt-3">
+                  <Typography
+                    variant="body1"
+                    fontWeight="bold"
+                    sx={{ textAlign: "left" }}
+                  >
+                    Tinge
+                  </Typography>
+                </div>
+
+                <div item>
+                  <div className="jps-lab-box">
+                    {tinge.map((value) => (
+                      <Grid
+                        key={value.name}
+                        item
+                        onClick={() => toggleTinge(value.name)}
+                        sx={{
+                          display: "flex",
+                          flexDirection: "column",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          textAlign: "center",
+                          border: selectedTinge.includes(value.name)
+                            ? "1px solid #1976D2"
+                            : "1px solid #ccc",
+                          borderRadius: "4px",
+                          // height: "50px",
+                          // width: "100%",
+                          fontSize: "12px",
+                          fontWeight: "500",
+                          padding: 0,
+                          cursor: "pointer",
+                          backgroundColor: selectedTinge.includes(value.name)
+                            ? "#1976D250"
+                            : "#fff",
+                          color: "#000",
+                          transition: "background-color 0.3s",
+                        }}
+                      >
+                        {value.name}
+                      </Grid>
+                    ))}
                   </div>
                 </div>
               </div>
@@ -3084,484 +3314,11 @@ const DiamondsGrid = () => {
                   </div>
                 </div>
 
-                <div className="bg-box mb-3 pb-0">
-                  <div className="jps-measurements row">
-                    <div className="col-md-6 col-12 mb-3">
-                      <div item>
-                        <Typography
-                          variant="body1"
-                          fontWeight="bold"
-                          sx={{ textAlign: "left" }}
-                        >
-                          Clarity
-                        </Typography>
-                      </div>
-                      <div item>
-                        <div className="jps-lab-box">
-                          {clarity.map((value) => (
-                            <Grid
-                              key={value.name}
-                              item
-                              onClick={() => toggleClarity(value.name)}
-                              sx={{
-                                display: "flex",
-                                flexDirection: "column",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                textAlign: "center",
-                                border: selectedClarity.includes(value.name)
-                                  ? "1px solid #1976D2"
-                                  : "1px solid #ccc",
-                                borderRadius: "4px",
-                                fontSize: "12px",
-                                fontWeight: "500",
-                                padding: 0,
-                                cursor: "pointer",
-                                backgroundColor: selectedClarity.includes(
-                                  value.name
-                                )
-                                  ? "#1976D250"
-                                  : "#fff",
-                                color: "#000",
-                                transition: "background-color 0.3s",
-                              }}
-                            >
-                              {value.name}
-                            </Grid>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                    <div className="col-md-6 col-12 mb-3">
-                      <div item>
-                        <Typography
-                          variant="body1"
-                          fontWeight="bold"
-                          sx={{ textAlign: "left" }}
-                        >
-                          Colors
-                        </Typography>
-                      </div>
-
-                      <div item>
-                        <div className="jps-lab-box">
-                          {color.map((value) => (
-                            <Grid
-                              key={value.name}
-                              item
-                              onClick={() => toggleColor(value.name)}
-                              sx={{
-                                display: "flex",
-                                flexDirection: "column",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                textAlign: "center",
-                                border: selectedColor.includes(value.name)
-                                  ? "1px solid #1976D2"
-                                  : "1px solid #ccc",
-                                borderRadius: "4px",
-                                // height: "50px",
-                                // width: "100%",
-                                fontSize: "12px",
-                                fontWeight: "500",
-                                padding: 0,
-                                cursor: "pointer",
-                                backgroundColor: selectedColor.includes(
-                                  value.name
-                                )
-                                  ? "#1976D250"
-                                  : "#fff",
-                                color: "#000",
-                                transition: "background-color 0.3s",
-                              }}
-                            >
-                              {value.name}
-                            </Grid>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="bg-box mb-3 pb-0">
-                  <div className="jps-measurements row">
-                    <div className="col-md-6 col-12 mb-3">
-                      <div item>
-                        <Typography
-                          variant="body1"
-                          fontWeight="bold"
-                          sx={{ textAlign: "left" }}
-                        >
-                          Milky
-                        </Typography>
-                      </div>
-
-                      <div item>
-                        <div className="jps-lab-box">
-                          {milky.map((value) => (
-                            <Grid
-                              key={value.name}
-                              item
-                              onClick={() => toggleMilky(value.name)}
-                              sx={{
-                                display: "flex",
-                                flexDirection: "column",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                textAlign: "center",
-                                border: selectedMilky.includes(value.name)
-                                  ? "1px solid #1976D2"
-                                  : "1px solid #ccc",
-                                borderRadius: "4px",
-                                // height: "50px",
-                                // width: "100%",
-                                fontSize: "12px",
-                                fontWeight: "500",
-                                padding: 0,
-                                cursor: "pointer",
-                                backgroundColor: selectedMilky.includes(
-                                  value.name
-                                )
-                                  ? "#1976D250"
-                                  : "#fff",
-                                color: "#000",
-                                transition: "background-color 0.3s",
-                              }}
-                            >
-                              {value.name}
-                            </Grid>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                    <div className="col-md-6 col-12 mb-3">
-                      <div item>
-                        <Typography
-                          variant="body1"
-                          fontWeight="bold"
-                          sx={{ textAlign: "left" }}
-                        >
-                          Tinge
-                        </Typography>
-                      </div>
-
-                      <div item>
-                        <div className="jps-lab-box">
-                          {tinge.map((value) => (
-                            <Grid
-                              key={value.name}
-                              item
-                              onClick={() => toggleTinge(value.name)}
-                              sx={{
-                                display: "flex",
-                                flexDirection: "column",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                textAlign: "center",
-                                border: selectedTinge.includes(value.name)
-                                  ? "1px solid #1976D2"
-                                  : "1px solid #ccc",
-                                borderRadius: "4px",
-                                // height: "50px",
-                                // width: "100%",
-                                fontSize: "12px",
-                                fontWeight: "500",
-                                padding: 0,
-                                cursor: "pointer",
-                                backgroundColor: selectedTinge.includes(
-                                  value.name
-                                )
-                                  ? "#1976D250"
-                                  : "#fff",
-                                color: "#000",
-                                transition: "background-color 0.3s",
-                              }}
-                            >
-                              {value.name}
-                            </Grid>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
                 <div className="row">
                   <div className="col-md-6 col-12 mb-3">
-                    <div className="bg-box mb-3 pb-0">
-                      <div className="jps-measurements row">
-                        <div className="col-md-12 col-12 ">
-                          <div item>
-                            <Typography
-                              variant="body1"
-                              fontWeight="bold"
-                              sx={{ textAlign: "left" }}
-                            >
-                              Cut, Polish, Symmetry
-                            </Typography>
-                          </div>
-                        </div>
-                        <div className="col-md-12 col-12 mb-3">
-                          <div item>
-                            <Typography
-                              variant="body1"
-                              fontWeight="bold"
-                              sx={{ textAlign: "left" }}
-                            >
-                              Cut
-                            </Typography>
-                          </div>
-                          <div item>
-                            <div className="jps-lab-box">
-                              {(diamondType === "0" ? cut : labcut).map(
-                                (value) => (
-                                  <Grid
-                                    key={value.name}
-                                    item
-                                    onClick={() => toggleCut(value.value)}
-                                    sx={{
-                                      display: "flex",
-                                      alignItems: "center",
-                                      justifyContent: "center",
-                                      textAlign: "center",
-                                      border: selectedCut.includes(value.value)
-                                        ? "1px solid #1976D2"
-                                        : "1px solid #ccc",
-                                      borderRadius: "4px",
-                                      // height: "50px",
-                                      // width: "100%",
-                                      fontSize: "12px",
-                                      fontWeight: "500",
-                                      cursor: "pointer",
-                                      backgroundColor: selectedCut.includes(
-                                        value.value
-                                      )
-                                        ? "#1976D250"
-                                        : "#fff",
-                                      color: "#000",
-                                      transition: "background-color 0.3s",
-                                    }}
-                                  >
-                                    {value?.name || ""}
-                                  </Grid>
-                                )
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                        <div className="col-md-12 col-12 mb-3">
-                          <div item>
-                            <Typography
-                              variant="body1"
-                              fontWeight="bold"
-                              sx={{ textAlign: "left" }}
-                            >
-                              Polish
-                            </Typography>
-                          </div>
-                          <div item>
-                            <div className="jps-lab-box">
-                              {(diamondType === "0" ? polish : labpolish).map(
-                                (value) => (
-                                  <Grid
-                                    key={value.name}
-                                    item
-                                    onClick={() => togglePolish(value.value)}
-                                    sx={{
-                                      display: "flex",
-                                      flexDirection: "column",
-                                      alignItems: "center",
-                                      justifyContent: "center",
-                                      textAlign: "center",
-                                      border: selectedPolish.includes(
-                                        value.value
-                                      )
-                                        ? "1px solid #1976D2"
-                                        : "1px solid #ccc",
-                                      borderRadius: "4px",
-                                      // height: "50px",
-                                      // width: "100%",
-                                      fontSize: "12px",
-                                      fontWeight: "500",
-                                      padding: 0,
-                                      cursor: "pointer",
-                                      backgroundColor: selectedPolish.includes(
-                                        value.value
-                                      )
-                                        ? "#1976D250"
-                                        : "#fff",
-                                      color: "#000",
-                                      transition: "background-color 0.3s",
-                                    }}
-                                  >
-                                    {value?.name || ""}
-                                  </Grid>
-                                )
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                        <div className="col-md-12 col-12 mb-3">
-                          <div item>
-                            <Typography
-                              variant="body1"
-                              fontWeight="bold"
-                              sx={{ textAlign: "left" }}
-                            >
-                              Symmetry
-                            </Typography>
-                          </div>
-                          <div item>
-                            <div className="jps-lab-box">
-                              {(diamondType === "0"
-                                ? symmetry
-                                : labsymmetry
-                              ).map((value) => (
-                                <Grid
-                                  key={value.name}
-                                  item
-                                  onClick={() => toggleSymmetry(value.value)}
-                                  sx={{
-                                    display: "flex",
-                                    flexDirection: "column",
-                                    alignItems: "center",
-                                    justifyContent: "center",
-                                    textAlign: "center",
-                                    border: selectedSymmetry.includes(
-                                      value.value
-                                    )
-                                      ? "1px solid #1976D2"
-                                      : "1px solid #ccc",
-                                    borderRadius: "4px",
-                                    // height: "50px",
-                                    // width: "100%",
-                                    fontSize: "12px",
-                                    fontWeight: "500",
-                                    padding: 0,
-                                    cursor: "pointer",
-                                    backgroundColor: selectedSymmetry.includes(
-                                      value.value
-                                    )
-                                      ? "#1976D250"
-                                      : "#fff",
-                                    color: "#000",
-                                    transition: "background-color 0.3s",
-                                  }}
-                                >
-                                  {value?.name || ""}
-                                </Grid>
-                              ))}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col-md-6 col-12 mb-3">
-                    <div className="bg-box mb-2 pb-0">
-                      <div className="jps-measurements row">
-                        <div className="col-md-6 col-12 mb-3">
-                          <div item>
-                            <Typography
-                              variant="body1"
-                              fontWeight="bold"
-                              sx={{ textAlign: "left" }}
-                            >
-                              Fluorescence
-                            </Typography>
-                          </div>
-                          <div item>
-                            <div className="jps-lab-box">
-                              {fluorescence.map((value) => (
-                                <Grid
-                                  key={value.name}
-                                  item
-                                  onClick={() => toggleFluroescene(value.value)}
-                                  sx={{
-                                    display: "flex",
-                                    flexDirection: "column",
-                                    alignItems: "center",
-                                    justifyContent: "center",
-                                    textAlign: "center",
-                                    border: selectedFluroescene.includes(
-                                      value.value
-                                    )
-                                      ? "1px solid #1976D2"
-                                      : "1px solid #ccc",
-                                    borderRadius: "4px",
-                                    fontSize: "12px",
-                                    fontWeight: "500",
-                                    padding: 0,
-                                    cursor: "pointer",
-                                    backgroundColor:
-                                      selectedFluroescene.includes(value.value)
-                                        ? "#1976D250"
-                                        : "#fff",
-                                    color: "#000",
-                                    transition: "background-color 0.3s",
-                                  }}
-                                >
-                                  {value?.name || ""}
-                                </Grid>
-                              ))}
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="col-md-6 col-12 mb-3">
-                          <div item>
-                            <Typography
-                              variant="body1"
-                              fontWeight="bold"
-                              sx={{ textAlign: "left" }}
-                            >
-                              Lab
-                            </Typography>
-                          </div>
-                          <div item>
-                            <div className="jps-lab-box">
-                              {(diamondType === "0" ? lab : labgrownlab).map(
-                                (value) => (
-                                  <Grid
-                                    key={value.name}
-                                    item
-                                    onClick={() => toggleLab(value.name)}
-                                    sx={{
-                                      display: "flex",
-                                      flexDirection: "column",
-                                      alignItems: "center",
-                                      justifyContent: "center",
-                                      textAlign: "center",
-                                      border: selectedLab.includes(value.name)
-                                        ? "1px solid #1976D2"
-                                        : "1px solid #ccc",
-                                      borderRadius: "4px",
-                                      fontSize: "12px",
-                                      fontWeight: "500",
-                                      padding: 0,
-                                      cursor: "pointer",
-                                      backgroundColor: selectedLab.includes(
-                                        value.name
-                                      )
-                                        ? "#1976D250"
-                                        : "#fff",
-                                      color: "#000",
-                                      transition: "background-color 0.3s",
-                                    }}
-                                  >
-                                    {value?.name || ""}
-                                  </Grid>
-                                )
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
                     <div className="bg-box mb-2">
                       <div className="row">
-                        <div className="col-lg-6 col-md-12 col-12 mb-3">
+                        <div className="col-lg-6 col-md-12 col-12 mb-2">
                           <div item>
                             <Typography
                               variant="body1"
@@ -3603,7 +3360,7 @@ const DiamondsGrid = () => {
                             </div>
                           </div>
                         </div>
-                        <div className="col-lg-6 col-md-12 col-12 mb-3">
+                        <div className="col-lg-6 col-md-12 col-12 mb-2">
                           <div item>
                             <Tabs
                               value={tabValue}
@@ -3634,7 +3391,7 @@ const DiamondsGrid = () => {
                               <Tab
                                 label={
                                   <Typography variant="body1" fontWeight="bold">
-                                    P/ct
+                                    Price per carat
                                   </Typography>
                                 }
                                 sx={{
@@ -3692,9 +3449,633 @@ const DiamondsGrid = () => {
                         </div>
                       </div>
                     </div>
+
+                    <div className="bg-box  pb-0">
+                      <div className="jps-measurements row">
+                        <div className="col-md-10 col-12 mb-3">
+                          <div item>
+                            <Typography
+                              variant="body1"
+                              fontWeight="bold"
+                              sx={{ textAlign: "left" }}
+                            >
+                              Clarity
+                            </Typography>
+                          </div>
+                          <div item>
+                            <div className="jps-lab-box">
+                              {clarity.map((value) => (
+                                <Grid
+                                  key={value.name}
+                                  item
+                                  onClick={() => toggleClarity(value.name)}
+                                  sx={{
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    textAlign: "center",
+                                    border: selectedClarity.includes(value.name)
+                                      ? "1px solid #1976D2"
+                                      : "1px solid #ccc",
+                                    borderRadius: "4px",
+                                    fontSize: "12px",
+                                    fontWeight: "500",
+                                    padding: 0,
+                                    cursor: "pointer",
+                                    backgroundColor: selectedClarity.includes(
+                                      value.name
+                                    )
+                                      ? "#1976D250"
+                                      : "#fff",
+                                    color: "#000",
+                                    transition: "background-color 0.3s",
+                                  }}
+                                >
+                                  {value.name}
+                                </Grid>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="col-md-6 col-12">
+                    <div className="bg-box mb-3 pb-0">
+                      <div className="jps-measurements row">
+                        <div className="col-md-12 col-12 ">
+                          <div item>
+                            <Typography
+                              variant="body1"
+                              fontWeight="bold"
+                              sx={{ textAlign: "left" }}
+                            >
+                              Cut, Polish, Symmetry
+                            </Typography>
+                          </div>
+                        </div>
+                        <div className="col-md-12 col-12 mb-3">
+                          <div item>
+                            <Typography
+                              variant="body1"
+                              fontWeight="bold"
+                              sx={{ textAlign: "left" }}
+                            >
+                              Cut
+                            </Typography>
+                          </div>
+                          <div item>
+                            <div className="jps-lab-box">
+                              {/* {(diamondType === "0" ? cut : labcut).map((value) => ( */}
+                              {cut.map((value) => (
+                                <Grid
+                                  key={value.name}
+                                  item
+                                  onClick={() => toggleCut(value.value)}
+                                  sx={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    textAlign: "center",
+                                    border: selectedCut.includes(value.value)
+                                      ? "1px solid #1976D2"
+                                      : "1px solid #ccc",
+                                    borderRadius: "4px",
+                                    // height: "50px",
+                                    // width: "100%",
+                                    fontSize: "12px",
+                                    fontWeight: "500",
+                                    cursor: "pointer",
+                                    backgroundColor: selectedCut.includes(
+                                      value.value
+                                    )
+                                      ? "#1976D250"
+                                      : "#fff",
+                                    color: "#000",
+                                    transition: "background-color 0.3s",
+                                  }}
+                                >
+                                  {value?.name || ""}
+                                </Grid>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                        <div className="col-md-12 col-12 mb-3">
+                          <div item>
+                            <Typography
+                              variant="body1"
+                              fontWeight="bold"
+                              sx={{ textAlign: "left" }}
+                            >
+                              Polish
+                            </Typography>
+                          </div>
+                          <div item>
+                            <div className="jps-lab-box">
+                              {/* {(diamondType === "0" ? polish : labpolish).map( */}
+                              {polish.map((value) => (
+                                <Grid
+                                  key={value.name}
+                                  item
+                                  onClick={() => togglePolish(value.value)}
+                                  sx={{
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    textAlign: "center",
+                                    border: selectedPolish.includes(value.value)
+                                      ? "1px solid #1976D2"
+                                      : "1px solid #ccc",
+                                    borderRadius: "4px",
+                                    // height: "50px",
+                                    // width: "100%",
+                                    fontSize: "12px",
+                                    fontWeight: "500",
+                                    padding: 0,
+                                    cursor: "pointer",
+                                    backgroundColor: selectedPolish.includes(
+                                      value.value
+                                    )
+                                      ? "#1976D250"
+                                      : "#fff",
+                                    color: "#000",
+                                    transition: "background-color 0.3s",
+                                  }}
+                                >
+                                  {value?.name || ""}
+                                </Grid>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                        <div className="col-md-12 col-12 mb-3">
+                          <div item>
+                            <Typography
+                              variant="body1"
+                              fontWeight="bold"
+                              sx={{ textAlign: "left" }}
+                            >
+                              Symmetry
+                            </Typography>
+                          </div>
+                          <div item>
+                            <div className="jps-lab-box">
+                              {/* {(diamondType === "0" ? symmetry : labsymmetry).map( */}
+                              {symmetry.map((value) => (
+                                <Grid
+                                  key={value.name}
+                                  item
+                                  onClick={() => toggleSymmetry(value.value)}
+                                  sx={{
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    textAlign: "center",
+                                    border: selectedSymmetry.includes(
+                                      value.value
+                                    )
+                                      ? "1px solid #1976D2"
+                                      : "1px solid #ccc",
+                                    borderRadius: "4px",
+                                    // height: "50px",
+                                    // width: "100%",
+                                    fontSize: "12px",
+                                    fontWeight: "500",
+                                    padding: 0,
+                                    cursor: "pointer",
+                                    backgroundColor: selectedSymmetry.includes(
+                                      value.value
+                                    )
+                                      ? "#1976D250"
+                                      : "#fff",
+                                    color: "#000",
+                                    transition: "background-color 0.3s",
+                                  }}
+                                >
+                                  {value?.name || ""}
+                                </Grid>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
+                <div className="bg-box mb-3 pb-0">
+                  <div className="jps-measurements row">
+                    <div className="col-md-12 col-12 mb-3">
+                      <div item>
+                        <Tabs
+                          value={colortabValue}
+                          onChange={handleColorChange}
+                          aria-label="price tabs"
+                          sx={{
+                            minHeight: "40px",
+                            "& .MuiTab-root": {
+                              minWidth: "auto",
+                              textTransform: "none",
+                            },
+                          }}
+                        >
+                          <Tab
+                            label={
+                              <Typography variant="body1" fontWeight="bold">
+                                White
+                              </Typography>
+                            }
+                            sx={{
+                              px: 2,
+                              outline: "none !important",
+                              "&:focus": { outline: "none" },
+                              "&.Mui-selected:focus": { outline: "none" },
+                              "&.Mui-focusVisible": { outline: "none" },
+                            }}
+                          />
+                          <Tab
+                            label={
+                              <Typography variant="body1" fontWeight="bold">
+                                Fancy
+                              </Typography>
+                            }
+                            sx={{
+                              px: 2,
+                              outline: "none !important",
+                              "&:focus": { outline: "none" },
+                              "&.Mui-selected:focus": { outline: "none" },
+                              "&.Mui-focusVisible": { outline: "none" },
+                            }}
+                          />
+                        </Tabs>
+                      </div>
+                      {colortabValue === 0 && (
+                        <div item>
+                          <div className="jps-lab-box">
+                            {color.map((colorItem) => (
+                              <Grid
+                                key={colorItem.name}
+                                item
+                                onClick={() => toggleColor(colorItem.value)}
+                                sx={{
+                                  display: "flex",
+                                  flexDirection: "column",
+                                  alignItems: "center",
+                                  justifyContent: "center",
+                                  textAlign: "center",
+                                  border: colorItem.value.some((val) =>
+                                    selectedColor.includes(val)
+                                  )
+                                    ? "1px solid #1976D2"
+                                    : "1px solid #ccc",
+                                  borderRadius: "4px",
+                                  fontSize: "12px",
+                                  fontWeight: "500",
+                                  padding: 0,
+                                  cursor: "pointer",
+                                  backgroundColor: colorItem.value.some((val) =>
+                                    selectedColor.includes(val)
+                                  )
+                                    ? "#1976D250"
+                                    : "#fff",
+                                  color: "#000",
+                                  transition: "background-color 0.3s",
+                                }}
+                              >
+                                {colorItem.name}
+                              </Grid>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                      {colortabValue === 1 && (
+                        <>
+                          <div className="col-md-12 col-12 mb-3 mt-3">
+                            <div item>
+                              <Typography
+                                variant="body1"
+                                fontWeight="bold"
+                                sx={{ textAlign: "left" }}
+                              >
+                                Color
+                              </Typography>
+                            </div>
+                            <Grid item xs={12}>
+                              <Grid
+                                container
+                                spacing={1}
+                                sx={{
+                                  display: "grid",
+                                  gridTemplateColumns:
+                                    "repeat(auto-fill, minmax(80px, 1fr))",
+                                  gap: "8px",
+                                  mt: 1,
+                                }}
+                                className="jps-icons"
+                              >
+                                {colorimage.map((value) => (
+                                  <Grid
+                                    key={value.name}
+                                    item
+                                    onClick={() =>
+                                      toggleColorimages(value.value)
+                                    }
+                                    sx={{
+                                      display: "flex",
+                                      flexDirection: "column",
+                                      alignItems: "center",
+                                      justifyContent: "center",
+                                      textAlign: "center",
+                                      border: colorimages.includes(value.value)
+                                        ? "1px solid #1976D2"
+                                        : "1px solid #ccc",
+                                      borderRadius: "5px",
+                                      height: "115px",
+                                      width: "100%",
+                                      fontSize: "12px",
+                                      fontWeight: "500",
+                                      padding: 0,
+                                      cursor: "pointer",
+                                      backgroundColor: colorimages.includes(
+                                        value.value
+                                      )
+                                        ? "#1976D250"
+                                        : "#fff",
+                                      color: "#000",
+                                      transition: "background-color 0.3s",
+                                    }}
+                                  >
+                                    <img
+                                      src={value.icon}
+                                      alt={value.name}
+                                      style={{
+                                        width: "50px",
+                                        height: "55px",
+                                        objectFit: "cover",
+                                      }}
+                                    />
+                                    <span className="color-imagename">
+                                      {" "}
+                                      {value.name}
+                                    </span>
+                                  </Grid>
+                                ))}
+                              </Grid>
+                            </Grid>
+                          </div>
+                          <div className="col-md-12 col-12 ">
+                            <div item>
+                              <Typography
+                                variant="body1"
+                                fontWeight="bold"
+                                sx={{ textAlign: "left" }}
+                              >
+                                Intensity
+                              </Typography>
+                            </div>
+                            <div item>
+                              <div className="jps-lab-box">
+                                {Intensity.map((value) => (
+                                  <Grid
+                                    key={value.name}
+                                    item
+                                    onClick={() => toggleIntensity(value.name)}
+                                    sx={{
+                                      display: "flex",
+                                      flexDirection: "column",
+                                      alignItems: "center",
+                                      justifyContent: "center",
+                                      textAlign: "center",
+                                      border: selectedIntensity.includes(
+                                        value.name
+                                      )
+                                        ? "1px solid #1976D2"
+                                        : "1px solid #ccc",
+                                      borderRadius: "4px",
+                                      // height: "50px",
+                                      // width: "100%",
+                                      fontSize: "12px",
+                                      fontWeight: "500",
+                                      padding: 0,
+                                      cursor: "pointer",
+                                      backgroundColor:
+                                        selectedIntensity.includes(value.name)
+                                          ? "#1976D250"
+                                          : "#fff",
+                                      color: "#000",
+                                      transition: "background-color 0.3s",
+                                    }}
+                                  >
+                                    {value.name}
+                                  </Grid>
+                                ))}
+                              </div>
+                            </div>
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-box mb-3 pb-0">
+                  <div className="jps-measurements row">
+                    <div className="col-md-6 col-12 mb-3">
+                      <div item>
+                        <Typography
+                          variant="body1"
+                          fontWeight="bold"
+                          sx={{ textAlign: "left" }}
+                        >
+                          Lab
+                        </Typography>
+                      </div>
+                      <div item>
+                        <div className="jps-lab-box">
+                          {(diamondType === "0" ? lab : labgrownlab).map(
+                            (value) => (
+                              <Grid
+                                key={value.name}
+                                item
+                                onClick={() => toggleLab(value.name)}
+                                sx={{
+                                  display: "flex",
+                                  flexDirection: "column",
+                                  alignItems: "center",
+                                  justifyContent: "center",
+                                  textAlign: "center",
+                                  border: selectedLab.includes(value.name)
+                                    ? "1px solid #1976D2"
+                                    : "1px solid #ccc",
+                                  borderRadius: "4px",
+                                  fontSize: "12px",
+                                  fontWeight: "500",
+                                  padding: 0,
+                                  cursor: "pointer",
+                                  backgroundColor: selectedLab.includes(
+                                    value.name
+                                  )
+                                    ? "#1976D250"
+                                    : "#fff",
+                                  color: "#000",
+                                  transition: "background-color 0.3s",
+                                }}
+                              >
+                                {value?.name || ""}
+                              </Grid>
+                            )
+                          )}
+                        </div>
+                      </div>
+                      <div item className="mt-3">
+                        <Typography
+                          variant="body1"
+                          fontWeight="bold"
+                          sx={{ textAlign: "left" }}
+                        >
+                          Fluorescence
+                        </Typography>
+                      </div>
+                      <div item>
+                        <div className="jps-lab-box">
+                          {fluorescence.map((value) => (
+                            <Grid
+                              key={value.name}
+                              item
+                              onClick={() => toggleFluroescene(value.value)}
+                              sx={{
+                                display: "flex",
+                                flexDirection: "column",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                textAlign: "center",
+                                border: selectedFluroescene.includes(
+                                  value.value
+                                )
+                                  ? "1px solid #1976D2"
+                                  : "1px solid #ccc",
+                                borderRadius: "4px",
+                                fontSize: "12px",
+                                fontWeight: "500",
+                                padding: 0,
+                                cursor: "pointer",
+                                backgroundColor: selectedFluroescene.includes(
+                                  value.value
+                                )
+                                  ? "#1976D250"
+                                  : "#fff",
+                                color: "#000",
+                                transition: "background-color 0.3s",
+                              }}
+                            >
+                              {value?.name || ""}
+                            </Grid>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="col-md-6 col-12 mb-3">
+                      <div item>
+                        <Typography
+                          variant="body1"
+                          fontWeight="bold"
+                          sx={{ textAlign: "left" }}
+                        >
+                          Milky
+                        </Typography>
+                      </div>
+
+                      <div item>
+                        <div className="jps-lab-box">
+                          {milky.map((value) => (
+                            <Grid
+                              key={value.name}
+                              item
+                              onClick={() => toggleMilky(value.name)}
+                              sx={{
+                                display: "flex",
+                                flexDirection: "column",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                textAlign: "center",
+                                border: selectedMilky.includes(value.name)
+                                  ? "1px solid #1976D2"
+                                  : "1px solid #ccc",
+                                borderRadius: "4px",
+                                // height: "50px",
+                                // width: "100%",
+                                fontSize: "12px",
+                                fontWeight: "500",
+                                padding: 0,
+                                cursor: "pointer",
+                                backgroundColor: selectedMilky.includes(
+                                  value.name
+                                )
+                                  ? "#1976D250"
+                                  : "#fff",
+                                color: "#000",
+                                transition: "background-color 0.3s",
+                              }}
+                            >
+                              {value.name}
+                            </Grid>
+                          ))}
+                        </div>
+                      </div>
+                      <div item className="mt-3">
+                        <Typography
+                          variant="body1"
+                          fontWeight="bold"
+                          sx={{ textAlign: "left" }}
+                        >
+                          Tinge
+                        </Typography>
+                      </div>
+
+                      <div item>
+                        <div className="jps-lab-box">
+                          {tinge.map((value) => (
+                            <Grid
+                              key={value.name}
+                              item
+                              onClick={() => toggleTinge(value.name)}
+                              sx={{
+                                display: "flex",
+                                flexDirection: "column",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                textAlign: "center",
+                                border: selectedTinge.includes(value.name)
+                                  ? "1px solid #1976D2"
+                                  : "1px solid #ccc",
+                                borderRadius: "4px",
+                                // height: "50px",
+                                // width: "100%",
+                                fontSize: "12px",
+                                fontWeight: "500",
+                                padding: 0,
+                                cursor: "pointer",
+                                backgroundColor: selectedTinge.includes(
+                                  value.name
+                                )
+                                  ? "#1976D250"
+                                  : "#fff",
+                                color: "#000",
+                                transition: "background-color 0.3s",
+                              }}
+                            >
+                              {value.name}
+                            </Grid>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
                 {diamondType !== "0" && (
                   <div className="bg-box mb-3 pb-0">
                     <div className="jps-measurements row">

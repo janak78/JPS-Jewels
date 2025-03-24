@@ -40,11 +40,15 @@ const Diamonddetail = () => {
 
   const diamonds = useSelector((state) => state.shop.caretData);
   const [visitedDiamonds, setVisitedDiamonds] = useState([]);
-
-  const [visibleCount, setVisibleCount] = useState(8);
+  const initialVisibleCount = 8;
+  const [visibleCount, setVisibleCount] = useState(initialVisibleCount);
 
   const handleViewMore = () => {
     setVisibleCount(visitedDiamonds.length);
+  };
+
+  const handleViewLess = () => {
+    setVisibleCount(initialVisibleCount); // Reset to initial count
   };
 
   const [openVideoModal, setOpenVideoModal] = useState(false);
@@ -76,21 +80,25 @@ const Diamonddetail = () => {
 
   const similarDiamonds = useSelector((state) => state.shop.similarDiamonds);
   useEffect(() => {
-  if (diamondData?.Carats && diamondData?.Color && diamondData?.Clarity && diamondData?.Shape) {
-    setItsLoading(true);
-    dispatch(
-      fetchSimilarDiamonds(
-        diamondData.Carats,
-        diamondData.Color,
-        diamondData.Clarity,
-        diamondData.Shape
-      )
-    ).finally(() => setItsLoading(false));
-  } else {
-    console.warn("diamondData is missing required properties:", diamondData);
-  }
-}, [dispatch, diamondData]);
-
+    if (
+      diamondData?.Carats &&
+      diamondData?.Color &&
+      diamondData?.Clarity &&
+      diamondData?.Shape
+    ) {
+      setItsLoading(true);
+      dispatch(
+        fetchSimilarDiamonds(
+          diamondData.Carats,
+          diamondData.Color,
+          diamondData.Clarity,
+          diamondData.Shape
+        )
+      ).finally(() => setItsLoading(false));
+    } else {
+      console.warn("diamondData is missing required properties:", diamondData);
+    }
+  }, [dispatch, diamondData]);
 
   // useEffect(() => {
   //   dispatch(fetchCaretData());
@@ -144,7 +152,12 @@ const Diamonddetail = () => {
     dispatch(addToCart(cartItem, userId, shouldShowToast));
   };
   useEffect(() => {
-    if (diamondData && diamondData.SKU && diamondData.Carats && diamondData.Amount) {
+    if (
+      diamondData &&
+      diamondData.SKU &&
+      diamondData.Carats &&
+      diamondData.Amount
+    ) {
       let visitedDiamonds =
         JSON.parse(localStorage.getItem("visitedDiamonds")) || [];
 
@@ -804,13 +817,17 @@ const Diamonddetail = () => {
           ))}
         </div>
 
-        {visibleCount < visitedDiamonds.length && (
-          <div className="view-btnalign mt-3">
+        <div className="view-btnalign mt-3">
+          {visibleCount < visitedDiamonds.length ? (
             <button className="view-morebtn btn" onClick={handleViewMore}>
-              View More <i class="fa-solid fa-arrow-right"></i>
+              View More <i className="fa-solid fa-arrow-right"></i>
             </button>
-          </div>
-        )}
+          ) : (
+            <button className="view-morebtn btn" onClick={handleViewLess}>
+              View Less <i className="fa-solid fa-arrow-left"></i>
+            </button>
+          )}
+        </div>
 
         {/* <div>
           <h2 className="shop-by-brands-title">Top Products</h2>
