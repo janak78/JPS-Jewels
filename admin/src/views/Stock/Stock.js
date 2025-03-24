@@ -1,32 +1,8 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { useDispatch } from "react-redux";
 import Header from "../../components/Headers/Header";
 
-import {
-  Badge,
-  Card,
-  CardHeader,
-  CardFooter,
-  DropdownMenu,
-  DropdownItem,
-  UncontrolledDropdown,
-  DropdownToggle,
-  Media,
-  Pagination,
-  PaginationItem,
-  PaginationLink,
-  Progress,
-  Table,
-  Container,
-  Row,
-  UncontrolledTooltip,
-  Button,
-  Dropdown,
-  Col,
-  Input,
-  CardBody,
-} from "reactstrap";
+import { Card, CardHeader, Container, Row, CardBody } from "reactstrap";
 import React from "react";
 import {
   Dialog,

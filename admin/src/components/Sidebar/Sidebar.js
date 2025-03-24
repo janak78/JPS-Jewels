@@ -3,21 +3,12 @@ import { NavLink as NavLinkRRD, Link } from "react-router-dom";
 import { PropTypes } from "prop-types";
 
 import {
-  Button,
-  Card,
-  CardHeader,
-  CardBody,
-  CardTitle,
   Collapse,
   DropdownMenu,
   DropdownItem,
   UncontrolledDropdown,
   DropdownToggle,
-  FormGroup,
   Form,
-  Input,
-  InputGroupAddon,
-  InputGroupText,
   InputGroup,
   Media,
   NavbarBrand,
@@ -25,8 +16,6 @@ import {
   NavItem,
   NavLink,
   Nav,
-  Progress,
-  Table,
   Container,
   Row,
   Col,
@@ -86,7 +75,7 @@ const Sidebar = (props) => {
   const handleLogout = () => {
     localStorage.clear();
 
-    toast.success("Logout successful!", {
+    toast.success("Logout successful !!", {
       position: "top-center",
       autoClose: 2000,
     });

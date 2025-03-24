@@ -1,22 +1,7 @@
 import React from "react";
-import {
-  Badge,
-  Card,
-  CardHeader,
-  DropdownMenu,
-  DropdownItem,
-  DropdownToggle,
-  Container,
-  Row,
-  Button,
-  Col,
-  Dropdown,
-  Input,
-  CardBody,
-} from "reactstrap";
+import { Card, CardHeader, Container, Row, Col, CardBody } from "reactstrap";
 import Header from "components/Headers/Header.js";
 import { useEffect, useState } from "react";
-import axios from "axios";
 import SpinnerDotted from "../../components/Loader/loader";
 
 import CustomTable from "../../components/Table/Table";
@@ -177,11 +162,12 @@ const Contact = () => {
         <Row>
           <Col>
             <Card className="shadow">
-              <CardHeader className="border-0 d-flex justify-content-between align-items-center heading-searchflex"
-              // style={{
-              //   borderBottom: "2px solid rgba(246, 192, 16)",
-              //   zIndex: "1000",
-              // }}
+              <CardHeader
+                className="border-0 d-flex justify-content-between align-items-center heading-searchflex"
+                // style={{
+                //   borderBottom: "2px solid rgba(246, 192, 16)",
+                //   zIndex: "1000",
+                // }}
               >
                 <h3 className="mb-0 heading-right">Contacts</h3>
                 <div className="search-left">

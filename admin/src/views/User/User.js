@@ -1,21 +1,6 @@
-import {
-  Badge,
-  Card,
-  CardHeader,
-  DropdownMenu,
-  DropdownItem,
-  DropdownToggle,
-  Container,
-  Row,
-  Button,
-  Col,
-  Dropdown,
-  Input,
-  CardBody,
-} from "reactstrap";
+import { Card, CardHeader, Container, Row, Col, CardBody } from "reactstrap";
 import Header from "components/Headers/Header.js";
 import { useEffect, useState } from "react";
-import axios from "axios";
 import SpinnerDotted from "../../components/Loader/loader";
 import {
   Dialog,
@@ -28,7 +13,6 @@ import CloseIcon from "@mui/icons-material/Close";
 import CustomTable from "../../components/Table/Table";
 import JobberSearch from "../../components/Search/Search";
 import JobberPagination from "../../components/Pagination/Pagination";
-import showToast from "../../components/Toast/Toast";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import swal from "sweetalert";

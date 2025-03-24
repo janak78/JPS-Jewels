@@ -1,4 +1,3 @@
-import axios from "axios";
 import AxiosInstance from "AxiosInstance";
 
 // Action Types

@@ -1,13 +1,11 @@
 import React, { useEffect } from "react";
 import { Card, CardBody, CardTitle, Container, Row, Col } from "reactstrap";
 import AddCardIcon from "@mui/icons-material/AddCard";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ReceiptSharpIcon from "@mui/icons-material/ReceiptSharp";
 import ShowChartIcon from "@mui/icons-material/ShowChart";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import AxiosInstance from "../../AxiosInstance";
-import { setUserData, setLoading, fetchUsers } from "../userSlice"; // Import actions
+import { fetchUsers } from "../userSlice"; // Import actions
 import "./style.css";
 
 const Header = () => {

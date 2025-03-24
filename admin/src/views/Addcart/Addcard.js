@@ -1,31 +1,7 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import Header from "../../components/Headers/Header";
 // import "./style.css";
-import {
-  Badge,
-  Card,
-  CardHeader,
-  CardFooter,
-  DropdownMenu,
-  DropdownItem,
-  UncontrolledDropdown,
-  DropdownToggle,
-  Media,
-  Pagination,
-  PaginationItem,
-  PaginationLink,
-  Progress,
-  Table,
-  Container,
-  Row,
-  UncontrolledTooltip,
-  Button,
-  Dropdown,
-  Col,
-  Input,
-  CardBody,
-} from "reactstrap";
+import { Card, CardHeader, Container, Row, CardBody } from "reactstrap";
 import React from "react";
 import {
   Dialog,
@@ -43,7 +19,6 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import swal from "sweetalert";
 import showToast from "../../components/Toast/Toast";
-import ToolTip from "../../components/Tooltip/Tooltio";
 import Detailloader from "../../components/DetailLOader/detailloader";
 import AxiosInstance from "../../AxiosInstance";
 import Tooltip from "@mui/material/Tooltip";

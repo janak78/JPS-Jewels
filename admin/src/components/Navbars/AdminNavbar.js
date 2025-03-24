@@ -25,7 +25,7 @@ const AdminNavbar = (props) => {
   const handleLogout = () => {
     localStorage.clear();
 
-    toast.success("Logout successful!", {
+    toast.success("Logout successful !!", {
       position: "top-center",
       autoClose: 2000,
     });

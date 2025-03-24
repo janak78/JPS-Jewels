@@ -1,5 +1,5 @@
 import React from "react";
-import { FormGroup, Paper, Input, IconButton, InputBase } from "@mui/material";
+import { FormGroup, InputBase } from "@mui/material";
 
 const JobberSearch = ({ search, setSearch }) => {
   const handleKeyPress = (e) => {

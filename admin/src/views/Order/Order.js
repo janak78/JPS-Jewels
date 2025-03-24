@@ -1,25 +1,6 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import Header from "components/Headers/Header.js";
-import {
-  Badge,
-  Card,
-  CardHeader,
-  CardFooter,
-  DropdownMenu,
-  DropdownItem,
-  UncontrolledDropdown,
-  DropdownToggle,
-  Media,
-  Table,
-  Container,
-  Row,
-  Button,
-  Col,
-  Dropdown,
-  Input,
-  CardBody,
-} from "reactstrap";
+import { Card, CardHeader, Container, Row, CardBody } from "reactstrap";
 import React from "react";
 import SpinnerDotted from "../../components/Loader/loader";
 import {

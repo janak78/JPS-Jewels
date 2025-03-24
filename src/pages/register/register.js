@@ -1,15 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Grid, Button, Container, Typography } from "@mui/material";
+import { Grid, Button, Typography } from "@mui/material";
 import TextInput from "../../components/inputs/TextInput";
-import SelectInput from "../../components/inputs/SelectInput";
-import PasswordInput from "../../components/inputs/PasswordInput";
 import showToast from "../../components/Toast/Toaster";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import "./register.css";
-import shop2 from "../../assets/images/searching-rare-gem-valuable-diamond-business_1134986-17589.jpg";
 import logo from "../../assets/images/logo.svg";
 import gallery13 from "../../assets/gallery images/luxury-shine-diamonds-digital-art_23-2151695052.avif";
 import gallery12 from "../../assets/gallery images/female-jewelry_772702-3140.avif";

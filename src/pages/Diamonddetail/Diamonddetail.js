@@ -206,7 +206,37 @@ const Diamonddetail = () => {
         <p>No diamond found. it has ben already ordered or deleted.</p>
       </div>
     );
-  if (!diamondDetail) return <p>No diamond data found.</p>;
+  if (!diamondDetail)
+    return (
+      <div
+        style={{
+          height: "50vh",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          textAlign: "center",
+          fontSize: "20px",
+          fontWeight: "600",
+          color: "#444",
+          backgroundColor: "#f8f9fa",
+          borderRadius: "10px",
+          padding: "20px",
+          // boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
+        }}
+      >
+        <img
+          src={noitem}
+          alt="No Data"
+          style={{
+            width: "80px",
+            marginBottom: "15px",
+            opacity: "0.7",
+          }}
+        />
+        <p>No diamond found.</p>
+      </div>
+    );
 
   return (
     <div className="diamond-product-container">
@@ -636,7 +666,7 @@ const Diamonddetail = () => {
           )}
         </div> */}
         <div className="similar-diamonds-section">
-          <h3>Similar Diamonds</h3>
+          <h3 className="shop-by-brands-title">Similar Diamonds</h3>
           {similarDiamonds.length === 0 ? (
             <p>No similar diamonds found.</p>
           ) : (
@@ -690,7 +720,7 @@ const Diamonddetail = () => {
           )}
         </div>
 
-        <h3 className="mt-3">Recently Visited Diamonds</h3>
+        <h3 className="mt-3 shop-by-brands-title">Recently Visited Diamonds</h3>
         {/* <Grid container spacing={2} className="mt-3">
           {visitedDiamonds.slice(0, visibleCount).map((diamond, index) => (
             <div className="col-md-3 col-sm-6" key={index}>

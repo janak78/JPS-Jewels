@@ -1,9 +1,8 @@
-import { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import {useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Button,
   Card,
-  CardHeader,
   CardBody,
   FormGroup,
   Form,
@@ -11,15 +10,13 @@ import {
   InputGroupAddon,
   InputGroupText,
   InputGroup,
-  Row,
   Col,
 } from "reactstrap";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import axios from "axios";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import { InputAdornment, IconButton } from "@mui/material";
+import {IconButton } from "@mui/material";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import weblogo from "../../assets/img/theme/logo.svg";
@@ -107,7 +104,7 @@ const Login = () => {
         }
 
         setData(res.data.data);
-        toast.success("Login successful! Welcome!", {
+        toast.success("Login successful welcome !!", {
           position: "top-center",
           autoClose: 2000,
         });
@@ -254,11 +251,12 @@ const Login = () => {
                       onClick={() => setShowPassword(!showPassword)}
                       edge="end"
                       style={{
-                        position: "absolute",
-                        right: "10px",
-                        top: "50%",
-                        transform: "translateY(-50%)",
-                        zIndex: 10,
+                        // position: "absolute",
+                        // right: "10px",
+                        // top: "50%",
+                        // transform: "translateY(-50%)",
+                        // zIndex: 10,
+                        marginRight:"0px"
                       }}
                     >
                       {showPassword ? <VisibilityOff /> : <Visibility />}
