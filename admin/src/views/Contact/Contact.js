@@ -23,8 +23,14 @@ import AxiosInstance from "../../AxiosInstance";
 import Tooltip from "@mui/material/Tooltip";
 
 import Detailloader from "../../components/DetailLOader/detailloader";
+import { useLocation, useNavigate } from "react-router-dom";
+import { handleAuth } from "../../auth";
 
 const Contact = () => {
+
+  const location = useLocation();
+    const navigate = useNavigate();
+
   const baseUrl = process.env.REACT_APP_BASE_API;
 
   const [data, setData] = useState([]);
@@ -39,6 +45,15 @@ const Contact = () => {
   useEffect(() => {
     fetchUsers(1);
   }, [rowsPerPage, page]);
+
+  useEffect(() => {
+      (async () => {
+        const authResponse = await handleAuth(navigate, location);
+        if (authResponse) {
+          fetchUsers(); // Fetch data only if authentication succeeds
+        }
+      })();
+    }, []);
 
   const fetchUsers = async () => {
     try {

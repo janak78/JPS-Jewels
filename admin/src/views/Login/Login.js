@@ -21,12 +21,25 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import weblogo from "../../assets/img/theme/logo.svg";
 import AxiosInstance from "AxiosInstance";
+import { handleAuth } from "../../auth";
 
 const Login = () => {
+
+  const location = useLocation();
+
   const baseUrl = process.env.REACT_APP_BASE_API;
 
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+
+  useEffect(() => {
+    (async () => {
+      const authResponse = await handleAuth(navigate, location);
+      if (authResponse) {
+        // getData(); // Fetch data only if authentication succeeds
+      }
+    })();
+  }, []);
 
   const formik = useFormik({
     initialValues: {

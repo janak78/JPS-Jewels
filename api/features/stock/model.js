@@ -20,6 +20,7 @@ const userSchema = new mongoose.Schema(
     FluoInt: { type: String },
     Symm: { type: String },
     Polish: { type: String },
+    Intensity: { type: String },
     Cut: { type: String },
     Clarity: { type: String },
     Color: { type: String },
