@@ -56,7 +56,7 @@ export const fetchCartCount = (userId) => async (dispatch) => {
   }
 };
 
-export const addToCart = (item, userId, shouldShowToast) => async (dispatch) => {
+export const addToCart = (item, userId, shouldShowToast, navigate) => async (dispatch) => {
   try {
     const token = localStorage.getItem("Token");
 
@@ -89,6 +89,7 @@ export const addToCart = (item, userId, shouldShowToast) => async (dispatch) => 
     }
   } catch (error) {
     showToast.error("Your Session Expired. Please Login Again");
+    navigate("/login");
   } 
 };
 

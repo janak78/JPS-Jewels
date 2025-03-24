@@ -111,7 +111,7 @@ const superadminLogin = async (data) => {
 
     // Generate a JWT token
     const token = jwt.sign(
-      { SuperadminId: user.SuperadminId }, // Payload with SuperadminId
+      { SuperadminId: user.SuperadminId, role: "Superadmin" }, // Payload with SuperadminId
       SECRET_KEY, // Secret key
       { expiresIn: "4h" } // Token expiration (1 hour)
     );
@@ -122,6 +122,7 @@ const superadminLogin = async (data) => {
       message: "Login successful",
       token: token,
       superadminId: user.SuperadminId,
+      role: user.role,
     };
   } catch (error) {
     return {
@@ -153,6 +154,7 @@ const superadminDetails = async () => {
         FirstName: 1,
         LastName: 1,
         EmailAddress: 1,
+        role: 1,
       },
     },
   ]);

@@ -147,7 +147,7 @@ const DiamondsGrid = () => {
       Quantity: 1,
     };
 
-    dispatch(addToCart(cartItem, userId, shouldShowToast));
+    dispatch(addToCart(cartItem, userId, shouldShowToast, navigate));
   };
 
   const [anchorEl, setAnchorEl] = useState(null);

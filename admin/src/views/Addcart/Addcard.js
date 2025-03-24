@@ -49,8 +49,14 @@ import AxiosInstance from "../../AxiosInstance";
 import Tooltip from "@mui/material/Tooltip";
 import { useDispatch } from "react-redux";
 import { fetchUsers } from "components/userSlice";
+import { useLocation, useNavigate } from "react-router-dom";
+import { handleAuth } from "../../auth";
 
 const Addcard = () => {
+
+  const location = useLocation();
+  const navigate = useNavigate();
+
   const baseUrl = process.env.REACT_APP_BASE_API;
 
   const dispatch = useDispatch();
@@ -62,6 +68,16 @@ const Addcard = () => {
   const [page, setPage] = useState(0);
 
   const [data, setData] = useState([]);
+
+  useEffect(() => {
+    (async () => {
+      const authResponse = await handleAuth(navigate, location);
+      if (authResponse) {
+        getData(); // Fetch data only if authentication succeeds
+      }
+    })();
+  }, []);
+
 
   const getData = async () => {
     try {

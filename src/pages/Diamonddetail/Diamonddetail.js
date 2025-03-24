@@ -141,7 +141,7 @@ const Diamonddetail = () => {
       Quantity: 1,
     };
 
-    dispatch(addToCart(cartItem, userId, shouldShowToast));
+    dispatch(addToCart(cartItem, userId, shouldShowToast, navigate));
   };
   useEffect(() => {
     if (diamondData && diamondData.SKU && diamondData.Carats && diamondData.Amount) {

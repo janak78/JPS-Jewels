@@ -111,6 +111,7 @@ router.post(
         "Fluo Int",
         "Symm",
         "Polish",
+        "Intensity",
         "Cut",
         "Clarity",
         "Color",
@@ -143,6 +144,8 @@ router.post(
         const finalImage =
           data.Image && data.Image.length > 0 ? data.Image : defaultImageUrl;
 
+          console.log(finalImage,"fi1")
+
         await stockSchema.findOneAndUpdate(
           { SKU: data.SKU },
           {
@@ -164,6 +167,7 @@ router.post(
             FluoInt: data["Fluo Int"],
             Symm: data.Symm,
             Polish: data.Polish,
+            Intensity: data.Intensity,
             Cut: data.Cut,
             Clarity: data.Clarity,
             Color: data.Color,
@@ -587,6 +591,7 @@ router.post("/data/page", async function (req, res) {
       Clarity,
       Cut,
       Polish,
+      Intensity,
       Symm,
       FluoInt,
       Lab,
@@ -612,7 +617,7 @@ router.post("/data/page", async function (req, res) {
       maxPrice,
     } = req.body;
 
-    [Shape, Color, Clarity, Cut, Polish, Symm, FluoInt, Lab, Milky, Tinge] = [
+    [Shape, Color, Clarity, Cut, Polish, Symm, FluoInt, Lab, Milky, Tinge, Intensity,] = [
       Shape,
       Color,
       Clarity,
@@ -623,6 +628,7 @@ router.post("/data/page", async function (req, res) {
       Lab,
       Milky,
       Tinge,
+      Intensity,
     ].map((val) => (val && !Array.isArray(val) ? [val] : val));
 
     const result = await fetchDiamondsPageDetails({
@@ -637,6 +643,7 @@ router.post("/data/page", async function (req, res) {
       Clarity,
       Cut,
       Polish,
+      Intensity,
       Symm,
       FluoInt,
       Lab,
