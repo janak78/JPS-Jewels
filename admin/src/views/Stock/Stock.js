@@ -27,8 +27,14 @@ import Tooltip from "@mui/material/Tooltip";
 
 import Detailloader from "../../components/DetailLOader/detailloader";
 import { fetchUsers } from "components/userSlice";
+import { useLocation, useNavigate } from "react-router-dom";
+import { handleAuth } from "../../auth";
 
 const Tablelogin = () => {
+
+  const location = useLocation();
+  const navigate = useNavigate();
+
   const [file, setFile] = useState(null);
   const baseUrl = process.env.REACT_APP_BASE_API;
   const dispatch = useDispatch();
@@ -60,32 +66,47 @@ const Tablelogin = () => {
     }
   };
 
+  useEffect(() => {
+    (async () => {
+      const authResponse = await handleAuth(navigate, location);
+      if (authResponse) {
+        getData(); // Fetch data only if authentication succeeds
+      }
+    })();
+  }, []);
+
   const handleUpload = async () => {
     if (!file) {
       alert("Please select a file to upload.");
       return;
     }
 
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("IsLabgrown", !!isLabgrown);
-    formData.append("IsNatural", !!isNatural);
+    if (isLabgrown || isNatural) {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("IsLabgrown", !!isLabgrown);
+      formData.append("IsNatural", !!isNatural);
 
-    try {
-      setUploadStatus("Uploading...");
-      const response = await AxiosInstance.post(
-        `${baseUrl}/stock/addstocks`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-      setUploadStatus("File uploaded successfully!");
-    } catch (error) {
-      setUploadStatus("Error uploading file.");
-      console.error("Error:", error);
+      try {
+        setUploadStatus("Uploading...");
+        const response = await AxiosInstance.post(
+          `${baseUrl}/stock/addstocks`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        setUploadStatus("File uploaded successfully!");
+        showToast.success("File uploaded successfully!");
+      } catch (error) {
+        setUploadStatus("Error uploading file.");
+        console.error("Error:", error);
+      }
+    } else {
+      showToast.error("Please select one of the diamond type");
+      return;
     }
   };
 
@@ -139,13 +160,6 @@ const Tablelogin = () => {
   const [popupData, setPopupData] = useState(null);
   const [popupLoading, setPopupLoading] = useState(false);
   const [openRow, setOpenRow] = useState(false);
-
-  const handleClose = () => {
-    setOpenRow(false);
-    setOpen(false);
-    setOpenDialog(false);
-    setUploadFile(false);
-  };
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -229,6 +243,15 @@ const Tablelogin = () => {
   const handleCheckboxChangetwo = (event) => {
     setIsNatural(event.target.checked);
     setIsLabgrown(); // Toggle value
+  };
+
+  const handleClose = () => {
+    setOpenRow(false);
+    setOpen(false);
+    setOpenDialog(false);
+    setUploadFile(false);
+    setIsNatural(false);
+    setIsLabgrown(false);
   };
 
   return (
