@@ -8,6 +8,23 @@ import "./App.css";
 import MainLayout from "./layout/MainLayout";
 import AuthLayout from "./layout/AuthLayout";
 import Loader from "./components/Loader/loader";
+import "./pages/About/Aboutus.css"
+import "./pages/Checkout/Checkout.css"
+import "./pages/Contactus/Contactus.css"
+import "./pages/Diamonddetail/Diamonddetail.css"
+import "./pages/Forgotpassword/Resetpassword.css"
+import "./pages/Home/Home.css"
+import "./pages/login/login.css"
+import "./pages/Pagenotfound/Pagenotfound.css"
+import "./pages/privacypolicy/privacypolicy.css"
+import "./pages/register/register.css"
+import "./pages/shop/shop.css"
+import "./pages/Termsofuse/Termsofuse.css"
+import "./pages/Userprofile/Userprofile.css"
+import "./components/Footer.css"
+import "./components/Header.css"
+import "./components/Loader/loader.css"
+
 const Home = lazy(() => import("./pages/Home/Home"));
 const Aboutus = lazy(() => import("./pages/About/Aboutus"));
 const Contactus = lazy(() => import("./pages/Contactus/Contactus"));
