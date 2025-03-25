@@ -45,12 +45,12 @@ function App() {
       <Routes>
         {/* Routes with Header & Footer */}
         <Route
-          path="/"
           element={
             <MainLayout>
               <Home />
             </MainLayout>
           }
+          index={true}
         />
         <Route
           path="/aboutus"
