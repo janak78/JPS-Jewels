@@ -34,6 +34,7 @@ import shop1 from "../../assets/images/tripple-banner-img-2.webp";
 import shop2 from "../../assets/images/tripple-banner-img-3.webp";
 import shop3 from "../../assets/images/tripple-banner-img-1.webp";
 import "./Home.css";
+import "../shop/shop.css";
 import showToast from "../../components/Toast/Toaster";
 import { addToCart } from "../../redux/cartSlice";
 import AOS from "aos";

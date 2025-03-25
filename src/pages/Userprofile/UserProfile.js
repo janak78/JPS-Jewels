@@ -71,7 +71,6 @@ const UserProfile = () => {
 
   const existingUserData = useSelector((state) => state.userSlice.userData);
 
-
   const handleSubmit = async (values, { setSubmitting }) => {
     try {
       // Check if values are the same as existing data
@@ -354,7 +353,6 @@ const UserProfile = () => {
             <div className="card-body">
               <div className="d-flex flex-column align-items-center text-center">
                 <div
-                  className="profilecirclewidth  fontfamilysty"
                   style={{
                     borderRadius: "50%",
                     padding: "20px",
@@ -376,7 +374,6 @@ const UserProfile = () => {
 
                 <div className="mt-3">
                   <h4
-                    className="labelfontstyle textcolorblue fontfamilysty"
                     style={{
                       fontWeight: "600",
                       fontSize: "18px",
@@ -385,7 +382,6 @@ const UserProfile = () => {
                     {userData?.FirstName}&nbsp;{userData?.LastName}
                   </h4>
                   <p
-                    className="fontstylerentr textcolorblue fontfamilysty"
                     style={{
                       fontWeight: "500",
                       fontSize: "14px",
@@ -394,13 +390,12 @@ const UserProfile = () => {
                     {`${userData?.PrimaryEmail}`}
                   </p>
                   <p
-                    className="fontstylerentr textcolorblue fontfamilysty"
                     style={{
                       fontWeight: "500",
                       fontSize: "14px",
                     }}
                   >
-                  {`${userData?.PhoneNo}`}
+                    {`${userData?.PhoneNo}`}
                   </p>
                 </div>
               </div>

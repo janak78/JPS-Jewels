@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import "./register.css";
+import "../login/login.css";
 import logo from "../../assets/images/logo.svg";
 import gallery13 from "../../assets/gallery images/luxury-shine-diamonds-digital-art_23-2151695052.avif";
 import gallery12 from "../../assets/gallery images/female-jewelry_772702-3140.avif";

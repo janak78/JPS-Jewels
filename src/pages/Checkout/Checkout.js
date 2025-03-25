@@ -14,6 +14,8 @@ import { Formik, Form, Field } from "formik";
 import AxiosInstance from "../../Axiosinstance";
 import * as Yup from "yup";
 import "./Checkout.css";
+import "../Home/Home.css";
+
 import showToast from "../../components/Toast/Toaster";
 
 const Checkout = () => {
