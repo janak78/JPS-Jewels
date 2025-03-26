@@ -79,7 +79,7 @@ const Footer = () => {
                     <a href="tel:+919825971176" className="note1">
                       +91 9825971176
                     </a>
-                  </span>``
+                  </span>
                 </div>
               </div>
               <div className="addresssec">
