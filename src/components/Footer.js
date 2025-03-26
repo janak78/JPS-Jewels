@@ -15,7 +15,7 @@ import "./Footer.css";
 
 const Footer = () => {
   const navigate = useNavigate();
-  const currentYear = new Date().getFullYear(); 
+  const currentYear = new Date().getFullYear();
 
   return (
     <div className="f-border">
@@ -54,8 +54,18 @@ const Footer = () => {
             <div className="footer-section">
               <h3>HELP</h3>
               <p>FAQ</p>
-              <p>About us</p>
-              <p>Contact us</p>
+              <p
+                onClick={() => navigate("/aboutus")}
+                style={{ cursor: "pointer" }}
+              >
+                About us
+              </p>
+              <p
+                onClick={() => navigate("/contactus")}
+                style={{ cursor: "pointer" }}
+              >
+                Contact us
+              </p>
             </div>
 
             {/* {/ Contact Section /} */}
@@ -69,7 +79,7 @@ const Footer = () => {
                     <a href="tel:+919825971176" className="note1">
                       +91 9825971176
                     </a>
-                  </span>
+                  </span>``
                 </div>
               </div>
               <div className="addresssec">
