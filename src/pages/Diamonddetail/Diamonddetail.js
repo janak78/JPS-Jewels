@@ -42,14 +42,17 @@ const Diamonddetail = () => {
   const [visitedDiamonds, setVisitedDiamonds] = useState([]);
   const initialVisibleCount = 8;
   const [visibleCount, setVisibleCount] = useState(initialVisibleCount);
+const [isExpanded, setIsExpanded] = useState(false); // Track if view more is clicked
 
-  const handleViewMore = () => {
-    setVisibleCount(visitedDiamonds.length);
-  };
+const handleViewMore = () => {
+  setVisibleCount(visitedDiamonds.length);
+  setIsExpanded(true); // Mark as expanded
+};
 
-  const handleViewLess = () => {
-    setVisibleCount(initialVisibleCount); // Reset to initial count
-  };
+const handleViewLess = () => {
+  setVisibleCount(initialVisibleCount);
+  setIsExpanded(false); // Mark as collapsed
+};
 
   const [openVideoModal, setOpenVideoModal] = useState(false);
   const [isAddToCart, setIsAddToCart] = useState(false);
@@ -818,16 +821,17 @@ const Diamonddetail = () => {
         </div>
 
         <div className="view-btnalign mt-3">
-          {visibleCount < visitedDiamonds.length ? (
-            <button className="view-morebtn btn" onClick={handleViewMore}>
-              View More <i className="fa-solid fa-arrow-right"></i>
-            </button>
-          ) : (
-            <button className="view-morebtn btn" onClick={handleViewLess}>
-              View Less <i className="fa-solid fa-arrow-left"></i>
-            </button>
-          )}
-        </div>
+    { visitedDiamonds.length > initialVisibleCount && (!isExpanded ? ( // Show View More only if not expanded
+      <button className="view-morebtn btn" onClick={handleViewMore}>
+        View More <i className="fa-solid fa-arrow-right"></i>
+      </button>
+    ) : ( // Show View Less only if expanded
+      <button className="view-morebtn btn" onClick={handleViewLess}>
+        View Less <i className="fa-solid fa-arrow-left"></i>
+      </button>
+    )
+  )}
+  </div>
 
         {/* <div>
           <h2 className="shop-by-brands-title">Top Products</h2>
