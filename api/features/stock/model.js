@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const userSchema = new mongoose.Schema(
+const stockSchema = new mongoose.Schema(
   {
     Image: { type: String },
     Video: { type: String },
@@ -20,7 +20,8 @@ const userSchema = new mongoose.Schema(
     FluoInt: { type: String },
     Symm: { type: String },
     Polish: { type: String },
-    Intensity: { type: String },
+    Intensity: { type: String }, // Fancy, Very Light, etc.
+    Overtone: { type: String },  // Added: Brownish, Yellowish, etc.
     Cut: { type: String },
     Clarity: { type: String },
     Color: { type: String },
@@ -39,4 +40,4 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-module.exports = mongoose.model("stocks", userSchema);
+module.exports = mongoose.model("stocks", stockSchema)

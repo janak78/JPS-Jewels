@@ -21,8 +21,13 @@ import AxiosInstance from "../../AxiosInstance";
 import Tooltip from "@mui/material/Tooltip";
 import { useDispatch } from "react-redux";
 import { fetchUsers } from "components/userSlice";
+import { handleAuth } from "../../auth";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const Tables = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+
   const baseUrl = process.env.REACT_APP_BASE_API;
 
   const dispatch = useDispatch();
@@ -38,6 +43,15 @@ const Tables = () => {
   const [countData, setCountData] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [page, setPage] = useState(0);
+
+  useEffect(() => {
+    (async () => {
+      const authResponse = await handleAuth(navigate, location);
+      if (authResponse) {
+        // getData(); // Fetch data only if authentication succeeds
+      }
+    })();
+  }, []);
 
   useEffect(() => {
     getData(1);
