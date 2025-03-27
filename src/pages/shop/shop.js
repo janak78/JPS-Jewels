@@ -1892,8 +1892,8 @@ const DiamondsGrid = () => {
                 Measurements
               </Typography>
             </div>
-            <div className="jps-measurements row">
-              <div className="col-md-4 col-12">
+            <div className="jps-measurements row m-auto">
+              <div className="col-md-3 col-12">
                 <div className="jps-measur-box">
                   <div item>
                     <TextInput
@@ -1948,6 +1948,9 @@ const DiamondsGrid = () => {
                     />
                   </div>
                 </div>
+              </div>
+              <div className="col-md-1 col-12">
+                
               </div>
 
               <div className="col-md-4 col-12">
@@ -2007,7 +2010,10 @@ const DiamondsGrid = () => {
                   </div>
                 </div>
               </div>
-              <div className="col-md-4 col-12">
+              <div className="col-md-1 col-12">
+                
+              </div>
+              <div className="col-md-3 col-12">
                 <div className="jps-measur-box">
                   <div item>
                     <TextInput

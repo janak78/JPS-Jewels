@@ -613,7 +613,7 @@ const Tablelogin = () => {
                   <div>
                     <p>
                       <strong className="Heading">SKU:</strong>{" "}
-                      {dialogData?.CertificateNo || "N/A"}{" "}
+                      {dialogData?.SKU || "N/A"}{" "}
                     </p>
                     <p>
                       <strong className="Heading">Amount:</strong>{" "}

@@ -47,21 +47,21 @@ function getDefaultImageUrl(Shape) {
     case "radiant":
     case "rad":
     case "radiant modified":
-      return "https://jpsjewels.com/api/images/RADIENT.png";
+      return "https://jpsjewels.com/api/images/RADIENT.jpg";
     case "marquise":
     case "mq":
     case "marquise modified":
-      return "https://jpsjewels.com/api/images/Marquise.png";
+      return "https://jpsjewels.com/api/images/Marquise.jpg";
     case "oval":
     case "ovl":
-      return "https://jpsjewels.com/api/images/OVAL.png";
+      return "https://jpsjewels.com/api/images/OVAL.jpg";
     case "pear":
     case "pe":
-      return "https://jpsjewels.com/api/images/PEAR.png";
+      return "https://jpsjewels.com/api/images/PEAR.jpg";
     case "princess":
     case "pri":
     case "princess modified":
-      return "https://jpsjewels.com/api/images/PRINCESS.png";
+      return "https://jpsjewels.com/api/images/PRINCESS.jpg";
     case "round":
     case "rbc":
       return "https://jpsjewels.com/api/images/RBC.jpg";
@@ -70,132 +70,285 @@ function getDefaultImageUrl(Shape) {
   }
 }
 
-router.post(
-  "/addstocks",
+const colors = new Map(
+  [
+    "Yellow",
+    "Orange",
+    "Pink",
+    "Blue",
+    "Green",
+    "Brown",
+    "Red",
+    "White",
+    "Violet",
+    "Purple",
+    "Gray",
+    "Olive",
+    "Black",
+    "D",
+    "E",
+    "F",
+    "G",
+    "H",
+    "I",
+    "J",
+    "K",
+    "L",
+    "M",
+    "N",
+    "O",
+    "P",
+    "Q",
+    "R",
+    "S",
+    "T",
+    "U",
+    "V",
+    "W",
+    "X",
+    "Y",
+    "Z",
+  ].map((c) => [c.toLowerCase(), c])
+);
 
-  upload.single("file"),
-  async (req, res) => {
-    try {
-      if (!req.file) {
-        return res
-          .status(400)
-          .json({ success: false, message: "No file uploaded" });
+const intensities = [
+  "Fancy Deep",
+  "Fancy Dark",
+  "Fancy Vivid",
+  "Fancy Intense",
+  "Fancy Light",
+  "Very Light",
+  "Light",
+  "Faint",
+  "Fancy",
+];
+
+const overtones = new Map(
+  [
+    "Beige",
+    "Beige White",
+    "Black",
+    "Bluish",
+    "Brown",
+    "Dark Brown",
+    "Dark Golden",
+    "Golden",
+    "Green",
+    "Light Beige",
+    "Light Brown",
+    "Light Golden",
+    "Pink",
+    "Pinkish",
+    "Red",
+    "Reddish",
+    "White",
+    "Yellow",
+    "Yellowish",
+    "Brownish",
+    "Greenish",
+  ].map((o) => [o.toLowerCase(), o])
+);
+
+function extractAttributes(input) {
+  const result = { color: new Set(), intensity: null, overtone: new Set() };
+
+  const lowerInput = input.toLowerCase().replace(/-/g, " ");
+  const sortedIntensities = [...intensities].sort(
+    (a, b) => b.length - a.length
+  );
+
+  let usedWords = new Set();
+
+  for (const intensity of sortedIntensities) {
+    const lowerIntensity = intensity.toLowerCase();
+    if (lowerInput.includes(lowerIntensity)) {
+      result.intensity = intensity;
+      usedWords = new Set(lowerIntensity.split(" "));
+      break;
+    }
+  }
+
+  const words = lowerInput.split(/\s+/);
+  for (const word of words) {
+    if (colors.has(word)) {
+      result.color.add(colors.get(word));
+    }
+    if (overtones.has(word) && !usedWords.has(word)) {
+      result.overtone.add(overtones.get(word));
+    }
+  }
+
+  words.forEach((word, index) => {
+    if (index < words.length - 1) {
+      const compound = `${word} ${words[index + 1]}`;
+      if (
+        overtones.has(compound) &&
+        !usedWords.has(word) &&
+        !usedWords.has(words[index + 1])
+      ) {
+        result.overtone.add(overtones.get(compound));
       }
+    }
+  });
 
-      const isNatural = req.body.IsNatural;
-      const isLabgrown = req.body.IsLabgrown;
+  return {
+    color: result.color.size ? Array.from(result.color).join(", ") : null,
+    intensity: result.intensity,
+    overtone: result.overtone.size
+      ? Array.from(result.overtone).join(", ")
+      : null,
+  };
+}
 
-      const fileName = req.file.filename;
-      const fileData = `./${fileName}`;
-      const workbook = XLSX.readFile(fileData);
-      const sheetName = workbook.SheetNames[0];
-      const worksheet = workbook.Sheets[sheetName];
-      const jsonData = XLSX.utils.sheet_to_json(worksheet);
+router.post("/addstocks", upload.single("file"), async (req, res) => {
+  try {
+    if (!req.file) {
+      return res
+        .status(400)
+        .json({ success: false, message: "No file uploaded" });
+    }
 
-      const allowedFields = [
-        "Image",
-        "Video",
-        "Diamond Type",
-        "H&A",
-        "Ratio",
-        "Tinge",
-        "Milky",
-        "EyeC",
-        "Table(%)",
-        "Depth(%)",
-        "measurements",
-        "Amount U$",
-        "Price $/ct",
-        "Disc %",
-        "Rap $",
-        "Fluo Int",
-        "Symm",
-        "Polish",
-        "Intensity",
-        "Cut",
-        "Clarity",
-        "Color",
-        "Carats",
-        "Shape",
-        "Certificate No",
-        "Lab",
-        "SKU",
-        "Sr.No",
-        "IsNatural",
-        "IsLabgrown",
-      ];
+    const isNatural = req.body.IsNatural;
+    const isLabgrown = req.body.IsLabgrown;
 
-      for (const data of jsonData) {
-        const dataFields = Object.keys(data);
-        const extraFields = dataFields.filter(
-          (field) => !allowedFields.includes(field)
-        );
+    const fileName = req.file.filename;
+    const fileData = `./${fileName}`;
+    const workbook = XLSX.readFile(fileData);
+    const sheetName = workbook.SheetNames[0];
+    const worksheet = workbook.Sheets[sheetName];
+    const jsonData = XLSX.utils.sheet_to_json(worksheet);
 
-        if (extraFields.length > 0) {
-          return res.status(400).json({
-            success: false,
-            message: `Invalid fields detected: ${extraFields.join(
-              ", "
-            )}. Only allowed fields are: ${allowedFields.join(", ")}`,
-          });
-        }
+    const allowedFields = [
+      "Image",
+      "Video",
+      "Diamond Type",
+      "H&A",
+      "Ratio",
+      "Tinge",
+      "Milky",
+      "EyeC",
+      "Table(%)",
+      "Depth(%)",
+      "measurements",
+      "Amount U$",
+      "Price $/ct",
+      "Disc %",
+      "Rap $",
+      "Fluo Int",
+      "Symm",
+      "Polish",
+      "Intensity",
+      "Cut",
+      "Clarity",
+      "Color",
+      "Carats",
+      "Shape",
+      "Certificate No",
+      "Lab",
+      "SKU",
+      "Sr.No",
+      "IsNatural",
+      "IsLabgrown",
+    ];
 
-        const defaultImageUrl = getDefaultImageUrl(data.Shape);
-        const finalImage =
-          data.Image && data.Image.length > 0 ? data.Image : defaultImageUrl;
-
-          console.log(finalImage,"fi1")
-
-        await stockSchema.findOneAndUpdate(
-          { SKU: data.SKU },
-          {
-            Image: finalImage,
-            Video: data.Video,
-            DiamondType: data["Diamond Type"],
-            HA: data["H&A"],
-            Ratio: data.Ratio,
-            Tinge: data.Tinge,
-            Milky: data.Milky,
-            EyeC: data.EyeC,
-            Table: data["Table(%)"],
-            Depth: data["Depth(%)"],
-            measurements: data.measurements,
-            Amount: data["Amount U$"],
-            Price: data["Price $/ct"],
-            Disc: data["Disc %"],
-            Rap: data["Rap $"],
-            FluoInt: data["Fluo Int"],
-            Symm: data.Symm,
-            Polish: data.Polish,
-            Intensity: data.Intensity,
-            Cut: data.Cut,
-            Clarity: data.Clarity,
-            Color: data.Color,
-            Carats: data.Carats,
-            Shape: data.Shape,
-            CertificateNo: data["Certificate No"],
-            Lab: data.Lab,
-            SKU: data.SKU,
-            SrNo: data["Sr.No"],
-            IsNatural: isNatural,
-            IsLabgrown: isLabgrown,
-          },
-          { upsert: true, new: true }
-        );
+    const getHyperlink = (cell, worksheet) => {
+      if (cell && cell.l && cell.l.Target) {
+        return cell.l.Target; // Extract hyperlink
       }
-      fs.unlinkSync(fileName);
-      res
-        .status(200)
-        .json({ success: true, message: "Excel file processed successfully" });
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({
+      return cell ? cell.v : ""; // Return cell value if no hyperlink
+    };
+    
+    for (const data of jsonData) {
+      const dataFields = Object.keys(data);
+      const extraFields = dataFields.filter(
+        (field) => !allowedFields.includes(field)
+      );
+    
+      if (extraFields.length > 0) {
+        return res.status(400).json({
+          success: false,
+          message: `Invalid fields detected: ${extraFields.join(
+            ", "
+          )}. Only allowed fields are: ${allowedFields.join(", ")}`,
+        });
+      }
+    
+      // Get the actual hyperlink if the value is a placeholder text
+      const imageCellRef = Object.keys(worksheet).find(
+        (key) => worksheet[key].v === data.Image
+      );
+      const videoCellRef = Object.keys(worksheet).find(
+        (key) => worksheet[key].v === data.Video
+      );
+    
+      const imageUrl = imageCellRef ? getHyperlink(worksheet[imageCellRef], worksheet) : data.Image;
+      const videoUrl = videoCellRef ? getHyperlink(worksheet[videoCellRef], worksheet) : data.Video;
+    console.log(imageUrl, "Image URL");
+      const defaultImageUrl = getDefaultImageUrl(data.Shape);
+      const finalImage = imageUrl && imageUrl.length > 0 ? imageUrl : defaultImageUrl;
+
+      console.log(finalImage, "Final Image");
+    
+      // Extract color and intensity attributes
+      const colorIntensityData = extractAttributes(
+        `${data.Color || ""} ${data.Intensity || ""}`
+      );
+    
+      // console.log(colorIntensityData, "Extracted Attributes");
+    
+      await stockSchema.findOneAndUpdate(
+        { SKU: data.SKU },
+        {
+          Image: finalImage,
+          Video: videoUrl,
+          DiamondType: data["Diamond Type"],
+          HA: data["H&A"],
+          Ratio: data.Ratio,
+          Tinge: data.Tinge,
+          Milky: data.Milky,
+          EyeC: data.EyeC,
+          Table: data["Table(%)"],
+          Depth: data["Depth(%)"],
+          measurements: data.measurements,
+          Amount: data["Amount U$"],
+          Price: data["Price $/ct"],
+          Disc: data["Disc %"],
+          Rap: data["Rap $"],
+          FluoInt: data["Fluo Int"],
+          Symm: data.Symm,
+          Polish: data.Polish,
+          Intensity: colorIntensityData.intensity,
+          Cut: data.Cut,
+          Clarity: data.Clarity,
+          Color: colorIntensityData.color,
+          Overtone: colorIntensityData.overtone,
+          Carats: data.Carats,
+          Shape: data.Shape,
+          CertificateNo: data["Certificate No"],
+          Lab: data.Lab,
+          SKU: data.SKU,
+          SrNo: data["Sr.No"],
+          IsNatural: isNatural,
+          IsLabgrown: isLabgrown,
+        },
+        { upsert: true, new: true }
+      );
+    }    
+
+    fs.unlinkSync(fileName);
+    res
+      .status(200)
+      .json({ success: true, message: "Excel file processed successfully" });
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({
         success: false,
         message: "An error occurred while processing the request",
       });
-    }
   }
-);
+});
 
 const labUrlMap = {
   HRD: "https://my.hrdantwerp.com/Download/GetGradingReportPdf/?reportNumber=",
@@ -265,6 +418,7 @@ const fetchStockDetails = async () => {
   ]);
 
   const stockCount = diamondsdetail.length;
+  console.log(diamondsdetail, "Stock Count"); 
 
   return {
     statusCode: diamondsdetail.length > 0 ? 200 : 204,
@@ -289,11 +443,11 @@ router.get("/data", async function (req, res) {
         );
         diamond.certificateUrl = certificateUrl;
 
-        const defaultImageUrl = getDefaultImageUrl(diamond.Shape);
-        diamond.Image =
-          diamond.Image && diamond.Image.length > 0
-            ? diamond.Image
-            : defaultImageUrl;
+        // const defaultImageUrl = getDefaultImageUrl(diamond.Shape);
+        // diamond.Image =
+        //   diamond.Image && diamond.Image.length > 0
+        //     ? diamond.Image
+        //     : defaultImageUrl;
       });
     }
 
@@ -329,9 +483,11 @@ const fetchDiamondsPageDetails = async (query) => {
     }
 
     if (query.Color?.length) {
-      matchStage.Color = Array.isArray(query.Color)
-        ? { $in: query.Color }
-        : query.Color;
+      let selectedColors = Array.isArray(query.Color)
+        ? query.Color.flatMap((color) => color.split(/\s*,\s*/)) // Split if comma-separated
+        : [query.Color];
+
+      matchStage.Color = { $regex: selectedColors.join("|"), $options: "i" };
     }
 
     if (query.Clarity?.length) {
@@ -512,7 +668,6 @@ const fetchDiamondsPageDetails = async (query) => {
         });
       }
     }
-
     const diamondDetailsPage = await stockSchema.aggregate([
       { $match: matchStage },
       {
@@ -546,7 +701,24 @@ const fetchDiamondsPageDetails = async (query) => {
           SrNo: 1,
         },
       },
-      { $sort: { createdAt: 1 } },
+      {
+        $addFields: {
+          hasBothColors: {
+            $cond: {
+              if: {
+                $regexMatch: {
+                  input: "$Color",
+                  regex: `^.*${query.Color.join(".*")}`,
+                  options: "i",
+                },
+              },
+              then: 1,
+              else: 0,
+            },
+          },
+        },
+      },
+      { $sort: { hasBothColors: -1, createdAt: 1 } },
     ]);
 
     const stockCount = diamondDetailsPage.length;
@@ -617,7 +789,19 @@ router.post("/data/page", async function (req, res) {
       maxPrice,
     } = req.body;
 
-    [Shape, Color, Clarity, Cut, Polish, Symm, FluoInt, Lab, Milky, Tinge, Intensity,] = [
+    [
+      Shape,
+      Color,
+      Clarity,
+      Cut,
+      Polish,
+      Symm,
+      FluoInt,
+      Lab,
+      Milky,
+      Tinge,
+      Intensity,
+    ] = [
       Shape,
       Color,
       Clarity,

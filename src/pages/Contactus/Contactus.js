@@ -104,7 +104,7 @@ const Contactus = () => {
                 +91 9825971176
               </a>
               <p className="note">
-                Calls from mobile and landlines within USA are free
+                Calls from mobile and landlines within INDIA are free
               </p>
             </div>
 
