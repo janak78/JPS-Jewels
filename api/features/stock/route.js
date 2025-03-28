@@ -251,19 +251,26 @@ router.post("/addstocks", upload.single("file"), async (req, res) => {
       "IsLabgrown",
     ];
 
+    const parseNumber = (value) => {
+      if (typeof value === "string") {
+        return parseFloat(value.replace(/,/g, "")) || 0; // Remove commas and convert to number
+      }
+      return value || 0;
+    };
+
     const getHyperlink = (cell, worksheet) => {
       if (cell && cell.l && cell.l.Target) {
         return cell.l.Target; // Extract hyperlink
       }
       return cell ? cell.v : ""; // Return cell value if no hyperlink
     };
-    
+
     for (const data of jsonData) {
       const dataFields = Object.keys(data);
       const extraFields = dataFields.filter(
         (field) => !allowedFields.includes(field)
       );
-    
+
       if (extraFields.length > 0) {
         return res.status(400).json({
           success: false,
@@ -272,30 +279,29 @@ router.post("/addstocks", upload.single("file"), async (req, res) => {
           )}. Only allowed fields are: ${allowedFields.join(", ")}`,
         });
       }
-    
-      // Get the actual hyperlink if the value is a placeholder text
+
       const imageCellRef = Object.keys(worksheet).find(
         (key) => worksheet[key].v === data.Image
       );
       const videoCellRef = Object.keys(worksheet).find(
         (key) => worksheet[key].v === data.Video
       );
-    
-      const imageUrl = imageCellRef ? getHyperlink(worksheet[imageCellRef], worksheet) : data.Image;
-      const videoUrl = videoCellRef ? getHyperlink(worksheet[videoCellRef], worksheet) : data.Video;
-    console.log(imageUrl, "Image URL");
-      const defaultImageUrl = getDefaultImageUrl(data.Shape);
-      const finalImage = imageUrl && imageUrl.length > 0 ? imageUrl : defaultImageUrl;
 
-      console.log(finalImage, "Final Image");
-    
-      // Extract color and intensity attributes
+      const imageUrl = imageCellRef
+        ? getHyperlink(worksheet[imageCellRef], worksheet)
+        : data.Image;
+      const videoUrl = videoCellRef
+        ? getHyperlink(worksheet[videoCellRef], worksheet)
+        : data.Video;
+
+      const defaultImageUrl = getDefaultImageUrl(data.Shape);
+      const finalImage =
+        imageUrl && imageUrl.length > 0 ? imageUrl : defaultImageUrl;
+
       const colorIntensityData = extractAttributes(
         `${data.Color || ""} ${data.Intensity || ""}`
       );
-    
-      // console.log(colorIntensityData, "Extracted Attributes");
-    
+
       await stockSchema.findOneAndUpdate(
         { SKU: data.SKU },
         {
@@ -307,13 +313,13 @@ router.post("/addstocks", upload.single("file"), async (req, res) => {
           Tinge: data.Tinge,
           Milky: data.Milky,
           EyeC: data.EyeC,
-          Table: data["Table(%)"],
-          Depth: data["Depth(%)"],
+          Table: parseNumber(data["Table(%)"]),
+          Depth: parseNumber(data["Depth(%)"]),
           measurements: data.measurements,
-          Amount: data["Amount U$"],
-          Price: data["Price $/ct"],
-          Disc: data["Disc %"],
-          Rap: data["Rap $"],
+          Amount: parseNumber(data["Amount U$"]),
+          Price: parseNumber(data["Price $/ct"]),
+          Disc: parseNumber(data["Disc %"]),
+          Rap: parseNumber(data["Rap $"]),
           FluoInt: data["Fluo Int"],
           Symm: data.Symm,
           Polish: data.Polish,
@@ -322,7 +328,7 @@ router.post("/addstocks", upload.single("file"), async (req, res) => {
           Clarity: data.Clarity,
           Color: colorIntensityData.color,
           Overtone: colorIntensityData.overtone,
-          Carats: data.Carats,
+          Carats: parseNumber(data.Carats),
           Shape: data.Shape,
           CertificateNo: data["Certificate No"],
           Lab: data.Lab,
@@ -333,7 +339,7 @@ router.post("/addstocks", upload.single("file"), async (req, res) => {
         },
         { upsert: true, new: true }
       );
-    }    
+    }
 
     fs.unlinkSync(fileName);
     res
@@ -341,14 +347,13 @@ router.post("/addstocks", upload.single("file"), async (req, res) => {
       .json({ success: true, message: "Excel file processed successfully" });
   } catch (error) {
     console.error(error);
-    res
-      .status(500)
-      .json({
-        success: false,
-        message: "An error occurred while processing the request",
-      });
+    res.status(500).json({
+      success: false,
+      message: "An error occurred while processing the request",
+    });
   }
 });
+
 
 const labUrlMap = {
   HRD: "https://my.hrdantwerp.com/Download/GetGradingReportPdf/?reportNumber=",
