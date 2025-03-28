@@ -566,7 +566,7 @@ const Home = () => {
                       </Grid>
                     ))}
                   </Grid>
-                  {shapeError && <p style={{ color: "red" }}>{shapeError}</p>}
+                  {shapeError && <p style={{ color: "red" }}></p>}
                 </div>
               </div>
             </div>
