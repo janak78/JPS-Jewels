@@ -110,7 +110,7 @@ const shopSlice = createSlice({
       state.similarDiamonds = action.payload;
     },
     setShape: (state, action) => {
-      state.shape = [action.payload];
+      state.shape = action.payload;
     },
   },
   extraReducers: (builder) => {

@@ -22,8 +22,50 @@ const upload = multer({ storage: storage });
 function getDefaultImageUrl(Shape) {
   const lowerCaseShape = Shape?.toLowerCase() || "";
   switch (lowerCaseShape) {
+    case "long octagon":
+      return "https://jpsjewels.com/api/images/Octagonal.jpg";
+    case "pentagonal":
+    case "long pentagon":
+      return "https://jpsjewels.com/api/images/Pentagonal.jpg";
+    case "shield":
+    case "scad":
+    case "sld":
+      return "https://jpsjewels.com/api/images/Shield.jpg";
+    case "trapezoid":
+    case "tp":
+    case "trapez":
+    case "wide trapezoid":
+    case "long trapezoid":
+      return "https://jpsjewels.com/api/images/Trapezoid.jpg";
+    case "half moon":
+    case "hm":
+      return "https://jpsjewels.com/api/images/Halfmoon.jpg";
+    case "tapered baguette":
+    case "tb":
+      return "https://jpsjewels.com/api/images/Taperedbaguette.jpg";
+    case "baguette":
+    case "bgt":
+      return "https://jpsjewels.com/api/images/Baguette.jpg";
+    case "lozenge":
+    case "lozg":
+      return "https://jpsjewels.com/api/images/Lozenge.jpg";
+    case "rose cut":
+    case "rose":
+      return "https://jpsjewels.com/api/images/Rosecut.jpg";
+    case "trilliant":
+      return "https://jpsjewels.com/api/images/Trilliant.jpg";
+    case "hexagonal":
+      return "https://jpsjewels.com/api/images/Hexagonal.jpg";
+    case "bullet":
+    case "bullet cut":
+      return "https://jpsjewels.com/api/images/BULLET.jpg";
+    case "kite":
+    case "kmsc":
+      return "https://jpsjewels.com/api/images/kite.jpg";
     case "asscher":
     case "sq eme":
+    case "sqemerald":
+    case "square emerald":
       return "https://jpsjewels.com/api/images/EMARALD.jpg";
     case "baguette":
     case "bug":
@@ -33,40 +75,68 @@ function getDefaultImageUrl(Shape) {
     case "square cushion":
     case "sq cu":
     case "cushion modified":
+    case "cushion brilliant":
+    case "cushion brilliant ha":
+    case "long cushion":
+    case "long cu bril":
+    case "cm":
+    case "cus. crisscut":
       return "https://jpsjewels.com/api/images/Cushion.jpg";
     case "emerald":
     case "eme":
     case "square emerald":
+    case "sem":
+    case "ecbf":
+    case "eca":
+    case "ecmb":
+    case "ecm":
+    case "elegance emerald":
       return "https://jpsjewels.com/api/images/EMARALD.jpg";
     case "heart":
     case "he":
     case "heart modified":
+    case "hrt":
+    case "heart mb":
+    case "heart stepcut":
       return "https://jpsjewels.com/api/images/Heart.jpg";
     case "long radiant":
     case "long rad":
     case "radiant":
     case "rad":
     case "radiant modified":
+    case "rmb":
+    case "rm":
+    case "sq.rad":
       return "https://jpsjewels.com/api/images/RADIENT.jpg";
     case "marquise":
     case "mq":
     case "marquise modified":
+    case "mmc":
+    case "mq. stepcut":
       return "https://jpsjewels.com/api/images/Marquise.jpg";
     case "oval":
     case "ovl":
+    case "oval stepcut":
+    case "moval":
       return "https://jpsjewels.com/api/images/OVAL.jpg";
     case "pear":
     case "pe":
+    case "pmc":
+    case "pmb":
+    case "pear stepcut":
+    case "pear old cut":
       return "https://jpsjewels.com/api/images/PEAR.jpg";
     case "princess":
     case "pri":
     case "princess modified":
+    case "pr":
       return "https://jpsjewels.com/api/images/PRINCESS.jpg";
     case "round":
     case "rbc":
+    case "round modifi brillin":
       return "https://jpsjewels.com/api/images/RBC.jpg";
     default:
-      return "https://jpsjewels.com/api/images/RBC.jpg"; // Default fallback image
+      return "https://jpsjewels.com/api/images/diamond.jpg"; // Default fallback image
   }
 }
 
@@ -354,7 +424,6 @@ router.post("/addstocks", upload.single("file"), async (req, res) => {
   }
 });
 
-
 const labUrlMap = {
   HRD: "https://my.hrdantwerp.com/Download/GetGradingReportPdf/?reportNumber=",
   GIA: "https://www.gia.edu/report-check?locale=en_US&reportno=",
@@ -423,7 +492,6 @@ const fetchStockDetails = async () => {
   ]);
 
   const stockCount = diamondsdetail.length;
-  console.log(diamondsdetail, "Stock Count"); 
 
   return {
     statusCode: diamondsdetail.length > 0 ? 200 : 204,
@@ -482,10 +550,14 @@ const fetchDiamondsPageDetails = async (query) => {
     }
 
     if (query.Shape?.length) {
-      matchStage.Shape = Array.isArray(query.Shape)
-        ? { $in: query.Shape }
-        : query.Shape;
+      // If "Other" (empty string) is selected, remove shape filtering
+      if (query.Shape.includes("other")) {
+        delete matchStage.Shape;
+      } else {
+        matchStage.Shape = { $in: query.Shape };
+      }
     }
+    
 
     if (query.Color?.length) {
       let selectedColors = Array.isArray(query.Color)
@@ -529,6 +601,11 @@ const fetchDiamondsPageDetails = async (query) => {
       matchStage.Lab = Array.isArray(query.Lab)
         ? { $in: query.Lab }
         : query.Lab;
+    }
+    if (query.Intensity?.length) {
+      matchStage.Intensity = Array.isArray(query.Intensity)
+        ? { $in: query.Intensity }
+        : query.Intensity;
     }
 
     if (query.Milky?.length) {
@@ -713,7 +790,12 @@ const fetchDiamondsPageDetails = async (query) => {
               if: {
                 $regexMatch: {
                   input: "$Color",
-                  regex: `^.*${query.Color.join(".*")}`,
+                  regex:
+                    query.Color &&
+                    Array.isArray(query.Color) &&
+                    query.Color.length > 0
+                      ? `^.*${query.Color.join(".*")}.*$`
+                      : ".*",
                   options: "i",
                 },
               },
@@ -967,82 +1049,75 @@ router.get("/caretdata", async function (req, res) {
 const fetchShapeDataDetails = async (shape) => {
   try {
     const matchQuery = { IsDelete: false };
-
-    if (shape) {
-      matchQuery.Shape = shape;
-    }
+    if (shape) matchQuery.Shape = shape;
 
     let Carets;
 
     if (shape) {
       // Fetch 5 records for the selected shape
-      Carets = await stockSchema.aggregate([
-        { $match: matchQuery },
-        { $sort: { Amount: -1 } },
-        { $limit: 5 },
-        {
-          $project: {
-            Image: 1,
-            // Video: 1,
-            // DiamondType: 1,
-            // HA: 1,
-            // Ratio: 1,
-            // Tinge: 1,
-            // Milky: 1,
-            // EyeC: 1,
-            // Table: 1,
-            // Depth: 1,
-            // measurements: 1,
-            Amount: 1,
-            Price: 1,
-            // Disc: 1,
-            // Rap: 1,
-            // FluoInt: 1,
-            // Symm: 1,
-            // Polish: 1,
-            Cut: 1,
-            Clarity: 1,
-            Color: 1,
-            Carats: 1,
-            Shape: 1,
-            // CertificateNo: 1,
-            Lab: 1,
-            SKU: 1,
-            // SrNo: 1,
+      Carets = await stockSchema
+        .aggregate([
+          { $match: matchQuery },
+          { $sort: { Amount: -1 } },
+          { $limit: 5 },
+          {
+            $project: {
+              Image: 1,
+              Amount: 1,
+              Price: 1,
+              Cut: 1,
+              Clarity: 1,
+              Color: 1,
+              Carats: 1,
+              Shape: 1,
+              Lab: 1,
+              SKU: 1,
+            },
           },
-        },
-      ]);
+        ])
+        .allowDiskUse(true);
     } else {
-      // Fetch 5 records per unique shape WITHOUT grouping
-      Carets = await stockSchema.aggregate([
-        { $match: matchQuery },
-        { $sort: { Shape: 1, Amount: -1 } }, // Sort by Shape and Amount descending
-        {
-          $group: {
-            _id: "$Shape",
-            diamonds: { $push: "$$ROOT" },
+      // Efficiently fetch 5 records per shape
+      Carets = await stockSchema
+        .aggregate([
+          { $match: matchQuery },
+
+          // Group directly while limiting to prevent memory overload
+          {
+            $facet: {
+              groupedByShape: [
+                { $sort: { Amount: -1 } },
+                {
+                  $group: {
+                    _id: "$Shape",
+                    diamonds: { $push: "$$ROOT" },
+                  },
+                },
+                { $set: { diamonds: { $slice: ["$diamonds", 5] } } }, // ✅ Limit within each group
+              ],
+            },
           },
-        },
-        { $unwind: "$diamonds" }, // Flatten grouped diamonds array
-        { $sort: { "diamonds.Amount": -1 } }, // Sort by Amount descending within each shape
-        { $group: { _id: "$_id", diamonds: { $push: "$diamonds" } } }, // Re-group for slicing
-        { $project: { diamonds: { $slice: ["$diamonds", 5] } } }, // Take only top 5 per shape
-        { $unwind: "$diamonds" }, // Flatten the final result
-        {
-          $project: {
-            Image: "$diamonds.Image",
-            Amount: "$diamonds.Amount",
-            Price: "$diamonds.Price",
-            Cut: "$diamonds.Cut",
-            Clarity: "$diamonds.Clarity",
-            Color: "$diamonds.Color",
-            Carats: "$diamonds.Carats",
-            Shape: "$diamonds.Shape",
-            Lab: "$diamonds.Lab",
-            SKU: "$diamonds.SKU",
+          { $unwind: "$groupedByShape" },
+          { $replaceRoot: { newRoot: "$groupedByShape" } },
+
+          // Flatten structure
+          { $unwind: "$diamonds" },
+          {
+            $project: {
+              Image: "$diamonds.Image",
+              Amount: "$diamonds.Amount",
+              Price: "$diamonds.Price",
+              Cut: "$diamonds.Cut",
+              Clarity: "$diamonds.Clarity",
+              Color: "$diamonds.Color",
+              Carats: "$diamonds.Carats",
+              Shape: "$diamonds.Shape",
+              Lab: "$diamonds.Lab",
+              SKU: "$diamonds.SKU",
+            },
           },
-        },
-      ]);
+        ])
+        .allowDiskUse(true);
     }
 
     return {
@@ -1349,7 +1424,7 @@ router.get("/data/:SkuId", async function (req, res) {
 
 const fetchSearchDaimondDetails = async (CertificateNo) => {
   const diamondSearchQuery = await stockSchema.findOne({
-    CertificateNo: CertificateNo,
+    SKU: CertificateNo,
     IsDelete: false,
   });
 
