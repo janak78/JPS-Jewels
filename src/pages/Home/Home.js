@@ -40,10 +40,7 @@ import { addToCart } from "../../redux/cartSlice";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { useNavigate } from "react-router-dom";
-import {
-  Typography,
-  Grid,
-} from "@mui/material";
+import { Typography, Grid } from "@mui/material";
 import { fetchShapeData, setShape } from "../../redux/shopSlice";
 
 const images = [image1, image2, image3];
@@ -86,36 +83,116 @@ const Home = () => {
 
   const icon = [
     { name: "All", value: "" },
-    { icon: "", name: "Round", value: "RBC" },
-    { icon: "", name: "Oval", value: "Oval" },
-    { icon: "", name: "Pear", value: "Pear" },
-    // { icon: "", name: "Cush Mod", value: "" },
-    // { icon: "", name: "Cush Brill", value: "" },
-    { icon: "", name: "Emerald", value: "Emerald" },
-    { icon: "", name: "Radiant", value: "Radiant" },
-    { icon: "", name: "Princess", value: "Princess" },
-    // { icon: "", name: "Asscher", value: "" },
-    // { icon: "", name: "Square", value: "" },
-    { icon: "", name: "Marquise", value: "Marquise" },
-    { icon: "", name: "Heart", value: "Heart" },
-    // { icon: "", name: "Trilliant", value: "" },
-    // { icon: "", name: "Euro Cut", value: "" },
-    // { icon: "", name: "Old Miner", value: "" },
-    // { icon: "", name: "Briolette", value: "" },
-    // { icon: "", name: "Rose Cut", value: "" },
-    // { icon: "", name: "Lozenge", value: "" },
-    { icon: "", name: "Baguette", value: "BUG" },
-    // { icon: "", name: "Tap Bag", value: "" },
-    // { icon: "", name: "Half Moon", value: "" },
-    // { icon: "", name: "Flanders", value: "" },
-    // { icon: "", name: "Trapezoid", value: "" },
-    // { icon: "", name: "Bullets", value: "" },
-    { icon: "", name: "Kite", value: "KITE" },
-    // { icon: "", name: "Shield", value: "" },
-    // { icon: "", name: "Star", value: "" },
-    // { icon: "", name: "Pentagonal", value: "" },
-    // { icon: "", name: "Hexagonal", value: "" },
-    // { icon: "", name: "Octagonal", value: "" },
+    {
+      icon: "",
+      name: "Round",
+      value: ["RBC", "round", "round modifi brillin"],
+    },
+    {
+      icon: "",
+      name: "Oval",
+      value: ["Oval", "ovl", "oval stepcut", "moval"],
+    },
+    {
+      icon: "",
+      name: "Pear",
+      value: ["Pear", "pe", "pmc", "pmb", "pear stepcut", "pear old cut"],
+    },
+    {
+      icon: "",
+      name: "Cush Mod",
+      value: [
+        "CUSHION",
+        "cu",
+        "square cushion",
+        "sq cu",
+        "cushion modified",
+        "cm",
+        "cus. crisscut",
+      ],
+    },
+    {
+      icon: "",
+      name: "Cush Brill",
+      value: [
+        "CUSHION BRILLIANT",
+        "cushion brilliant ha",
+        "long cu bril",
+        "long cushion",
+      ],
+    },
+    {
+      icon: "",
+      name: "Emerald",
+      value: [
+        "Emerald",
+        "eme",
+        "square emerald",
+        "sem",
+        "ecbf",
+        "eca",
+        "ecmb",
+        "ecm",
+        "elegance emerald",
+      ],
+    },
+    {
+      icon: "",
+      name: "Radiant",
+      value: [
+        "Radiant",
+        "long radiant",
+        "long rad",
+        "radiant modified",
+        "rmb",
+        "rm",
+        "sq.rad",
+      ],
+    },
+    {
+      icon: "",
+      name: "Princess",
+      value: ["Princess", "pri", "princess modified", "pr"],
+    },
+    {
+      icon: "",
+      name: "Asscher",
+      value: ["ASSCHER"],
+    },
+    {
+      icon: "",
+      name: "Marquise",
+      value: ["Marquise", "mq", "marquise modified", "mmc", "mq. stepcut"],
+    },
+    {
+      icon: "",
+      name: "Heart",
+      value: [
+        "Heart",
+        "he",
+        "heart modified",
+        "hrt",
+        "heart mb",
+        "heart stepcut",
+      ],
+    },
+    { icon: "", name: "Trilliant", value: ["TRILLIANT"] },
+    { icon: "", name: "Rose Cut", value: ["ROSE CUT", "rose"] },
+    { icon: "", name: "Lozenge", value: ["LOZENGE", "lozg"] },
+    { icon: "", name: "Baguette", value: ["BAGUETTE", "bgt", "bug"] },
+    { icon: "", name: "Tap Bag", value: ["TAPERED BAGUETTE", "tb"] },
+    { icon: "", name: "Half Moon", value: ["HALF MOON", "hm"] },
+    {
+      icon: "",
+      name: "Trapezoid",
+      value: ["TRAPEZOID", "tp", "trapez", "wide trapezoid", "long trapezoid"],
+    },
+    { icon: "", name: "Bullets", value: ["BULLET", "bullet cut"] },
+    { icon: "", name: "Kite", value: ["KITE", "kmsc"] },
+    { icon: "", name: "Shield", value: ["SHIELD", "scad", "sld"] },
+    { icon: "", name: "Pentagonal", value: ["PENTAGONAL", "long pentagon"] },
+    { icon: "", name: "Hexagonal", value: ["HEXAGONAL"] },
+    { icon: "", name: "Octagonal", value: ["long octagon"] },
   ];
 
   // const toggleShape = (name) => {
@@ -231,12 +308,15 @@ const Home = () => {
   }, [shape, dispatch]);
 
   const handleShapeClick = (shapeValue) => {
-    if (shape.length > 0 && shape[0] === shapeValue) {
-      return;
+    if (Array.isArray(shapeValue)) {
+      dispatch(setShape(shapeValue)); // Store the array directly
+    } else {
+      dispatch(setShape([shapeValue])); // Convert single value to array
     }
-    dispatch(setShape(shapeValue));
+    dispatch(fetchShapeData(shapeValue)); // Fetch diamonds based on selection
     setCurrentPage(0);
   };
+
   const ITEMS_PER_PAGE = 5;
 
   const [currentPage, setCurrentPage] = useState(0);
@@ -545,7 +625,7 @@ const Home = () => {
                           alignItems: "center",
                           justifyContent: "center",
                           textAlign: "center",
-                          border: shape.includes(value.value)
+                          border: shape.some((s) => value.value.includes(s))
                             ? "1px solid #1976D2"
                             : "1px solid #ccc",
                           borderRadius: "5px",
@@ -554,7 +634,9 @@ const Home = () => {
                           fontWeight: "500",
                           padding: "8px",
                           cursor: "pointer",
-                          backgroundColor: shape.includes(value.value)
+                          backgroundColor: shape.some((s) =>
+                            value.value.includes(s)
+                          )
                             ? "#1976D250"
                             : "#fff",
                           color: "#000",
@@ -598,7 +680,6 @@ const Home = () => {
                       e.stopPropagation();
                       // navigate("/diamonddetail", { state: { diamond } });
                       navigate(`/diamonddetail/${diamond.SKU}`);
-
                     }}
                   >
                     <div className="shopimg">

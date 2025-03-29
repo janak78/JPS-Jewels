@@ -72,20 +72,18 @@ const DiamondsGrid = () => {
   const { totalPages, currentPage, itemsPerPage } = useSelector(
     (state) => state.shop
   );
-
   const [filterData, setFilterData] = useState(undefined);
   const [showfilterData, setShowFilterData] = useState(undefined);
-
   const filteredData = Object.entries(showfilterData || {}).filter(
     ([key, value]) => {
-      if (Array.isArray(value)) return value.length > 0;
+      if (Array.isArray(value)) return value?.length > 0;
       if (typeof value === "boolean") return false;
       return value !== "" && value !== null;
     }
   );
 
   // Split data into two columns
-  const midIndex = Math.ceil(filteredData.length / 2);
+  const midIndex = Math.ceil(filteredData?.length / 2);
   const leftColumn = Array.from({ length: midIndex }).map((_, index) =>
     filteredData.slice(index * 2, index * 2 + 2)
   );
@@ -106,7 +104,11 @@ const DiamondsGrid = () => {
       setFilterData(decodedToken);
       setShape(decodedToken.Shape);
       setSelectedClarity(decodedToken.Clarity);
-      setSelectedColor(decodedToken.Color);
+      setSelectedColor(
+        decodedToken.Color?.length > 0
+          ? decodedToken.Color
+          : decodedToken.colorimages
+      );
       setSelectedCut(decodedToken.Cut);
       setSelectedPolish(decodedToken.Polish);
       setSelectedSymmetry(decodedToken.Symm);
@@ -122,6 +124,7 @@ const DiamondsGrid = () => {
         min: decodedToken.minAmount,
         max: decodedToken.maxAmount,
       });
+      setSelectedIntensity(decodedToken.Intensity);
       setDepthRange({ min: decodedToken.minDepth, max: decodedToken.maxDepth });
       setTableRange({ min: decodedToken.minTable, max: decodedToken.maxTable });
       setRadioRange({ min: decodedToken.minRatio, max: decodedToken.maxRatio });
@@ -238,36 +241,117 @@ const DiamondsGrid = () => {
   };
 
   const icon = [
-    { icon: "", name: "Round", value: "RBC" },
-    { icon: "", name: "Oval", value: "Oval" },
-    { icon: "", name: "Pear", value: "Pear" },
-    // { icon: "", name: "Cush Mod", value: "" },
-    // { icon: "", name: "Cush Brill", value: "" },
-    { icon: "", name: "Emerald", value: "Emerald" },
-    { icon: "", name: "Radiant", value: "Radiant" },
-    { icon: "", name: "Princess", value: "Princess" },
-    // { icon: "", name: "Asscher", value: "" },
-    // { icon: "", name: "Square", value: "" },
-    { icon: "", name: "Marquise", value: "Marquise" },
-    { icon: "", name: "Heart", value: "Heart" },
-    // { icon: "", name: "Trilliant", value: "" },
-    // { icon: "", name: "Euro Cut", value: "" },
-    // { icon: "", name: "Old Miner", value: "" },
-    // { icon: "", name: "Briolette", value: "" },
-    // { icon: "", name: "Rose Cut", value: "" },
-    // { icon: "", name: "Lozenge", value: "" },
-    { icon: "", name: "Baguette", value: "BUG" },
-    // { icon: "", name: "Tap Bag", value: "" },
-    // { icon: "", name: "Half Moon", value: "" },
-    // { icon: "", name: "Flanders", value: "" },
-    // { icon: "", name: "Trapezoid", value: "" },
-    // { icon: "", name: "Bullets", value: "" },
-    { icon: "", name: "Kite", value: "KITE" },
-    // { icon: "", name: "Shield", value: "" },
-    // { icon: "", name: "Star", value: "" },
-    // { icon: "", name: "Pentagonal", value: "" },
-    // { icon: "", name: "Hexagonal", value: "" },
-    // { icon: "", name: "Octagonal", value: "" },
+    {
+      icon: "",
+      name: "Round",
+      value: ["RBC", "round", "round modifi brillin"],
+    },
+    {
+      icon: "",
+      name: "Oval",
+      value: ["Oval", "ovl", "oval stepcut", "moval"],
+    },
+    {
+      icon: "",
+      name: "Pear",
+      value: ["Pear", "pe", "pmc", "pmb", "pear stepcut", "pear old cut"],
+    },
+    {
+      icon: "",
+      name: "Cush Mod",
+      value: [
+        "CUSHION",
+        "cu",
+        "square cushion",
+        "sq cu",
+        "cushion modified",
+        "cm",
+        "cus. crisscut",
+      ],
+    },
+    {
+      icon: "",
+      name: "Cush Brill",
+      value: [
+        "CUSHION BRILLIANT",
+        "cushion brilliant ha",
+        "long cu bril",
+        "long cushion",
+      ],
+    },
+    {
+      icon: "",
+      name: "Emerald",
+      value: [
+        "Emerald",
+        "eme",
+        "square emerald",
+        "sem",
+        "ecbf",
+        "eca",
+        "ecmb",
+        "ecm",
+        "elegance emerald",
+      ],
+    },
+    {
+      icon: "",
+      name: "Radiant",
+      value: [
+        "Radiant",
+        "long radiant",
+        "long rad",
+        "radiant modified",
+        "rmb",
+        "rm",
+        "sq.rad",
+      ],
+    },
+    {
+      icon: "",
+      name: "Princess",
+      value: ["Princess", "pri", "princess modified", "pr"],
+    },
+    {
+      icon: "",
+      name: "Asscher",
+      value: ["ASSCHER"],
+    },
+    {
+      icon: "",
+      name: "Marquise",
+      value: ["Marquise", "mq", "marquise modified", "mmc", "mq. stepcut"],
+    },
+    {
+      icon: "",
+      name: "Heart",
+      value: [
+        "Heart",
+        "he",
+        "heart modified",
+        "hrt",
+        "heart mb",
+        "heart stepcut",
+      ],
+    },
+    { icon: "", name: "Trilliant", value: ["TRILLIANT"] },
+    { icon: "", name: "Rose Cut", value: ["ROSE CUT", "rose"] },
+    { icon: "", name: "Lozenge", value: ["LOZENGE", "lozg"] },
+    { icon: "", name: "Baguette", value: ["BAGUETTE", "bgt", "bug"] },
+    { icon: "", name: "Tap Bag", value: ["TAPERED BAGUETTE", "tb"] },
+    { icon: "", name: "Half Moon", value: ["HALF MOON", "hm"] },
+    {
+      icon: "",
+      name: "Trapezoid",
+      value: ["TRAPEZOID", "tp", "trapez", "wide trapezoid", "long trapezoid"],
+    },
+    { icon: "", name: "Bullets", value: ["BULLET", "bullet cut"] },
+    { icon: "", name: "Kite", value: ["KITE", "kmsc"] },
+    { icon: "", name: "Shield", value: ["SHIELD", "scad", "sld"] },
+    { icon: "", name: "Pentagonal", value: ["PENTAGONAL", "long pentagon"] },
+    { icon: "", name: "Hexagonal", value: ["HEXAGONAL"] },
+    { icon: "", name: "Octagonal", value: ["long octagon"] },
+    { name: "Other", value: ["other"] },
   ];
 
   const colorimage = [
@@ -448,12 +532,16 @@ const DiamondsGrid = () => {
 
   const [shape, setShape] = useState([]);
 
-  const toggleShape = (name) => {
-    setShape((prevShapes) =>
-      prevShapes.includes(name)
-        ? prevShapes.filter((s) => s !== name)
-        : [...prevShapes, name]
-    );
+  const toggleShape = (values) => {
+    setShape((prevShapes) => {
+      const isSelected = values.some((val) => prevShapes.includes(val));
+
+      if (isSelected) {
+        return prevShapes.filter((s) => !values.includes(s));
+      } else {
+        return [...prevShapes, ...values];
+      }
+    });
   };
 
   // Color image selection array
@@ -461,7 +549,7 @@ const DiamondsGrid = () => {
 
   const toggleColorimages = (name) => {
     setColorImages((prevShapes) =>
-      prevShapes.includes(name)
+      prevShapes?.includes(name)
         ? prevShapes.filter((s) => s !== name)
         : [...prevShapes, name]
     );
@@ -472,20 +560,49 @@ const DiamondsGrid = () => {
 
   const toggleClarity = (name) => {
     setSelectedClarity((prevClarity) =>
-      prevClarity.includes(name)
+      prevClarity?.includes(name)
         ? prevClarity.filter((c) => c !== name)
         : [...prevClarity, name]
     );
   };
+
+  // 3x and 3vg+ for cut, polish and symmetry
+  const [selectedcutoption, setSelectedcutoption] = useState([]);
+
+  const togglecutoption = (name) => {
+    const isSelected = selectedcutoption.includes(name);
+
+    let newCutOptions = isSelected ? [] : [name]; // Toggle the clicked option
+    setSelectedcutoption(newCutOptions);
+
+    if (isSelected) {
+      // If already selected, clear related selections
+      setSelectedCut([]);
+      setSelectedPolish([]);
+      setSelectedSymmetry([]);
+    } else {
+      // Apply selections based on the clicked option
+      if (name === "3X") {
+        setSelectedCut(["ID", "EX"]);
+        setSelectedPolish(["ID", "EX"]);
+        setSelectedSymmetry(["EX"]);
+      } else if (name === "3VG+") {
+        setSelectedCut(["ID", "EX", "VG"]);
+        setSelectedPolish(["ID", "EX", "VG"]);
+        setSelectedSymmetry(["EX", "VG"]);
+      }
+    }
+  };
+
   // Color selection array
   const [selectedColor, setSelectedColor] = useState([]);
 
   const toggleColor = (colorValues) => {
     let newSelected = [...selectedColor];
 
-    if (colorValues.some((val) => newSelected.includes(val))) {
+    if (colorValues.some((val) => newSelected?.includes(val))) {
       // If any value is already selected, remove all
-      newSelected = newSelected.filter((val) => !colorValues.includes(val));
+      newSelected = newSelected.filter((val) => !colorValues?.includes(val));
     } else {
       // Otherwise, add all values
       newSelected = [...newSelected, ...colorValues];
@@ -499,7 +616,7 @@ const DiamondsGrid = () => {
 
   const toggleIntensity = (name) => {
     setSelectedIntensity((prevIntensity) =>
-      prevIntensity.includes(name)
+      prevIntensity?.includes(name)
         ? prevIntensity.filter((c) => c !== name)
         : [...prevIntensity, name]
     );
@@ -510,7 +627,7 @@ const DiamondsGrid = () => {
 
   const toggleMilky = (name) => {
     setSelectedMilky((prevMilky) =>
-      prevMilky.includes(name)
+      prevMilky?.includes(name)
         ? prevMilky.filter((c) => c !== name)
         : [...prevMilky, name]
     );
@@ -521,7 +638,7 @@ const DiamondsGrid = () => {
 
   const toggleTinge = (name) => {
     setSelectedTinge((prevTinge) =>
-      prevTinge.includes(name)
+      prevTinge?.includes(name)
         ? prevTinge.filter((c) => c !== name)
         : [...prevTinge, name]
     );
@@ -532,7 +649,7 @@ const DiamondsGrid = () => {
 
   const toggleSelection = (name) => {
     setSelectedHeart((prevHeart) =>
-      prevHeart.includes(name)
+      prevHeart?.includes(name)
         ? prevHeart.filter((c) => c !== name)
         : [...prevHeart, name]
     );
@@ -544,25 +661,39 @@ const DiamondsGrid = () => {
   const [selectedSymmetry, setSelectedSymmetry] = useState([]);
 
   const toggleCut = (name) => {
-    setSelectedCut((prevCut) =>
-      prevCut.includes(name)
+    setSelectedCut((prevCut) => {
+      const newCut = prevCut.includes(name)
         ? prevCut.filter((item) => item !== name)
-        : [...prevCut, name]
-    );
+        : [...prevCut, name];
+
+      // If any manual selection is made, clear "3X" and "3VG+"
+      setSelectedcutoption([]);
+      return newCut;
+    });
   };
+
   const togglePolish = (name) => {
-    setSelectedPolish((prevPolish) =>
-      prevPolish.includes(name)
+    setSelectedPolish((prevPolish) => {
+      const newPolish = prevPolish.includes(name)
         ? prevPolish.filter((item) => item !== name)
-        : [...prevPolish, name]
-    );
+        : [...prevPolish, name];
+
+      // If any manual selection is made, clear "3X" and "3VG+"
+      setSelectedcutoption([]);
+      return newPolish;
+    });
   };
+
   const toggleSymmetry = (name) => {
-    setSelectedSymmetry((prevSymmetry) =>
-      prevSymmetry.includes(name)
+    setSelectedSymmetry((prevSymmetry) => {
+      const newSymmetry = prevSymmetry.includes(name)
         ? prevSymmetry.filter((item) => item !== name)
-        : [...prevSymmetry, name]
-    );
+        : [...prevSymmetry, name];
+
+      // If any manual selection is made, clear "3X" and "3VG+"
+      setSelectedcutoption([]);
+      return newSymmetry;
+    });
   };
 
   // fluroescene lab selection array
@@ -571,14 +702,14 @@ const DiamondsGrid = () => {
 
   const toggleFluroescene = (name) => {
     setSelectedFluroescene((prevFluroescene) =>
-      prevFluroescene.includes(name)
+      prevFluroescene?.includes(name)
         ? prevFluroescene.filter((item) => item !== name)
         : [...prevFluroescene, name]
     );
   };
   const toggleLab = (name) => {
     setSelectedLab((prevLab) =>
-      prevLab.includes(name)
+      prevLab?.includes(name)
         ? prevLab.filter((item) => item !== name)
         : [...prevLab, name]
     );
@@ -820,6 +951,7 @@ const DiamondsGrid = () => {
     setSelectedTinge([]);
     setColorImages([]);
     setSelectedIntensity([]);
+    setSelectedcutoption([]);
     setFilters({
       media: false,
       available: false,
@@ -886,9 +1018,11 @@ const DiamondsGrid = () => {
   const applyFilter = () => {
     const payload = {
       Shape: shape,
+      Intensity: selectedIntensity,
       minCt: caratRange.min,
       maxCt: caratRange.max,
-      Color: selectedColor,
+      Color: selectedColor?.length > 0 ? selectedColor : colorimages,
+
       Clarity: selectedClarity,
       Milky: selectedMilky,
       Tinge: selectedTinge,
@@ -918,7 +1052,6 @@ const DiamondsGrid = () => {
       IsNatural: diamondType == 0,
       IsLabgrown: diamondType == 1,
     };
-
     setFilterData(payload);
 
     const filterToken = createUnsignedJWT(payload);
@@ -1044,38 +1177,42 @@ const DiamondsGrid = () => {
                     }}
                     className="jps-icons"
                   >
-                    {icon.map((value) => (
-                      <Grid
-                        key={value.name}
-                        item
-                        onClick={() => toggleShape(value.value)}
-                        sx={{
-                          display: "flex",
-                          flexDirection: "column",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          textAlign: "center",
-                          border: shape.includes(value.value)
-                            ? "1px solid #1976D2"
-                            : "1px solid #ccc",
-                          borderRadius: "5px",
-                          height: "115px",
-                          width: "100%",
-                          fontSize: "12px",
-                          fontWeight: "500",
-                          padding: 0,
-                          cursor: "pointer",
-                          backgroundColor: shape.includes(value.value)
-                            ? "#1976D250"
-                            : "#fff",
-                          color: "#000",
-                          transition: "background-color 0.3s",
-                        }}
-                      >
-                        <div className="jps-icon">{value.icon}</div>
-                        {value.name}
-                      </Grid>
-                    ))}
+                    {icon.map((value) => {
+                      const isSelected = value.value.some((val) =>
+                        shape.includes(val)
+                      );
+
+                      return (
+                        <Grid
+                          key={value.name}
+                          item
+                          onClick={() => toggleShape(value.value)}
+                          sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            textAlign: "center",
+                            border: isSelected
+                              ? "1px solid #1976D2"
+                              : "1px solid #ccc",
+                            borderRadius: "5px",
+                            height: "115px",
+                            width: "100%",
+                            fontSize: "12px",
+                            fontWeight: "500",
+                            padding: 0,
+                            cursor: "pointer",
+                            backgroundColor: isSelected ? "#1976D250" : "#fff",
+                            color: "#000",
+                            transition: "background-color 0.3s",
+                          }}
+                        >
+                          <div className="jps-icon">{value.icon}</div>
+                          {value.name}
+                        </Grid>
+                      );
+                    })}
                   </Grid>
                 </Grid>
               </div>
@@ -1084,7 +1221,7 @@ const DiamondsGrid = () => {
 
           <div className="row">
             <div className="col-md-6 col-12 mb-3">
-              <div className="bg-box mb-2">
+              <div className="bg-box mb-3">
                 <div className="row">
                   <div className="col-lg-6 col-md-12 col-12 mb-2">
                     <div item>
@@ -1230,7 +1367,7 @@ const DiamondsGrid = () => {
                         Clarity
                       </Typography>
                     </div>
-                    <div item>
+                    <div item className="clarity-styless">
                       <div className="jps-lab-box">
                         {clarity.map((value) => (
                           <Grid
@@ -1243,7 +1380,7 @@ const DiamondsGrid = () => {
                               alignItems: "center",
                               justifyContent: "center",
                               textAlign: "center",
-                              border: selectedClarity.includes(value.name)
+                              border: selectedClarity?.includes(value.name)
                                 ? "1px solid #1976D2"
                                 : "1px solid #ccc",
                               borderRadius: "4px",
@@ -1251,7 +1388,7 @@ const DiamondsGrid = () => {
                               fontWeight: "500",
                               padding: 0,
                               cursor: "pointer",
-                              backgroundColor: selectedClarity.includes(
+                              backgroundColor: selectedClarity?.includes(
                                 value.name
                               )
                                 ? "#1976D250"
@@ -1285,28 +1422,18 @@ const DiamondsGrid = () => {
                   </div>
                   <div className="col-md-12 col-12 mb-3">
                     <div item>
-                      <Typography
-                        variant="body1"
-                        fontWeight="bold"
-                        sx={{ textAlign: "left" }}
-                      >
-                        Cut
-                      </Typography>
-                    </div>
-                    <div item>
                       <div className="jps-lab-box">
-                        {/* {(diamondType === "0" ? cut : labcut).map((value) => ( */}
-                        {cut.map((value) => (
+                        {heart.map((value) => (
                           <Grid
                             key={value.name}
                             item
-                            onClick={() => toggleCut(value.value)}
+                            onClick={() => togglecutoption(value.name)}
                             sx={{
                               display: "flex",
                               alignItems: "center",
                               justifyContent: "center",
                               textAlign: "center",
-                              border: selectedCut.includes(value.value)
+                              border: selectedcutoption?.includes(value.name)
                                 ? "1px solid #1976D2"
                                 : "1px solid #ccc",
                               borderRadius: "4px",
@@ -1315,7 +1442,9 @@ const DiamondsGrid = () => {
                               fontSize: "12px",
                               fontWeight: "500",
                               cursor: "pointer",
-                              backgroundColor: selectedCut.includes(value.value)
+                              backgroundColor: selectedcutoption?.includes(
+                                value.name
+                              )
                                 ? "#1976D250"
                                 : "#fff",
                               color: "#000",
@@ -1325,6 +1454,104 @@ const DiamondsGrid = () => {
                             {value?.name || ""}
                           </Grid>
                         ))}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="cut-polish-css">
+                    <div className="col-md-6 col-12 mb-3">
+                      <div item>
+                        <Typography
+                          variant="body1"
+                          fontWeight="bold"
+                          sx={{ textAlign: "left" }}
+                        >
+                          Cut
+                        </Typography>
+                      </div>
+                      <div item>
+                        <div className="jps-lab-box">
+                          {/* {(diamondType === "0" ? cut : labcut).map((value) => ( */}
+                          {cut.map((value) => (
+                            <Grid
+                              key={value.name}
+                              item
+                              onClick={() => toggleCut(value.value)}
+                              sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                textAlign: "center",
+                                border: selectedCut?.includes(value.value)
+                                  ? "1px solid #1976D2"
+                                  : "1px solid #ccc",
+                                borderRadius: "4px",
+                                // height: "50px",
+                                // width: "100%",
+                                fontSize: "12px",
+                                fontWeight: "500",
+                                cursor: "pointer",
+                                backgroundColor: selectedCut?.includes(
+                                  value.value
+                                )
+                                  ? "#1976D250"
+                                  : "#fff",
+                                color: "#000",
+                                transition: "background-color 0.3s",
+                              }}
+                            >
+                              {value?.name || ""}
+                            </Grid>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="col-md-6 col-12 mb-3">
+                      <div item>
+                        <Typography
+                          variant="body1"
+                          fontWeight="bold"
+                          sx={{ textAlign: "left" }}
+                        >
+                          Symmetry
+                        </Typography>
+                      </div>
+                      <div item>
+                        <div className="jps-lab-box">
+                          {/* {(diamondType === "0" ? symmetry : labsymmetry).map( */}
+                          {symmetry.map((value) => (
+                            <Grid
+                              key={value.name}
+                              item
+                              onClick={() => toggleSymmetry(value.value)}
+                              sx={{
+                                display: "flex",
+                                flexDirection: "column",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                textAlign: "center",
+                                border: selectedSymmetry?.includes(value.value)
+                                  ? "1px solid #1976D2"
+                                  : "1px solid #ccc",
+                                borderRadius: "4px",
+                                // height: "50px",
+                                // width: "100%",
+                                fontSize: "12px",
+                                fontWeight: "500",
+                                padding: 0,
+                                cursor: "pointer",
+                                backgroundColor: selectedSymmetry?.includes(
+                                  value.value
+                                )
+                                  ? "#1976D250"
+                                  : "#fff",
+                                color: "#000",
+                                transition: "background-color 0.3s",
+                              }}
+                            >
+                              {value?.name || ""}
+                            </Grid>
+                          ))}
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -1352,7 +1579,7 @@ const DiamondsGrid = () => {
                               alignItems: "center",
                               justifyContent: "center",
                               textAlign: "center",
-                              border: selectedPolish.includes(value.value)
+                              border: selectedPolish?.includes(value.value)
                                 ? "1px solid #1976D2"
                                 : "1px solid #ccc",
                               borderRadius: "4px",
@@ -1362,7 +1589,7 @@ const DiamondsGrid = () => {
                               fontWeight: "500",
                               padding: 0,
                               cursor: "pointer",
-                              backgroundColor: selectedPolish.includes(
+                              backgroundColor: selectedPolish?.includes(
                                 value.value
                               )
                                 ? "#1976D250"
@@ -1377,7 +1604,7 @@ const DiamondsGrid = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="col-md-12 col-12 mb-3">
+                  {/* <div className="col-md-12 col-12 mb-3">
                     <div item>
                       <Typography
                         variant="body1"
@@ -1389,7 +1616,6 @@ const DiamondsGrid = () => {
                     </div>
                     <div item>
                       <div className="jps-lab-box">
-                        {/* {(diamondType === "0" ? symmetry : labsymmetry).map( */}
                         {symmetry.map((value) => (
                           <Grid
                             key={value.name}
@@ -1401,7 +1627,7 @@ const DiamondsGrid = () => {
                               alignItems: "center",
                               justifyContent: "center",
                               textAlign: "center",
-                              border: selectedSymmetry.includes(value.value)
+                              border: selectedSymmetry?.includes(value.value)
                                 ? "1px solid #1976D2"
                                 : "1px solid #ccc",
                               borderRadius: "4px",
@@ -1411,7 +1637,7 @@ const DiamondsGrid = () => {
                               fontWeight: "500",
                               padding: 0,
                               cursor: "pointer",
-                              backgroundColor: selectedSymmetry.includes(
+                              backgroundColor: selectedSymmetry?.includes(
                                 value.value
                               )
                                 ? "#1976D250"
@@ -1425,7 +1651,7 @@ const DiamondsGrid = () => {
                         ))}
                       </div>
                     </div>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>
@@ -1491,8 +1717,8 @@ const DiamondsGrid = () => {
                             alignItems: "center",
                             justifyContent: "center",
                             textAlign: "center",
-                            border: colorItem.value.some((val) =>
-                              selectedColor.includes(val)
+                            border: colorItem.value?.some((val) =>
+                              selectedColor?.includes(val)
                             )
                               ? "1px solid #1976D2"
                               : "1px solid #ccc",
@@ -1501,8 +1727,8 @@ const DiamondsGrid = () => {
                             fontWeight: "500",
                             padding: 0,
                             cursor: "pointer",
-                            backgroundColor: colorItem.value.some((val) =>
-                              selectedColor.includes(val)
+                            backgroundColor: colorItem.value?.some((val) =>
+                              selectedColor?.includes(val)
                             )
                               ? "#1976D250"
                               : "#fff",
@@ -1552,7 +1778,7 @@ const DiamondsGrid = () => {
                                 alignItems: "center",
                                 justifyContent: "center",
                                 textAlign: "center",
-                                border: colorimages.includes(value.value)
+                                border: colorimages?.includes(value.value)
                                   ? "1px solid #1976D2"
                                   : "1px solid #ccc",
                                 borderRadius: "5px",
@@ -1562,7 +1788,7 @@ const DiamondsGrid = () => {
                                 fontWeight: "500",
                                 padding: 0,
                                 cursor: "pointer",
-                                backgroundColor: colorimages.includes(
+                                backgroundColor: colorimages?.includes(
                                   value.value
                                 )
                                   ? "#1976D250"
@@ -1612,7 +1838,7 @@ const DiamondsGrid = () => {
                                 alignItems: "center",
                                 justifyContent: "center",
                                 textAlign: "center",
-                                border: selectedIntensity.includes(value.name)
+                                border: selectedIntensity?.includes(value.name)
                                   ? "1px solid #1976D2"
                                   : "1px solid #ccc",
                                 borderRadius: "4px",
@@ -1622,7 +1848,7 @@ const DiamondsGrid = () => {
                                 fontWeight: "500",
                                 padding: 0,
                                 cursor: "pointer",
-                                backgroundColor: selectedIntensity.includes(
+                                backgroundColor: selectedIntensity?.includes(
                                   value.name
                                 )
                                   ? "#1976D250"
@@ -1667,7 +1893,7 @@ const DiamondsGrid = () => {
                           alignItems: "center",
                           justifyContent: "center",
                           textAlign: "center",
-                          border: selectedLab.includes(value.name)
+                          border: selectedLab?.includes(value.name)
                             ? "1px solid #1976D2"
                             : "1px solid #ccc",
                           borderRadius: "4px",
@@ -1675,7 +1901,7 @@ const DiamondsGrid = () => {
                           fontWeight: "500",
                           padding: 0,
                           cursor: "pointer",
-                          backgroundColor: selectedLab.includes(value.name)
+                          backgroundColor: selectedLab?.includes(value.name)
                             ? "#1976D250"
                             : "#fff",
                           color: "#000",
@@ -1709,7 +1935,7 @@ const DiamondsGrid = () => {
                           alignItems: "center",
                           justifyContent: "center",
                           textAlign: "center",
-                          border: selectedFluroescene.includes(value.value)
+                          border: selectedFluroescene?.includes(value.value)
                             ? "1px solid #1976D2"
                             : "1px solid #ccc",
                           borderRadius: "4px",
@@ -1717,7 +1943,7 @@ const DiamondsGrid = () => {
                           fontWeight: "500",
                           padding: 0,
                           cursor: "pointer",
-                          backgroundColor: selectedFluroescene.includes(
+                          backgroundColor: selectedFluroescene?.includes(
                             value.value
                           )
                             ? "#1976D250"
@@ -1756,7 +1982,7 @@ const DiamondsGrid = () => {
                           alignItems: "center",
                           justifyContent: "center",
                           textAlign: "center",
-                          border: selectedMilky.includes(value.name)
+                          border: selectedMilky?.includes(value.name)
                             ? "1px solid #1976D2"
                             : "1px solid #ccc",
                           borderRadius: "4px",
@@ -1766,7 +1992,7 @@ const DiamondsGrid = () => {
                           fontWeight: "500",
                           padding: 0,
                           cursor: "pointer",
-                          backgroundColor: selectedMilky.includes(value.name)
+                          backgroundColor: selectedMilky?.includes(value.name)
                             ? "#1976D250"
                             : "#fff",
                           color: "#000",
@@ -1801,7 +2027,7 @@ const DiamondsGrid = () => {
                           alignItems: "center",
                           justifyContent: "center",
                           textAlign: "center",
-                          border: selectedTinge.includes(value.name)
+                          border: selectedTinge?.includes(value.name)
                             ? "1px solid #1976D2"
                             : "1px solid #ccc",
                           borderRadius: "4px",
@@ -1811,7 +2037,7 @@ const DiamondsGrid = () => {
                           fontWeight: "500",
                           padding: 0,
                           cursor: "pointer",
-                          backgroundColor: selectedTinge.includes(value.name)
+                          backgroundColor: selectedTinge?.includes(value.name)
                             ? "#1976D250"
                             : "#fff",
                           color: "#000",
@@ -1949,9 +2175,7 @@ const DiamondsGrid = () => {
                   </div>
                 </div>
               </div>
-              <div className="col-md-1 col-12">
-                
-              </div>
+              <div className="col-md-1 col-12"></div>
 
               <div className="col-md-4 col-12">
                 <div className="jps-measur-box">
@@ -2010,9 +2234,7 @@ const DiamondsGrid = () => {
                   </div>
                 </div>
               </div>
-              <div className="col-md-1 col-12">
-                
-              </div>
+              <div className="col-md-1 col-12"></div>
               <div className="col-md-3 col-12">
                 <div className="jps-measur-box">
                   <div item>
@@ -2111,9 +2333,8 @@ const DiamondsGrid = () => {
                       Hide filter
                     </Button>
                   )}
-
                   {/* Show Filter Data Beside Button */}
-                  {filteredData.length > 0 && (
+                  {filteredData?.length > 0 && (
                     <div
                       style={{
                         display: "flex",
@@ -2148,9 +2369,16 @@ const DiamondsGrid = () => {
                                 {key} :
                               </strong>
                               <span>
-                                {Array.isArray(value)
-                                  ? value.join(", ")
-                                  : value.toString()}
+                                {[
+                                  ...new Set(
+                                    value.map(
+                                      (val) =>
+                                        icon.find((item) =>
+                                          item.value.includes(val)
+                                        )?.name || val
+                                    )
+                                  ),
+                                ].join(", ")}
                               </span>
                             </div>
                           ))}
@@ -2286,7 +2514,7 @@ const DiamondsGrid = () => {
               //                   alignItems: "center",
               //                   justifyContent: "center",
               //                   textAlign: "center",
-              //                   border: shape.includes(value.value)
+              //                   border: shape?.includes(value.value)
               //                     ? "1px solid #1976D2"
               //                     : "1px solid #ccc",
               //                   borderRadius: "5px",
@@ -2296,7 +2524,7 @@ const DiamondsGrid = () => {
               //                   fontWeight: "500",
               //                   padding: 0,
               //                   cursor: "pointer",
-              //                   backgroundColor: shape.includes(value.value)
+              //                   backgroundColor: shape?.includes(value.value)
               //                     ? "#1976D250"
               //                     : "#fff",
               //                   color: "#000",
@@ -2339,7 +2567,7 @@ const DiamondsGrid = () => {
               //                   alignItems: "center",
               //                   justifyContent: "center",
               //                   textAlign: "center",
-              //                   border: selectedClarity.includes(value.name)
+              //                   border: selectedClarity?.includes(value.name)
               //                     ? "1px solid #1976D2"
               //                     : "1px solid #ccc",
               //                   borderRadius: "4px",
@@ -2349,7 +2577,7 @@ const DiamondsGrid = () => {
               //                   fontWeight: "500",
               //                   padding: 0,
               //                   cursor: "pointer",
-              //                   backgroundColor: selectedClarity.includes(
+              //                   backgroundColor: selectedClarity?.includes(
               //                     value.name
               //                   )
               //                     ? "#1976D250"
@@ -2388,7 +2616,7 @@ const DiamondsGrid = () => {
               //                   alignItems: "center",
               //                   justifyContent: "center",
               //                   textAlign: "center",
-              //                   border: selectedColor.includes(value.name)
+              //                   border: selectedColor?.includes(value.name)
               //                     ? "1px solid #1976D2"
               //                     : "1px solid #ccc",
               //                   borderRadius: "4px",
@@ -2398,7 +2626,7 @@ const DiamondsGrid = () => {
               //                   fontWeight: "500",
               //                   padding: 0,
               //                   cursor: "pointer",
-              //                   backgroundColor: selectedColor.includes(
+              //                   backgroundColor: selectedColor?.includes(
               //                     value.name
               //                   )
               //                     ? "#1976D250"
@@ -2442,7 +2670,7 @@ const DiamondsGrid = () => {
               //                   alignItems: "center",
               //                   justifyContent: "center",
               //                   textAlign: "center",
-              //                   border: selectedMilky.includes(value.name)
+              //                   border: selectedMilky?.includes(value.name)
               //                     ? "1px solid #1976D2"
               //                     : "1px solid #ccc",
               //                   borderRadius: "4px",
@@ -2452,7 +2680,7 @@ const DiamondsGrid = () => {
               //                   fontWeight: "500",
               //                   padding: 0,
               //                   cursor: "pointer",
-              //                   backgroundColor: selectedMilky.includes(
+              //                   backgroundColor: selectedMilky?.includes(
               //                     value.name
               //                   )
               //                     ? "#1976D250"
@@ -2491,7 +2719,7 @@ const DiamondsGrid = () => {
               //                   alignItems: "center",
               //                   justifyContent: "center",
               //                   textAlign: "center",
-              //                   border: selectedTinge.includes(value.name)
+              //                   border: selectedTinge?.includes(value.name)
               //                     ? "1px solid #1976D2"
               //                     : "1px solid #ccc",
               //                   borderRadius: "4px",
@@ -2501,7 +2729,7 @@ const DiamondsGrid = () => {
               //                   fontWeight: "500",
               //                   padding: 0,
               //                   cursor: "pointer",
-              //                   backgroundColor: selectedTinge.includes(
+              //                   backgroundColor: selectedTinge?.includes(
               //                     value.name
               //                   )
               //                     ? "#1976D250"
@@ -2557,7 +2785,7 @@ const DiamondsGrid = () => {
               //                         alignItems: "center",
               //                         justifyContent: "center",
               //                         textAlign: "center",
-              //                         border: selectedCut.includes(value.value)
+              //                         border: selectedCut?.includes(value.value)
               //                           ? "1px solid #1976D2"
               //                           : "1px solid #ccc",
               //                         borderRadius: "4px",
@@ -2566,7 +2794,7 @@ const DiamondsGrid = () => {
               //                         fontSize: "12px",
               //                         fontWeight: "500",
               //                         cursor: "pointer",
-              //                         backgroundColor: selectedCut.includes(
+              //                         backgroundColor: selectedCut?.includes(
               //                           value.value
               //                         )
               //                           ? "#1976D250"
@@ -2606,7 +2834,7 @@ const DiamondsGrid = () => {
               //                         alignItems: "center",
               //                         justifyContent: "center",
               //                         textAlign: "center",
-              //                         border: selectedPolish.includes(
+              //                         border: selectedPolish?.includes(
               //                           value.value
               //                         )
               //                           ? "1px solid #1976D2"
@@ -2618,7 +2846,7 @@ const DiamondsGrid = () => {
               //                         fontWeight: "500",
               //                         padding: 0,
               //                         cursor: "pointer",
-              //                         backgroundColor: selectedPolish.includes(
+              //                         backgroundColor: selectedPolish?.includes(
               //                           value.value
               //                         )
               //                           ? "#1976D250"
@@ -2660,7 +2888,7 @@ const DiamondsGrid = () => {
               //                       alignItems: "center",
               //                       justifyContent: "center",
               //                       textAlign: "center",
-              //                       border: selectedSymmetry.includes(
+              //                       border: selectedSymmetry?.includes(
               //                         value.value
               //                       )
               //                         ? "1px solid #1976D2"
@@ -2672,7 +2900,7 @@ const DiamondsGrid = () => {
               //                       fontWeight: "500",
               //                       padding: 0,
               //                       cursor: "pointer",
-              //                       backgroundColor: selectedSymmetry.includes(
+              //                       backgroundColor: selectedSymmetry?.includes(
               //                         value.value
               //                       )
               //                         ? "#1976D250"
@@ -2716,7 +2944,7 @@ const DiamondsGrid = () => {
               //                       alignItems: "center",
               //                       justifyContent: "center",
               //                       textAlign: "center",
-              //                       border: selectedFluroescene.includes(
+              //                       border: selectedFluroescene?.includes(
               //                         value.value
               //                       )
               //                         ? "1px solid #1976D2"
@@ -2727,7 +2955,7 @@ const DiamondsGrid = () => {
               //                       padding: 0,
               //                       cursor: "pointer",
               //                       backgroundColor:
-              //                         selectedFluroescene.includes(value.value)
+              //                         selectedFluroescene?.includes(value.value)
               //                           ? "#1976D250"
               //                           : "#fff",
               //                       color: "#000",
@@ -2765,7 +2993,7 @@ const DiamondsGrid = () => {
               //                         alignItems: "center",
               //                         justifyContent: "center",
               //                         textAlign: "center",
-              //                         border: selectedLab.includes(value.name)
+              //                         border: selectedLab?.includes(value.name)
               //                           ? "1px solid #1976D2"
               //                           : "1px solid #ccc",
               //                         borderRadius: "4px",
@@ -2773,7 +3001,7 @@ const DiamondsGrid = () => {
               //                         fontWeight: "500",
               //                         padding: 0,
               //                         cursor: "pointer",
-              //                         backgroundColor: selectedLab.includes(
+              //                         backgroundColor: selectedLab?.includes(
               //                           value.name
               //                         )
               //                           ? "#1976D250"
@@ -3282,38 +3510,44 @@ const DiamondsGrid = () => {
                           }}
                           className="jps-icons"
                         >
-                          {icon.map((value) => (
-                            <Grid
-                              key={value.name}
-                              item
-                              onClick={() => toggleShape(value.value)}
-                              sx={{
-                                display: "flex",
-                                flexDirection: "column",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                textAlign: "center",
-                                border: shape.includes(value.value)
-                                  ? "1px solid #1976D2"
-                                  : "1px solid #ccc",
-                                borderRadius: "5px",
-                                height: "115px",
-                                width: "100%",
-                                fontSize: "12px",
-                                fontWeight: "500",
-                                padding: 0,
-                                cursor: "pointer",
-                                backgroundColor: shape.includes(value.value)
-                                  ? "#1976D250"
-                                  : "#fff",
-                                color: "#000",
-                                transition: "background-color 0.3s",
-                              }}
-                            >
-                              <div className="jps-icon">{value.icon}</div>
-                              {value.name}
-                            </Grid>
-                          ))}
+                          {icon.map((value) => {
+                            const isSelected = value.value.some((val) =>
+                              shape.includes(val)
+                            );
+
+                            return (
+                              <Grid
+                                key={value.name}
+                                item
+                                onClick={() => toggleShape(value.value)}
+                                sx={{
+                                  display: "flex",
+                                  flexDirection: "column",
+                                  alignItems: "center",
+                                  justifyContent: "center",
+                                  textAlign: "center",
+                                  border: isSelected
+                                    ? "1px solid #1976D2"
+                                    : "1px solid #ccc",
+                                  borderRadius: "5px",
+                                  height: "115px",
+                                  width: "100%",
+                                  fontSize: "12px",
+                                  fontWeight: "500",
+                                  padding: 0,
+                                  cursor: "pointer",
+                                  backgroundColor: isSelected
+                                    ? "#1976D250"
+                                    : "#fff",
+                                  color: "#000",
+                                  transition: "background-color 0.3s",
+                                }}
+                              >
+                                <div className="jps-icon">{value.icon}</div>
+                                {value.name}
+                              </Grid>
+                            );
+                          })}
                         </Grid>
                       </Grid>
                     </div>
@@ -3322,7 +3556,7 @@ const DiamondsGrid = () => {
 
                 <div className="row">
                   <div className="col-md-6 col-12 mb-3">
-                    <div className="bg-box mb-2">
+                    <div className="bg-box mb-3">
                       <div className="row">
                         <div className="col-lg-6 col-md-12 col-12 mb-2">
                           <div item>
@@ -3468,7 +3702,7 @@ const DiamondsGrid = () => {
                               Clarity
                             </Typography>
                           </div>
-                          <div item>
+                          <div item className="clarity-styless">
                             <div className="jps-lab-box">
                               {clarity.map((value) => (
                                 <Grid
@@ -3481,7 +3715,9 @@ const DiamondsGrid = () => {
                                     alignItems: "center",
                                     justifyContent: "center",
                                     textAlign: "center",
-                                    border: selectedClarity.includes(value.name)
+                                    border: selectedClarity?.includes(
+                                      value.name
+                                    )
                                       ? "1px solid #1976D2"
                                       : "1px solid #ccc",
                                     borderRadius: "4px",
@@ -3489,7 +3725,7 @@ const DiamondsGrid = () => {
                                     fontWeight: "500",
                                     padding: 0,
                                     cursor: "pointer",
-                                    backgroundColor: selectedClarity.includes(
+                                    backgroundColor: selectedClarity?.includes(
                                       value.name
                                     )
                                       ? "#1976D250"
@@ -3523,28 +3759,20 @@ const DiamondsGrid = () => {
                         </div>
                         <div className="col-md-12 col-12 mb-3">
                           <div item>
-                            <Typography
-                              variant="body1"
-                              fontWeight="bold"
-                              sx={{ textAlign: "left" }}
-                            >
-                              Cut
-                            </Typography>
-                          </div>
-                          <div item>
                             <div className="jps-lab-box">
-                              {/* {(diamondType === "0" ? cut : labcut).map((value) => ( */}
-                              {cut.map((value) => (
+                              {heart.map((value) => (
                                 <Grid
                                   key={value.name}
                                   item
-                                  onClick={() => toggleCut(value.value)}
+                                  onClick={() => togglecutoption(value.name)}
                                   sx={{
                                     display: "flex",
                                     alignItems: "center",
                                     justifyContent: "center",
                                     textAlign: "center",
-                                    border: selectedCut.includes(value.value)
+                                    border: selectedcutoption?.includes(
+                                      value.name
+                                    )
                                       ? "1px solid #1976D2"
                                       : "1px solid #ccc",
                                     borderRadius: "4px",
@@ -3553,11 +3781,10 @@ const DiamondsGrid = () => {
                                     fontSize: "12px",
                                     fontWeight: "500",
                                     cursor: "pointer",
-                                    backgroundColor: selectedCut.includes(
-                                      value.value
-                                    )
-                                      ? "#1976D250"
-                                      : "#fff",
+                                    backgroundColor:
+                                      selectedcutoption?.includes(value.name)
+                                        ? "#1976D250"
+                                        : "#fff",
                                     color: "#000",
                                     transition: "background-color 0.3s",
                                   }}
@@ -3565,6 +3792,105 @@ const DiamondsGrid = () => {
                                   {value?.name || ""}
                                 </Grid>
                               ))}
+                            </div>
+                          </div>
+                        </div>
+                        <div className="cut-polish-css">
+                          <div className="col-md-6 col-12 mb-3">
+                            <div item>
+                              <Typography
+                                variant="body1"
+                                fontWeight="bold"
+                                sx={{ textAlign: "left" }}
+                              >
+                                Cut
+                              </Typography>
+                            </div>
+                            <div item>
+                              <div className="jps-lab-box">
+                                {/* {(diamondType === "0" ? cut : labcut).map((value) => ( */}
+                                {cut.map((value) => (
+                                  <Grid
+                                    key={value.name}
+                                    item
+                                    onClick={() => toggleCut(value.value)}
+                                    sx={{
+                                      display: "flex",
+                                      alignItems: "center",
+                                      justifyContent: "center",
+                                      textAlign: "center",
+                                      border: selectedCut?.includes(value.value)
+                                        ? "1px solid #1976D2"
+                                        : "1px solid #ccc",
+                                      borderRadius: "4px",
+                                      // height: "50px",
+                                      // width: "100%",
+                                      fontSize: "12px",
+                                      fontWeight: "500",
+                                      cursor: "pointer",
+                                      backgroundColor: selectedCut?.includes(
+                                        value.value
+                                      )
+                                        ? "#1976D250"
+                                        : "#fff",
+                                      color: "#000",
+                                      transition: "background-color 0.3s",
+                                    }}
+                                  >
+                                    {value?.name || ""}
+                                  </Grid>
+                                ))}
+                              </div>
+                            </div>
+                          </div>
+                          <div className="col-md-6 col-12 mb-3">
+                            <div item>
+                              <Typography
+                                variant="body1"
+                                fontWeight="bold"
+                                sx={{ textAlign: "left" }}
+                              >
+                                Symmetry
+                              </Typography>
+                            </div>
+                            <div item>
+                              <div className="jps-lab-box">
+                                {/* {(diamondType === "0" ? symmetry : labsymmetry).map( */}
+                                {symmetry.map((value) => (
+                                  <Grid
+                                    key={value.name}
+                                    item
+                                    onClick={() => toggleSymmetry(value.value)}
+                                    sx={{
+                                      display: "flex",
+                                      flexDirection: "column",
+                                      alignItems: "center",
+                                      justifyContent: "center",
+                                      textAlign: "center",
+                                      border: selectedSymmetry?.includes(
+                                        value.value
+                                      )
+                                        ? "1px solid #1976D2"
+                                        : "1px solid #ccc",
+                                      borderRadius: "4px",
+                                      // height: "50px",
+                                      // width: "100%",
+                                      fontSize: "12px",
+                                      fontWeight: "500",
+                                      padding: 0,
+                                      cursor: "pointer",
+                                      backgroundColor:
+                                        selectedSymmetry?.includes(value.value)
+                                          ? "#1976D250"
+                                          : "#fff",
+                                      color: "#000",
+                                      transition: "background-color 0.3s",
+                                    }}
+                                  >
+                                    {value?.name || ""}
+                                  </Grid>
+                                ))}
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -3592,7 +3918,9 @@ const DiamondsGrid = () => {
                                     alignItems: "center",
                                     justifyContent: "center",
                                     textAlign: "center",
-                                    border: selectedPolish.includes(value.value)
+                                    border: selectedPolish?.includes(
+                                      value.value
+                                    )
                                       ? "1px solid #1976D2"
                                       : "1px solid #ccc",
                                     borderRadius: "4px",
@@ -3602,7 +3930,7 @@ const DiamondsGrid = () => {
                                     fontWeight: "500",
                                     padding: 0,
                                     cursor: "pointer",
-                                    backgroundColor: selectedPolish.includes(
+                                    backgroundColor: selectedPolish?.includes(
                                       value.value
                                     )
                                       ? "#1976D250"
@@ -3617,57 +3945,54 @@ const DiamondsGrid = () => {
                             </div>
                           </div>
                         </div>
-                        <div className="col-md-12 col-12 mb-3">
-                          <div item>
-                            <Typography
-                              variant="body1"
-                              fontWeight="bold"
-                              sx={{ textAlign: "left" }}
-                            >
-                              Symmetry
-                            </Typography>
-                          </div>
-                          <div item>
-                            <div className="jps-lab-box">
-                              {/* {(diamondType === "0" ? symmetry : labsymmetry).map( */}
-                              {symmetry.map((value) => (
-                                <Grid
-                                  key={value.name}
-                                  item
-                                  onClick={() => toggleSymmetry(value.value)}
-                                  sx={{
-                                    display: "flex",
-                                    flexDirection: "column",
-                                    alignItems: "center",
-                                    justifyContent: "center",
-                                    textAlign: "center",
-                                    border: selectedSymmetry.includes(
-                                      value.value
-                                    )
-                                      ? "1px solid #1976D2"
-                                      : "1px solid #ccc",
-                                    borderRadius: "4px",
-                                    // height: "50px",
-                                    // width: "100%",
-                                    fontSize: "12px",
-                                    fontWeight: "500",
-                                    padding: 0,
-                                    cursor: "pointer",
-                                    backgroundColor: selectedSymmetry.includes(
-                                      value.value
-                                    )
-                                      ? "#1976D250"
-                                      : "#fff",
-                                    color: "#000",
-                                    transition: "background-color 0.3s",
-                                  }}
-                                >
-                                  {value?.name || ""}
-                                </Grid>
-                              ))}
-                            </div>
-                          </div>
-                        </div>
+                        {/* <div className="col-md-12 col-12 mb-3">
+                    <div item>
+                      <Typography
+                        variant="body1"
+                        fontWeight="bold"
+                        sx={{ textAlign: "left" }}
+                      >
+                        Symmetry
+                      </Typography>
+                    </div>
+                    <div item>
+                      <div className="jps-lab-box">
+                        {symmetry.map((value) => (
+                          <Grid
+                            key={value.name}
+                            item
+                            onClick={() => toggleSymmetry(value.value)}
+                            sx={{
+                              display: "flex",
+                              flexDirection: "column",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              textAlign: "center",
+                              border: selectedSymmetry?.includes(value.value)
+                                ? "1px solid #1976D2"
+                                : "1px solid #ccc",
+                              borderRadius: "4px",
+                              // height: "50px",
+                              // width: "100%",
+                              fontSize: "12px",
+                              fontWeight: "500",
+                              padding: 0,
+                              cursor: "pointer",
+                              backgroundColor: selectedSymmetry?.includes(
+                                value.value
+                              )
+                                ? "#1976D250"
+                                : "#fff",
+                              color: "#000",
+                              transition: "background-color 0.3s",
+                            }}
+                          >
+                            {value?.name || ""}
+                          </Grid>
+                        ))}
+                      </div>
+                    </div>
+                  </div> */}
                       </div>
                     </div>
                   </div>
@@ -3734,7 +4059,7 @@ const DiamondsGrid = () => {
                                   justifyContent: "center",
                                   textAlign: "center",
                                   border: colorItem.value.some((val) =>
-                                    selectedColor.includes(val)
+                                    selectedColor?.includes(val)
                                   )
                                     ? "1px solid #1976D2"
                                     : "1px solid #ccc",
@@ -3744,7 +4069,7 @@ const DiamondsGrid = () => {
                                   padding: 0,
                                   cursor: "pointer",
                                   backgroundColor: colorItem.value.some((val) =>
-                                    selectedColor.includes(val)
+                                    selectedColor?.includes(val)
                                   )
                                     ? "#1976D250"
                                     : "#fff",
@@ -3796,7 +4121,7 @@ const DiamondsGrid = () => {
                                       alignItems: "center",
                                       justifyContent: "center",
                                       textAlign: "center",
-                                      border: colorimages.includes(value.value)
+                                      border: colorimages?.includes(value.value)
                                         ? "1px solid #1976D2"
                                         : "1px solid #ccc",
                                       borderRadius: "5px",
@@ -3806,7 +4131,7 @@ const DiamondsGrid = () => {
                                       fontWeight: "500",
                                       padding: 0,
                                       cursor: "pointer",
-                                      backgroundColor: colorimages.includes(
+                                      backgroundColor: colorimages?.includes(
                                         value.value
                                       )
                                         ? "#1976D250"
@@ -3856,7 +4181,7 @@ const DiamondsGrid = () => {
                                       alignItems: "center",
                                       justifyContent: "center",
                                       textAlign: "center",
-                                      border: selectedIntensity.includes(
+                                      border: selectedIntensity?.includes(
                                         value.name
                                       )
                                         ? "1px solid #1976D2"
@@ -3869,7 +4194,7 @@ const DiamondsGrid = () => {
                                       padding: 0,
                                       cursor: "pointer",
                                       backgroundColor:
-                                        selectedIntensity.includes(value.name)
+                                        selectedIntensity?.includes(value.name)
                                           ? "#1976D250"
                                           : "#fff",
                                       color: "#000",
@@ -3914,7 +4239,7 @@ const DiamondsGrid = () => {
                                   alignItems: "center",
                                   justifyContent: "center",
                                   textAlign: "center",
-                                  border: selectedLab.includes(value.name)
+                                  border: selectedLab?.includes(value.name)
                                     ? "1px solid #1976D2"
                                     : "1px solid #ccc",
                                   borderRadius: "4px",
@@ -3922,7 +4247,7 @@ const DiamondsGrid = () => {
                                   fontWeight: "500",
                                   padding: 0,
                                   cursor: "pointer",
-                                  backgroundColor: selectedLab.includes(
+                                  backgroundColor: selectedLab?.includes(
                                     value.name
                                   )
                                     ? "#1976D250"
@@ -3959,7 +4284,7 @@ const DiamondsGrid = () => {
                                 alignItems: "center",
                                 justifyContent: "center",
                                 textAlign: "center",
-                                border: selectedFluroescene.includes(
+                                border: selectedFluroescene?.includes(
                                   value.value
                                 )
                                   ? "1px solid #1976D2"
@@ -3969,7 +4294,7 @@ const DiamondsGrid = () => {
                                 fontWeight: "500",
                                 padding: 0,
                                 cursor: "pointer",
-                                backgroundColor: selectedFluroescene.includes(
+                                backgroundColor: selectedFluroescene?.includes(
                                   value.value
                                 )
                                   ? "#1976D250"
@@ -4008,7 +4333,7 @@ const DiamondsGrid = () => {
                                 alignItems: "center",
                                 justifyContent: "center",
                                 textAlign: "center",
-                                border: selectedMilky.includes(value.name)
+                                border: selectedMilky?.includes(value.name)
                                   ? "1px solid #1976D2"
                                   : "1px solid #ccc",
                                 borderRadius: "4px",
@@ -4018,7 +4343,7 @@ const DiamondsGrid = () => {
                                 fontWeight: "500",
                                 padding: 0,
                                 cursor: "pointer",
-                                backgroundColor: selectedMilky.includes(
+                                backgroundColor: selectedMilky?.includes(
                                   value.name
                                 )
                                   ? "#1976D250"
@@ -4055,7 +4380,7 @@ const DiamondsGrid = () => {
                                 alignItems: "center",
                                 justifyContent: "center",
                                 textAlign: "center",
-                                border: selectedTinge.includes(value.name)
+                                border: selectedTinge?.includes(value.name)
                                   ? "1px solid #1976D2"
                                   : "1px solid #ccc",
                                 borderRadius: "4px",
@@ -4065,7 +4390,7 @@ const DiamondsGrid = () => {
                                 fontWeight: "500",
                                 padding: 0,
                                 cursor: "pointer",
-                                backgroundColor: selectedTinge.includes(
+                                backgroundColor: selectedTinge?.includes(
                                   value.name
                                 )
                                   ? "#1976D250"
