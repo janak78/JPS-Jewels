@@ -897,6 +897,8 @@ const fetchStockDetails = async () => {
         Rap: 1,
         Intensity: 1,
         Overtone: 1,
+        Intensity: 1,
+        Overtone: 1,
         FluoInt: 1,
         Symm: 1,
         Polish: 1,
@@ -909,6 +911,8 @@ const fetchStockDetails = async () => {
         Lab: 1,
         SKU: 1,
         SrNo: 1,
+        IsNatural: 1,
+        IsLabgrown: 1,
         IsNatural: 1,
         IsLabgrown: 1,
       },
@@ -975,11 +979,18 @@ const fetchDiamondsPageDetails = async (query) => {
     }
 
     if (query.Shape?.length) {
+      // Ensure Shape is an array and convert frontend values to lowercase
+      const shapesArray = Array.isArray(query.Shape) ? query.Shape : [query.Shape];
+      const lowerCaseShapes = shapesArray.map((shape) => shape.toLowerCase());
+    
       // If "Other" (empty string) is selected, remove shape filtering
-      if (query.Shape.includes("other")) {
+      if (lowerCaseShapes.includes("other")) {
         delete matchStage.Shape;
       } else {
-        matchStage.Shape = { $in: query.Shape };
+        // Use case-insensitive regex matching for MongoDB
+        matchStage.Shape = { 
+          $in: lowerCaseShapes.map((shape) => new RegExp(`^${shape}$`, "i")) 
+        };
       }
     }
     
@@ -1241,7 +1252,7 @@ const fetchDiamondsPageDetails = async (query) => {
     );
 
     return {
-      statusCode: diamondDetailsPage.length === 0 ? 204 : 200,
+      statusCode: diamondDetailsPage.length === 0 ? 404 : 200,
       message:
         diamondDetailsPage.length > 0
           ? "diamondDetailsPage retrieved successfully"
@@ -1326,7 +1337,6 @@ router.post("/data/page", async function (req, res) {
       Tinge,
       Intensity,
     ].map((val) => (val && !Array.isArray(val) ? [val] : val));
-
     const result = await fetchDiamondsPageDetails({
       pageSize,
       pageNumber,
@@ -1666,7 +1676,6 @@ const getSimilarDiamonds = async (carat, color, clarity, shape, IsNatural, IsLab
 router.get("/similarproducts", async function (req, res) {
   try {
     const { carat, color, clarity, shape, IsNatural, IsLabgrown } = req.query;
-    console.log(IsNatural, IsLabgrown, "IsNatural IsLabgrown"); 
 
     // if (!carat || !color || !clarity || !shape || !IsNatural || !IsLabgrown) {
     //   return res.status(400).json({
@@ -1676,7 +1685,14 @@ router.get("/similarproducts", async function (req, res) {
     //   });
     // }
 
-    let result = await getSimilarDiamonds(carat, color, clarity, shape, IsNatural, IsLabgrown);
+    let result = await getSimilarDiamonds(
+      carat,
+      color,
+      clarity,
+      shape,
+      IsNatural,
+      IsLabgrown
+    );
 
     if (result.statusCode === 200 && result.data.length > 0) {
       result.data = result.data.map((diamond) => {
@@ -1700,65 +1716,6 @@ router.get("/similarproducts", async function (req, res) {
     });
   }
 });
-
-// function getDefaultImage(Shape) {
-//   const lowerCaseShape = Shape.toLowerCase();
-//   switch (lowerCaseShape) {
-//     case "asscher":
-//     case "sq eme":
-//       return "https://jpsjewels.com/wp-content/uploads/Emerald-Square.png";
-//     case "baguette":
-//     case "bug":
-//       return "https://jpsjewels.com/wp-content/uploads/Tapered-baguette.png";
-//     case "cushion":
-//     case "cu":
-//       return "https://jpsjewels.com/wp-content/uploads/Cushion.png";
-//     case "square cushion":
-//     case "sq cu":
-//       return "https://jpsjewels.com/wp-content/uploads/Cushion.png";
-//     case "cushion modified":
-//       return "https://jpsjewels.com/wp-content/uploads/Cushion-Square.png";
-//     case "emerald":
-//     case "eme":
-//       return "https://jpsjewels.com/wp-content/uploads/Emerald-Square.png";
-//     case "square emerald":
-//       return "https://jpsjewels.com/wp-content/uploads/Emerald-Square.png";
-//     case "heart":
-//     case "he":
-//       return "https://jpsjewels.com/wp-content/uploads/Heart.png";
-//     case "heart modified":
-//       return "https://jpsjewels.com/wp-content/uploads/Heart.png";
-//     case "long radiant":
-//     case "long rad":
-//       return "https://jpsjewels.com/wp-content/uploads/Radiant.png";
-//     case "marquise":
-//     case "mq":
-//       return "https://jpsjewels.com/wp-content/uploads/Marquise.png";
-//     case "marquise modified":
-//       return "https://jpsjewels.com/wp-content/uploads/Marquise.png";
-//     case "oval":
-//     case "ovl":
-//       return "https://jpsjewels.com/wp-content/uploads/Oval.png";
-//     case "pear":
-//     case "pe":
-//       return "https://jpsjewels.com/wp-content/uploads/Pear.png";
-//     case "princess":
-//     case "pri":
-//       return "https://jpsjewels.com/wp-content/uploads/Princess.png";
-//     case "princess modified":
-//       return "https://jpsjewels.com/wp-content/uploads/Princess.png";
-//     case "radiant":
-//     case "rad":
-//       return "https://jpsjewels.com/wp-content/uploads/Radiant-Square.png";
-//     case "radiant modified":
-//       return "https://jpsjewels.com/wp-content/uploads/Radiant.png";
-//     case "round":
-//     case "rbc":
-//       return "https://jpsjewels.com/wp-content/uploads/Round.png";
-//     default:
-//       return "https://jpsjewels.com/wp-content/uploads/Round.png";
-//   }
-// }
 
 const fetchDaimondDetails = async (SkuId) => {
   const diamondSearchQuery = await stockSchema.findOne({
@@ -1804,6 +1761,8 @@ const fetchDaimondDetails = async (SkuId) => {
         Lab: 1,
         SKU: 1,
         SrNo: 1,
+        IsNatural: 1,
+        IsLabgrown: 1,
       },
     },
   ]);
@@ -1930,7 +1889,6 @@ router.get("/searchdata/:CertificateNo", async function (req, res) {
           diamond.CertificateNo
         );
         diamond.certificateUrl = certificateUrl;
-        console.log(certificateUrl, "crtfurl");
 
         const defaultImageUrl = getDefaultImageUrl(diamond.Shape);
         diamond.Image =

@@ -145,10 +145,6 @@ const addBilling = async (data, UserId) => {
     );
 
     const validDiamDetails = diamDetails.filter((item) => item !== null);
-    console.log("validDiamDetails", validDiamDetails);
-    console.log("validDiamDetailslength", validDiamDetails.length);
-    console.log("cartDetails", cartDetails);
-    console.log("cartDetailslength", cartDetails.length);
 
     // If no valid diamonds found, return early
     if (validDiamDetails.length !== cartDetails.length) {

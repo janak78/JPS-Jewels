@@ -23,6 +23,7 @@ const historyDetails = async () => {
         IsDelete: 1,
         IsNatural: 1,
         IsLabgrown: 1,
+        createdAt: 1,
       },
     },
   ]);
@@ -40,7 +41,7 @@ const historyDetails = async () => {
   };
 };
 
-router.get("/historydetails",  async (req, res) => {
+router.get("/historydetails", verifyLoginToken, async (req, res) => {
   try {
     const response = await historyDetails();
     res.status(response.statusCode).json(response);
@@ -88,6 +89,7 @@ const historyDetailsPopup = async (CronjobId) => {
         IsDelete: 1,
         IsNatural: 1,
         IsLabgrown: 1,
+        createdAt: 1,
       },
     },
   ]);
@@ -100,7 +102,7 @@ const historyDetailsPopup = async (CronjobId) => {
       historyCount > 0
         ? "historydetail retrieved successfully"
         : "No History found",
-    data: contact,
+    data: history,
     TotalCount: historyCount,
   };
 };
