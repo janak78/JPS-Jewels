@@ -1,19 +1,25 @@
 var express = require("express");
+const router = express.Router();
 const mongoose = require("mongoose");
 const multer = require("multer");
 const XLSX = require("xlsx");
 const stockSchema = require("./model");
+const Cronjobmodal = require("../cron/modal");
 const { verifyLoginToken } = require("../authentication/authentication");
 const fs = require("fs");
-
-const router = express.Router();
+const path = require("path");
+const { v4: uuidv4 } = require("uuid");
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "./");
+    const uploadPath = path.join(__dirname, "../../uploads"); // Ensure path consistency
+    if (!fs.existsSync(uploadPath)) {
+      fs.mkdirSync(uploadPath, { recursive: true });
+    }
+    cb(null, uploadPath);
   },
   filename: function (req, file, cb) {
-    cb(null, file.originalname.replace(/\s/g, ""));
+    cb(null, file.originalname.replace(/\s/g, "")); // Remove spaces from filename
   },
 });
 
@@ -39,6 +45,7 @@ function getDefaultImageUrl(Shape) {
     case "square emerald":
       return "https://jpsjewels.com/api/images/EMARALD.jpg";
     case "heart":
+    case "hrt":
     case "he":
     case "heart modified":
       return "https://jpsjewels.com/api/images/Heart.jpg";
@@ -200,20 +207,154 @@ function extractAttributes(input) {
   };
 }
 
-router.post("/addstocks", upload.single("file"), async (req, res) => {
+// const processExcelFile = async (filePath, IsNatural, IsLabgrown) => {
+//   console.log(IsNatural, IsLabgrown, "IsNatural and IsLabgrown values");
+//   try {
+//     console.log("1");
+//     const normalizedFilePath = path.normalize(path.resolve(filePath));
+
+//     if (!fs.existsSync(normalizedFilePath)) {
+//       throw new Error(`File not found: ${normalizedFilePath}`);
+//     }
+
+//     console.log(`Processing file: ${normalizedFilePath}`);
+
+//     const workbook = XLSX.readFile(normalizedFilePath);
+//     const sheetName = workbook.SheetNames[0];
+//     const worksheet = workbook.Sheets[sheetName];
+//     const jsonData = XLSX.utils.sheet_to_json(worksheet);
+
+//     const allowedFields = [
+//       "Image",
+//       "Video",
+//       "Diamond Type",
+//       "H&A",
+//       "Ratio",
+//       "Tinge",
+//       "Milky",
+//       "EyeC",
+//       "Table(%)",
+//       "Depth(%)",
+//       "measurements",
+//       "Amount U$",
+//       "Price $/ct",
+//       "Disc %",
+//       "Rap $",
+//       "Fluo Int",
+//       "Symm",
+//       "Polish",
+//       "Intensity",
+//       "Cut",
+//       "Clarity",
+//       "Color",
+//       "Carats",
+//       "Shape",
+//       "Certificate No",
+//       "Lab",
+//       "SKU",
+//       "Sr.No",
+//     ];
+
+//     const getHyperlink = (cell) =>
+//       cell && cell.l && cell.l.Target ? cell.l.Target : cell?.v || "";
+
+//     let insertedCount = 0;
+
+//     for (const data of jsonData) {
+//       const extraFields = Object.keys(data).filter(
+//         (field) => !allowedFields.includes(field)
+//       );
+//       if (extraFields.length > 0) {
+//         console.log(`Invalid fields detected: ${extraFields.join(", ")}`);
+//         continue;
+//       }
+
+//       const imageRef = Object.keys(worksheet).find(
+//         (key) => worksheet[key].v === data.Image
+//       );
+//       const videoRef = Object.keys(worksheet).find(
+//         (key) => worksheet[key].v === data.Video
+//       );
+//       const imageUrl = imageRef
+//         ? getHyperlink(worksheet[imageRef])
+//         : data.Image;
+//       const videoUrl = videoRef
+//         ? getHyperlink(worksheet[videoRef])
+//         : data.Video;
+
+//       const finalImage =
+//         imageUrl?.length > 0 ? imageUrl : getDefaultImageUrl(data.Shape);
+//       const colorIntensityData = extractAttributes(
+//         `${data.Color || ""} ${data.Intensity || ""}`
+//       );
+
+//       await stockSchema.findOneAndUpdate(
+//         { SKU: data.SKU },
+//         {
+//           Image: finalImage,
+//           Video: videoUrl,
+//           DiamondType: data["Diamond Type"],
+//           HA: data["H&A"],
+//           Ratio: data.Ratio,
+//           Tinge: data.Tinge,
+//           Milky: data.Milky,
+//           EyeC: data.EyeC,
+//           Table: data["Table(%)"],
+//           Depth: data["Depth(%)"],
+//           measurements: data.measurements,
+//           Amount: data["Amount U$"],
+//           Price: data["Price $/ct"],
+//           Disc: data["Disc %"],
+//           Rap: data["Rap $"],
+//           FluoInt: data["Fluo Int"],
+//           Symm: data.Symm,
+//           Polish: data.Polish,
+//           Intensity: colorIntensityData.intensity,
+//           Cut: data.Cut,
+//           Clarity: data.Clarity,
+//           Color: colorIntensityData.color,
+//           Overtone: colorIntensityData.overtone,
+//           Carats: data.Carats,
+//           Shape: data.Shape,
+//           CertificateNo: data["Certificate No"],
+//           Lab: data.Lab,
+//           SKU: data.SKU,
+//           SrNo: data["Sr.No"],
+//           IsNatural: IsNatural,
+//           IsLabgrown: IsLabgrown,
+//         },
+//         { upsert: true, new: true }
+//       );
+//       insertedCount++;
+//     }
+//     console.log(stockSchema, "Stock Schema");
+
+//     // ✅ Move processed file to success folder
+//     const successFolder = path.join(__dirname, "../successfullyProcessed");
+//     if (!fs.existsSync(successFolder)) fs.mkdirSync(successFolder);
+//     fs.renameSync(
+//       normalizedFilePath,
+//       path.join(successFolder, path.basename(normalizedFilePath))
+//     );
+
+//     console.log(
+//       `Processed file: ${normalizedFilePath} | ${insertedCount} records inserted.`
+//     );
+//   } catch (error) {
+//     console.error(`❌ Error processing ${filePath}:`, error);
+
+//     // ✅ Move failed files to error folder
+//     const errorFolder = path.join(__dirname, "../errorWhileProcessing");
+//     if (!fs.existsSync(errorFolder)) fs.mkdirSync(errorFolder);
+//     fs.renameSync(filePath, path.join(errorFolder, path.basename(filePath)));
+//   }
+// };
+
+const processExcelFile = async (filePath, IsNatural, IsLabgrown) => {
   try {
-    if (!req.file) {
-      return res
-        .status(400)
-        .json({ success: false, message: "No file uploaded" });
-    }
+    console.log(`📂 Processing file: ${filePath}`);
 
-    const isNatural = req.body.IsNatural;
-    const isLabgrown = req.body.IsLabgrown;
-
-    const fileName = req.file.filename;
-    const fileData = `./${fileName}`;
-    const workbook = XLSX.readFile(fileData);
+    const workbook = XLSX.readFile(filePath);
     const sheetName = workbook.SheetNames[0];
     const worksheet = workbook.Sheets[sheetName];
     const jsonData = XLSX.utils.sheet_to_json(worksheet);
@@ -247,55 +388,35 @@ router.post("/addstocks", upload.single("file"), async (req, res) => {
       "Lab",
       "SKU",
       "Sr.No",
-      "IsNatural",
-      "IsLabgrown",
     ];
 
-    const getHyperlink = (cell, worksheet) => {
-      if (cell && cell.l && cell.l.Target) {
-        return cell.l.Target; // Extract hyperlink
-      }
-      return cell ? cell.v : ""; // Return cell value if no hyperlink
-    };
-    
+    const getHyperlink = (cell) =>
+      cell && cell.l && cell.l.Target ? cell.l.Target : cell?.v || "";
+
+    let insertedCount = 0;
+
     for (const data of jsonData) {
-      const dataFields = Object.keys(data);
-      const extraFields = dataFields.filter(
+      const extraFields = Object.keys(data).filter(
         (field) => !allowedFields.includes(field)
       );
-    
       if (extraFields.length > 0) {
-        return res.status(400).json({
-          success: false,
-          message: `Invalid fields detected: ${extraFields.join(
-            ", "
-          )}. Only allowed fields are: ${allowedFields.join(", ")}`,
-        });
+        console.log(`⚠️ Invalid fields detected: ${extraFields.join(", ")}`);
+        continue;
       }
-    
-      // Get the actual hyperlink if the value is a placeholder text
-      const imageCellRef = Object.keys(worksheet).find(
+
+      // Extract image and video links from the Excel file
+      const imageRef = Object.keys(worksheet).find(
         (key) => worksheet[key].v === data.Image
       );
-      const videoCellRef = Object.keys(worksheet).find(
+      const videoRef = Object.keys(worksheet).find(
         (key) => worksheet[key].v === data.Video
       );
-    
-      const imageUrl = imageCellRef ? getHyperlink(worksheet[imageCellRef], worksheet) : data.Image;
-      const videoUrl = videoCellRef ? getHyperlink(worksheet[videoCellRef], worksheet) : data.Video;
-    console.log(imageUrl, "Image URL");
-      const defaultImageUrl = getDefaultImageUrl(data.Shape);
-      const finalImage = imageUrl && imageUrl.length > 0 ? imageUrl : defaultImageUrl;
+      const imageUrl = imageRef ? getHyperlink(worksheet[imageRef]) : data.Image;
+      const videoUrl = videoRef ? getHyperlink(worksheet[videoRef]) : data.Video;
 
-      console.log(finalImage, "Final Image");
-    
-      // Extract color and intensity attributes
-      const colorIntensityData = extractAttributes(
-        `${data.Color || ""} ${data.Intensity || ""}`
-      );
-    
-      // console.log(colorIntensityData, "Extracted Attributes");
-    
+      const finalImage = imageUrl?.length > 0 ? imageUrl : getDefaultImageUrl(data.Shape);
+      const colorIntensityData = extractAttributes(`${data.Color || ""} ${data.Intensity || ""}`);
+
       await stockSchema.findOneAndUpdate(
         { SKU: data.SKU },
         {
@@ -328,27 +449,321 @@ router.post("/addstocks", upload.single("file"), async (req, res) => {
           Lab: data.Lab,
           SKU: data.SKU,
           SrNo: data["Sr.No"],
-          IsNatural: isNatural,
-          IsLabgrown: isLabgrown,
+          IsNatural: IsNatural,
+          IsLabgrown: IsLabgrown,
         },
         { upsert: true, new: true }
       );
-    }    
+      insertedCount++;
+      await Cronjobmodal.updateOne(
+        { Record: filePath },
+        { InsertedRows: insertedCount }
+      );
+    }
 
-    fs.unlinkSync(fileName);
-    res
-      .status(200)
-      .json({ success: true, message: "Excel file processed successfully" });
+    console.log(`✅ ${insertedCount} records inserted from ${filePath}`);
+
+    // ✅ Update DB with inserted count
+
+    // ✅ Move processed file to "successfullyProcessed" folder
+    const successFolder = path.join(__dirname, "../successfullyProcessed");
+    if (!fs.existsSync(successFolder)) fs.mkdirSync(successFolder);
+    fs.renameSync(filePath, path.join(successFolder, path.basename(filePath)));
+
+    // return insertedCount;
+    
+    await Cronjobmodal.updateOne({ Record: filePath }, { Processed: true });
+  } catch (error) {
+    console.error(`❌ Error processing ${filePath}:`, error);
+
+    // ✅ Move failed files to "errorWhileProcessing" folder
+    const errorFolder = path.join(__dirname, "../errorWhileProcessing");
+    if (!fs.existsSync(errorFolder)) fs.mkdirSync(errorFolder);
+    fs.renameSync(filePath, path.join(errorFolder, path.basename(filePath)));
+
+    return 0;
+  }
+};
+
+module.exports = processExcelFile;
+
+router.post("/addstocks", upload.single("file"), async (req, res) => {
+  try {
+    if (!req.file) {
+      return res
+        .status(400)
+        .json({ success: false, message: "No file uploaded" });
+    }
+
+    const { IsNatural, IsLabgrown } = req.body;
+    if (IsNatural === undefined || IsLabgrown === undefined) {
+      return res.status(400).json({
+        success: false,
+        message: "Missing required fields: IsNatural or IsLabgrown",
+      });
+    }
+
+    const fileName = req.file.filename;
+
+    const existingFile = await Cronjobmodal.findOne({ Name: fileName });
+    if (existingFile) {
+      return res.status(400).json({
+        success: false,
+        message: `The file "${fileName}" already exists. Please upload a different file.`,
+      });
+    }
+
+    const filePath = path.join(__dirname, "../../uploads", fileName);
+
+    if (!fs.existsSync(filePath)) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Uploaded file not found!" });
+    }
+
+    // ✅ Read Excel file and count TotalRows
+    const workbook = XLSX.readFile(filePath);
+    const sheetName = workbook.SheetNames[0];
+    const jsonData = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
+
+    const totalRows = jsonData.length; // ✅ Store total row count
+
+    // ✅ Ensure pendingFiles folder exists
+    const pendingFolder = path.join(__dirname, "../pendingFiles");
+    if (!fs.existsSync(pendingFolder)) {
+      fs.mkdirSync(pendingFolder, { recursive: true });
+    }
+
+    const newFilePath = path.join(pendingFolder, fileName);
+
+    try {
+      fs.renameSync(filePath, newFilePath);
+    } catch (error) {
+      console.error("Error moving file:", error);
+      return res.status(500).json({
+        success: false,
+        message: "File move failed.",
+        error: error.message,
+      });
+    }
+
+    // ✅ Save metadata in DB
+    const scheduledTime = new Date();
+    scheduledTime.setMinutes(scheduledTime.getMinutes() + 1);
+
+    const cronjobEntry = new Cronjobmodal({
+      CronjobId: uuidv4(),
+      Name: fileName,
+      Record: newFilePath,
+      Processed: 0,
+      Time: scheduledTime.toISOString(),
+      Total: false,
+      IsCronjob_running: false,
+      IsDelete: false,
+      IsNatural: IsNatural,
+      IsLabgrown: IsLabgrown,
+      TotalRows: totalRows,
+      Status: "Pending",
+      InsertedRows: 0, // ✅ Initialize inserted count to 0
+    });
+
+    await cronjobEntry.save();
+
+    res.status(200).json({
+      success: true,
+      message:
+        "File uploaded successfully. Processing will happen in the background.",
+      fileName: fileName,
+      scheduledTime: scheduledTime.toISOString(),
+      totalRows: totalRows,
+    });
   } catch (error) {
     console.error(error);
-    res
-      .status(500)
-      .json({
-        success: false,
-        message: "An error occurred while processing the request",
-      });
+    res.status(500).json({
+      success: false,
+      message: "File upload failed.",
+      error: error.message,
+    });
   }
 });
+
+// router.post("/addstocks", upload.single("file"), async (req, res) => {
+//   try {
+//     if (!req.file) {
+//       return res
+//         .status(400)
+//         .json({ success: false, message: "No file uploaded" });
+//     }
+
+//     const isNatural = req.body.IsNatural;
+//     const isLabgrown = req.body.IsLabgrown;
+
+//     const fileName = req.file.filename;
+//     const fileData = `./${fileName}`;
+//     const workbook = XLSX.readFile(fileData);
+//     const sheetName = workbook.SheetNames[0];
+//     const worksheet = workbook.Sheets[sheetName];
+//     const jsonData = XLSX.utils.sheet_to_json(worksheet);
+
+//     const allowedFields = [
+//       "Image",
+//       "Video",
+//       "Diamond Type",
+//       "H&A",
+//       "Ratio",
+//       "Tinge",
+//       "Milky",
+//       "EyeC",
+//       "Table(%)",
+//       "Depth(%)",
+//       "measurements",
+//       "Amount U$",
+//       "Price $/ct",
+//       "Disc %",
+//       "Rap $",
+//       "Fluo Int",
+//       "Symm",
+//       "Polish",
+//       "Intensity",
+//       "Cut",
+//       "Clarity",
+//       "Color",
+//       "Carats",
+//       "Shape",
+//       "Certificate No",
+//       "Lab",
+//       "SKU",
+//       "Sr.No",
+//       "IsNatural",
+//       "IsLabgrown",
+//     ];
+
+//     const getHyperlink = (cell, worksheet) => {
+//       if (cell && cell.l && cell.l.Target) {
+//         return cell.l.Target; // Extract hyperlink
+//       }
+//       return cell ? cell.v : ""; // Return cell value if no hyperlink
+//     };
+
+//     let insertedCount = 0;
+
+//     for (const data of jsonData) {
+//       const dataFields = Object.keys(data);
+//       const extraFields = dataFields.filter(
+//         (field) => !allowedFields.includes(field)
+//       );
+
+//       if (extraFields.length > 0) {
+//         return res.status(400).json({
+//           success: false,
+//           statusCode: 422,
+//           message: `Invalid fields detected: ${extraFields.join(
+//             ", "
+//           )}. Only allowed fields are: ${allowedFields.join(", ")}`,
+//         });
+//       }
+
+//       // Get the actual hyperlink if the value is a placeholder text
+//       const imageCellRef = Object.keys(worksheet).find(
+//         (key) => worksheet[key].v === data.Image
+//       );
+//       const videoCellRef = Object.keys(worksheet).find(
+//         (key) => worksheet[key].v === data.Video
+//       );
+
+//       const imageUrl = imageCellRef
+//         ? getHyperlink(worksheet[imageCellRef], worksheet)
+//         : data.Image;
+//       const videoUrl = videoCellRef
+//         ? getHyperlink(worksheet[videoCellRef], worksheet)
+//         : data.Video;
+//       console.log(imageUrl, "Image URL");
+//       const defaultImageUrl = getDefaultImageUrl(data.Shape);
+//       const finalImage =
+//         imageUrl && imageUrl.length > 0 ? imageUrl : defaultImageUrl;
+
+//       console.log(finalImage, "Final Image");
+
+//       // Extract color and intensity attributes
+//       const colorIntensityData = extractAttributes(
+//         `${data.Color || ""} ${data.Intensity || ""}`
+//       );
+
+//       // console.log(colorIntensityData, "Extracted Attributes");
+
+//       await stockSchema.findOneAndUpdate(
+//         { SKU: data.SKU },
+//         {
+//           Image: finalImage,
+//           Video: videoUrl,
+//           DiamondType: data["Diamond Type"],
+//           HA: data["H&A"],
+//           Ratio: data.Ratio,
+//           Tinge: data.Tinge,
+//           Milky: data.Milky,
+//           EyeC: data.EyeC,
+//           Table: data["Table(%)"],
+//           Depth: data["Depth(%)"],
+//           measurements: data.measurements,
+//           Amount: data["Amount U$"],
+//           Price: data["Price $/ct"],
+//           Disc: data["Disc %"],
+//           Rap: data["Rap $"],
+//           FluoInt: data["Fluo Int"],
+//           Symm: data.Symm,
+//           Polish: data.Polish,
+//           Intensity: colorIntensityData.intensity,
+//           Cut: data.Cut,
+//           Clarity: data.Clarity,
+//           Color: colorIntensityData.color,
+//           Overtone: colorIntensityData.overtone,
+//           Carats: data.Carats,
+//           Shape: data.Shape,
+//           CertificateNo: data["Certificate No"],
+//           Lab: data.Lab,
+//           SKU: data.SKU,
+//           SrNo: data["Sr.No"],
+//           IsNatural: isNatural,
+//           IsLabgrown: isLabgrown,
+//         },
+//         { upsert: true, new: true }
+//       );
+//       insertedCount++;
+//     }
+
+//     // fs.unlinkSync(fileName);
+//     // res
+//     //   .status(200)
+//     //   .json({ success: true, message: "Excel file processed successfully" });
+//     const successFolder = path.join(__dirname, "../successfullyProcessed");
+//     if (!fs.existsSync(successFolder)) {
+//       fs.mkdirSync(successFolder);
+//     }
+
+//     const newFilePath = path.join(successFolder, fileName);
+//     fs.renameSync(fileData, newFilePath);
+
+//     res.status(200).json({
+//       success: true,
+//       message: `Excel file processed successfully. ${insertedCount} records inserted.`,
+//       fileLocation: newFilePath,
+//     });
+//   } catch (error) {
+//     console.error(error);
+//     const errorFolder = path.join(__dirname, "../errorWhileProcessing");
+//     if (!fs.existsSync(errorFolder)) {
+//       fs.mkdirSync(errorFolder);
+//     }
+//     fs.renameSync(filePath, path.join(errorFolder, fileName));
+
+//     res.status(500).json({
+//       success: false,
+//       message:
+//         "An error occurred while processing the file. Moved to error folder.",
+//       error: error.message,
+//     });
+//   }
+// });
 
 const labUrlMap = {
   HRD: "https://my.hrdantwerp.com/Download/GetGradingReportPdf/?reportNumber=",
@@ -401,6 +816,8 @@ const fetchStockDetails = async () => {
         Price: 1,
         Disc: 1,
         Rap: 1,
+        Intensity: 1,
+        Overtone: 1,
         FluoInt: 1,
         Symm: 1,
         Polish: 1,
@@ -413,12 +830,14 @@ const fetchStockDetails = async () => {
         Lab: 1,
         SKU: 1,
         SrNo: 1,
+        IsNatural: 1,
+        IsLabgrown: 1,
       },
     },
   ]);
 
   const stockCount = diamondsdetail.length;
-  console.log(diamondsdetail, "Stock Count"); 
+  // console.log(diamondsdetail, "Stock Count");
 
   return {
     statusCode: diamondsdetail.length > 0 ? 200 : 204,
@@ -708,7 +1127,12 @@ const fetchDiamondsPageDetails = async (query) => {
               if: {
                 $regexMatch: {
                   input: "$Color",
-                  regex: `^.*${query.Color.join(".*")}`,
+                  regex:
+                    query.Color &&
+                    Array.isArray(query.Color) &&
+                    query.Color.length > 0
+                      ? `^.*${query.Color.join(".*")}.*$`
+                      : ".*", // Default regex to match anything if query.Color is empty
                   options: "i",
                 },
               },
@@ -962,82 +1386,75 @@ router.get("/caretdata", async function (req, res) {
 const fetchShapeDataDetails = async (shape) => {
   try {
     const matchQuery = { IsDelete: false };
-
-    if (shape) {
-      matchQuery.Shape = shape;
-    }
+    if (shape) matchQuery.Shape = shape;
 
     let Carets;
 
     if (shape) {
       // Fetch 5 records for the selected shape
-      Carets = await stockSchema.aggregate([
-        { $match: matchQuery },
-        { $sort: { Amount: -1 } },
-        { $limit: 5 },
-        {
-          $project: {
-            Image: 1,
-            // Video: 1,
-            // DiamondType: 1,
-            // HA: 1,
-            // Ratio: 1,
-            // Tinge: 1,
-            // Milky: 1,
-            // EyeC: 1,
-            // Table: 1,
-            // Depth: 1,
-            // measurements: 1,
-            Amount: 1,
-            Price: 1,
-            // Disc: 1,
-            // Rap: 1,
-            // FluoInt: 1,
-            // Symm: 1,
-            // Polish: 1,
-            Cut: 1,
-            Clarity: 1,
-            Color: 1,
-            Carats: 1,
-            Shape: 1,
-            // CertificateNo: 1,
-            Lab: 1,
-            SKU: 1,
-            // SrNo: 1,
+      Carets = await stockSchema
+        .aggregate([
+          { $match: matchQuery },
+          { $sort: { Amount: -1 } },
+          { $limit: 5 },
+          {
+            $project: {
+              Image: 1,
+              Amount: 1,
+              Price: 1,
+              Cut: 1,
+              Clarity: 1,
+              Color: 1,
+              Carats: 1,
+              Shape: 1,
+              Lab: 1,
+              SKU: 1,
+            },
           },
-        },
-      ]);
+        ])
+        .allowDiskUse(true);
     } else {
-      // Fetch 5 records per unique shape WITHOUT grouping
-      Carets = await stockSchema.aggregate([
-        { $match: matchQuery },
-        { $sort: { Shape: 1, Amount: -1 } }, // Sort by Shape and Amount descending
-        {
-          $group: {
-            _id: "$Shape",
-            diamonds: { $push: "$$ROOT" },
+      // Efficiently fetch 5 records per shape
+      Carets = await stockSchema
+        .aggregate([
+          { $match: matchQuery },
+
+          // Group directly while limiting to prevent memory overload
+          {
+            $facet: {
+              groupedByShape: [
+                { $sort: { Amount: -1 } },
+                {
+                  $group: {
+                    _id: "$Shape",
+                    diamonds: { $push: "$$ROOT" },
+                  },
+                },
+                { $set: { diamonds: { $slice: ["$diamonds", 5] } } }, // ✅ Limit within each group
+              ],
+            },
           },
-        },
-        { $unwind: "$diamonds" }, // Flatten grouped diamonds array
-        { $sort: { "diamonds.Amount": -1 } }, // Sort by Amount descending within each shape
-        { $group: { _id: "$_id", diamonds: { $push: "$diamonds" } } }, // Re-group for slicing
-        { $project: { diamonds: { $slice: ["$diamonds", 5] } } }, // Take only top 5 per shape
-        { $unwind: "$diamonds" }, // Flatten the final result
-        {
-          $project: {
-            Image: "$diamonds.Image",
-            Amount: "$diamonds.Amount",
-            Price: "$diamonds.Price",
-            Cut: "$diamonds.Cut",
-            Clarity: "$diamonds.Clarity",
-            Color: "$diamonds.Color",
-            Carats: "$diamonds.Carats",
-            Shape: "$diamonds.Shape",
-            Lab: "$diamonds.Lab",
-            SKU: "$diamonds.SKU",
+          { $unwind: "$groupedByShape" },
+          { $replaceRoot: { newRoot: "$groupedByShape" } },
+
+          // Flatten structure
+          { $unwind: "$diamonds" },
+          {
+            $project: {
+              Image: "$diamonds.Image",
+              Amount: "$diamonds.Amount",
+              Price: "$diamonds.Price",
+              Cut: "$diamonds.Cut",
+              Clarity: "$diamonds.Clarity",
+              Color: "$diamonds.Color",
+              Carats: "$diamonds.Carats",
+              Shape: "$diamonds.Shape",
+              Lab: "$diamonds.Lab",
+              SKU: "$diamonds.SKU",
+            },
           },
-        },
-      ]);
+        ])
+        .allowDiskUse(true);
     }
 
     return {
@@ -1088,85 +1505,90 @@ router.get("/shapedata", async function (req, res) {
   }
 });
 
-const getSimilarDiamonds = async (carat, color, clarity, shape) => {
+const getSimilarDiamonds = async (carat, color, clarity, shape, IsNatural, IsLabgrown) => {
   try {
     const result = await fetchStockDetails();
 
-    if (
-      result.statusCode !== 200 ||
-      !result.data ||
-      !Array.isArray(result.data)
-    ) {
+    if (!result || result.statusCode !== 200 || !Array.isArray(result.data)) {
       return { statusCode: result.statusCode, data: [] };
     }
 
     const caratValue = parseFloat(carat);
-
-    let similarDiamonds = result.data.filter((diamond) => {
-      const diamondCarat = parseFloat(diamond.Carats);
-      return (
-        diamond.Shape === shape &&
-        (diamond.Color === color ||
-          (diamond.Clarity === clarity &&
-            Math.abs(diamondCarat - caratValue) <= 0.2))
-      );
+    
+    // ✅ Step 1: Pre-filter based on IsNatural & IsLabgrown
+    filteredData = result.data.filter((diamond) => {
+      return IsNatural ? diamond.IsNatural === true : diamond.IsLabgrown === true;
     });
+    
 
+    // ✅ Step 2: Process filtering in a single loop (Faster!)
+    let similarDiamonds = [];
+    
+    for (const diamond of filteredData) {
+      const diamondCarat = parseFloat(diamond.Carats);
+
+      if (
+        diamond.Shape === shape &&
+        (diamond.Color === color || 
+          (diamond.Clarity === clarity && Math.abs(diamondCarat - caratValue) <= 0.2))
+      ) {
+        similarDiamonds.push(diamond);
+      }
+    }
+
+    // ✅ Step 3: Expand the range only if no matches
     if (similarDiamonds.length === 0) {
-      similarDiamonds = result.data.filter((diamond) => {
+      similarDiamonds = filteredData.filter(diamond => {
         const diamondCarat = parseFloat(diamond.Carats);
         return (
           diamond.Shape === shape &&
           ((diamond.Color === color || diamond.Clarity === clarity) &&
-            Math.abs(diamondCarat - caratValue)) <= 0.3
+            Math.abs(diamondCarat - caratValue) <= 0.3)
         );
       });
     }
 
     if (similarDiamonds.length === 0) {
-      similarDiamonds = result.data.filter((diamond) => {
+      similarDiamonds = filteredData.filter(diamond => {
         const diamondCarat = parseFloat(diamond.Carats);
-        return (
-          diamond.Shape === shape && Math.abs(diamondCarat - caratValue) <= 0.4
-        );
+        return diamond.Shape === shape && Math.abs(diamondCarat - caratValue) <= 0.4;
       });
     }
 
+    // ✅ Step 4: Limit to top 5 results (Faster slice operation)
     similarDiamonds = similarDiamonds.slice(0, 5);
 
-    const projectedDiamonds = similarDiamonds.map((diamond) => ({
-      Image: diamond.Image,
-      Amount: diamond.Amount,
-      Price: diamond.Price,
-      Cut: diamond.Cut,
-      Clarity: diamond.Clarity,
-      Color: diamond.Color,
-      Carats: diamond.Carats,
-      Shape: diamond.Shape,
-      Lab: diamond.Lab,
-      SKU: diamond.SKU,
+    // ✅ Step 5: Project required fields
+    const projectedDiamonds = similarDiamonds.map(({ 
+      Image, Amount, Price, Cut, Clarity, Color, Carats, Shape, Lab, SKU, IsNatural, IsLabgrown, CertificateNo
+    }) => ({
+      Image, Amount, Price, Cut, Clarity, Color, Carats, Shape, Lab, SKU, IsNatural, IsLabgrown, CertificateNo
     }));
 
     return { statusCode: 200, data: projectedDiamonds };
+
   } catch (error) {
     console.error("Error in getSimilarDiamonds:", error.message);
     return { statusCode: 500, data: [], message: error.message };
   }
 };
 
+
+
 router.get("/similarproducts", async function (req, res) {
   try {
-    const { carat, color, clarity, shape } = req.query;
+    const { carat, color, clarity, shape, IsNatural, IsLabgrown } = req.query;
+    console.log(IsNatural, IsLabgrown, "IsNatural IsLabgrown"); 
 
-    if (!carat || !color || !clarity || !shape) {
-      return res.status(400).json({
-        statusCode: 400,
-        message:
-          "Missing required query parameters: carat, color, clarity, shape",
-      });
-    }
+    // if (!carat || !color || !clarity || !shape || !IsNatural || !IsLabgrown) {
+    //   return res.status(400).json({
+    //     statusCode: 400,
+    //     message:
+    //       "Missing required query parameters: carat, color, clarity, shape",
+    //   });
+    // }
 
-    let result = await getSimilarDiamonds(carat, color, clarity, shape);
+    let result = await getSimilarDiamonds(carat, color, clarity, shape, IsNatural, IsLabgrown);
 
     if (result.statusCode === 200 && result.data.length > 0) {
       result.data = result.data.map((diamond) => {
@@ -1344,7 +1766,7 @@ router.get("/data/:SkuId", async function (req, res) {
 
 const fetchSearchDaimondDetails = async (CertificateNo) => {
   const diamondSearchQuery = await stockSchema.findOne({
-    CertificateNo: CertificateNo,
+    SKU: CertificateNo,
     IsDelete: false,
   });
 
@@ -1420,6 +1842,7 @@ router.get("/searchdata/:CertificateNo", async function (req, res) {
           diamond.CertificateNo
         );
         diamond.certificateUrl = certificateUrl;
+        console.log(certificateUrl, "crtfurl");
 
         const defaultImageUrl = getDefaultImageUrl(diamond.Shape);
         diamond.Image =
@@ -1532,4 +1955,4 @@ router.delete("/deletestock/:SKU", verifyLoginToken, async (req, res) => {
   }
 });
 
-module.exports = router;
+module.exports = { router, processExcelFile };

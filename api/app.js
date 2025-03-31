@@ -9,6 +9,7 @@ var cors = require("cors");
 var nocache = require("nocache");
 
 var initMongo = require("./config.js/mongo");
+require("./features/cron/cronjob");
 
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
@@ -18,9 +19,9 @@ var app = express();
 // New
 // Signup Step
 var superadminroutes = require("./features/Superadmin/route");
-var billingroutes = require("./features/billing/route");  
+var billingroutes = require("./features/billing/route");
 var cartroutes = require("./features/cart/route");
-var stockroutes = require("./features/stock/route");
+var { router: stockroutes } = require("./features/stock/route");
 var userroutes = require("./features/users/route");
 var contactroutes = require("./features/contactus/route");
 var resetpasswordroutes = require("./features/resetpassword/route");
