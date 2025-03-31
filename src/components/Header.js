@@ -344,7 +344,7 @@ const Header = () => {
                             }
                             name="CertificateNo"
                             label="Search"
-                            placeholder="Search by SKU number"
+                            placeholder="Search by Stock Id number"
                             type="text"
                             className="custom-textfield w-100"
                             fullWidth

@@ -475,6 +475,8 @@ const fetchStockDetails = async () => {
         Price: 1,
         Disc: 1,
         Rap: 1,
+        Intensity: 1,
+        Overtone: 1,
         FluoInt: 1,
         Symm: 1,
         Polish: 1,
@@ -487,6 +489,8 @@ const fetchStockDetails = async () => {
         Lab: 1,
         SKU: 1,
         SrNo: 1,
+        IsNatural: 1,
+        IsLabgrown: 1,
       },
     },
   ]);
@@ -550,11 +554,18 @@ const fetchDiamondsPageDetails = async (query) => {
     }
 
     if (query.Shape?.length) {
+      // Ensure Shape is an array and convert frontend values to lowercase
+      const shapesArray = Array.isArray(query.Shape) ? query.Shape : [query.Shape];
+      const lowerCaseShapes = shapesArray.map((shape) => shape.toLowerCase());
+    
       // If "Other" (empty string) is selected, remove shape filtering
-      if (query.Shape.includes("other")) {
+      if (lowerCaseShapes.includes("other")) {
         delete matchStage.Shape;
       } else {
-        matchStage.Shape = { $in: query.Shape };
+        // Use case-insensitive regex matching for MongoDB
+        matchStage.Shape = { 
+          $in: lowerCaseShapes.map((shape) => new RegExp(`^${shape}$`, "i")) 
+        };
       }
     }
     
@@ -816,7 +827,7 @@ const fetchDiamondsPageDetails = async (query) => {
     );
 
     return {
-      statusCode: diamondDetailsPage.length === 0 ? 204 : 200,
+      statusCode: diamondDetailsPage.length === 0 ? 404 : 200,
       message:
         diamondDetailsPage.length > 0
           ? "diamondDetailsPage retrieved successfully"
@@ -901,7 +912,7 @@ router.post("/data/page", async function (req, res) {
       Tinge,
       Intensity,
     ].map((val) => (val && !Array.isArray(val) ? [val] : val));
-
+console.log(Shape,"shape-----------------")
     const result = await fetchDiamondsPageDetails({
       pageSize,
       pageNumber,
@@ -1168,43 +1179,126 @@ router.get("/shapedata", async function (req, res) {
   }
 });
 
-const getSimilarDiamonds = async (carat, color, clarity, shape) => {
+// const getSimilarDiamonds = async (carat, color, clarity, shape) => {
+//   try {
+//     const result = await fetchStockDetails();
+
+//     if (
+//       result.statusCode !== 200 ||
+//       !result.data ||
+//       !Array.isArray(result.data)
+//     ) {
+//       return { statusCode: result.statusCode, data: [] };
+//     }
+
+//     const caratValue = parseFloat(carat);
+
+//     let similarDiamonds = result.data.filter((diamond) => {
+//       const diamondCarat = parseFloat(diamond.Carats);
+//       return (
+//         diamond.Shape === shape &&
+//         (diamond.Color === color ||
+//           (diamond.Clarity === clarity &&
+//             Math.abs(diamondCarat - caratValue) <= 0.2))
+//       );
+//     });
+
+//     if (similarDiamonds.length === 0) {
+//       similarDiamonds = result.data.filter((diamond) => {
+//         const diamondCarat = parseFloat(diamond.Carats);
+//         return (
+//           diamond.Shape === shape &&
+//           ((diamond.Color === color || diamond.Clarity === clarity) &&
+//             Math.abs(diamondCarat - caratValue)) <= 0.3
+//         );
+//       });
+//     }
+
+//     if (similarDiamonds.length === 0) {
+//       similarDiamonds = result.data.filter((diamond) => {
+//         const diamondCarat = parseFloat(diamond.Carats);
+//         return (
+//           diamond.Shape === shape && Math.abs(diamondCarat - caratValue) <= 0.4
+//         );
+//       });
+//     }
+
+//     similarDiamonds = similarDiamonds.slice(0, 5);
+
+//     const projectedDiamonds = similarDiamonds.map((diamond) => ({
+//       Image: diamond.Image,
+//       Amount: diamond.Amount,
+//       Price: diamond.Price,
+//       Cut: diamond.Cut,
+//       Clarity: diamond.Clarity,
+//       Color: diamond.Color,
+//       Carats: diamond.Carats,
+//       Shape: diamond.Shape,
+//       Lab: diamond.Lab,
+//       SKU: diamond.SKU,
+//     }));
+
+//     return { statusCode: 200, data: projectedDiamonds };
+//   } catch (error) {
+//     console.error("Error in getSimilarDiamonds:", error.message);
+//     return { statusCode: 500, data: [], message: error.message };
+//   }
+// };
+
+const getSimilarDiamonds = async (
+  carat,
+  color,
+  clarity,
+  shape,
+  IsNatural,
+  IsLabgrown
+) => {
   try {
     const result = await fetchStockDetails();
 
-    if (
-      result.statusCode !== 200 ||
-      !result.data ||
-      !Array.isArray(result.data)
-    ) {
+    if (!result || result.statusCode !== 200 || !Array.isArray(result.data)) {
       return { statusCode: result.statusCode, data: [] };
     }
 
     const caratValue = parseFloat(carat);
 
-    let similarDiamonds = result.data.filter((diamond) => {
+    // ✅ Step 1: Pre-filter based on IsNatural & IsLabgrown
+    filteredData = result.data.filter((diamond) => {
+      return IsNatural
+        ? diamond.IsNatural === true
+        : diamond.IsLabgrown === true;
+    });
+
+    // ✅ Step 2: Process filtering in a single loop (Faster!)
+    let similarDiamonds = [];
+
+    for (const diamond of filteredData) {
       const diamondCarat = parseFloat(diamond.Carats);
-      return (
+
+      if (
         diamond.Shape === shape &&
         (diamond.Color === color ||
           (diamond.Clarity === clarity &&
             Math.abs(diamondCarat - caratValue) <= 0.2))
-      );
-    });
+      ) {
+        similarDiamonds.push(diamond);
+      }
+    }
 
+    // ✅ Step 3: Expand the range only if no matches
     if (similarDiamonds.length === 0) {
-      similarDiamonds = result.data.filter((diamond) => {
+      similarDiamonds = filteredData.filter((diamond) => {
         const diamondCarat = parseFloat(diamond.Carats);
         return (
           diamond.Shape === shape &&
-          ((diamond.Color === color || diamond.Clarity === clarity) &&
-            Math.abs(diamondCarat - caratValue)) <= 0.3
+          (diamond.Color === color || diamond.Clarity === clarity) &&
+          Math.abs(diamondCarat - caratValue) <= 0.3
         );
       });
     }
 
     if (similarDiamonds.length === 0) {
-      similarDiamonds = result.data.filter((diamond) => {
+      similarDiamonds = filteredData.filter((diamond) => {
         const diamondCarat = parseFloat(diamond.Carats);
         return (
           diamond.Shape === shape && Math.abs(diamondCarat - caratValue) <= 0.4
@@ -1212,20 +1306,41 @@ const getSimilarDiamonds = async (carat, color, clarity, shape) => {
       });
     }
 
+    // ✅ Step 4: Limit to top 5 results (Faster slice operation)
     similarDiamonds = similarDiamonds.slice(0, 5);
 
-    const projectedDiamonds = similarDiamonds.map((diamond) => ({
-      Image: diamond.Image,
-      Amount: diamond.Amount,
-      Price: diamond.Price,
-      Cut: diamond.Cut,
-      Clarity: diamond.Clarity,
-      Color: diamond.Color,
-      Carats: diamond.Carats,
-      Shape: diamond.Shape,
-      Lab: diamond.Lab,
-      SKU: diamond.SKU,
-    }));
+    // ✅ Step 5: Project required fields
+    const projectedDiamonds = similarDiamonds.map(
+      ({
+        Image,
+        Amount,
+        Price,
+        Cut,
+        Clarity,
+        Color,
+        Carats,
+        Shape,
+        Lab,
+        SKU,
+        IsNatural,
+        IsLabgrown,
+        CertificateNo,
+      }) => ({
+        Image,
+        Amount,
+        Price,
+        Cut,
+        Clarity,
+        Color,
+        Carats,
+        Shape,
+        Lab,
+        SKU,
+        IsNatural,
+        IsLabgrown,
+        CertificateNo,
+      })
+    );
 
     return { statusCode: 200, data: projectedDiamonds };
   } catch (error) {
@@ -1234,42 +1349,42 @@ const getSimilarDiamonds = async (carat, color, clarity, shape) => {
   }
 };
 
-router.get("/similarproducts", async function (req, res) {
-  try {
-    const { carat, color, clarity, shape } = req.query;
+// router.get("/similarproducts", async function (req, res) {
+//   try {
+//     const { carat, color, clarity, shape } = req.query;
 
-    if (!carat || !color || !clarity || !shape) {
-      return res.status(400).json({
-        statusCode: 400,
-        message:
-          "Missing required query parameters: carat, color, clarity, shape",
-      });
-    }
+//     if (!carat || !color || !clarity || !shape) {
+//       return res.status(400).json({
+//         statusCode: 400,
+//         message:
+//           "Missing required query parameters: carat, color, clarity, shape",
+//       });
+//     }
 
-    let result = await getSimilarDiamonds(carat, color, clarity, shape);
+//     let result = await getSimilarDiamonds(carat, color, clarity, shape);
 
-    if (result.statusCode === 200 && result.data.length > 0) {
-      result.data = result.data.map((diamond) => {
-        return {
-          ...diamond,
-          certificateUrl: getCertificateUrl(diamond.Lab, diamond.CertificateNo),
-          Image:
-            diamond.Image && diamond.Image.length > 0
-              ? diamond.Image
-              : getDefaultImageUrl(diamond.Shape),
-        };
-      });
-    }
+//     if (result.statusCode === 200 && result.data.length > 0) {
+//       result.data = result.data.map((diamond) => {
+//         return {
+//           ...diamond,
+//           certificateUrl: getCertificateUrl(diamond.Lab, diamond.CertificateNo),
+//           Image:
+//             diamond.Image && diamond.Image.length > 0
+//               ? diamond.Image
+//               : getDefaultImageUrl(diamond.Shape),
+//         };
+//       });
+//     }
 
-    res.status(result.statusCode).json(result);
-  } catch (error) {
-    console.error("Error in /similarproducts route:", error.message);
-    res.status(500).json({
-      statusCode: 500,
-      message: "Internal Server Error",
-    });
-  }
-});
+//     res.status(result.statusCode).json(result);
+//   } catch (error) {
+//     console.error("Error in /similarproducts route:", error.message);
+//     res.status(500).json({
+//       statusCode: 500,
+//       message: "Internal Server Error",
+//     });
+//   }
+// });
 
 // function getDefaultImage(Shape) {
 //   const lowerCaseShape = Shape.toLowerCase();
@@ -1330,6 +1445,50 @@ router.get("/similarproducts", async function (req, res) {
 //   }
 // }
 
+router.get("/similarproducts", async function (req, res) {
+  try {
+    const { carat, color, clarity, shape, IsNatural, IsLabgrown } = req.query;
+
+    // if (!carat || !color || !clarity || !shape || !IsNatural || !IsLabgrown) {
+    //   return res.status(400).json({
+    //     statusCode: 400,
+    //     message:
+    //       "Missing required query parameters: carat, color, clarity, shape",
+    //   });
+    // }
+
+    let result = await getSimilarDiamonds(
+      carat,
+      color,
+      clarity,
+      shape,
+      IsNatural,
+      IsLabgrown
+    );
+
+    if (result.statusCode === 200 && result.data.length > 0) {
+      result.data = result.data.map((diamond) => {
+        return {
+          ...diamond,
+          certificateUrl: getCertificateUrl(diamond.Lab, diamond.CertificateNo),
+          Image:
+            diamond.Image && diamond.Image.length > 0
+              ? diamond.Image
+              : getDefaultImageUrl(diamond.Shape),
+        };
+      });
+    }
+
+    res.status(result.statusCode).json(result);
+  } catch (error) {
+    console.error("Error in /similarproducts route:", error.message);
+    res.status(500).json({
+      statusCode: 500,
+      message: "Internal Server Error",
+    });
+  }
+});
+
 const fetchDaimondDetails = async (SkuId) => {
   const diamondSearchQuery = await stockSchema.findOne({
     SKU: SkuId,
@@ -1374,6 +1533,8 @@ const fetchDaimondDetails = async (SkuId) => {
         Lab: 1,
         SKU: 1,
         SrNo: 1,
+        IsNatural: 1,
+        IsLabgrown: 1,
       },
     },
   ]);

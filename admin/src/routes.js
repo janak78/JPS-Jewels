@@ -5,6 +5,7 @@ import Stock from "views/Stock/Stock";
 import Addcard from "views/Addcart/Addcard";
 import Order from "views/Order/Order";
 import Contact from "views/Contact/Contact";
+import History from "views/History/History";
 
 var routes = [
   {
@@ -48,6 +49,13 @@ var routes = [
     name: "Contacts",
     icon: "fa-duotone fa-solid fa-envelope",
     component: <Contact />,
+    layout: "/admin",
+  },
+  {
+    path: "/History",
+    name: "History",
+    icon: "fa-solid fa-clock-rotate-left",
+    component: <History />,
     layout: "/admin",
   },
 
