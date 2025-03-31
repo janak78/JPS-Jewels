@@ -98,7 +98,6 @@ const Tablelogin = () => {
             },
           }
         );
-        console.log("Response:", response);
         setUploadStatus(response.data.message);
         showToast.success("File uploaded successfully!");
       } catch (error) {

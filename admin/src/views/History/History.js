@@ -106,7 +106,6 @@ const History = () => {
       );
       if (response?.status === 200) {
         setDialogData(response?.data?.data);
-        console.log(dialogData,"data")
       } else {
         setDialogData(null);
       }

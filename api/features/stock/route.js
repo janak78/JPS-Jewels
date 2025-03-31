@@ -422,7 +422,7 @@ function extractAttributes(input) {
 
 const processExcelFile = async (filePath, IsNatural, IsLabgrown) => {
   try {
-    console.log(`📂 Processing file: ${filePath}`);
+    console.log(` Processing file: ${filePath}`);
 
     const workbook = XLSX.readFile(filePath);
     const sheetName = workbook.SheetNames[0];
@@ -538,7 +538,7 @@ const processExcelFile = async (filePath, IsNatural, IsLabgrown) => {
       );
     }
 
-    console.log(`✅ ${insertedCount} records inserted from ${filePath}`);
+    console.log(` ${insertedCount} records inserted from ${filePath}`);
 
     // ✅ Update DB with inserted count
 
@@ -1887,7 +1887,6 @@ router.get("/searchdata/:CertificateNo", async function (req, res) {
           diamond.CertificateNo
         );
         diamond.certificateUrl = certificateUrl;
-        console.log(certificateUrl, "crtfurl");
 
         const defaultImageUrl = getDefaultImageUrl(diamond.Shape);
         diamond.Image =
