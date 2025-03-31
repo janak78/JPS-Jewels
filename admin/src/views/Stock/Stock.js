@@ -98,10 +98,11 @@ const Tablelogin = () => {
             },
           }
         );
-        setUploadStatus("File uploaded successfully!");
+        setUploadStatus(response.data.message);
         showToast.success("File uploaded successfully!");
       } catch (error) {
-        setUploadStatus("Error uploading file.");
+        console.log("Error:", error);
+        setUploadStatus(error.response?.data?.message || "Upload failed");
         console.error("Error:", error);
       }
     } else {

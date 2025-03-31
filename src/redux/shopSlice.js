@@ -25,12 +25,11 @@ export const diamondsApi = createApi({
 });
 
 export const fetchSimilarDiamonds =
-  (carat, color, clarity, shape) => async (dispatch) => {
+  (carat, color, clarity, shape, IsNatural, IsLabgrown) => async (dispatch) => {
     try {
       const res = await AxiosInstance.get(
-        `${baseUrl}/stock/similarproducts?carat=${carat}&color=${color}&clarity=${clarity}&shape=${shape}`
+        `${baseUrl}/stock/similarproducts?carat=${carat}&color=${color}&clarity=${clarity}&shape=${shape}&IsNatural=${IsNatural}&IsLabgrown=${IsLabgrown}`
       );
-
       if (res.data.statusCode === 200) {
         dispatch(setSimilarDiamonds(res.data.data.slice(0, 4)));
       } else {
@@ -59,10 +58,9 @@ export const fetchShapeData = createAsyncThunk(
   "shop/fetchShapeData",
   async (shapeValue = null, { rejectWithValue }) => {
     try {
-      const response = await AxiosInstance.get(
-        `${baseUrl}/stock/shapedata`,
-        { params: shapeValue ? { shape: shapeValue } : {} }
-      );
+      const response = await AxiosInstance.get(`${baseUrl}/stock/shapedata`, {
+        params: shapeValue ? { shape: shapeValue } : {},
+      });
 
       if (response.data.result.statusCode === 200) {
         return response.data.result.data; // Returning full data without slicing
@@ -75,10 +73,6 @@ export const fetchShapeData = createAsyncThunk(
     }
   }
 );
-
-
-
-
 
 export const { useFetchDiamondsQuery } = diamondsApi;
 

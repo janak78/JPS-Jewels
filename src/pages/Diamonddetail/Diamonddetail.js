@@ -82,6 +82,7 @@ const Diamonddetail = () => {
   }, [userId]);
 
   const similarDiamonds = useSelector((state) => state.shop.similarDiamonds);
+
   useEffect(() => {
     if (
       diamondData?.Carats &&
@@ -95,7 +96,9 @@ const Diamonddetail = () => {
           diamondData.Carats,
           diamondData.Color,
           diamondData.Clarity,
-          diamondData.Shape
+          diamondData.Shape,
+          !!diamondData.IsNatural, // Convert to boolean
+          !!diamondData.IsLabgrown // Convert to boolean
         )
       ).finally(() => setItsLoading(false));
     } else {
@@ -173,7 +176,11 @@ const Diamonddetail = () => {
           JSON.stringify(visitedDiamonds)
         );
 
-        setVisitedDiamonds([...visitedDiamonds]); // Update state immediately
+        const filteredVisitedDiamonds = visitedDiamonds.filter(
+          (d) => d.SKU !== diamondData.SKU
+        );
+
+        setVisitedDiamonds(filteredVisitedDiamonds); // Update state immediately
       }
     }
   }, [diamondData]);
@@ -304,35 +311,31 @@ const Diamonddetail = () => {
               {diamondData?.Lab} {diamondData?.Cut}
             </h2>
             <p className="diamond-product-sku">
-              SKU: {diamondData?.SKU} &nbsp; | &nbsp; Category:{" "}
+              Stock Id: {diamondData?.SKU} &nbsp; | &nbsp; Category:{" "}
               <span className="categorytext"> Diamond</span>
             </p>
             <hr className="diamond-description-divider" />
 
             {/* Buttons */}
             <div className="diamond-product-buttons-container">
-              {diamondData?.Video && diamondData.Video.startsWith("http") ? (
-                <Button
-                  variant="contained"
-                  className="diamond-product-video-btn"
-                  startIcon={<PlayCircleOutlineIcon />}
-                  onClick={handleVideoClick}
-                  fullWidth
-                >
-                  Video
-                </Button>
-              ) : null}
-              {diamondData?.certificateUrl ? (
-                <Button
-                  variant="contained"
-                  className="diamond-product-certificate-btn"
-                  startIcon={<DescriptionIcon />}
-                  onClick={handleCertificateClick}
-                  fullWidth
-                >
-                  Certificate
-                </Button>
-              ) : null}
+              <Button
+                variant="contained"
+                className="diamond-product-video-btn"
+                startIcon={<PlayCircleOutlineIcon />}
+                onClick={handleVideoClick}
+                fullWidth
+              >
+                Video
+              </Button>
+              <Button
+                variant="contained"
+                className="diamond-product-certificate-btn"
+                startIcon={<DescriptionIcon />}
+                onClick={handleCertificateClick}
+                fullWidth
+              >
+                Certificate
+              </Button>
             </div>
 
             {/* Video dialog */}
@@ -533,28 +536,32 @@ const Diamonddetail = () => {
                             diamondData?.CertificateNo
                               ? diamondData?.CertificateNo
                               : " N/A",
-                            "Rap $",
-                            diamondData?.Rap ? diamondData?.Rap : "N/A",
+                            "Rap",
+                            diamondData?.Rap ? `$${diamondData.Rap}` : "N/A",
                           ],
                           [
                             "Diamond Type",
                             diamondData?.DiamondType
                               ? diamondData?.DiamondType
                               : "N/A",
-                            "Disc %",
-                            diamondData?.Disc ? diamondData?.Disc : "N/A",
+                            "Disc",
+                            diamondData?.Disc ? `${diamondData.Disc}%` : "N/A",
                           ],
                           [
                             "Shape",
                             diamondData?.Shape ? diamondData?.Shape : "N/A",
-                            "Price $/ct",
-                            diamondData?.Price ? diamondData?.Price : "N/A",
+                            "Price per carat",
+                            diamondData?.Price
+                              ? `$${diamondData.Price}`
+                              : "N/A",
                           ],
                           [
                             "Carat",
                             diamondData?.Carats ? diamondData?.Carats : "N/A",
-                            "Amount $",
-                            diamondData?.Amount ? diamondData?.Amount : "N/A",
+                            "Amount",
+                            diamondData?.Amount
+                              ? `$${diamondData.Amount}`
+                              : "N/A",
                           ],
                           [
                             "Color",

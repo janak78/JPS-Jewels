@@ -43,6 +43,7 @@ import red from "../../assets/colorimages/red.png";
 import violet from "../../assets/colorimages/violet.png";
 import white from "../../assets/colorimages/white.png";
 import yellow from "../../assets/colorimages/yellow.png";
+import { skipToken } from "@reduxjs/toolkit/query";
 
 const createUnsignedJWT = (payload) => {
   const header = { alg: "none", typ: "JWT" };
@@ -88,18 +89,22 @@ const DiamondsGrid = () => {
     filteredData.slice(index * 2, index * 2 + 2)
   );
 
-  const { data, error, isLoading } = useFetchDiamondsQuery({
-    pageNumber: currentPage,
-    pageSize: itemsPerPage,
-    filterData: filterData,
-  });
+  const { data, error, isLoading } = useFetchDiamondsQuery(
+    filterData
+      ? {
+          pageNumber: currentPage,
+          pageSize: itemsPerPage,
+          filterData: filterData,
+        }
+      : skipToken
+  );
 
   // const diamonds = data?.result?.data || [];
   const diamonds = data?.result?.data || [];
 
   useEffect(() => {
     if (query !== "filter") {
-      const decodedToken = jwtDecode(localStorage.getItem("filterToken"));
+      const decodedToken = jwtDecode(localStorage?.getItem("filterToken"));
       setShowFilterData(decodedToken);
       setFilterData(decodedToken);
       setShape(decodedToken.Shape);
@@ -260,7 +265,7 @@ const DiamondsGrid = () => {
       icon: "",
       name: "Cush Mod",
       value: [
-        "CUSHION",
+        "Cushion",
         "cu",
         "square cushion",
         "sq cu",
@@ -292,6 +297,7 @@ const DiamondsGrid = () => {
         "ecmb",
         "ecm",
         "elegance emerald",
+        "SqEmerald",
       ],
     },
     {
@@ -320,7 +326,7 @@ const DiamondsGrid = () => {
     {
       icon: "",
       name: "Marquise",
-      value: ["Marquise", "mq", "marquise modified", "mmc", "mq. stepcut"],
+      value: ["Marquise", "mq", "marquise modified", "mmc", "MQ. STEPCUT"],
     },
     {
       icon: "",
@@ -343,14 +349,14 @@ const DiamondsGrid = () => {
     {
       icon: "",
       name: "Trapezoid",
-      value: ["TRAPEZOID", "tp", "trapez", "wide trapezoid", "long trapezoid"],
+      value: ["TRAPEZOID", "tp", "trapez", "wide trapezoid", "LONG TRAPEZOID"],
     },
     { icon: "", name: "Bullets", value: ["BULLET", "bullet cut"] },
     { icon: "", name: "Kite", value: ["KITE", "kmsc"] },
     { icon: "", name: "Shield", value: ["SHIELD", "scad", "sld"] },
     { icon: "", name: "Pentagonal", value: ["PENTAGONAL", "long pentagon"] },
     { icon: "", name: "Hexagonal", value: ["HEXAGONAL"] },
-    { icon: "", name: "Octagonal", value: ["long octagon"] },
+    { icon: "", name: "Octagonal", value: ["LONG OCTAGON"] },
     { name: "Other", value: ["other"] },
   ];
 
@@ -534,10 +540,10 @@ const DiamondsGrid = () => {
 
   const toggleShape = (values) => {
     setShape((prevShapes) => {
-      const isSelected = values.some((val) => prevShapes.includes(val));
+      const isSelected = values.some((val) => prevShapes?.includes(val));
 
       if (isSelected) {
-        return prevShapes.filter((s) => !values.includes(s));
+        return prevShapes.filter((s) => !values?.includes(s));
       } else {
         return [...prevShapes, ...values];
       }
@@ -570,7 +576,7 @@ const DiamondsGrid = () => {
   const [selectedcutoption, setSelectedcutoption] = useState([]);
 
   const togglecutoption = (name) => {
-    const isSelected = selectedcutoption.includes(name);
+    const isSelected = selectedcutoption?.includes(name);
 
     let newCutOptions = isSelected ? [] : [name]; // Toggle the clicked option
     setSelectedcutoption(newCutOptions);
@@ -1052,16 +1058,30 @@ const DiamondsGrid = () => {
       IsNatural: diamondType == 0,
       IsLabgrown: diamondType == 1,
     };
+
     setFilterData(payload);
 
-    const filterToken = createUnsignedJWT(payload);
-    localStorage.setItem("filterToken", JSON.stringify(filterToken));
-    setSearchParams({ q: filterToken });
+    // const filterToken = createUnsignedJWT(payload);
+    // localStorage.setItem("filterToken", JSON.stringify(filterToken));
+    // setSearchParams({ q: filterToken });
   };
+  useEffect(() => {
+    const updateQuery = () => {
+      if (data && !isLoading && !error) {
+        const filterToken = createUnsignedJWT(filterData);
+        localStorage.setItem("filterToken", JSON.stringify(filterToken));
+        setSearchParams({ q: filterToken });
+      } else {
+        if (error) {
+          showToast.error(error?.data?.result?.message);
+        }
+      }
+    };
+
+    updateQuery();
+  }, [data, isLoading, error]);
 
   if (isLoading) return <DiamondLoader />;
-  if (error) return <p className="error">{error.message}</p>;
-
   return (
     <>
       {query === "filter" ? (
@@ -1179,7 +1199,7 @@ const DiamondsGrid = () => {
                   >
                     {icon.map((value) => {
                       const isSelected = value.value.some((val) =>
-                        shape.includes(val)
+                        shape?.includes(val)
                       );
 
                       return (
@@ -2371,7 +2391,7 @@ const DiamondsGrid = () => {
                               <span>
                                 {[
                                   ...new Set(
-                                    value.map(
+                                    value?.map(
                                       (val) =>
                                         icon.find((item) =>
                                           item.value.includes(val)

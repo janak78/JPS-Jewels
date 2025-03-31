@@ -9,6 +9,7 @@ var cors = require("cors");
 var nocache = require("nocache");
 
 var initMongo = require("./config.js/mongo");
+require("./features/cron/cronjob");
 
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
@@ -18,12 +19,13 @@ var app = express();
 // New
 // Signup Step
 var superadminroutes = require("./features/Superadmin/route");
-var billingroutes = require("./features/billing/route");  
+var billingroutes = require("./features/billing/route");
 var cartroutes = require("./features/cart/route");
-var stockroutes = require("./features/stock/route");
+var { router: stockroutes } = require("./features/stock/route");
 var userroutes = require("./features/users/route");
 var contactroutes = require("./features/contactus/route");
 var resetpasswordroutes = require("./features/resetpassword/route");
+var historyroutes = require("./features/history/route");
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
@@ -52,7 +54,8 @@ app.use("/api/cart", cartroutes);
 app.use("/api/stock", stockroutes);
 app.use("/api/user", userroutes);
 app.use("/api/contact", contactroutes);
-app.use("/api/resetpassword", resetpasswordroutes);
+app.use("/api/resetpassword", resetpasswordroutes); 
+app.use("/api/history", historyroutes); 
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
