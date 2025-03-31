@@ -40,6 +40,7 @@
     "querystring": "^0.2.1",
     "strong-password-generator": "^1.0.6",
     "winston": "^3.17.0",
+    "ws": "^8.18.1",
     "xlsx": "^0.18.5",
     "xmldom": "^0.6.0",
     "yup": "^1.4.0"

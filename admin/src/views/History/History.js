@@ -55,7 +55,7 @@ const History = () => {
 
   const fetchUsers = async () => {
     try {
-      const res = await AxiosInstance.get(`/contact/contactdetails`);
+      const res = await AxiosInstance.get(`/history/historydetails`);
       if (res.status === 200) {
         setData(res?.data?.data);
         setCountData(res?.data?.TotalCount || 0);
@@ -70,17 +70,24 @@ const History = () => {
   };
 
   const filteredData = data.filter((user) => {
-    const fullName = `${user.FirstName ?? ""} ${
-      user.LastName ?? ""
-    }`.toLowerCase();
+    const fullName = `${user.name ?? ""}`.toLowerCase();
+    const searchLower = search.toLowerCase(); // Store the search term in lowercase
+  
+    // Convert the fields to strings before calling `.toLowerCase()`
+    const insertedRows = (user?.InsertedRows ?? "").toString().toLowerCase();
+    const totalRows = (user?.TotalRows ?? "").toString().toLowerCase();
+    const status = (user?.Status ?? "").toLowerCase();
+    const createdAt = (user?.createdAt ?? "").toLowerCase();
+  
     return (
-      fullName.includes(search.toLowerCase()) ||
-      (user?.Name ?? "").toLowerCase().includes(search.toLowerCase()) ||
-      (user?.Email ?? "").toLowerCase().includes(search.toLowerCase()) ||
-      (user?.Message ?? "").toLowerCase().includes(search.toLowerCase()) ||
-      (user?.Subject ?? "").toLowerCase().includes(search.toLowerCase())
+      fullName.includes(searchLower) ||
+      insertedRows.includes(searchLower) ||
+      totalRows.includes(searchLower) ||
+      status.includes(searchLower) ||
+      createdAt.includes(searchLower)
     );
   });
+
   useEffect(() => {
     fetchUsers();
   }, []);
@@ -95,10 +102,11 @@ const History = () => {
 
     try {
       const response = await AxiosInstance.get(
-        `/contact/contactdetailspopup?ContactId=${rowData}`
+        `/history/historydetailspopup?CronjobId=${rowData}`
       );
       if (response?.status === 200) {
         setDialogData(response?.data?.data);
+        console.log(dialogData,"data")
       } else {
         setDialogData(null);
       }
@@ -112,45 +120,6 @@ const History = () => {
 
   const handleClose = () => {
     setOpenDialog(false);
-  };
-
-  const deleteuser = async (ContactId) => {
-    try {
-      const willDelete = await swal({
-        title: "Are you sure?",
-        text: "You want to delete this contact?",
-        icon: "warning",
-        buttons: ["Cancel", "Delete"],
-        dangerMode: true,
-      });
-
-      if (willDelete) {
-        const response = await AxiosInstance.delete(
-          `/contact/updatecontact/${ContactId}`
-        );
-
-        if (response?.status === 200) {
-          toast.success("contact deleted successfully", {
-            position: "top-center",
-            autoClose: 2000,
-          });
-
-          fetchUsers();
-          if (data.length === 1) {
-            setData([]);
-          }
-        } else {
-          showToast.error("Failed to delete the contact. Please try again.");
-        }
-      } else {
-      }
-    } catch (error) {
-      console.error("Error deleting contact:", error.message || error);
-      showToast.error(
-        "An error occurred while deleting the contact. Please try again."
-      );
-      setDialogData(null);
-    }
   };
 
   return (
@@ -181,25 +150,20 @@ const History = () => {
                     headerData={[
                       "Sr No.",
                       "Name",
-                      "Email",
-                      "Subject",
-                      "Message",
+                      "Inserted data",
+                      "Total data",
+                      "Status",
                       "Contact At",
-                      "Delete",
                     ]}
                     isDialog={true}
                     cellData={currentData.map((user, index) => ({
-                      key: user.ContactId,
+                      key: user.CronjobId,
                       value: [
                         indexOfFirstItem + index + 1,
                         `${user?.Name || "N/A"} `,
-                        user?.Email || "N/A",
-                        (user?.Subject && user?.Subject?.length > 20
-                          ? user?.Subject.substring(0, 20) + "..."
-                          : user?.Subject) || "N/A",
-                        (user?.Message && user?.Message?.length > 20
-                          ? user?.Message?.substring(0, 20) + "..."
-                          : user?.Message) || "N/A",
+                        user?.InsertedRows || "0",
+                        user?.TotalRows || "0",
+                        user?.Status || "N/A",
                         new Date(user.createdAt).toLocaleDateString(
                           "en-GB",
                           {
@@ -208,19 +172,7 @@ const History = () => {
                             year: "numeric",
                           } || "N/A"
                         ),
-                        <Tooltip title="Delete" arrow>
-                          <i
-                            className="fa-solid fa-trash"
-                            style={{
-                              display: "flex",
-                              justifyContent: "center",
-                            }}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              deleteuser(user.ContactId); // Pass the UserId correctly
-                            }}
-                          ></i>
-                        </Tooltip>,
+                      
                       ],
                     }))}
                     onDialogOpen={handleDialogOpen}
@@ -321,19 +273,19 @@ const History = () => {
                       {/* {dialogData?.[0]?.LastName || "N/A"} */}
                     </p>
                     <p>
-                      <strong className="Heading">Email:</strong>{" "}
-                      {dialogData?.[0]?.Email || "N/A"}
+                      <strong className="Heading">Inserted data:</strong>{" "}
+                      {dialogData?.[0]?.InsertedRows || "0"}
                     </p>
                     <p>
-                      <strong className="Heading">Subject:</strong>{" "}
-                      {dialogData?.[0]?.Subject || "N/A"}
+                      <strong className="Heading">Total data:</strong>{" "}
+                      {dialogData?.[0]?.TotalRows || "0"}
                     </p>
                     <p>
-                      <strong className="Heading">Message:</strong>{" "}
-                      {dialogData?.[0]?.Message || "N/A"}
+                      <strong className="Heading">Status:</strong>{" "}
+                      {dialogData?.[0]?.Status || "N/A"}
                     </p>
                     <p>
-                      <strong className="Heading">Contact Date:</strong>{" "}
+                      <strong className="Heading">Created At:</strong>{" "}
                       {/* {dialogData?.[0]?.createdAt || "N/A"}
                        */}
                       {new Date(dialogData?.[0]?.createdAt).toLocaleDateString(

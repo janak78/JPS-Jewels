@@ -104,7 +104,7 @@ const DiamondsGrid = () => {
 
   useEffect(() => {
     if (query !== "filter") {
-      const decodedToken = jwtDecode(localStorage.getItem("filterToken"));
+      const decodedToken = jwtDecode(localStorage?.getItem("filterToken"));
       setShowFilterData(decodedToken);
       setFilterData(decodedToken);
       setShape(decodedToken.Shape);
@@ -540,10 +540,10 @@ const DiamondsGrid = () => {
 
   const toggleShape = (values) => {
     setShape((prevShapes) => {
-      const isSelected = values.some((val) => prevShapes.includes(val));
+      const isSelected = values.some((val) => prevShapes?.includes(val));
 
       if (isSelected) {
-        return prevShapes.filter((s) => !values.includes(s));
+        return prevShapes.filter((s) => !values?.includes(s));
       } else {
         return [...prevShapes, ...values];
       }
@@ -576,7 +576,7 @@ const DiamondsGrid = () => {
   const [selectedcutoption, setSelectedcutoption] = useState([]);
 
   const togglecutoption = (name) => {
-    const isSelected = selectedcutoption.includes(name);
+    const isSelected = selectedcutoption?.includes(name);
 
     let newCutOptions = isSelected ? [] : [name]; // Toggle the clicked option
     setSelectedcutoption(newCutOptions);
@@ -1068,7 +1068,7 @@ const DiamondsGrid = () => {
   useEffect(() => {
     const updateQuery = () => {
       if (data && !isLoading && !error) {
-        const filterToken = createUnsignedJWT(data);
+        const filterToken = createUnsignedJWT(filterData);
         localStorage.setItem("filterToken", JSON.stringify(filterToken));
         setSearchParams({ q: filterToken });
       } else {
@@ -1199,7 +1199,7 @@ const DiamondsGrid = () => {
                   >
                     {icon.map((value) => {
                       const isSelected = value.value.some((val) =>
-                        shape.includes(val)
+                        shape?.includes(val)
                       );
 
                       return (
@@ -2389,7 +2389,7 @@ const DiamondsGrid = () => {
                                 {key} :
                               </strong>
                               <span>
-                                {/* {[
+                                {[
                                   ...new Set(
                                     value?.map(
                                       (val) =>
@@ -2398,7 +2398,7 @@ const DiamondsGrid = () => {
                                         )?.name || val
                                     )
                                   ),
-                                ].join(", ")} */}
+                                ].join(", ")}
                               </span>
                             </div>
                           ))}
