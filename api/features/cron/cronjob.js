@@ -143,12 +143,12 @@ cron.schedule("*/1 * * * *", async () => {
   for (const fileName of files) {
     try {
       const filePath = path.join(pendingFolder, fileName);
-      console.log(`🔍 Processing file: ${fileName}`);
+      console.log(`Processing file: ${fileName}`);
 
       const fileEntry = await CronjobModel.findOne({ Name: fileName });
 
       if (!fileEntry) {
-        console.error(`❌ No metadata found in DB for ${fileName}. Skipping.`);
+        console.error(`No metadata found in DB for ${fileName}. Skipping.`);
         continue;
       }
 

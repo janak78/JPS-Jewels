@@ -422,7 +422,7 @@ function extractAttributes(input) {
 
 const processExcelFile = async (filePath, IsNatural, IsLabgrown) => {
   try {
-    console.log(`📂 Processing file: ${filePath}`);
+    console.log(`Processing file: ${filePath}`);
 
     const workbook = XLSX.readFile(filePath);
     const sheetName = workbook.SheetNames[0];
@@ -538,11 +538,8 @@ const processExcelFile = async (filePath, IsNatural, IsLabgrown) => {
       );
     }
 
-    console.log(`✅ ${insertedCount} records inserted from ${filePath}`);
+    console.log(`${insertedCount} records inserted from ${filePath}`);
 
-    // ✅ Update DB with inserted count
-
-    // ✅ Move processed file to "successfullyProcessed" folder
     const successFolder = path.join(__dirname, "../successfullyProcessed");
     if (!fs.existsSync(successFolder)) fs.mkdirSync(successFolder);
     fs.renameSync(filePath, path.join(successFolder, path.basename(filePath)));
@@ -551,9 +548,8 @@ const processExcelFile = async (filePath, IsNatural, IsLabgrown) => {
     
     await Cronjobmodal.updateOne({ Record: filePath }, { Processed: true });
   } catch (error) {
-    console.error(`❌ Error processing ${filePath}:`, error);
+    console.error(`Error processing ${filePath}:`, error);
 
-    // ✅ Move failed files to "errorWhileProcessing" folder
     const errorFolder = path.join(__dirname, "../errorWhileProcessing");
     if (!fs.existsSync(errorFolder)) fs.mkdirSync(errorFolder);
     fs.renameSync(filePath, path.join(errorFolder, path.basename(filePath)));
@@ -598,14 +594,12 @@ router.post("/addstocks", upload.single("file"), async (req, res) => {
         .json({ success: false, message: "Uploaded file not found!" });
     }
 
-    // ✅ Read Excel file and count TotalRows
     const workbook = XLSX.readFile(filePath);
     const sheetName = workbook.SheetNames[0];
     const jsonData = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
 
-    const totalRows = jsonData.length; // ✅ Store total row count
+    const totalRows = jsonData.length;
 
-    // ✅ Ensure pendingFiles folder exists
     const pendingFolder = path.join(__dirname, "../pendingFiles");
     if (!fs.existsSync(pendingFolder)) {
       fs.mkdirSync(pendingFolder, { recursive: true });
@@ -624,7 +618,6 @@ router.post("/addstocks", upload.single("file"), async (req, res) => {
       });
     }
 
-    // ✅ Save metadata in DB
     const scheduledTime = new Date();
     scheduledTime.setMinutes(scheduledTime.getMinutes() + 1);
 
@@ -641,7 +634,8 @@ router.post("/addstocks", upload.single("file"), async (req, res) => {
       IsLabgrown: IsLabgrown,
       TotalRows: totalRows,
       Status: "Pending",
-      InsertedRows: 0, // ✅ Initialize inserted count to 0
+      InsertedRows: 0,
+      Error: "",
     });
 
     await cronjobEntry.save();
@@ -656,6 +650,14 @@ router.post("/addstocks", upload.single("file"), async (req, res) => {
     });
   } catch (error) {
     console.error(error);
+
+    if (cronjobEntry) {
+      await Cronjobmodal.updateOne(
+        { CronjobId: cronjobEntry.CronjobId },
+        { Error: error.message, Status: "Failed" }
+      );
+    }
+
     res.status(500).json({
       success: false,
       message: "File upload failed.",

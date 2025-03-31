@@ -4,10 +4,10 @@ const { v4: uuidv4 } = require("uuid");
 const CronjobSchema = new mongoose.Schema(
   {
     CronjobId: {
-        type: String, // Change type to String for UUID
-        default: uuidv4, // Assign UUID by default
-        unique: true, // Ensure uniqueness
-      },
+      type: String, // Change type to String for UUID
+      default: uuidv4, // Assign UUID by default
+      unique: true, // Ensure uniqueness
+    },
     Name: {
       type: String,
       required: true,
@@ -54,6 +54,10 @@ const CronjobSchema = new mongoose.Schema(
     IsLabgrown: {
       type: Boolean,
       default: false,
+    },
+    Error: {
+      type: String, // ✅ New field to store errors
+      default: "",
     },
   },
   { timestamps: true }

@@ -173,7 +173,11 @@ const Diamonddetail = () => {
           JSON.stringify(visitedDiamonds)
         );
 
-        setVisitedDiamonds([...visitedDiamonds]); // Update state immediately
+        const filteredVisitedDiamonds = visitedDiamonds.filter(
+          (d) => d.SKU !== diamondData.SKU
+        );
+
+        setVisitedDiamonds(filteredVisitedDiamonds); // Update state immediately
       }
     }
   }, [diamondData]);
@@ -311,28 +315,24 @@ const Diamonddetail = () => {
 
             {/* Buttons */}
             <div className="diamond-product-buttons-container">
-              {diamondData?.Video && diamondData.Video.startsWith("http") ? (
-                <Button
-                  variant="contained"
-                  className="diamond-product-video-btn"
-                  startIcon={<PlayCircleOutlineIcon />}
-                  onClick={handleVideoClick}
-                  fullWidth
-                >
-                  Video
-                </Button>
-              ) : null}
-              {diamondData?.certificateUrl ? (
-                <Button
-                  variant="contained"
-                  className="diamond-product-certificate-btn"
-                  startIcon={<DescriptionIcon />}
-                  onClick={handleCertificateClick}
-                  fullWidth
-                >
-                  Certificate
-                </Button>
-              ) : null}
+              <Button
+                variant="contained"
+                className="diamond-product-video-btn"
+                startIcon={<PlayCircleOutlineIcon />}
+                onClick={handleVideoClick}
+                fullWidth
+              >
+                Video
+              </Button>
+              <Button
+                variant="contained"
+                className="diamond-product-certificate-btn"
+                startIcon={<DescriptionIcon />}
+                onClick={handleCertificateClick}
+                fullWidth
+              >
+                Certificate
+              </Button>
             </div>
 
             {/* Video dialog */}

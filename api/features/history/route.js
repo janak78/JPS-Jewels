@@ -40,7 +40,7 @@ const historyDetails = async () => {
   };
 };
 
-router.get("/historydetails", verifyLoginToken, async (req, res) => {
+router.get("/historydetails",  async (req, res) => {
   try {
     const response = await historyDetails();
     res.status(response.statusCode).json(response);
