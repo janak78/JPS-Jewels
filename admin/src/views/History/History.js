@@ -153,7 +153,7 @@ const History = () => {
                       "Inserted data",
                       "Total data",
                       "Status",
-                      "Contact At",
+                      "Created At",
                     ]}
                     isDialog={true}
                     cellData={currentData.map((user, index) => ({
