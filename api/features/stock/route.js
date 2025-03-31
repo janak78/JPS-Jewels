@@ -28,8 +28,50 @@ const upload = multer({ storage: storage });
 function getDefaultImageUrl(Shape) {
   const lowerCaseShape = Shape?.toLowerCase() || "";
   switch (lowerCaseShape) {
+    case "long octagon":
+      return "https://jpsjewels.com/api/images/Octagonal.jpg";
+    case "pentagonal":
+    case "long pentagon":
+      return "https://jpsjewels.com/api/images/Pentagonal.jpg";
+    case "shield":
+    case "scad":
+    case "sld":
+      return "https://jpsjewels.com/api/images/Shield.jpg";
+    case "trapezoid":
+    case "tp":
+    case "trapez":
+    case "wide trapezoid":
+    case "long trapezoid":
+      return "https://jpsjewels.com/api/images/Trapezoid.jpg";
+    case "half moon":
+    case "hm":
+      return "https://jpsjewels.com/api/images/Halfmoon.jpg";
+    case "tapered baguette":
+    case "tb":
+      return "https://jpsjewels.com/api/images/Taperedbaguette.jpg";
+    case "baguette":
+    case "bgt":
+      return "https://jpsjewels.com/api/images/Baguette.jpg";
+    case "lozenge":
+    case "lozg":
+      return "https://jpsjewels.com/api/images/Lozenge.jpg";
+    case "rose cut":
+    case "rose":
+      return "https://jpsjewels.com/api/images/Rosecut.jpg";
+    case "trilliant":
+      return "https://jpsjewels.com/api/images/Trilliant.jpg";
+    case "hexagonal":
+      return "https://jpsjewels.com/api/images/Hexagonal.jpg";
+    case "bullet":
+    case "bullet cut":
+      return "https://jpsjewels.com/api/images/BULLET.jpg";
+    case "kite":
+    case "kmsc":
+      return "https://jpsjewels.com/api/images/kite.jpg";
     case "asscher":
     case "sq eme":
+    case "sqemerald":
+    case "square emerald":
       return "https://jpsjewels.com/api/images/EMARALD.jpg";
     case "baguette":
     case "bug":
@@ -39,41 +81,69 @@ function getDefaultImageUrl(Shape) {
     case "square cushion":
     case "sq cu":
     case "cushion modified":
+    case "cushion brilliant":
+    case "cushion brilliant ha":
+    case "long cushion":
+    case "long cu bril":
+    case "cm":
+    case "cus. crisscut":
       return "https://jpsjewels.com/api/images/Cushion.jpg";
     case "emerald":
     case "eme":
     case "square emerald":
+    case "sem":
+    case "ecbf":
+    case "eca":
+    case "ecmb":
+    case "ecm":
+    case "elegance emerald":
       return "https://jpsjewels.com/api/images/EMARALD.jpg";
     case "heart":
     case "hrt":
     case "he":
     case "heart modified":
+    case "hrt":
+    case "heart mb":
+    case "heart stepcut":
       return "https://jpsjewels.com/api/images/Heart.jpg";
     case "long radiant":
     case "long rad":
     case "radiant":
     case "rad":
     case "radiant modified":
+    case "rmb":
+    case "rm":
+    case "sq.rad":
       return "https://jpsjewels.com/api/images/RADIENT.jpg";
     case "marquise":
     case "mq":
     case "marquise modified":
+    case "mmc":
+    case "mq. stepcut":
       return "https://jpsjewels.com/api/images/Marquise.jpg";
     case "oval":
     case "ovl":
+    case "oval stepcut":
+    case "moval":
       return "https://jpsjewels.com/api/images/OVAL.jpg";
     case "pear":
     case "pe":
+    case "pmc":
+    case "pmb":
+    case "pear stepcut":
+    case "pear old cut":
       return "https://jpsjewels.com/api/images/PEAR.jpg";
     case "princess":
     case "pri":
     case "princess modified":
+    case "pr":
       return "https://jpsjewels.com/api/images/PRINCESS.jpg";
     case "round":
     case "rbc":
+    case "round modifi brillin":
       return "https://jpsjewels.com/api/images/RBC.jpg";
     default:
-      return "https://jpsjewels.com/api/images/RBC.jpg"; // Default fallback image
+      return "https://jpsjewels.com/api/images/diamond.jpg"; // Default fallback image
   }
 }
 
@@ -390,6 +460,13 @@ const processExcelFile = async (filePath, IsNatural, IsLabgrown) => {
       "Sr.No",
     ];
 
+    const parseNumber = (value) => {
+      if (typeof value === "string") {
+        return parseFloat(value.replace(/,/g, "")) || 0; // Remove commas and convert to number
+      }
+      return value || 0;
+    };
+
     const getHyperlink = (cell) =>
       cell && cell.l && cell.l.Target ? cell.l.Target : cell?.v || "";
 
@@ -400,7 +477,7 @@ const processExcelFile = async (filePath, IsNatural, IsLabgrown) => {
         (field) => !allowedFields.includes(field)
       );
       if (extraFields.length > 0) {
-        console.log(`⚠️ Invalid fields detected: ${extraFields.join(", ")}`);
+        console.log(`Invalid fields detected: ${extraFields.join(", ")}`);
         continue;
       }
 
@@ -428,13 +505,13 @@ const processExcelFile = async (filePath, IsNatural, IsLabgrown) => {
           Tinge: data.Tinge,
           Milky: data.Milky,
           EyeC: data.EyeC,
-          Table: data["Table(%)"],
-          Depth: data["Depth(%)"],
+          Table: parseNumber(data["Table(%)"]),
+          Depth: parseNumber(data["Depth(%)"]),
           measurements: data.measurements,
-          Amount: data["Amount U$"],
-          Price: data["Price $/ct"],
-          Disc: data["Disc %"],
-          Rap: data["Rap $"],
+          Amount: parseNumber(data["Amount U$"]),
+          Price: parseNumber(data["Price $/ct"]),
+          Disc: parseNumber(data["Disc %"]),
+          Rap: parseNumber(data["Rap $"]),
           FluoInt: data["Fluo Int"],
           Symm: data.Symm,
           Polish: data.Polish,
@@ -443,7 +520,7 @@ const processExcelFile = async (filePath, IsNatural, IsLabgrown) => {
           Clarity: data.Clarity,
           Color: colorIntensityData.color,
           Overtone: colorIntensityData.overtone,
-          Carats: data.Carats,
+          Carats: parseNumber(data.Carats),
           Shape: data.Shape,
           CertificateNo: data["Certificate No"],
           Lab: data.Lab,
@@ -896,10 +973,14 @@ const fetchDiamondsPageDetails = async (query) => {
     }
 
     if (query.Shape?.length) {
-      matchStage.Shape = Array.isArray(query.Shape)
-        ? { $in: query.Shape }
-        : query.Shape;
+      // If "Other" (empty string) is selected, remove shape filtering
+      if (query.Shape.includes("other")) {
+        delete matchStage.Shape;
+      } else {
+        matchStage.Shape = { $in: query.Shape };
+      }
     }
+    
 
     if (query.Color?.length) {
       let selectedColors = Array.isArray(query.Color)
@@ -943,6 +1024,11 @@ const fetchDiamondsPageDetails = async (query) => {
       matchStage.Lab = Array.isArray(query.Lab)
         ? { $in: query.Lab }
         : query.Lab;
+    }
+    if (query.Intensity?.length) {
+      matchStage.Intensity = Array.isArray(query.Intensity)
+        ? { $in: query.Intensity }
+        : query.Intensity;
     }
 
     if (query.Milky?.length) {

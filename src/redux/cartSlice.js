@@ -93,28 +93,58 @@ export const addToCart = (item, userId, shouldShowToast, navigate) => async (dis
   } 
 };
 
-export const removeFromCart = (AddToCartId, userId) => async (dispatch) => {
-  // Show confirmation alert before deleting
+// export const removeFromCart = (AddToCartId, userId) => async (dispatch) => {
+//   // Show confirmation alert before deleting
+//   const willDelete = await sendSwal();
+
+//   if (willDelete) {
+//     try {
+//       const response = await AxiosInstance.delete(
+//         `${baseUrl}/cart/updatecart/${AddToCartId}`
+//       );
+
+//       if (response.data.statusCode === 200) {
+//         dispatch(removeItemFromCart(AddToCartId));
+//         dispatch(fetchCartCount(userId));
+//         showToast.success("Item Removed Successfully.");
+//       } else {
+//         showToast.error("Failed to remove item.");
+//       }
+//     } catch (error) {
+//       console.error("Remove from cart error:", error);
+//       showToast.error("Something went wrong.");
+//     }
+//   }
+// };
+
+export const removeFromCart = (AddToCartId, userId) => async (dispatch, getState) => {
   const willDelete = await sendSwal();
 
   if (willDelete) {
+    // Optimistically remove the item from the UI
+    const prevCartData = getState().cart.cartData;
+    const updatedCartData = prevCartData.filter((item) => item.AddToCartId !== AddToCartId);
+    dispatch(removeItemFromCart(AddToCartId));
+
     try {
       const response = await AxiosInstance.delete(
         `${baseUrl}/cart/updatecart/${AddToCartId}`
       );
 
       if (response.data.statusCode === 200) {
-        dispatch(removeItemFromCart(AddToCartId));
-        dispatch(fetchCartCount(userId));
+        dispatch(fetchCartCount(userId)); // Ensure the latest cart count is fetched
         showToast.success("Item Removed Successfully.");
       } else {
         showToast.error("Failed to remove item.");
+        dispatch(setCart({ count: prevCartData.length, data: prevCartData })); // Rollback on failure
       }
     } catch (error) {
       console.error("Remove from cart error:", error);
       showToast.error("Something went wrong.");
+      dispatch(setCart({ count: prevCartData.length, data: prevCartData })); // Rollback on error
     }
   }
 };
+
 
 export default cartSlice.reducer;
