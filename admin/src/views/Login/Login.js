@@ -22,6 +22,7 @@ import "react-toastify/dist/ReactToastify.css";
 import weblogo from "../../assets/img/theme/logo.svg";
 import AxiosInstance from "AxiosInstance";
 import { handleAuth } from "../../auth";
+import WhiteLoader from "components/Loader/whiteloader";
 
 const Login = () => {
 
@@ -31,6 +32,8 @@ const Login = () => {
 
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const [loader, setLoader] = useState(false);
+
 
   useEffect(() => {
     (async () => {
@@ -63,6 +66,7 @@ const Login = () => {
   const [data, setData] = useState([]);
   const handleSubmit = async (values) => {
     try {
+      setLoader(true);
       const res = await AxiosInstance.post(
         `${baseUrl}/superadmin/superadminlogin`,
         {
@@ -133,6 +137,9 @@ const Login = () => {
           autoClose: 2000,
         });
       }
+    }
+    finally{
+      setLoader(false);
     }
   };
 
@@ -276,8 +283,18 @@ const Login = () => {
                     color="primary"
                     type="submit"
                     style={{ backgroundColor: "#C9A234", border: "none" }}
+                    disabled={loader}
                   >
-                    Sign in
+                     {loader ? (
+                    <WhiteLoader
+                      height="20"
+                      width="20"
+                      padding="20"
+                      loader={loader}
+                    />
+                  ) : (
+                    "Login"
+                  )}
                   </Button>
                 </div>
               </Form>

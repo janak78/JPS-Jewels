@@ -101,7 +101,7 @@ const superadminLogin = async (data) => {
     }
 
     // Check if the password is valid
-    const isPasswordValid = bcrypt.compare(Password, user.Password);
+    const isPasswordValid = await bcrypt.compare(Password, user.Password);
     if (!isPasswordValid) {
       return {
         statusCode: 401,
