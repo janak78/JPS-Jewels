@@ -488,11 +488,18 @@ const processExcelFile = async (filePath, IsNatural, IsLabgrown) => {
       const videoRef = Object.keys(worksheet).find(
         (key) => worksheet[key].v === data.Video
       );
-      const imageUrl = imageRef ? getHyperlink(worksheet[imageRef]) : data.Image;
-      const videoUrl = videoRef ? getHyperlink(worksheet[videoRef]) : data.Video;
+      const imageUrl = imageRef
+        ? getHyperlink(worksheet[imageRef])
+        : data.Image;
+      const videoUrl = videoRef
+        ? getHyperlink(worksheet[videoRef])
+        : data.Video;
 
-      const finalImage = imageUrl?.length > 0 ? imageUrl : getDefaultImageUrl(data.Shape);
-      const colorIntensityData = extractAttributes(`${data.Color || ""} ${data.Intensity || ""}`);
+      const finalImage =
+        imageUrl?.length > 0 ? imageUrl : getDefaultImageUrl(data.Shape);
+      const colorIntensityData = extractAttributes(
+        `${data.Color || ""} ${data.Intensity || ""}`
+      );
 
       await stockSchema.findOneAndUpdate(
         { SKU: data.SKU },
@@ -545,10 +552,14 @@ const processExcelFile = async (filePath, IsNatural, IsLabgrown) => {
     fs.renameSync(filePath, path.join(successFolder, path.basename(filePath)));
 
     // return insertedCount;
-    
+
     await Cronjobmodal.updateOne({ Record: filePath }, { Processed: true });
   } catch (error) {
     console.error(`Error processing ${filePath}:`, error);
+    await Cronjobmodal.updateOne(
+      { Record: filePath },
+      { Error: error.message, Status: "Failed" }
+    );
 
     const errorFolder = path.join(__dirname, "../errorWhileProcessing");
     if (!fs.existsSync(errorFolder)) fs.mkdirSync(errorFolder);
@@ -567,6 +578,37 @@ router.post("/addstocks", upload.single("file"), async (req, res) => {
         .status(400)
         .json({ success: false, message: "No file uploaded" });
     }
+
+    const allowedFields = [
+      "Image",
+      "Video",
+      "Diamond Type",
+      "H&A",
+      "Ratio",
+      "Tinge",
+      "Milky",
+      "EyeC",
+      "Table(%)",
+      "Depth(%)",
+      "measurements",
+      "Amount U$",
+      "Price $/ct",
+      "Disc %",
+      "Rap $",
+      "Fluo Int",
+      "Symm",
+      "Polish",
+      "Intensity",
+      "Cut",
+      "Clarity",
+      "Color",
+      "Carats",
+      "Shape",
+      "Certificate No",
+      "Lab",
+      "SKU",
+      "Sr.No",
+    ];
 
     const { IsNatural, IsLabgrown } = req.body;
     if (IsNatural === undefined || IsLabgrown === undefined) {
@@ -599,6 +641,18 @@ router.post("/addstocks", upload.single("file"), async (req, res) => {
     const jsonData = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
 
     const totalRows = jsonData.length;
+
+    for (const data of jsonData) {
+      const extraFields = Object.keys(data).filter(
+        (field) => !allowedFields.includes(field)
+      );
+      if (extraFields.length > 0) {
+        return res.status(400).json({
+          success: false,
+          message: `Invalid fields detected: ${extraFields.join(", ")}`,
+        });
+      }
+    }
 
     const pendingFolder = path.join(__dirname, "../pendingFiles");
     if (!fs.existsSync(pendingFolder)) {
@@ -651,7 +705,7 @@ router.post("/addstocks", upload.single("file"), async (req, res) => {
   } catch (error) {
     console.error(error);
 
-    if (cronjobEntry) {
+    if (typeof cronjobEntry !== "undefined") {
       await Cronjobmodal.updateOne(
         { CronjobId: cronjobEntry.CronjobId },
         { Error: error.message, Status: "Failed" }
@@ -980,20 +1034,21 @@ const fetchDiamondsPageDetails = async (query) => {
 
     if (query.Shape?.length) {
       // Ensure Shape is an array and convert frontend values to lowercase
-      const shapesArray = Array.isArray(query.Shape) ? query.Shape : [query.Shape];
+      const shapesArray = Array.isArray(query.Shape)
+        ? query.Shape
+        : [query.Shape];
       const lowerCaseShapes = shapesArray.map((shape) => shape.toLowerCase());
-    
+
       // If "Other" (empty string) is selected, remove shape filtering
       if (lowerCaseShapes.includes("other")) {
         delete matchStage.Shape;
       } else {
         // Use case-insensitive regex matching for MongoDB
-        matchStage.Shape = { 
-          $in: lowerCaseShapes.map((shape) => new RegExp(`^${shape}$`, "i")) 
+        matchStage.Shape = {
+          $in: lowerCaseShapes.map((shape) => new RegExp(`^${shape}$`, "i")),
         };
       }
     }
-    
 
     if (query.Color?.length) {
       let selectedColors = Array.isArray(query.Color)
@@ -1603,80 +1658,125 @@ router.get("/shapedata", async function (req, res) {
   }
 });
 
-const getSimilarDiamonds = async (carat, color, clarity, shape, IsNatural, IsLabgrown) => {
+const getSimilarDiamonds = async (
+  carat,
+  color,
+  clarity,
+  shape,
+  IsNatural,
+  IsLabgrown
+) => {
   try {
     const result = await fetchStockDetails();
+    // console.log(result, "Result from fetchStockDetails");
 
     if (!result || result.statusCode !== 200 || !Array.isArray(result.data)) {
       return { statusCode: result.statusCode, data: [] };
     }
 
     const caratValue = parseFloat(carat);
-    
-    // ✅ Step 1: Pre-filter based on IsNatural & IsLabgrown
-    filteredData = result.data.filter((diamond) => {
-      return IsNatural ? diamond.IsNatural === true : diamond.IsLabgrown === true;
-    });
-    
+    // console.log(caratValue, "Carat Value");
 
-    // ✅ Step 2: Process filtering in a single loop (Faster!)
     let similarDiamonds = [];
-    
-    for (const diamond of filteredData) {
-      const diamondCarat = parseFloat(diamond.Carats);
 
+    for (const diamond of result.data) {
+      const diamondCarat = parseFloat(diamond.Carats);
       if (
         diamond.Shape === shape &&
-        (diamond.Color === color || 
-          (diamond.Clarity === clarity && Math.abs(diamondCarat - caratValue) <= 0.2))
+        (diamond.Color === color ||
+          (diamond.Clarity === clarity &&
+            Math.abs(diamondCarat - caratValue) <= 0.2))
       ) {
         similarDiamonds.push(diamond);
+        if (similarDiamonds.length >= 5) break; // Stop early
       }
     }
 
-    // ✅ Step 3: Expand the range only if no matches
     if (similarDiamonds.length === 0) {
-      similarDiamonds = filteredData.filter(diamond => {
+      for (const diamond of result.data) {
         const diamondCarat = parseFloat(diamond.Carats);
-        return (
+        if (
           diamond.Shape === shape &&
-          ((diamond.Color === color || diamond.Clarity === clarity) &&
-            Math.abs(diamondCarat - caratValue) <= 0.3)
-        );
-      });
+          (diamond.Color === color || diamond.Clarity === clarity) &&
+          Math.abs(diamondCarat - caratValue) <= 0.3
+        ) {
+          similarDiamonds.push(diamond);
+          if (similarDiamonds.length >= 5) break; // Stop early
+        }
+      }
     }
 
     if (similarDiamonds.length === 0) {
-      similarDiamonds = filteredData.filter(diamond => {
+      for (const diamond of result.data) {
         const diamondCarat = parseFloat(diamond.Carats);
-        return diamond.Shape === shape && Math.abs(diamondCarat - caratValue) <= 0.4;
-      });
+        if (
+          diamond.Shape === shape &&
+          Math.abs(diamondCarat - caratValue) <= 0.4
+        ) {
+          similarDiamonds.push(diamond);
+          if (similarDiamonds.length >= 5) break; // Stop early
+        }
+      }
     }
 
-    // ✅ Step 4: Limit to top 5 results (Faster slice operation)
-    similarDiamonds = similarDiamonds.slice(0, 5);
+    console.log(
+      Boolean(IsNatural === "true"),
+      Boolean(IsLabgrown === "true"),
+      "Similar Diamonds Before IsNatural/IsLabgrown Filter"
+    );
 
-    // ✅ Step 5: Project required fields
-    const projectedDiamonds = similarDiamonds.map(({ 
-      Image, Amount, Price, Cut, Clarity, Color, Carats, Shape, Lab, SKU, IsNatural, IsLabgrown, CertificateNo
-    }) => ({
-      Image, Amount, Price, Cut, Clarity, Color, Carats, Shape, Lab, SKU, IsNatural, IsLabgrown, CertificateNo
-    }));
+    similarDiamonds = similarDiamonds.filter(
+      (diamond) =>
+        (Boolean(IsNatural === "true") && diamond.IsNatural) ||
+        (Boolean(IsLabgrown === "true") && diamond?.IsLabgrown)
+    );
 
-    return { statusCode: 200, data: projectedDiamonds };
+    // console.log(similarDiamonds, "Filtered Similar Diamonds");
 
+    return {
+      statusCode: 200,
+      data: similarDiamonds.map(
+        ({
+          Image,
+          Amount,
+          Price,
+          Cut,
+          Clarity,
+          Color,
+          Carats,
+          Shape,
+          Lab,
+          SKU,
+          IsNatural,
+          IsLabgrown,
+          CertificateNo,
+        }) => ({
+          Image,
+          Amount,
+          Price,
+          Cut,
+          Clarity,
+          Color,
+          Carats,
+          Shape,
+          Lab,
+          SKU,
+          IsNatural,
+          IsLabgrown,
+          CertificateNo,
+        })
+      ),
+    };
   } catch (error) {
     console.error("Error in getSimilarDiamonds:", error.message);
     return { statusCode: 500, data: [], message: error.message };
   }
 };
 
-
-
 router.get("/similarproducts", async function (req, res) {
   try {
     const { carat, color, clarity, shape, IsNatural, IsLabgrown } = req.query;
-
+    console.log(IsNatural, IsLabgrown, "IsNatural and IsLabgrown values");
     // if (!carat || !color || !clarity || !shape || !IsNatural || !IsLabgrown) {
     //   return res.status(400).json({
     //     statusCode: 400,
