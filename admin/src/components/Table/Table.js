@@ -96,7 +96,7 @@ const CustomTable = ({
               <TableCell
                 align="center"
                 className="text-blue-color"
-                colSpan={headerData?.length}
+                colSpan={headerData?.length + 1}
               >
                 <div style={{ flexDirection: "column", display: "flex" }}>
                   <div>

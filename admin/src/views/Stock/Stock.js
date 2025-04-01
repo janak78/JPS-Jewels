@@ -31,7 +31,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { handleAuth } from "../../auth";
 
 const Tablelogin = () => {
-
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -679,20 +678,23 @@ const Tablelogin = () => {
                     <p>
                       <strong className="Heading">Video Url:</strong>{" "}
                       <span>
-                        <a
-                          href={dialogData?.Video}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          style={{
-                            color: "#4e54c8",
-                            textDecoration: "underline",
-                          }}
-                        >
-                          {/* Truncate the URL if it exceeds 20 characters */}
-                          {dialogData?.Video && dialogData.Video.length > 20
-                            ? dialogData.Video.substring(0, 20) + "..."
-                            : dialogData?.Video || "N/A"}
-                        </a>
+                        {dialogData?.Video ? (
+                          <a
+                            href={dialogData.Video}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{
+                              color: "#4e54c8",
+                              textDecoration: "underline",
+                            }}
+                          >
+                            {dialogData.Video.length > 20
+                              ? dialogData.Video.substring(0, 20) + "..."
+                              : dialogData.Video}
+                          </a>
+                        ) : (
+                          <span>N/A</span>
+                        )}
                       </span>
                     </p>
                   </div>

@@ -36,12 +36,14 @@ import gallery2 from "../../assets/gallery images/pexels-the-glorious-studio-358
 import gallery1 from "../../assets/gallery images/pexels-the-glorious-studio-3584518-10983783.jpg";
 import allimage from "../../assets/gallery images/allimage.png";
 import AxiosInstance from "../../Axiosinstance";
+import WhiteLoader from "../../components/Loader/whiteloader";
 
 const Login = () => {
   const baseUrl = process.env.REACT_APP_BASE_API;
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const [loader, setLoader] = useState(false);
 
   const formik = useFormik({
     initialValues: {
@@ -76,7 +78,7 @@ const Login = () => {
 
   const handleSubmit = async (values) => {
     try {
-      //   setLoader(true);
+      setLoader(true);
       const res = await AxiosInstance.post(`${baseUrl}/user/login`, {
         ...values,
       });
@@ -117,7 +119,7 @@ const Login = () => {
         showToast.error("Something went wrong. Please try again later.");
       }
     } finally {
-      //   setLoader(false);
+      setLoader(false);
     }
   };
 
@@ -255,8 +257,22 @@ const Login = () => {
                   </span>
                 </p>
               </div>
-              <Button type="submit" variant="contained" className="login-btn">
-                Login
+              <Button
+                type="submit"
+                variant="contained"
+                className="login-btn"
+                disabled={loader}
+              >
+                {loader ? (
+                  <WhiteLoader
+                    height="30"
+                    width="30"
+                    padding="10px"
+                    loader={loader}
+                  />
+                ) : (
+                  "Login"
+                )}
               </Button>
             </form>
             {/* </div> */}

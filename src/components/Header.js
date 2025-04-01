@@ -32,6 +32,7 @@ import "./Header.css";
 import AxiosInstance from "../Axiosinstance";
 import { fetchUserData, resetUserState } from "../redux/userSlice";
 import SearchIcon from "@mui/icons-material/Search";
+import WhiteLoader from "../components/Loader/whiteloader";
 
 const Header = () => {
   const baseUrl = process.env.REACT_APP_BASE_API;
@@ -56,6 +57,7 @@ const Header = () => {
   const cartData = useSelector((state) => state.cart.cartData);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
+  const [loader, setLoader] = useState(false);
 
   // const Mail = useSelector((state) => state.auth.Mail);
   // const cartCount = useSelector((state) => state.cart.cartCount);
@@ -134,7 +136,7 @@ const Header = () => {
 
   const handleSubmit = async (values) => {
     try {
-      //   setLoader(true);
+      setLoader(true);
       const res = await AxiosInstance.post(`${baseUrl}/user/login`, {
         ...values,
       });
@@ -186,7 +188,7 @@ const Header = () => {
         showToast.error("Something went wrong. Please try again later.");
       }
     } finally {
-      //   setLoader(false);
+      setLoader(false);
     }
   };
 
@@ -637,8 +639,18 @@ const Header = () => {
                             type="submit"
                             variant="contained"
                             className="login-btn-login"
+                            disabled={loader}
                           >
-                            Login
+                            {loader ? (
+                              <WhiteLoader
+                                height="30"
+                                width="30"
+                                padding="10px"
+                                loader={loader}
+                              />
+                            ) : (
+                              "Login"
+                            )}
                           </Button>
 
                           <p className="forgot-signup">
