@@ -12,14 +12,14 @@ const { v4: uuidv4 } = require("uuid");
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    const uploadPath = path.join(__dirname, "../../uploads"); // Ensure path consistency
+    const uploadPath = path.join(__dirname, "../../uploads");
     if (!fs.existsSync(uploadPath)) {
       fs.mkdirSync(uploadPath, { recursive: true });
     }
     cb(null, uploadPath);
   },
   filename: function (req, file, cb) {
-    cb(null, file.originalname.replace(/\s/g, "")); // Remove spaces from filename
+    cb(null, file.originalname.replace(/\s/g, ""));
   },
 });
 
@@ -143,7 +143,7 @@ function getDefaultImageUrl(Shape) {
     case "round modifi brillin":
       return "https://jpsjewels.com/api/images/RBC.jpg";
     default:
-      return "https://jpsjewels.com/api/images/diamond.jpg"; // Default fallback image
+      return "https://jpsjewels.com/api/images/diamond.jpg";
   }
 }
 
@@ -462,7 +462,7 @@ const processExcelFile = async (filePath, IsNatural, IsLabgrown) => {
 
     const parseNumber = (value) => {
       if (typeof value === "string") {
-        return parseFloat(value.replace(/,/g, "")) || 0; // Remove commas and convert to number
+        return parseFloat(value.replace(/,/g, "")) || 0;
       }
       return value || 0;
     };
@@ -481,7 +481,6 @@ const processExcelFile = async (filePath, IsNatural, IsLabgrown) => {
         continue;
       }
 
-      // Extract image and video links from the Excel file
       const imageRef = Object.keys(worksheet).find(
         (key) => worksheet[key].v === data.Image
       );
@@ -550,8 +549,6 @@ const processExcelFile = async (filePath, IsNatural, IsLabgrown) => {
     const successFolder = path.join(__dirname, "../successfullyProcessed");
     if (!fs.existsSync(successFolder)) fs.mkdirSync(successFolder);
     fs.renameSync(filePath, path.join(successFolder, path.basename(filePath)));
-
-    // return insertedCount;
 
     await Cronjobmodal.updateOne({ Record: filePath }, { Processed: true });
   } catch (error) {
@@ -974,7 +971,6 @@ const fetchStockDetails = async () => {
   ]);
 
   const stockCount = diamondsdetail.length;
-  // console.log(diamondsdetail, "Stock Count");
 
   return {
     statusCode: diamondsdetail.length > 0 ? 200 : 204,
@@ -1033,17 +1029,14 @@ const fetchDiamondsPageDetails = async (query) => {
     }
 
     if (query.Shape?.length) {
-      // Ensure Shape is an array and convert frontend values to lowercase
       const shapesArray = Array.isArray(query.Shape)
         ? query.Shape
         : [query.Shape];
       const lowerCaseShapes = shapesArray.map((shape) => shape.toLowerCase());
 
-      // If "Other" (empty string) is selected, remove shape filtering
       if (lowerCaseShapes.includes("other")) {
         delete matchStage.Shape;
       } else {
-        // Use case-insensitive regex matching for MongoDB
         matchStage.Shape = {
           $in: lowerCaseShapes.map((shape) => new RegExp(`^${shape}$`, "i")),
         };
@@ -1286,7 +1279,7 @@ const fetchDiamondsPageDetails = async (query) => {
                     Array.isArray(query.Color) &&
                     query.Color.length > 0
                       ? `^.*${query.Color.join(".*")}.*$`
-                      : ".*", // Default regex to match anything if query.Color is empty
+                      : ".*",
                   options: "i",
                 },
               },
@@ -1544,7 +1537,6 @@ const fetchShapeDataDetails = async (shape) => {
     let Carets;
 
     if (shape) {
-      // Fetch 5 records for the selected shape
       Carets = await stockSchema
         .aggregate([
           { $match: matchQuery },
@@ -1567,12 +1559,10 @@ const fetchShapeDataDetails = async (shape) => {
         ])
         .allowDiskUse(true);
     } else {
-      // Efficiently fetch 5 records per shape
       Carets = await stockSchema
         .aggregate([
           { $match: matchQuery },
 
-          // Group directly while limiting to prevent memory overload
           {
             $facet: {
               groupedByShape: [
@@ -1583,7 +1573,7 @@ const fetchShapeDataDetails = async (shape) => {
                     diamonds: { $push: "$$ROOT" },
                   },
                 },
-                { $set: { diamonds: { $slice: ["$diamonds", 5] } } }, // ✅ Limit within each group
+                { $set: { diamonds: { $slice: ["$diamonds", 5] } } },
               ],
             },
           },
@@ -1658,114 +1648,41 @@ router.get("/shapedata", async function (req, res) {
   }
 });
 
-const getSimilarDiamonds = async (
-  carat,
-  color,
-  clarity,
-  shape,
-  IsNatural,
-  IsLabgrown
-) => {
+const getSimilarDiamonds = async (carat, color, clarity, shape, IsNatural, IsLabgrown) => {
   try {
     const result = await fetchStockDetails();
-    // console.log(result, "Result from fetchStockDetails");
 
     if (!result || result.statusCode !== 200 || !Array.isArray(result.data)) {
       return { statusCode: result.statusCode, data: [] };
     }
 
     const caratValue = parseFloat(carat);
-    // console.log(caratValue, "Carat Value");
+    const maxResults = 5;
 
-    let similarDiamonds = [];
+    // Convert string booleans to actual booleans once
+    const isNatural = IsNatural === "true";
+    const isLabgrown = IsLabgrown === "true";
 
-    for (const diamond of result.data) {
-      const diamondCarat = parseFloat(diamond.Carats);
-      if (
-        diamond.Shape === shape &&
-        (diamond.Color === color ||
-          (diamond.Clarity === clarity &&
-            Math.abs(diamondCarat - caratValue) <= 0.2))
-      ) {
-        similarDiamonds.push(diamond);
-        if (similarDiamonds.length >= 5) break; // Stop early
-      }
-    }
-
-    if (similarDiamonds.length === 0) {
-      for (const diamond of result.data) {
+    // Filter and map in one pass to minimize overhead
+    let similarDiamonds = result.data
+      .filter(diamond => {
         const diamondCarat = parseFloat(diamond.Carats);
-        if (
-          diamond.Shape === shape &&
-          (diamond.Color === color || diamond.Clarity === clarity) &&
-          Math.abs(diamondCarat - caratValue) <= 0.3
-        ) {
-          similarDiamonds.push(diamond);
-          if (similarDiamonds.length >= 5) break; // Stop early
-        }
-      }
-    }
+        const isShapeMatch = diamond.Shape === shape;
+        const isColorClarityMatch = diamond.Color === color || diamond.Clarity === clarity;
+        const isCaratMatch = Math.abs(diamondCarat - caratValue) <= 0.4;
+        const isNaturalOrLabgrownMatch = (isNatural && diamond.IsNatural) || (isLabgrown && diamond.IsLabgrown);
 
-    if (similarDiamonds.length === 0) {
-      for (const diamond of result.data) {
-        const diamondCarat = parseFloat(diamond.Carats);
-        if (
-          diamond.Shape === shape &&
-          Math.abs(diamondCarat - caratValue) <= 0.4
-        ) {
-          similarDiamonds.push(diamond);
-          if (similarDiamonds.length >= 5) break; // Stop early
-        }
-      }
-    }
+        return isShapeMatch && isColorClarityMatch && isCaratMatch && (isNatural || isLabgrown ? isNaturalOrLabgrownMatch : true);
+      })
+      .sort((a, b) => Math.abs(parseFloat(a.Carats) - caratValue) - Math.abs(parseFloat(b.Carats) - caratValue))
+      .slice(0, maxResults); // Limit to top 5
 
-    console.log(
-      Boolean(IsNatural === "true"),
-      Boolean(IsLabgrown === "true"),
-      "Similar Diamonds Before IsNatural/IsLabgrown Filter"
-    );
-
-    similarDiamonds = similarDiamonds.filter(
-      (diamond) =>
-        (Boolean(IsNatural === "true") && diamond.IsNatural) ||
-        (Boolean(IsLabgrown === "true") && diamond?.IsLabgrown)
-    );
-
-    // console.log(similarDiamonds, "Filtered Similar Diamonds");
-
+    // Return only necessary fields
     return {
       statusCode: 200,
-      data: similarDiamonds.map(
-        ({
-          Image,
-          Amount,
-          Price,
-          Cut,
-          Clarity,
-          Color,
-          Carats,
-          Shape,
-          Lab,
-          SKU,
-          IsNatural,
-          IsLabgrown,
-          CertificateNo,
-        }) => ({
-          Image,
-          Amount,
-          Price,
-          Cut,
-          Clarity,
-          Color,
-          Carats,
-          Shape,
-          Lab,
-          SKU,
-          IsNatural,
-          IsLabgrown,
-          CertificateNo,
-        })
-      ),
+      data: similarDiamonds.map(({ Image, Amount, Price, Cut, Clarity, Color, Carats, Shape, Lab, SKU, IsNatural, IsLabgrown, CertificateNo }) => ({
+        Image, Amount, Price, Cut, Clarity, Color, Carats, Shape, Lab, SKU, IsNatural, IsLabgrown, CertificateNo
+      })),
     };
   } catch (error) {
     console.error("Error in getSimilarDiamonds:", error.message);
