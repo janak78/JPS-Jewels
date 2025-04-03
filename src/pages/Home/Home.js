@@ -63,6 +63,7 @@ const Home = () => {
   const baseUrl = process.env.REACT_APP_BASE_API;
 
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [fade, setFade] = useState(true);
   const carouselRef = useRef(null);
   const navigate = useNavigate();
 
@@ -73,11 +74,15 @@ const Home = () => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
+      setFade(false); // Start fade effect
+      setTimeout(() => {
+        setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
+        setFade(true); // Reset fade effect after change
+      }, 500); // Delay before changing the image
     }, 3000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [images.length]);
 
   // const [shape, setShape] = useState([]);
 
@@ -426,8 +431,8 @@ const Home = () => {
         <div className="card cardbackground text-white border-0">
           {/* Image Slider */}
           <img
-            className="card-img img-fluid"
-            src={images[currentIndex]}
+          className={`card-img img-fluid ${fade ? "fade-in" : "fade-out"}`}
+          src={images[currentIndex]}
             alt="Slider"
           />
 
@@ -436,15 +441,12 @@ const Home = () => {
             <div className="cardtext-style">
               <div className="slider-content">
                 <h2 className="timeBeuty">Timeless Beauty</h2>
-
                 <h3 className="timeBeuty">JEWELRY SETS</h3>
                 <p className="timeBeuty">GET UP TO 10% OFF</p>
-
                 <p className="brtag">
                   Sparkle and Save: Enjoy our stunning <br />
                   jewelry collection at discounted prices!
                 </p>
-
                 <div className="btn-container">
                   <button
                     className="cardshopnow"

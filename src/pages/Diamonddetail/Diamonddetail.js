@@ -31,6 +31,7 @@ import showToast from "../../components/Toast/Toaster";
 import { fetchSimilarDiamonds } from "../../redux/shopSlice";
 import DiamondLoader from "../../components/Loader/loader";
 import noitem from "../../assets/images/not found.png";
+import DiamondCardSkeleton from "../../components/Loader/diamondloader";
 
 const Diamonddetail = () => {
   const location = useLocation();
@@ -694,9 +695,19 @@ const Diamonddetail = () => {
         </div> */}
         <div className="similar-diamonds-section">
           <h3 className="shop-by-brands-title">Similar Diamonds</h3>
-          {similarDiamonds.length === 0 ? (
+
+          {itsLoading ? (
+            // Show skeleton loaders while fetching data
+            <div className="row">
+              {Array.from({ length: 4 }).map((_, index) => (
+                <DiamondCardSkeleton key={index} />
+              ))}
+            </div>
+          ) : similarDiamonds.length === 0 ? (
+            // Show "No similar diamonds found" only after API response arrives
             <p>No similar diamonds found.</p>
           ) : (
+            // Display similar diamonds after fetching is complete
             <div className="row">
               {similarDiamonds.slice(0, visibleCount).map((diamond, index) => (
                 <div
@@ -707,7 +718,6 @@ const Diamonddetail = () => {
                     className="diamond-card"
                     onClick={(e) => {
                       e.stopPropagation();
-                      // navigate("/diamonddetail", { state: { diamond } });
                       navigate(`/diamonddetail/${diamond.SKU}`);
                     }}
                   >
@@ -718,7 +728,7 @@ const Diamonddetail = () => {
                         className="diamond-img"
                       />
                     </div>
-                    <div class="dimond-content">
+                    <div className="dimond-content">
                       <h6 className="diamond-name">
                         {diamond.Carats} CARAT {diamond.Shape} - {diamond.Lab}
                       </h6>
@@ -736,8 +746,7 @@ const Diamonddetail = () => {
                           handleAddToCart(diamond, true);
                         }}
                       >
-                        Add to cart <i class="fa-solid fa-arrow-right"></i>
-                        {/* <span className="">→</span> */}
+                        Add to cart <i className="fa-solid fa-arrow-right"></i>
                       </span>
                     </div>
                   </div>

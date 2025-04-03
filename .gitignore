@@ -11,6 +11,8 @@
 # production
 /build
 /admin/build
+/admin/jps-admin-build.zip
+/jps-user-build.zip
 # misc
 .DS_Store
 .env.local

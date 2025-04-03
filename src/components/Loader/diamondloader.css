@@ -1,0 +1,40 @@
+.skeleton {
+    background-color: #f3f3f3;
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+  }
+  
+  .skeleton-box {
+    background: linear-gradient(90deg, #ececec 25%, #f3f3f3 50%, #ececec 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 4px;
+  }
+  
+  .skeleton-text {
+    height: 15px;
+    margin: 5px 0;
+    width: 80%;
+  }
+  
+  .skeleton-btn {
+    height: 30px;
+    width: 60%;
+    margin-top: 10px;
+  }
+  
+  .shopimg.skeleton-box {
+    height: 150px;
+    width: 100%;
+  }
+  
+  @keyframes shimmer {
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
+  }
+  
