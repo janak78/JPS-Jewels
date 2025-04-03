@@ -17,7 +17,9 @@
     "start": "set PORT=4000 && react-scripts start",
     "build": "cross-env PUBLIC_URL=/ react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "build": "rm -rf /home/user/web/admin.jpsjewels.com/public_html/* && npm run build-app && cp -r build/* /home/user/web/admin.jpsjewels.com/public_html/",
+    "build-app": "react-scripts build"
   },
   "eslintConfig": {
     "extends": "react-app"
