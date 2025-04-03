@@ -422,7 +422,6 @@ function extractAttributes(input) {
 
 const processExcelFile = async (filePath, IsNatural, IsLabgrown) => {
   try {
-    console.log(`Processing file: ${filePath}`);
 
     const workbook = XLSX.readFile(filePath);
     const sheetName = workbook.SheetNames[0];
@@ -477,7 +476,7 @@ const processExcelFile = async (filePath, IsNatural, IsLabgrown) => {
         (field) => !allowedFields.includes(field)
       );
       if (extraFields.length > 0) {
-        console.log(`Invalid fields detected: ${extraFields.join(", ")}`);
+        
         continue;
       }
 
@@ -544,7 +543,7 @@ const processExcelFile = async (filePath, IsNatural, IsLabgrown) => {
       );
     }
 
-    console.log(`${insertedCount} records inserted from ${filePath}`);
+      
 
     const successFolder = path.join(__dirname, "../successfullyProcessed");
     if (!fs.existsSync(successFolder)) fs.mkdirSync(successFolder);
@@ -1647,40 +1646,37 @@ router.get("/shapedata", async function (req, res) {
     });
   }
 });
-
 const getSimilarDiamonds = async (carat, color, clarity, shape, IsNatural, IsLabgrown) => {
   try {
     const result = await fetchStockDetails();
 
-    if (!result || result.statusCode !== 200 || !Array.isArray(result.data)) {
-      return { statusCode: result.statusCode, data: [] };
+    if (!result || result.statusCode !== 200 || !Array.isArray(result.data) || result.data.length === 0) {
+      return { statusCode: result?.statusCode || 500, data: [] };
     }
 
     const caratValue = parseFloat(carat);
     const maxResults = 5;
-
-    // Convert string booleans to actual booleans once
     const isNatural = IsNatural === "true";
     const isLabgrown = IsLabgrown === "true";
 
-    // Filter and map in one pass to minimize overhead
-    let similarDiamonds = result.data
-      .filter(diamond => {
-        const diamondCarat = parseFloat(diamond.Carats);
-        const isShapeMatch = diamond.Shape === shape;
-        const isColorClarityMatch = diamond.Color === color || diamond.Clarity === clarity;
-        const isCaratMatch = Math.abs(diamondCarat - caratValue) <= 0.4;
-        const isNaturalOrLabgrownMatch = (isNatural && diamond.IsNatural) || (isLabgrown && diamond.IsLabgrown);
+    let filteredDiamonds = [];
+    for (const diamond of result.data) {
+      const diamondCarat = parseFloat(diamond.Carats);
+      if (
+        diamond.Shape === shape &&
+        (diamond.Color === color || diamond.Clarity === clarity) &&
+        Math.abs(diamondCarat - caratValue) <= 0.4 &&
+        (!isNatural && !isLabgrown || (isNatural && diamond.IsNatural) || (isLabgrown && diamond.IsLabgrown))
+      ) {
+        filteredDiamonds.push({ ...diamond, diamondCarat });
+      }
+    }
 
-        return isShapeMatch && isColorClarityMatch && isCaratMatch && (isNatural || isLabgrown ? isNaturalOrLabgrownMatch : true);
-      })
-      .sort((a, b) => Math.abs(parseFloat(a.Carats) - caratValue) - Math.abs(parseFloat(b.Carats) - caratValue))
-      .slice(0, maxResults); // Limit to top 5
+    filteredDiamonds.sort((a, b) => Math.abs(a.diamondCarat - caratValue) - Math.abs(b.diamondCarat - caratValue));
 
-    // Return only necessary fields
     return {
       statusCode: 200,
-      data: similarDiamonds.map(({ Image, Amount, Price, Cut, Clarity, Color, Carats, Shape, Lab, SKU, IsNatural, IsLabgrown, CertificateNo }) => ({
+      data: filteredDiamonds.slice(0, maxResults).map(({ Image, Amount, Price, Cut, Clarity, Color, Carats, Shape, Lab, SKU, IsNatural, IsLabgrown, CertificateNo }) => ({
         Image, Amount, Price, Cut, Clarity, Color, Carats, Shape, Lab, SKU, IsNatural, IsLabgrown, CertificateNo
       })),
     };
@@ -1693,7 +1689,6 @@ const getSimilarDiamonds = async (carat, color, clarity, shape, IsNatural, IsLab
 router.get("/similarproducts", async function (req, res) {
   try {
     const { carat, color, clarity, shape, IsNatural, IsLabgrown } = req.query;
-    console.log(IsNatural, IsLabgrown, "IsNatural and IsLabgrown values");
     // if (!carat || !color || !clarity || !shape || !IsNatural || !IsLabgrown) {
     //   return res.status(400).json({
     //     statusCode: 400,
