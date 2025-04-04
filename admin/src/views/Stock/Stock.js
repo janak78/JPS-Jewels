@@ -612,6 +612,10 @@ const Tablelogin = () => {
                 >
                   <div>
                     <p>
+                      <strong className="Heading">Sr No:</strong>{" "}
+                      {dialogData?.SrNo || "N/A"}
+                    </p>
+                    <p>
                       <strong className="Heading">SKU:</strong>{" "}
                       {dialogData?.SKU || "N/A"}{" "}
                     </p>
@@ -700,6 +704,10 @@ const Tablelogin = () => {
                   </div>
                   <div>
                     <p>
+                      <strong className="Heading">Color:</strong>{" "}
+                      {dialogData?.Color || "N/A"}
+                    </p>
+                    <p>
                       <strong className="Heading">Clarity:</strong>{" "}
                       {dialogData?.Clarity || "N/A"}
                     </p>
@@ -743,10 +751,6 @@ const Tablelogin = () => {
                     <p>
                       <strong className="Heading">Shape:</strong>{" "}
                       {dialogData?.Shape || "N/A"}
-                    </p>
-                    <p>
-                      <strong className="Heading">Sr No:</strong>{" "}
-                      {dialogData?.SrNo || "N/A"}
                     </p>
                   </div>
                 </div>

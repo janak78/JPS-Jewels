@@ -132,8 +132,8 @@ export const removeFromCart = (AddToCartId, userId) => async (dispatch, getState
       );
 
       if (response.data.statusCode === 200) {
-        dispatch(fetchCartCount(userId)); // Ensure the latest cart count is fetched
         showToast.success("Item Removed Successfully.");
+        dispatch(fetchCartCount(userId)); // Ensure the latest cart count is fetched
       } else {
         showToast.error("Failed to remove item.");
         dispatch(setCart({ count: prevCartData.length, data: prevCartData })); // Rollback on failure

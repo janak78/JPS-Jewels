@@ -85,7 +85,8 @@ const shopSlice = createSlice({
     caretData: [],
     similarDiamonds: [],
     shape: [""],
-    shapeError: null,
+    shapeLoading: false, // Added loading state
+    shapeError: null, // Added error state
   },
   reducers: {
     setItemsPerPage: (state, action) => {
@@ -109,16 +110,23 @@ const shopSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addCase(fetchShapeData.pending, (state) => {
+        state.shapeLoading = true;
+        state.shapeError = null;
+      })
       .addCase(fetchShapeData.fulfilled, (state, action) => {
         state.caretData = action.payload;
+        state.shapeLoading = false;
         state.shapeError = null;
       })
       .addCase(fetchShapeData.rejected, (state, action) => {
         state.caretData = [];
+        state.shapeLoading = false;
         state.shapeError = action.payload;
       });
   },
 });
+
 
 export const {
   setItemsPerPage,

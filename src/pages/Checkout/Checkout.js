@@ -71,7 +71,9 @@ const Checkout = () => {
         dispatch(fetchCartCount(localStorage.getItem("UserId")));
         dispatch(diamondsApi.util.invalidateTags(["Diamonds"]));
       } else if (response.status === 204) {
-        showToast.error("one diamond is already sold out from your cart moment ago"); 
+        showToast.error(
+          "one diamond is already sold out from your cart moment ago"
+        );
         // Redirect to confirmation page
         // window.location.reload(); // Refresh the page
         // resetForm();
@@ -222,7 +224,18 @@ const Checkout = () => {
                         variant="outlined"
                         error={touched.PinCode && Boolean(errors.PinCode)}
                         helperText={touched.PinCode && errors.PinCode}
-                        onChange={handleChange}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          // Allow only digits and length up to 10
+                          if (/^\d{0,10}$/.test(value)) {
+                            handleChange(e);
+                          }
+                        }}
+                        inputProps={{
+                          inputMode: "numeric",
+                          pattern: "[0-9]*",
+                          maxLength: 10,
+                        }}
                       />
                     </Grid>
                     <Grid item xs={6}>
@@ -235,7 +248,15 @@ const Checkout = () => {
                         variant="outlined"
                         error={touched.Phone && Boolean(errors.Phone)}
                         helperText={touched.Phone && errors.Phone}
-                        onChange={handleChange}
+                        onChange={(e) => {
+                          const onlyNums = e.target.value.replace(/\D/g, ""); 
+                          handleChange({
+                            target: {
+                              name: "Phone",
+                              value: onlyNums,
+                            },
+                          });
+                        }}
                       />
                     </Grid>
                   </Grid>
