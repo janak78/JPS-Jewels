@@ -42,7 +42,7 @@ import "aos/dist/aos.css";
 import { useNavigate } from "react-router-dom";
 import { Typography, Grid } from "@mui/material";
 import { fetchShapeData, setShape } from "../../redux/shopSlice";
-
+import "../../components/Loader/diamondloader.css";
 const images = [image1, image2, image3];
 
 const categories = [
@@ -197,7 +197,7 @@ const Home = () => {
     { icon: "", name: "Shield", value: ["SHIELD", "scad", "sld"] },
     { icon: "", name: "Pentagonal", value: ["PENTAGONAL", "long pentagon"] },
     { icon: "", name: "Hexagonal", value: ["HEXAGONAL"] },
-    { icon: "", name: "Octagonal", value: ["long octagon"] },
+    { icon: "", name: "Octagonal", value: ["LONG OCTAGON"] },
   ];
 
   // const toggleShape = (name) => {
@@ -300,7 +300,9 @@ const Home = () => {
     setBubbles(newBubbles);
   }, []);
 
-  const { shape, caretData, shapeError } = useSelector((state) => state.shop);
+  const { shape, caretData, shapeError, shapeLoading } = useSelector(
+    (state) => state.shop
+  );
 
   useEffect(() => {
     dispatch(fetchShapeData());
@@ -313,12 +315,10 @@ const Home = () => {
   }, [shape, dispatch]);
 
   const handleShapeClick = (shapeValue) => {
-    if (Array.isArray(shapeValue)) {
-      dispatch(setShape(shapeValue)); // Store the array directly
-    } else {
-      dispatch(setShape([shapeValue])); // Convert single value to array
-    }
-    dispatch(fetchShapeData(shapeValue)); // Fetch diamonds based on selection
+    let updatedShapes = Array.isArray(shapeValue) ? shapeValue : [shapeValue];
+
+    dispatch(setShape(updatedShapes));
+    dispatch(fetchShapeData(updatedShapes));
     setCurrentPage(0);
   };
 
@@ -431,8 +431,8 @@ const Home = () => {
         <div className="card cardbackground text-white border-0">
           {/* Image Slider */}
           <img
-          className={`card-img img-fluid ${fade ? "fade-in" : "fade-out"}`}
-          src={images[currentIndex]}
+            className={`card-img img-fluid ${fade ? "fade-in" : "fade-out"}`}
+            src={images[currentIndex]}
             alt="Slider"
           />
 
@@ -670,11 +670,33 @@ const Home = () => {
                 </button>
               )}
             </div>
-            {visibleDiamonds.length > 0 ? (
+            {shapeLoading ? (
+              [...Array(5)].map(
+                (
+                  _,
+                  index // Show exactly 5 loaders
+                ) => (
+                  <div
+                    key={index}
+                    className="col-xl-2 col-lg-3 col-md-4 col-sm-6 mb-3 mt-3"
+                  >
+                    <div className="diamond-card skeleton">
+                      <div className="shopimg skeleton-box"></div>
+                      <div className="dimond-content">
+                        <h6 className="skeleton-box skeleton-text"></h6>
+                        <p className="skeleton-box skeleton-text"></p>
+                        <p className="skeleton-box skeleton-text"></p>
+                        <span className="skeleton-box skeleton-btn"></span>
+                      </div>
+                    </div>
+                  </div>
+                )
+              )
+            ) : visibleDiamonds.length > 0 ? (
               visibleDiamonds.map((diamond, index) => (
                 <div
                   key={index}
-                  className="col-xl-2 col-lg-3 col-md-4 col-sm-6 mb-20"
+                  className="col-xl-2 col-lg-3 col-md-4 col-sm-6 mb-3 mt-3"
                 >
                   <div
                     className="diamond-card1"

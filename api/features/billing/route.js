@@ -219,7 +219,7 @@ const addBilling = async (data, UserId) => {
       overflow: hidden;
     }
     .email-header {
-      background-color: rgb(172, 130, 80);
+      background-color: #c9a236;
       color: #ffffff;
       padding: 20px;
       text-align: center;
@@ -231,7 +231,7 @@ const addBilling = async (data, UserId) => {
     }
     .email-body h2 {
       font-size: 20px;
-      color: rgb(172, 130, 80);
+      color: #c9a236;
     }
     .email-body p {
       line-height: 1.6;

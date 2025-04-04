@@ -444,16 +444,16 @@ const Addcard = () => {
                       {popupData?.diamondDetails?.CertificateNo || "N/A"}
                     </p>
                     <p>
-                      <strong className="Heading">Measurements:</strong>{" "}
-                      {popupData?.diamondDetails?.measurements || "N/A"}
-                    </p>
-                    <p>
                       <strong className="Heading">Depth:</strong>{" "}
                       {popupData?.diamondDetails?.Depth || "N/A"}
                     </p>
                     <p>
                       <strong className="Heading">Polish:</strong>{" "}
                       {popupData?.diamondDetails?.Polish || "N/A"}
+                    </p>
+                    <p>
+                      <strong className="Heading">Color:</strong>{" "}
+                      {popupData?.diamondDetails?.Color || "N/A"}
                     </p>
                     <p>
                       <strong className="Heading">Clarity:</strong>{" "}
@@ -502,6 +502,10 @@ const Addcard = () => {
                     <p>
                       <strong className="Heading">Ratio:</strong>{" "}
                       {popupData?.diamondDetails?.Ratio || "N/A"}
+                    </p>
+                    <p>
+                      <strong className="Heading">Measurements:</strong>{" "}
+                      {popupData?.diamondDetails?.measurements || "N/A"}
                     </p>
                   </div>
                 </div>

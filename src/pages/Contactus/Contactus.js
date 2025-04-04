@@ -60,7 +60,8 @@ const Contactus = () => {
         <div className="map-div">
           <iframe
             className="contact-form"
-            src="https://maps.google.com/maps?q=Shashvat%20Apartment%2C%20Pipla%20Sheri%2C%20Mahidharpura%2C%20Surat%2C%20Gujarat%2C%20India%2C&amp;t=m&amp;z=16&amp;output=embed&amp;iwloc=near"
+            src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d7438.397783137098!2d72.8251953935791!3d21.22396029999999!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be04f8f7892e19b%3A0x1de1700aa4eb56b9!2sShashwat%20Appartment!5e0!3m2!1sen!2sus!4v1743746988303!5m2!1sen!2sus"
+            // src="https://maps.google.com/maps?q=Shashvat%20Apartment%2C%20Pipla%20Sheri%2C%20Mahidharpura%2C%20Surat%2C%20Gujarat%2C%20India%2C&amp;t=m&amp;z=16&amp;output=embed&amp;iwloc=near"
             width="370"
             height="95%"
             allowfullscreen=""

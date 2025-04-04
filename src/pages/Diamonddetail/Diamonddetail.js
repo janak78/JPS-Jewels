@@ -32,110 +32,55 @@ import { fetchSimilarDiamonds } from "../../redux/shopSlice";
 import DiamondLoader from "../../components/Loader/loader";
 import noitem from "../../assets/images/not found.png";
 import DiamondCardSkeleton from "../../components/Loader/diamondloader";
+import AxiosInstance from "../../Axiosinstance";
 
 const Diamonddetail = () => {
-  const location = useLocation();
-  const navigate = useNavigate();
-  // const diamond = location.state?.diamond;
   const { SKU } = useParams();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const diamonds = useSelector((state) => state.shop.caretData);
+  const userId = useSelector((state) => state.auth?.user?.UserId);
+  // const similarDiamonds = useSelector((state) => state.shop.similarDiamonds);
+
+  const [diamondData, setDiamondData] = useState(null);
   const [visitedDiamonds, setVisitedDiamonds] = useState([]);
+  const [visibleCount, setVisibleCount] = useState(8);
   const initialVisibleCount = 8;
-  const [visibleCount, setVisibleCount] = useState(initialVisibleCount);
-  const [isExpanded, setIsExpanded] = useState(false); // Track if view more is clicked
 
-  const handleViewMore = () => {
-    setVisibleCount(visitedDiamonds.length);
-    setIsExpanded(true); // Mark as expanded
-  };
-
-  const handleViewLess = () => {
-    setVisibleCount(initialVisibleCount);
-    setIsExpanded(false); // Mark as collapsed
-  };
-
+  const [isExpanded, setIsExpanded] = useState(false);
   const [openVideoModal, setOpenVideoModal] = useState(false);
-  const [isAddToCart, setIsAddToCart] = useState(false);
   const [openCertificateModal, setOpenCertificateModal] = useState(false);
   const [openImageModal, setOpenImageModal] = useState(false);
-  const userId = useSelector((state) => state.auth?.user?.UserId);
-  const [isloading, setIsLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
   const [itsLoading, setItsLoading] = useState(true);
+  const [similarDiamonds, setSimilarDiamonds] = useState([]);
 
-  const dispatch = useDispatch();
-  const { diamondDetail, loading, error } = useSelector(
-    (state) => state.diamondDetail
-  );
+  const [isloading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const baseUrl = process.env.REACT_APP_BASE_API;
+
+  // Fetch Diamond Data
   useEffect(() => {
-    if (SKU) {
-      setIsLoading(true); // Start loading
-      dispatch(fetchDiamondDetail(SKU)).finally(() => setIsLoading(false));
-    }
-  }, [dispatch, SKU]);
+    const fetchData = async () => {
+      try {
+        const response = await AxiosInstance.get(
+          `${baseUrl}/stock/data/${SKU}`
+        );
+        if (response.data.statusCode === 200) {
+          setDiamondData(response.data.data[0]);
+        } else {
+          setError(response.data.message);
+        }
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const diamondData = diamondDetail?.[0] || {};
-
-  useEffect(() => {
-    if (userId) {
-      dispatch(fetchCartCount(userId));
-    }
-  }, [userId]);
-
-  const similarDiamonds = useSelector((state) => state.shop.similarDiamonds);
-
-  useEffect(() => {
-    if (
-      diamondData?.Carats &&
-      diamondData?.Color &&
-      diamondData?.Clarity &&
-      diamondData?.Shape
-    ) {
-      setItsLoading(true);
-      dispatch(
-        fetchSimilarDiamonds(
-          diamondData.Carats,
-          diamondData.Color,
-          diamondData.Clarity,
-          diamondData.Shape,
-          !!diamondData.IsNatural, // Convert to boolean
-          !!diamondData.IsLabgrown // Convert to boolean
-        )
-      ).finally(() => setItsLoading(false));
-    } else {
-      console.warn("diamondData is missing required properties:", diamondData);
-    }
-  }, [dispatch, diamondData]);
-
-  // useEffect(() => {
-  //   dispatch(fetchCaretData());
-  // }, [dispatch]);
-
-  const handleVideoClick = () => {
-    setOpenVideoModal(true);
-  };
-
-  const handleCertificateClick = () => {
-    setOpenCertificateModal(true);
-    setIsLoading(true);
-  };
-
-  // Functions to handle modal closing
-  const handleCloseVideoModal = () => {
-    setOpenVideoModal(false); // Close video modal
-  };
-
-  const handleCloseCertificateModal = () => {
-    setOpenCertificateModal(false); // Close certificate modal
-  };
-
-  const handleImageClick = () => {
-    setOpenImageModal(true); // Open the image modal
-  };
-
-  const handleCloseImageModal = () => {
-    setOpenImageModal(false); // Close the image modal
-  };
+    fetchData();
+  }, [SKU]);
 
   const getRowClass = (key, value) => {
     if (key === "Color" && value === "D") return "highlight-color";
@@ -143,21 +88,36 @@ const Diamonddetail = () => {
     if (key === "Fluorescence" && value === "NON") return "highlight-fluo";
     return "";
   };
-
-  // add cart
-  const handleAddToCart = (diamondData, shouldShowToast) => {
-    if (!userId) {
-      showToast.warning("Please log in to add items to the cart.");
-      return;
+  // Fetch Cart Count
+  useEffect(() => {
+    if (userId) {
+      dispatch(fetchCartCount(userId));
     }
+  }, [userId, dispatch]);
 
-    const cartItem = {
-      SKU: diamondData.SKU,
-      Quantity: 1,
-    };
+  // Fetch Similar Diamonds
+  // useEffect(() => {
+  //   if (
+  //     diamondData?.Carats &&
+  //     diamondData?.Color &&
+  //     diamondData?.Clarity &&
+  //     diamondData?.Shape
+  //   ) {
+  //     setItsLoading(true);
+  //     dispatch(
+  //       fetchSimilarDiamonds(
+  //         diamondData.Carats,
+  //         diamondData.Color,
+  //         diamondData.Clarity,
+  //         diamondData.Shape,
+  //         !!diamondData.IsNatural,
+  //         !!diamondData.IsLabgrown
+  //       )
+  //     ).finally(() => setItsLoading(false));
+  //   }
+  // }, [dispatch, diamondData]);
 
-    dispatch(addToCart(cartItem, userId, shouldShowToast, navigate));
-  };
+  // Store Visited Diamonds in Local Storage
   useEffect(() => {
     if (
       diamondData &&
@@ -168,10 +128,8 @@ const Diamonddetail = () => {
       let visitedDiamonds =
         JSON.parse(localStorage.getItem("visitedDiamonds")) || [];
 
-      // Avoid duplicates
       if (!visitedDiamonds.find((d) => d.SKU === diamondData.SKU)) {
-        visitedDiamonds.unshift(diamondData); // Add new diamondData to the beginning
-
+        visitedDiamonds.unshift(diamondData);
         localStorage.setItem(
           "visitedDiamonds",
           JSON.stringify(visitedDiamonds)
@@ -181,11 +139,12 @@ const Diamonddetail = () => {
           (d) => d.SKU !== diamondData.SKU
         );
 
-        setVisitedDiamonds(filteredVisitedDiamonds); // Update state immediately
+        setVisitedDiamonds(filteredVisitedDiamonds);
       }
     }
   }, [diamondData]);
 
+  // Load Visited Diamonds from Local Storage
   useEffect(() => {
     const storedDiamonds =
       JSON.parse(localStorage.getItem("visitedDiamonds")) || [];
@@ -193,11 +152,75 @@ const Diamonddetail = () => {
   }, []);
 
   useEffect(() => {
-    if (!loading && similarDiamonds && diamondData?.length > 0) {
-      setItsLoading(false); // Stop loading when everything is ready
-    }
-  }, [loading, similarDiamonds, diamondDetail]);
+    if (
+      diamondData?.Carats &&
+      diamondData?.Color &&
+      diamondData?.Clarity &&
+      diamondData?.Shape
+    ) {
+      setItsLoading(true);
 
+      AxiosInstance.get(`${baseUrl}/stock/similarproducts`, {
+        params: {
+          carat: diamondData.Carats,
+          color: diamondData.Color,
+          clarity: diamondData.Clarity,
+          shape: diamondData.Shape,
+          IsNatural: diamondData.IsNatural,
+          IsLabgrown: diamondData.IsLabgrown,
+        },
+      })
+        .then((response) => {
+          if (response.data.statusCode === 200) {
+            setSimilarDiamonds(response.data.data.slice(0, 4)); // Store similar diamonds
+          } else {
+            console.error(
+              "Error fetching similar diamonds:",
+              response.data.message
+            );
+          }
+        })
+        .catch((error) => {
+          console.error("API Error:", error.message);
+        })
+        .finally(() => setItsLoading(false));
+    }
+  }, [diamondData]);
+  // Handle Loader
+  useEffect(() => {
+    if (!loading && similarDiamonds && diamondData?.length > 0) {
+      setItsLoading(false);
+    }
+  }, [loading, similarDiamonds, diamondData]);
+
+  // ** UI Handling Functions **
+  const handleViewMore = () => {
+    setVisibleCount(visitedDiamonds.length);
+    setIsExpanded(true);
+  };
+
+  const handleViewLess = () => {
+    setVisibleCount(8);
+    setIsExpanded(false);
+  };
+
+  const handleVideoClick = () => setOpenVideoModal(true);
+  const handleCertificateClick = () => setOpenCertificateModal(true);
+  const handleCloseVideoModal = () => setOpenVideoModal(false);
+  const handleCloseCertificateModal = () => setOpenCertificateModal(false);
+  const handleImageClick = () => setOpenImageModal(true);
+  const handleCloseImageModal = () => setOpenImageModal(false);
+
+  const handleAddToCart = (diamondData, shouldShowToast) => {
+    if (!userId) {
+      showToast.warning("Please log in to add items to the cart.");
+      return;
+    }
+    const cartItem = { SKU: diamondData.SKU, Quantity: 1 };
+    dispatch(addToCart(cartItem, userId, shouldShowToast, navigate));
+  };
+
+  // Ensure Hooks Run First - Now Place the Return
   if (loading) return <DiamondLoader />;
   if (error)
     return (
@@ -230,7 +253,7 @@ const Diamonddetail = () => {
         <p>No diamond found. it has ben already ordered or deleted.</p>
       </div>
     );
-  if (!diamondDetail)
+  if (!diamondData)
     return (
       <div
         style={{
@@ -794,50 +817,59 @@ const Diamonddetail = () => {
         </Grid> */}
 
         <div className="row">
-          {visitedDiamonds.slice(0, visibleCount).map((diamond, index) => (
-            <div
-              key={index}
-              className="col-xl-3 col-lg-3 col-md-4 col-sm-6 mb-20"
-            >
+          {visitedDiamonds.length > 0 ? (
+            visitedDiamonds.slice(0, visibleCount).map((diamond, index) => (
               <div
-                className="diamond-card"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  // navigate("/diamonddetail", { state: { diamond } });
-                  navigate(`/diamonddetail/${diamond.SKU}`);
-                }}
+                key={index}
+                className="col-xl-3 col-lg-3 col-md-4 col-sm-6 mb-20"
               >
-                <div className="shopimg">
-                  <img
-                    src={diamond.Image}
-                    alt={diamond.Shape}
-                    className="diamond-img"
-                  />
-                </div>
-                <div class="dimond-content">
-                  <h6 className="diamond-name">
-                    {diamond.Carats} CARAT {diamond.Shape} - {diamond.Lab}
-                  </h6>
-                  <p className="price">
-                    <span>Amount:</span> ${diamond.Amount}
-                  </p>
-                  <p className="price">
-                    <span>Price per carat:</span> ${diamond.Price}
-                  </p>
-                  <span
-                    className="add-to-cart"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleAddToCart(diamond, true);
-                    }}
-                  >
-                    Add to cart <i class="fa-solid fa-arrow-right"></i>
-                    {/* <span className="">→</span> */}
-                  </span>
+                <div
+                  className="diamond-card"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    navigate(`/diamonddetail/${diamond.SKU}`);
+                  }}
+                >
+                  <div className="shopimg">
+                    <img
+                      src={diamond.Image}
+                      alt={diamond.Shape}
+                      className="diamond-img"
+                    />
+                  </div>
+                  <div className="dimond-content">
+                    <h6 className="diamond-name">
+                      {diamond.Carats} CARAT {diamond.Shape} - {diamond.Lab}
+                    </h6>
+                    <p className="price">
+                      <span>Amount:</span> ${diamond.Amount}
+                    </p>
+                    <p className="price">
+                      <span>Price per carat:</span> ${diamond.Price}
+                    </p>
+                    <span
+                      className="add-to-cart"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleAddToCart(diamond, true);
+                      }}
+                    >
+                      Add to cart <i className="fa-solid fa-arrow-right"></i>
+                    </span>
+                  </div>
                 </div>
               </div>
+            ))
+          ) : (
+            <div className="col-12 text-center py-4">
+              <img
+                src={noitem}
+                alt="No items"
+                style={{ width: "120px", marginBottom: "10px" }}
+              />
+              <h6>No recently visited diamonds</h6>
             </div>
-          ))}
+          )}
         </div>
 
         <div className="view-btnalign mt-3">
