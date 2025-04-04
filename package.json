@@ -35,7 +35,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "build": "rm -rf /home/user/web/jpsjewels.com/public_html/* && npm run build-app && cp -r build/* /home/user/web/jpsjewels.com/public_html/",
+    "build": "[ -f /home/user/web/jpsjewels.com/public_html/.htaccess ] && cp /home/user/web/jpsjewels.com/public_html/.htaccess /home/user/web/.htaccess_backup || echo 'No .htaccess found'; rm -rf /home/user/web/jpsjewels.com/public_html/* && npm run build-app && cp -r build/* /home/user/web/jpsjewels.com/public_html/ && [ -f /home/user/web/.htaccess_backup ] && mv /home/user/web/.htaccess_backup /home/user/web/jpsjewels.com/public_html/.htaccess || echo 'No backup found to restore'",
     "build-app": "react-scripts build"
   },
 
